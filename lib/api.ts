@@ -1,20 +1,36 @@
-// import axios from "axios";
-// import { getSession } from "next-auth/react";
+import axios from "axios";
+import { getSession } from "next-auth/react";
 
-// const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// const api = axios.create({
-//   baseURL: API_URL,
-// });
+const api = axios.create({
+  baseURL: API_URL,
+});
 
-// api.interceptors.request.use(
-//   async (config) => {
-//     const session = await getSession();
-//     if (session?.accessToken) {
-//       config.headers.Authorization = `Bearer ${session.accessToken}`;
-//     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
+api.interceptors.request.use(
+  async (config) => {
+    const session = await getSession();
+    if (session?.accessToken) {
+      config.headers.Authorization = `Bearer ${session.accessToken}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
+// ✅ New user Registration
+export const createUserRegistration = async (userData: {
+  firstName: string; 
+  lastName: string;
+  email: string;
+  password: string;
+}) => {
+  const response = await api.post("/user/register", userData);
+  return response.data;
+};
+
+// ---------------- Verify OTP ----------------
+export const verifyOtpRequest = async (otpData: { otp: string }) => {
+  const response = await api.post("/user/verify-email", otpData);
+  return response.data;
+};
