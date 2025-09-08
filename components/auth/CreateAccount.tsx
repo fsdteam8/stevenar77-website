@@ -17,6 +17,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useAuth } from "../hooks/useAuth";
+import { toast } from "sonner";
+import {   useRouter } from "next/navigation";
 
 // ✅ Zod validation schema
 const createAccountSchema = z
@@ -37,6 +40,8 @@ type CreateAccountFormValues = z.infer<typeof createAccountSchema>;
 
 export default function CreateAccount() {
   const [showPassword, setShowPassword] = useState(false);
+  const { signUp, loading, error } = useAuth();
+  const router = useRouter();
 
   const form = useForm<CreateAccountFormValues>({
     resolver: zodResolver(createAccountSchema),
@@ -49,117 +54,117 @@ export default function CreateAccount() {
       terms: false,
     },
   });
+const onSubmit = (values: CreateAccountFormValues) => {
+  // Send only fields backend expects
+  signUp({
+    firstName: values.firstName,
+    lastName: values.lastName,
+    email: values.email,
+    password: values.password,
+  })
+    .then(() => {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("userEmail", values.email);
+      }
 
-  const onSubmit = (values: CreateAccountFormValues) => {
-    console.log("Sign up values:", values);
-    alert("Account created successfully!");
-  };
+      // ✅ Show success toast only
+      toast.success("Account created successfully!");
+
+      // ✅ Reset form
+      form.reset();
+
+      router.push("/verify-otp");
+    })
+    .catch(() => {
+      // ❌ Handle error if needed
+    });
+};
 
   return (
-    <div>
-      {/* Right side - form */}
-      <div className="flex items-center justify-center bg-white py-10 px-4">
-        <div className="w-full max-w-lg">
-          <h2 className="text-3xl md:text-[40px] font-playfair font-bold text-[#0694A2] mb-2">
-            Create Your Account
-          </h2>
-          <p className="text-gray-500 text-sm md:text-[16px] mb-6">
-            Connect families with trusted care. Join ALH Hub today.
-          </p>
+    <div className="flex items-center justify-center bg-white py-10 px-4">
+      <div className="w-full max-w-lg">
+        <h2 className="text-3xl md:text-[40px] font-playfair font-bold text-[#0694A2] mb-2">
+          Create Your Account
+        </h2>
+        <p className="text-gray-500 text-sm md:text-[16px] mb-6">
+          Connect families with trusted care. Join ALH Hub today.
+        </p>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              {/* First & Last Name */}
-              <div className="flex flex-col md:flex-row gap-2">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* First & Last Name */}
+            <div className="flex flex-col md:flex-row gap-2">
+              {["firstName", "lastName"].map((fieldName, idx) => (
                 <FormField
+                  key={idx}
                   control={form.control}
-                  name="firstName"
+                  name={fieldName as "firstName" | "lastName"}
                   render={({ field }) => (
                     <FormItem className="md:w-1/2">
-                      <FormLabel className="text-[16px] leading-[150%] font-medium text-[#343A40]">
-                        First Name
+                      <FormLabel>
+                        {fieldName === "firstName" ? "First Name" : "Last Name"}
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Name Here"
                           {...field}
-                          className="h-12 w-full"
+                          className="h-10"
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="lastName"
-                  render={({ field }) => (
-                    <FormItem className="md:w-1/2">
-                      <FormLabel className="text-[16px] leading-[150%] font-medium text-[#343A40]">
-                        Last Name
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Name Here"
-                          {...field}
-                          className="h-12 w-full"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              ))}
+            </div>
 
-              {/* Email */}
+            {/* Email */}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="hello@example.com"
+                      {...field}
+                      className="h-10"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Password & Confirm Password */}
+            {["password", "confirmPassword"].map((fieldName) => (
               <FormField
+                key={fieldName}
                 control={form.control}
-                name="email"
+                name={fieldName as "password" | "confirmPassword"}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-[16px] leading-[150%] font-medium text-[#343A40]">
-                      Email Address
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="hello@example.com"
-                        {...field}
-                        className="h-12 w-full"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Password */}
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[16px] leading-[150%] font-medium text-[#343A40]">
-                      Create Password
+                    <FormLabel>
+                      {fieldName === "password"
+                        ? "Create Password"
+                        : "Confirm Password"}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input
                           type={showPassword ? "text" : "password"}
-                          {...field}
                           placeholder="********"
-                          className="h-12 w-full"
+                          {...field}
+                          className="h-10"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword((prev) => !prev)}
-                          className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700 cursor-pointer"
+                          className="absolute inset-y-0 right-3 flex items-center h-10"
                         >
-                          {showPassword ? (
-                            <EyeOff className="w-5 h-5" />
-                          ) : (
-                            <Eye className="w-5 h-5" />
-                          )}
+                          {showPassword ? <EyeOff /> : <Eye />}
                         </button>
                       </div>
                     </FormControl>
@@ -167,91 +172,60 @@ export default function CreateAccount() {
                   </FormItem>
                 )}
               />
+            ))}
 
-              {/* Confirm Password */}
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[16px] leading-[150%] font-medium text-[#343A40]">
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          type={showPassword ? "text" : "password"}
-                          {...field}
-                          placeholder="********"
-                          className="h-12 w-full"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword((prev) => !prev)}
-                          className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700 cursor-pointer"
-                        >
-                          {showPassword ? (
-                            <EyeOff className="w-5 h-5" />
-                          ) : (
-                            <Eye className="w-5 h-5" />
-                          )}
-                        </button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            {/* Terms */}
+            <FormField
+              control={form.control}
+              name="terms"
+              render={({ field }) => (
+                <FormItem className="flex items-center space-x-2 cursor-pointer">
+                  <FormControl>
+                    <Checkbox
+                      className="cursor-pointer"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel className="text-sm text-gray-600">
+                    I agree to The Real Life&apos;s{" "}
+                    <a href="/terms" className="text-[#0694A2] underline">
+                      Terms & Conditions
+                    </a>{" "}
+                    and{" "}
+                    <a href="/privacy" className="text-[#0694A2] underline">
+                      Privacy Policy
+                    </a>
+                  </FormLabel>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              {/* Terms */}
-              <FormField
-                control={form.control}
-                name="terms"
-                render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2 cursor-pointer">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        className="cursor-pointer"
-                      />
-                    </FormControl>
-                    <FormLabel className="text-sm text-gray-600">
-                      I agree to ALH Hub&apos;s{" "}
-                      <a href="/terms" className="text-[#0694A2] underline">
-                        Terms & Conditions
-                      </a>{" "}
-                      and{" "}
-                      <a href="/privacy" className="text-[#0694A2] underline">
-                        Privacy Policy
-                      </a>
-                    </FormLabel>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Submit */}
-              <Button
-                type="submit"
-                className="w-full h-10 bg-[#0694A2] hover:bg-[#0694A2] cursor-pointer"
-              >
-                Sign Up
-              </Button>
-            </form>
-          </Form>
-
-          {/* Already have account */}
-          <p className="mt-6 text-center text-sm">
-            Already have an account?{" "}
-            <a
-              href="/login"
-              className="text-[#0694A2] font-medium hover:underline"
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full h-10 bg-[#0694A2] hover:bg-[#0694A2] cursor-pointer"
             >
-              Log In
-            </a>
-          </p>
-        </div>
+              {loading ? "Creating..." : "Sign Up"}
+            </Button>
+
+            {/* API Error */}
+            {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
+          </form>
+        </Form>
+
+        {/* Already have account */}
+        <p className="mt-6 text-center text-sm">
+          Already have an account?{" "}
+          <a
+            href="/login"
+            className="text-[#0694A2] font-medium hover:underline"
+          >
+            Log In
+          </a>
+        </p>
       </div>
     </div>
   );
