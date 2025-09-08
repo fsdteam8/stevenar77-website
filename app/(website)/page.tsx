@@ -8,6 +8,8 @@ export default function page() {
     <div>
       <HomeHero />
     
+      
+
     </div>
   )
 }
