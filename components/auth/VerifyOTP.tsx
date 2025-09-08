@@ -6,16 +6,27 @@ import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
+import { toast } from "sonner";
 
 export default function VerifyOTP() {
-  const email = "user@example.com";  
+  // ✅ Get email from localStorage
+  const [email, setEmail] = useState<string | null>(null);
+  const { verifyOtp, loading } = useAuth();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedEmail = localStorage.getItem("userEmail");
+      setEmail(storedEmail);
+    }
+  }, []);
+
   const form = useForm({
     defaultValues: { otp: "" },
   });
 
   const [otpValue, setOtpValue] = useState<string[]>(Array(6).fill(""));
-  const [loading, setLoading] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60); 
+  const [timeLeft, setTimeLeft] = useState(60);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
   // Countdown timer
@@ -31,7 +42,7 @@ export default function VerifyOTP() {
     if (timeLeft > 0) return;
     console.log("Resend OTP to:", email);
     setOtpValue(Array(6).fill(""));
-    setTimeLeft(60);  
+    setTimeLeft(60);
   };
 
   const handleChange = (
@@ -58,20 +69,32 @@ export default function VerifyOTP() {
       if (index > 0) inputRefs.current[index - 1]?.focus();
     }
   };
-
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const otp = otpValue.join("");
-    setLoading(true);
-    console.log("Entered OTP:", otp);
+    if (!otp) return toast.warning("Please enter the OTP");
 
-    setTimeout(() => {
-      setLoading(false);
-      alert(`OTP Verified: ${otp}`);
-    }, 1500);
+    console.log(otp)
+
+    try {
+      // ✅ Send only OTP
+      await verifyOtp({ otp });
+      toast.success("OTP verified successfully!");
+
+      // ✅ Remove email from localStorage if stored
+      if (typeof window !== "undefined") localStorage.removeItem("userEmail");
+
+      // ✅ Reset inputs
+      setOtpValue(Array(6).fill(""));
+      form.reset();
+
+      console.log("OTP verified successfully");
+    } catch {
+      toast.error("OTP verification failed");
+    }
   };
 
   return (
-    <div className="w-full max-w-md  rounded-2xl">
+    <div className="w-full max-w-md rounded-2xl">
       <h1 className="text-[#0694A2] text-3xl md:text-[40px] font-bold mb-2">
         Enter OTP
       </h1>
