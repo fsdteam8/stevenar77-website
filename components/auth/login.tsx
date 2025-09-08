@@ -17,6 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { signIn } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 // ✅ Zod validation schema
 const loginSchema = z.object({
@@ -42,12 +44,14 @@ export default function Login() {
 
   const onSubmit = async (values: LoginFormValues) => {
     setIsLoading(true);
-    console.log("Login form submitted:", values);
-
-    // এখানে API call করতে পারো
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
+ 
+     await signIn("credentials", {
+      email: values.email,
+      password: values.password,
+      redirect: false,
+    });
+    redirect("/dashboard");
+ 
   };
 
   return (
