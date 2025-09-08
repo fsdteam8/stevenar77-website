@@ -19,8 +19,8 @@ const Footer = () => {
             <Image
               src={logo}
               alt=" logo"
-              width={150}
-              height={50}
+              width={64}
+              height={64}
               className="mb-4"
             />
             <p className="text-sm text-white max-w-xs">
