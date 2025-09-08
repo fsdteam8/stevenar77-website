@@ -3,7 +3,6 @@ import Link from "next/link";
 import logo from "../../../public/images/white-logo.png";
 import { FaFacebookSquare } from "react-icons/fa";
 import { FaInstagramSquare } from "react-icons/fa";
-import { FaLinkedin } from "react-icons/fa6";
 import { FaTwitter } from "react-icons/fa6";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -27,14 +26,13 @@ const Footer = () => {
               South Florida&apos;s premier PADI dive center. Discover the ocean, join our community, and experience the adventure of a lifetime.
 
             </p>
-            <div className="socails flex gap-2">
-                <FaFacebookSquare className="text-3xl  text-gray-500 duration-700 hover:text-blue-600" />
+            <div className="socails flex mt-4 gap-2">
+                <FaFacebookSquare className="text-4xl  text-white duration-700 hover:text-blue-600" />
                 <div className="relative group">
-                  <FaInstagramSquare className="text-3xl duration-700  text-gray-500" />
-                  <div className="absolute hidden  group-hover:block h-[90%] w-[90%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition text-gray-500 duration-700 bg-gradient-to-r from-[#fa7e1e] via-[#d62976] to-[#4f5bd5] rounded-xs mix-blend-overlay" />
+                  <FaInstagramSquare className="text-4xl duration-700  text-white" />
+                  <div className="absolute hidden  group-hover:block h-[90%] w-[90%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition text-white duration-700 bg-gradient-to-r from-[#fa7e1e] via-[#d62976] to-[#4f5bd5] rounded-xs mix-blend-overlay" />
                 </div>
-                <FaLinkedin className="text-3xl  text-gray-500 duration-700 hover:text-[#0077B5]" />
-                <FaTwitter className="text-3xl  text-gray-500 duration-700 hover:text-blue-400" />
+                <FaTwitter className="text-4xl  text-white duration-700 hover:text-blue-400" />
               </div>
           </div>
 
@@ -182,8 +180,8 @@ const Footer = () => {
           {/*  Newsletter */}
           <div className="space-y-6">
             <div className="space-y-4">
-              <h3 className="font-semibold text-lg">Newsletter</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className="font-semibold text-white text-lg">Newsletter</h3>
+              <p className="text-sm text-white">
                 Subscribe for updates & news
               </p>
               <div className="flex w-full gap-2 max-w-md">

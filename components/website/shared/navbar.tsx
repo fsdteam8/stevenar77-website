@@ -177,7 +177,7 @@ const Navbar = () => {
                   <li
                     key={item.name}
                     className={`transition rounded-md ${
-                      isActive ? "text-teal-500 bg-gray-200" : "text-gray-700"
+                      isActive ? "text-teal-500 " : "text-gray-700"
                     } hover:bg-gray-200 hover:text-teal-500`}
                   >
                     <Link href={item.path} className="px-3 py-1 block">
