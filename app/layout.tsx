@@ -40,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${montserrat.variable} ${geistMono.variable} ${poppins.variable} antialiased`}
+        className={`${geistSans.variable} ${montserrat.variable} ${geistMono.variable} ${poppins.variable} font-poppins antialiased`}
       >
         <MainProviders>
           <Provider> {children} </Provider>
