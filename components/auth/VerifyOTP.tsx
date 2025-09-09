@@ -12,7 +12,7 @@ import { toast } from "sonner";
 export default function VerifyOTP() {
   // ✅ Get email from localStorage
   const [email, setEmail] = useState<string | null>(null);
-  const { verifyOtp, loading } = useAuth();
+  const { onVerifyOtp, loading } = useAuth();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -69,26 +69,38 @@ export default function VerifyOTP() {
       if (index > 0) inputRefs.current[index - 1]?.focus();
     }
   };
+
+  // Submit OTP
   const onSubmit = async () => {
     const otp = otpValue.join("");
     if (!otp) return toast.warning("Please enter the OTP");
 
-    console.log(otp)
-
     try {
-      // ✅ Send only OTP
-      await verifyOtp({ otp });
+      // ⬇️ localStorage থেকে token নেওয়া
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        toast.error("Token not found. Please register again.");
+        return;
+      }
+
+      console.log(`Submitting OTP: ${otp} with Token: ${token}`);
+
+      // OTP + Token  
+      await onVerifyOtp({ otp }, token);
+
       toast.success("OTP verified successfully!");
 
-      // ✅ Remove email from localStorage if stored
-      if (typeof window !== "undefined") localStorage.removeItem("userEmail");
+      // সব localStorage clear
+      if (typeof window !== "undefined") {
+        localStorage.clear();
+      }
 
-      // ✅ Reset inputs
+      // Reset inputs
       setOtpValue(Array(6).fill(""));
       form.reset();
 
-      console.log("OTP verified successfully");
-    } catch {
+    } catch (error) {
+      console.error("OTP verification failed:", error);
       toast.error("OTP verification failed");
     }
   };
