@@ -78,7 +78,7 @@ const ProductDetails = () => {
           {/* Text Section */}
           <div className="order-2 space-y-8 lg:space-y-20 md:order-1">
             {/* Heading */}
-            <h1 className="text-4xl md:text-5xl text-[#27303F] font-semibold  mb-6">
+            <h1 className="text-4xl md:text-4xl text-[#27303F] font-semibold  mb-6">
               AquaLung Revelation 3X Mask
             </h1>
             <p className="flex gap-2 py-2">
