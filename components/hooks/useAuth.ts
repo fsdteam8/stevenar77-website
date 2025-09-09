@@ -3,6 +3,7 @@
 
 import { createUserRegistration, verifyOtpRequest } from "@/lib/api";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface SignUpData {
   firstName: string;
@@ -11,9 +12,9 @@ interface SignUpData {
   password: string;
 }
 
-interface VerifyOtpData {
-  otp: string;
-}
+// interface  {
+//   otp: string;
+// }
 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false);
@@ -33,20 +34,26 @@ export const useAuth = () => {
     }
   };
 
-const verifyOtp = async (data: VerifyOtpData) => {
-  setLoading(true);
-  setError(null);
-  try {
-    // Send the object with otp
-    const response = await verifyOtpRequest(data);
-    setLoading(false);
-    return response;
-  } catch {
-    setError("OTP verification failed");
-    setLoading(false);
-    throw new Error("OTP verification failed");
-  }
-};
+  const onVerifyOtp = async (values: { otp: string }, token: string) => {
+    try {
+      if (!token) {
+        toast.error("No token found. Please sign up again.");
+        return;
+      }
 
-  return { signUp, verifyOtp, loading, error };
+      // OTP + Token backend এ পাঠানো
+      const res = await verifyOtpRequest({ otp: values.otp }, token);
+
+      toast.success("OTP verified successfully!");
+      console.log("Verify OTP response:", res.data);
+
+      // সব clear করে দাও
+      localStorage.clear();
+    } catch (error) {
+      console.error("OTP verification failed:", error);
+      toast.error("Invalid OTP. Please try again.");
+    }
+  };
+
+  return { signUp, onVerifyOtp, loading, error };
 };
