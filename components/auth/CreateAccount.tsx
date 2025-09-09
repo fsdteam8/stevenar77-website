@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "../hooks/useAuth";
 import { toast } from "sonner";
-import {   useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 // ✅ Zod validation schema
 const createAccountSchema = z
@@ -54,31 +54,33 @@ export default function CreateAccount() {
       terms: false,
     },
   });
-const onSubmit = (values: CreateAccountFormValues) => {
-  // Send only fields backend expects
-  signUp({
-    firstName: values.firstName,
-    lastName: values.lastName,
-    email: values.email,
-    password: values.password,
-  })
-    .then(() => {
+
+  const onSubmit = async (values: CreateAccountFormValues) => {
+    try {
+      const res = await signUp({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        password: values.password,
+      });
+
+      const token = res?.data?.accessToken;
+
       if (typeof window !== "undefined") {
         localStorage.setItem("userEmail", values.email);
+        if (token) {
+          localStorage.setItem("accessToken", token);  
+        }
       }
 
-      // ✅ Show success toast only
       toast.success("Account created successfully!");
-
-      // ✅ Reset form
       form.reset();
-
       router.push("/verify-otp");
-    })
-    .catch(() => {
-      // ❌ Handle error if needed
-    });
-};
+    } catch (error) {
+      console.error("Registration failed:", error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
 
   return (
     <div className="flex items-center justify-center bg-white py-10 px-4">
