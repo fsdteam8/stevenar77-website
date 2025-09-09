@@ -9,6 +9,7 @@ export default function page() {
         title="Trips Details"
         subtitle="Start your underwater adventure with our comprehensive beginner courses. From your first breath underwater to becoming a certified diver."
         backgroundImage="/images/imagewater.jpg"
+        size="small"
       />
       <TripsDetails
         image="/images/TripsCard.png"

@@ -9,6 +9,7 @@ export default function Trips() {
         title="International Diving Trips"
         subtitle="Start your underwater adventure with our comprehensive beginner courses. From your first breath underwater to becoming a certified diver."
         backgroundImage="/images/imagewater.jpg"
+        size="small"
       />
       <TripsCard
         image="/images/TripsCard.png"
@@ -17,7 +18,7 @@ export default function Trips() {
 There are more than 50 dive sites scattered around the north and west sides of the island. St. Croix offers variety and there is something for everyone; beginner, intermediate and advanced. The underwater world is stunning! Colorful fish and coral reefs, forests of sea fans and sea whips, while other marine animals hide in caverns and under ledges. Observe turtles, bright parrotfish, blue tangs, queen triggerfish, moray eels and so much more."
         seeMoreLink={`/trips/1`}
         bookNowLink="/booking/st-croix"
-        reverse={false}  
+        reverse={false}
       />
       <TripsCard
         image="/images/TripsCard2.png"
@@ -26,7 +27,7 @@ There are more than 50 dive sites scattered around the north and west sides of t
 There are more than 50 dive sites scattered around the north and west sides of the island. St. Croix offers variety and there is something for everyone; beginner, intermediate and advanced. The underwater world is stunning! Colorful fish and coral reefs, forests of sea fans and sea whips, while other marine animals hide in caverns and under ledges. Observe turtles, bright parrotfish, blue tangs, queen triggerfish, moray eels and so much more."
         seeMoreLink={`/trips/1`}
         bookNowLink="/booking/st-croix"
-        reverse={true} 
+        reverse={true}
       />
       <TripsCard
         image="/images/TripsCard3.png"
@@ -35,7 +36,7 @@ There are more than 50 dive sites scattered around the north and west sides of t
 There are more than 50 dive sites scattered around the north and west sides of the island. St. Croix offers variety and there is something for everyone; beginner, intermediate and advanced. The underwater world is stunning! Colorful fish and coral reefs, forests of sea fans and sea whips, while other marine animals hide in caverns and under ledges. Observe turtles, bright parrotfish, blue tangs, queen triggerfish, moray eels and so much more."
         seeMoreLink={`/trips/1`}
         bookNowLink="/booking/st-croix"
-        reverse={false} 
+        reverse={false}
       />
       <TripsCard
         image="/images/TripsCard4.png"
@@ -44,7 +45,7 @@ There are more than 50 dive sites scattered around the north and west sides of t
 There are more than 50 dive sites scattered around the north and west sides of the island. St. Croix offers variety and there is something for everyone; beginner, intermediate and advanced. The underwater world is stunning! Colorful fish and coral reefs, forests of sea fans and sea whips, while other marine animals hide in caverns and under ledges. Observe turtles, bright parrotfish, blue tangs, queen triggerfish, moray eels and so much more."
         seeMoreLink={`/trips/1`}
         bookNowLink="/booking/st-croix"
-        reverse={true} 
+        reverse={true}
       />
     </div>
   );
