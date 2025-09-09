@@ -18,7 +18,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ✅ New user Registration
+//  New user Registration
 export const createUserRegistration = async (userData: {
   firstName: string; 
   lastName: string;
@@ -30,7 +30,13 @@ export const createUserRegistration = async (userData: {
 };
 
 // ---------------- Verify OTP ----------------
-export const verifyOtpRequest = async (otpData: { otp: string }) => {
-  const response = await api.post("/user/verify-email", otpData);
-  return response.data;
+export const verifyOtpRequest = (data: { otp: string }, token: string) => {
+
+  console.log("Sending OTP with token:", token); // Debugging line
+  console.log("OTP Data:", data); // Debugging line
+  return api.post("/user/verify-email", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,  
+    },
+  });
 };
