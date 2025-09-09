@@ -5,6 +5,7 @@ import WhyLearnUs from "@/components/website/landing/WhyLearnUs";
 
 import React from "react";
 import ScubaStevenar from "@/components/website/landing/ScubaStevenar";
+import Familyreviews from '@/components/website/landing/Familyreviews';
 
 export default function page() {
   return (
@@ -12,6 +13,7 @@ export default function page() {
       <HomeHero />
       <FeaturedClasses />
       <ScubaStevenar />
+      <Familyreviews />
       <WhyLearnUs />
       <StillHaveQuestion />
     </div>
