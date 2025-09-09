@@ -165,7 +165,7 @@ export default function Login() {
       <p className="mt-6 text-center text-sm">
         Don&apos;t have an account?{" "}
         <a
-          href="/signinaspage"
+          href="/create-account"
           className="text-[#0694A2] font-medium hover:underline cursor-pointer"
         >
           Sign Up
