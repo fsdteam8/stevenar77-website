@@ -5,13 +5,48 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselApi,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import FeatureCard from "../shared/FeatureCard";
 import { ChevronLeft, ChevronRight, Clock, Star, UserRound } from "lucide-react";
 
-// Dummy data (reuse your courses array)
-const courses = [
+// ----------------------
+// Types
+// ----------------------
+interface Course {
+  image: string;
+  title: string;
+  description: string;
+  rating: number;
+  reviews: number;
+  duration: string;
+  students: number;
+  features: string[];
+  price: string;
+  ageRestriction?: string;
+}
+
+interface FeatureCardProps {
+  image: string;
+  title: string;
+  description: string;
+  rating: number;
+  reviews: number;
+  duration: string;
+  students: number;
+  features: string[];
+  price: string;
+  ageRestriction?: string;
+  onSeeMore: () => void;
+  onBookNow: () => void;
+  children?: React.ReactNode;
+}
+
+// ----------------------
+// Data
+// ----------------------
+const courses: Course[] = [
   {
     image: "/asset/card.png",
     title: "Open Water Diver",
@@ -66,24 +101,8 @@ const courses = [
   {
     image: "/asset/card.png",
     title: "Dive Master",
-    description: "Take the first step to becoming a pro diver hello how are you bro  coming a pro diver hello how are you bro.",
-    rating: 5.0,
-    reviews: 50,
-    duration: "2-3 weeks",
-    students: 60,
-    features: [
-      "Professional training",
-      "Leadership skills",
-      "Assisting instructors",
-      "Certification paperwork",
-    ],
-    price: "$2,499",
-    ageRestriction: "18+",
-  },
-  {
-    image: "/asset/card.png",
-    title: "Dive Master",
-    description: "Take the first step to becoming a pro diver.",
+    description:
+      "Take the first step to becoming a pro diver hello how are you bro coming a pro diver hello how are you bro.",
     rating: 5.0,
     reviews: 50,
     duration: "2-3 weeks",
@@ -99,9 +118,12 @@ const courses = [
   },
 ];
 
-const FeaturedClasses = () => {
-  const [api, setApi] = React.useState<any>();
-  const [current, setCurrent] = React.useState(0);
+// ----------------------
+// Component
+// ----------------------
+const FeaturedClasses: React.FC = () => {
+  const [api, setApi] = React.useState<CarouselApi | null>(null);
+  const [current, setCurrent] = React.useState<number>(0);
 
   React.useEffect(() => {
     if (!api) return;
@@ -109,40 +131,48 @@ const FeaturedClasses = () => {
     const onSelect = () => setCurrent(api.selectedScrollSnap());
     api.on("select", onSelect);
     onSelect();
+
+    return () => {
+      api.off("select", onSelect);
+    };
   }, [api]);
+
   const itemsPerPage = 4;
   const totalPages = Math.ceil(courses.length / itemsPerPage);
+
   return (
     <section className="py-10">
       <h2 className="text-3xl font-bold text-center mb-8">Featured Classes</h2>
 
-      <Carousel setApi={setApi} className="w-full  container  mx-auto">
-        <CarouselContent>
+      <Carousel setApi={setApi} className="w-full container mx-auto">
+        <CarouselContent className="flex items-stretch">
           {courses.map((course, index) => (
-            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 ">
+            <CarouselItem
+              key={index}
+              className="md:basis-1/2 h-full lg:basis-1/3"
+            >
               <FeatureCard
-                {...course}
+                {...course} // spreads all typed course fields
                 onSeeMore={() => console.log("See More:", course.title)}
                 onBookNow={() => console.log("Book Now:", course.title)}
               >
-                {/* Content */}
                 <div className="p-5 space-y-4">
                   {/* Title + Rating */}
                   <div className="flex justify-between items-center">
-                    <h2 className="text-xl md:text-[24px]  font-medium text-[#27303F] leading-[120%]">
+                    <h2 className="text-xl md:text-[24px] font-medium text-[#27303F] leading-[120%]">
                       {course.title}
                     </h2>
                     <div className="flex items-center text-sm text-gray-600 gap-1">
                       <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
                       <span>{course.rating}</span>
-                      <span className="text-[#68706A] font-normal text-[12px] leading-[150%] ">
+                      <span className="text-[#68706A] font-normal text-[12px] leading-[150%]">
                         ({course.reviews} reviews)
                       </span>
                     </div>
                   </div>
 
                   {/* Description */}
-                  <p className="text-[#68706A] font-normal leading-[150%] mt-[10px ] text-sm md:text-[16px] ">
+                  <p className="text-[#68706A] font-normal leading-[150%] mt-[10px] text-sm md:text-[16px]">
                     {course.description}
                   </p>
 
@@ -165,10 +195,10 @@ const FeaturedClasses = () => {
                     <p className="font-medium mb-4 mt-[20px] text-[20px] leading-[120%] text-[#27303F]">
                       Course Includes:
                     </p>
-                    <ul className="space-y-2  text-[#68706A]">
-                      {course.features.map((feature, index) => (
+                    <ul className="space-y-2 text-[#68706A]">
+                      {course.features.map((feature, idx) => (
                         <li
-                          key={index}
+                          key={idx}
                           className="flex items-center text-[16px] font-normal gap-2"
                         >
                           <span className="h-2 w-2 rounded-full bg-cyan-600" />
@@ -180,7 +210,7 @@ const FeaturedClasses = () => {
 
                   {/* Price + Age */}
                   <div className="flex justify-between items-center">
-                    <p className="text-xl md:text-[24px] leading-[120%]  font-medium text-gray-900">
+                    <p className="text-xl md:text-[24px] leading-[120%] font-medium text-gray-900">
                       {course.price}
                     </p>
                     {course.ageRestriction && (
@@ -189,9 +219,6 @@ const FeaturedClasses = () => {
                       </span>
                     )}
                   </div>
-
-                  {/* Buttons */}
-                  
                 </div>
               </FeatureCard>
             </CarouselItem>
@@ -201,7 +228,11 @@ const FeaturedClasses = () => {
 
       {/* Bottom Controls */}
       <div className="flex items-center justify-center gap-4 mt-6">
-        <Button variant="outline" size="icon" onClick={() => api?.scrollPrev()}>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => api?.scrollPrev()}
+        >
           <ChevronLeft className="w-5 h-5" />
         </Button>
 
@@ -218,7 +249,11 @@ const FeaturedClasses = () => {
           ))}
         </div>
 
-        <Button variant="outline" size="icon" onClick={() => api?.scrollNext()}>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => api?.scrollNext()}
+        >
           <ChevronRight className="w-5 h-5" />
         </Button>
       </div>
