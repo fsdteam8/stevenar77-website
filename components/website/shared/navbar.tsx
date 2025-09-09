@@ -148,10 +148,12 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Home", path: "/" },
-    { name: "Facilities", path: "/facilities" },
-    { name: "Search", path: "/search" },
-    { name: "About Us", path: "/about-us" },
-    { name: "Blogs", path: "/blogs" },
+    { name: "Courses", path: "/courses" },
+    { name: "Schedule", path: "/schedule" },
+    { name: "Trips", path: "/trips" },
+    { name: "Shop", path: "/shop" },
+    { name: "Community ", path: "/community " },
+    { name: "About Us", path: "/about-Us" },
     { name: "Contact Us", path: "/contact-us" },
   ];
 
@@ -177,7 +179,7 @@ const Navbar = () => {
                   <li
                     key={item.name}
                     className={`transition rounded-md ${
-                      isActive ? "text-teal-500 bg-gray-200" : "text-gray-700"
+                      isActive ? "text-teal-500 " : "text-gray-700"
                     } hover:bg-gray-200 hover:text-teal-500`}
                   >
                     <Link href={item.path} className="px-3 py-1 block">
