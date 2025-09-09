@@ -1,12 +1,23 @@
-import StillHaveQuestion from '@/components/website/reusable/stillHaveQuestion'
-import React from 'react'
+import Familyreviews from "@/components/website/landing/Familyreviews";
+import StillHaveQuestion from "@/components/website/reusable/stillHaveQuestion";
+import Hero from "@/components/website/shared/Hero";
+import Products from "@/components/website/shop/products";
+import React from "react";
 
 const page = () => {
   return (
     <div>
-        <StillHaveQuestion />
+      <Hero
+        title="Gear Up for Your Next Dive"
+        subtitle="High-quality scuba equipment, apparel, and accessories — tested and trusted by divers worldwide. From masks to full dive computers, find everything you need for your underwater adventures."
+        backgroundImage="/images/imagewater.jpg"
+        size="small"
+      />
+      <Products />
+      <Familyreviews />
+      <StillHaveQuestion />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

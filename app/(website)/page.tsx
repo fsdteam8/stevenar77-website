@@ -4,6 +4,7 @@ import HomeHero from "@/components/website/landing/Hero";
 import WhyLearnUs from "@/components/website/landing/WhyLearnUs";
 
 import React from "react";
+import Familyreviews from '@/components/website/landing/Familyreviews';
 
 export default function page() {
   return (
@@ -11,6 +12,7 @@ export default function page() {
       <HomeHero />
       <StillHaveQuestion />
       <FeaturedClasses />
+      <Familyreviews />
       <WhyLearnUs />
     </div>
   );
