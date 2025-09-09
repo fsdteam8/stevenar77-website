@@ -82,7 +82,7 @@ export default function TripsDetails({
           {/* Buy Button */}
           <button
             onClick={handleBuyNow}
-            className="bg-[#0694A2] border border-[#0694A2] text-white px-24 py-2 rounded-md cursor-pointer"
+            className="bg-[#0694A2] border border-[#0694A2] text-white px-24 py-2 rounded-md cursor-pointer w-full md:w-auto"
           >
             Buy Now
           </button>
