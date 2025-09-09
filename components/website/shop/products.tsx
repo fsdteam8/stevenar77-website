@@ -311,11 +311,14 @@ const Products = () => {
               ))}
             </div>
 
+            <div className=" flex items-center justify-between">
+
             {/* Results Info */}
             <div className="text-sm text-gray-600 mb-4">
               Showing 1 to 9 of 12 results
             </div>
 
+            <div className="">
             {/* Pagination */}
             <Pagination>
               <PaginationContent>
@@ -368,6 +371,9 @@ const Products = () => {
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
+            </div>
+            </div>
+
           </div>
         </div>
       </div>
