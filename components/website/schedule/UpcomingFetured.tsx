@@ -151,13 +151,16 @@ const UpcomingFetured = () => {
                     <Clock className="h-4 w-4" />
                     {course.duration}
                   </span>
-
-                  <span className="flex items-center gap-2">
-                    <Locate className="h-4 w-4" />
-                    <span className="text-[12px] text-[#68706A]">
-                      {course.location}
+                  {course?.location?.length || -1 >= 0 ? (
+                    <span className="flex items-center gap-2">
+                      <Locate className="h-4 w-4" />
+                      <span className="text-[12px] text-[#68706A]">
+                        {course.location}
+                      </span>
                     </span>
-                  </span>
+                  ) : (
+                    ""
+                  )}
                 </div>
 
                 {/* Features */}

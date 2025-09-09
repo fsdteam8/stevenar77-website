@@ -116,10 +116,10 @@ const FeaturedClasses = () => {
     <section className="py-10">
       <h2 className="text-3xl font-bold text-center mb-8">Featured Classes</h2>
 
-      <Carousel setApi={setApi} className="w-full container  mx-auto">
+      <Carousel setApi={setApi} className="w-full  container  mx-auto">
         <CarouselContent>
           {courses.map((course, index) => (
-            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 ">
               <FeatureCard
                 {...course}
                 onSeeMore={() => console.log("See More:", course.title)}
