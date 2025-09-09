@@ -1,5 +1,12 @@
+import YourBookingCourse from "@/components/website/booking/YourBookingCourse";
 import React from "react";
 
-export default function page() {
-  return <div>page</div>;
-}
+const page = () => {
+  return (
+    <div>
+      <YourBookingCourse />
+    </div>
+  );
+};
+
+export default page;
