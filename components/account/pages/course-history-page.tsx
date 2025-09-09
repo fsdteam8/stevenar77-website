@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+
 import { CourseDetailModal } from "@/components/modals/course-detail-modal";
 import { DeleteConfirmationModal } from "@/components/modals/delete-confirmation-modal";
-import { Pagination } from "../pagination";
 import { CourseCard } from "../course-card";
+import { Pagination } from "../pagination";
 
 const mockCourses = [
   {
@@ -166,8 +167,8 @@ export function CourseHistoryPage() {
   };
 
   return (
-    <div className="container mx-auto">
-      <div className="space-y-4">
+    <div className="container mx-auto px-2 sm:px-0">
+      <div className="space-y-3 sm:space-y-4">
         {mockCourses.map((course) => (
           <CourseCard
             key={course.id}
@@ -181,13 +182,15 @@ export function CourseHistoryPage() {
         ))}
       </div>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        totalResults={totalResults}
-        resultsPerPage={resultsPerPage}
-        onPageChange={setCurrentPage}
-      />
+      <div className="mt-6 sm:mt-8">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalResults={totalResults}
+          resultsPerPage={resultsPerPage}
+          onPageChange={setCurrentPage}
+        />
+      </div>
 
       <CourseDetailModal
         course={selectedCourse}

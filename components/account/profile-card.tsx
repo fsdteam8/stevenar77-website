@@ -44,27 +44,27 @@ export function ProfileCard({
   };
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-sm h-[calc(100vh-150px)]">
-      <div className="profile-card-bg h-32 relative bg-[#0694A2]">
+    <div className="bg-white rounded-lg overflow-hidden shadow-sm md:h-[calc(100vh-100px)]">
+      <div className="profile-card-bg h-24 sm:h-32 relative">
         {showEditButton && (
           <Button
             size="sm"
-            className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 text-white border-white/30"
+            className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-white/20 hover:bg-white/30 text-white border-white/30"
             onClick={onEdit}
           >
             <Edit className="w-4 h-4" />
           </Button>
         )}
       </div>
-      <div className="px-6 pb-6 -mt-16 relative">
+      <div className="px-4 sm:px-6 pb-4 sm:pb-6 -mt-12 sm:-mt-16 relative">
         <div className="flex flex-col items-center">
           <div className="relative group">
             <Avatar
-              className="w-24 h-24 border-4 border-white mb-4 cursor-pointer"
+              className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-white mb-4 cursor-pointer"
               onClick={isEditing ? handleImageUpload : undefined}
             >
               <AvatarImage src={avatarUrl || "/placeholder.svg"} alt={name} />
-              <AvatarFallback className="text-xl font-semibold bg-[#68706a] text-white">
+              <AvatarFallback className="text-lg sm:text-xl font-semibold bg-[#68706a] text-white">
                 {name
                   .split(" ")
                   .map((n) => n[0])
@@ -76,7 +76,7 @@ export function ProfileCard({
                 className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer mb-4"
                 onClick={handleImageUpload}
               >
-                <Camera className="w-6 h-6 text-white" />
+                <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
             )}
           </div>
@@ -89,17 +89,21 @@ export function ProfileCard({
             className="hidden"
           />
 
-          <h3 className="text-xl font-semibold text-[#364039] mb-1">{name}</h3>
-          <p className="text-[#68706a] text-sm mb-6">{email}</p>
+          <h3 className="text-lg sm:text-xl font-semibold text-[#364039] mb-1 text-center">
+            {name}
+          </h3>
+          <p className="text-[#68706a] text-sm mb-4 sm:mb-6 text-center">
+            {email}
+          </p>
 
-          <div className="w-full space-y-3 text-sm">
+          <div className="w-full space-y-2 sm:space-y-3 text-sm">
             <div>
               <span className="font-medium text-[#364039]">Name: </span>
               <span className="text-[#68706a]">{name}</span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">Email: </span>
-              <span className="text-[#68706a]">{email}</span>
+              <span className="text-[#68706a] break-all">{email}</span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">Phone: </span>

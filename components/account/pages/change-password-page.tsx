@@ -88,8 +88,8 @@ export function ChangePasswordPage() {
   );
 
   return (
-    <div className="container mx-auto">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 ">
+    <div className="container mx-auto px-2 sm:px-0">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <div className="lg:col-span-1">
           <ProfileCard
             name="Gustavo Mango"
@@ -99,19 +99,19 @@ export function ChangePasswordPage() {
           />
         </div>
 
-        <div className="lg:col-span-2 ">
-          <div className="bg-white rounded-lg p-6 shadow-sm h-[calc(100vh-150px)]">
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-[#364039] mb-2">
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm h-[calc(100vh-100px)]">
+            <div className="mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-semibold text-[#364039] mb-2">
                 Changes Password
               </h2>
-              <p className="text-[#68706a]">
+              <p className="text-[#68706a] text-sm sm:text-base">
                 Manage your account preferences, security settings, and privacy
                 options.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div>
                 <Label
                   htmlFor="currentPassword"
@@ -214,7 +214,7 @@ export function ChangePasswordPage() {
               </div>
             </div>
 
-            <div className="mt-6 space-y-3">
+            <div className="mt-4 sm:mt-6 space-y-2 sm:space-y-3">
               <ValidationRule
                 isValid={validationRules.minLength}
                 text="Minimum 8-12 characters (recommend 12+ for stronger security)."
@@ -241,17 +241,17 @@ export function ChangePasswordPage() {
               />
             </div>
 
-            <div className="flex justify-end space-x-4 mt-8">
+            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4 mt-6 sm:mt-8">
               <Button
                 variant="outline"
                 onClick={handleDiscard}
-                className="text-[#68706a] border-[#e6e7e6] bg-transparent"
+                className="text-[#68706a] border-[#e6e7e6] bg-transparent w-full sm:w-auto"
               >
                 Discard Changes
               </Button>
               <Button
                 onClick={handleSave}
-                className="teal-primary text-white hover:bg-[#0694a2]/90"
+                className="teal-primary text-white hover:bg-[#0694a2]/90 w-full sm:w-auto"
               >
                 Save Changes
               </Button>

@@ -44,11 +44,11 @@ export function CourseCard({
         isHighlighted && "ring-2 ring-[#0694a2] ring-opacity-50"
       )}
     >
-      <div className="flex space-x-4">
-        <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+      <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+        <div className="w-full sm:w-24 h-48 sm:h-24 rounded-lg overflow-hidden flex-shrink-0">
           <Image
-            width={96}
-            height={96}
+            width={100}
+            height={100}
             src={imageUrl || "/placeholder.svg"}
             alt={title}
             className="w-full h-full object-cover"
@@ -56,13 +56,13 @@ export function CourseCard({
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="text-lg font-semibold text-[#364039] truncate">
+          <div className="flex flex-col sm:flex-row sm:justify-between items-start mb-2">
+            <h3 className="text-lg font-semibold text-[#364039] mb-2 sm:mb-0">
               {title}
             </h3>
             <Badge
               className={cn(
-                "ml-2 px-3 py-1 text-xs font-medium rounded-full",
+                "self-start sm:ml-2 px-3 py-1 text-xs font-medium rounded-full",
                 status === "complete" ? "status-complete" : "status-pending"
               )}
             >
@@ -74,20 +74,20 @@ export function CourseCard({
             {description}
           </p>
 
-          <div className="flex flex-wrap gap-4 text-sm text-[#68706a] mb-3">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-4 text-sm text-[#68706a] mb-3">
             <div className="flex items-center space-x-1">
               <Calendar className="w-4 h-4" />
-              <span>{date}</span>
+              <span className="truncate">{date}</span>
             </div>
             <div className="flex items-center space-x-1">
               <Clock className="w-4 h-4" />
               <span>{time}</span>
             </div>
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center space-x-1 col-span-2 sm:col-span-1">
               <MapPin className="w-4 h-4" />
-              <span>{location}</span>
+              <span className="truncate">{location}</span>
             </div>
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center space-x-1 col-span-2 sm:col-span-1">
               <Users className="w-4 h-4" />
               <span>
                 {participants} participant{participants !== 1 ? "s" : ""}

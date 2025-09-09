@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+
+import { LogoutModal } from "@/components/modals/logout-modal";
 import { ProfilePage } from "./pages/profile-page";
 import { CourseHistoryPage } from "./pages/course-history-page";
 import { TripsHistoryPage } from "./pages/trips-history-page";
@@ -8,7 +10,6 @@ import { ShopHistoryPage } from "./pages/shop-history-page";
 import { ChangePasswordPage } from "./pages/change-password-page";
 import { Header } from "./header";
 import { Sidebar } from "./sidebar";
-import { LogoutModal } from "../modals/logout-modal";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -44,7 +45,9 @@ export default function DashboardPage() {
       <Header />
       <div className="flex">
         <Sidebar activeTab={activeTab} onNavigate={handleNavigation} />
-        <main className="flex-1 ml-[312px] p-6">{renderContent()}</main>
+        <main className="flex-1 ml-0 md:ml-[408px] p-4 sm:p-6 pt-16 md:pt-6">
+          {renderContent()}
+        </main>
       </div>
       <LogoutModal
         isOpen={showLogoutModal}

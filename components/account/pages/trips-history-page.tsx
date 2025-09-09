@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+
 import { TripDetailModal } from "@/components/modals/trip-detail-modal";
 import { DeleteConfirmationModal } from "@/components/modals/delete-confirmation-modal";
-import { CourseCard } from "../course-card";
 import { Pagination } from "../pagination";
+import { CourseCard } from "../course-card";
 
 const mockTrips = [
   {
@@ -124,8 +125,8 @@ export function TripsHistoryPage() {
   };
 
   return (
-    <div className="container mx-auto">
-      <div className="space-y-4">
+    <div className="container mx-auto px-2 sm:px-0">
+      <div className="space-y-3 sm:space-y-4">
         {mockTrips.map((trip) => (
           <CourseCard
             key={trip.id}
@@ -137,13 +138,15 @@ export function TripsHistoryPage() {
         ))}
       </div>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        totalResults={totalResults}
-        resultsPerPage={resultsPerPage}
-        onPageChange={setCurrentPage}
-      />
+      <div className="mt-6 sm:mt-8">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalResults={totalResults}
+          resultsPerPage={resultsPerPage}
+          onPageChange={setCurrentPage}
+        />
+      </div>
 
       <TripDetailModal
         trip={selectedTrip}
