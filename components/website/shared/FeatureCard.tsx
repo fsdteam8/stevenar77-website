@@ -31,7 +31,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 }) => {
   return (
     <section>
-      <div className="container mx-auto">
+      <div className="container mx-auto h-full">
         <div className="py-1 my-5 w-full h-full overflow-hidden rounded-2xl shadow-lg bg-white">
           {/* Course Image */}
           <div className="relative h-52 w-full">
