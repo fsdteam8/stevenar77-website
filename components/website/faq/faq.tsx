@@ -72,18 +72,7 @@ const faqData: FaqItemType[] = [
     answer:
       "This is the answer for updating your email. Just keep nibh condimentum class. Augue orci conubia suscipit in condimentum maecenas congue magna velit.",
   },
-  {
-    question:
-      "This is the answer for the second question. You can nibh condimentum class. Augue orci conubia suscipit in condimentum at libero ultrices?",
-    answer:
-      "This is the answer for the long question example. Massa nibh sed erat ac est viverra nostra tellus, et aenean a phasellus rhoncus penatibus curae leo molestie.",
-  },
-  {
-    question:
-      "This is the answer for the second question. You can nibh condimentum class. Augue orci conubia suscipit in condimentum Aenean at libero ultrices?",
-    answer:
-      "Another answer example. Massa nibh sed erat ac est viverra nostra tellus, et aenean a phasellus rhoncus penatibus curae leo molestie.",
-  },
+  
 ];
 
 export default function FaqSection() {
@@ -94,7 +83,7 @@ export default function FaqSection() {
   };
 
   return (
-    <section className="bg-[#F8F9FA]">
+    <section className="bg-[#FFFEFD]">
       <div className="mx-auto container space-y-2 py-16">
         <div className="flex flex-col rounded-xl">
           {faqData.map((faq, index) => (
