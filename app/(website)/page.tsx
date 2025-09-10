@@ -9,7 +9,7 @@ import Familyreviews from '@/components/website/landing/Familyreviews';
 
 export default function page() {
   return (
-    <div className=" py-10">
+    <div className="">
       <HomeHero />
       <FeaturedClasses />
       <ScubaStevenar />

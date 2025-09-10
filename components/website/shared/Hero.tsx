@@ -45,10 +45,10 @@ const Hero: React.FC<HeroProps> = ({
       />
 
       {/* Overlay Content */}
-      <div className="relative z-10 max-w-3xl px-4">
+      <div className="relative z-10 max-w-4xl px-4">
         <h1 className="text-4xl md:text-5xl font-bold font-montserrat">{title}</h1>
         {subtitle && (
-          <p className="mt-[8px] text-[16px] leading-[150%] text-[#FFFFFF]  font-normal">{subtitle}</p>
+          <p className="mt-2 text-[16px] leading-[150%] text-[#FFFFFF]  font-normal">{subtitle}</p>
         )}
 
         {showButtons && (
