@@ -3,8 +3,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme{
-  --font-montserrat:var(--font-montserrat);
+@theme {
+  --font-montserrat: var(--font-montserrat);
   --font-poppins: var(--font-poppins), sans-serif;
 }
 
@@ -50,7 +50,6 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  
 }
 
 :root {
@@ -59,7 +58,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: #0694A2;
+  --primary: #0694a2;
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -129,4 +128,36 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom styles for the diving dashboard using Figma colors */
+.teal-primary {
+  background-color: #0694a2;
+}
+
+.teal-primary-text {
+  color: #0694a2;
+}
+
+.status-complete {
+  background-color: #0694a2;
+  color: white;
+}
+
+.status-pending {
+  background-color: #ffbf0f;
+  color: #364039;
+}
+
+.header-bg {
+  background-color: #0694a2;
+}
+
+.sidebar-active {
+  background-color: #0694a2;
+  color: white;
+}
+
+.profile-card-bg {
+  background: linear-gradient(135deg, #0694a2 0%, #68b3c0 100%);
 }
