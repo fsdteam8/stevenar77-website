@@ -142,8 +142,8 @@ const FeaturedClasses: React.FC = () => {
 
   return (
     <section className="py-10">
-      <h2 className="text-3xl font-bold text-center mb-8">Featured Classes</h2>
-
+      <h2 className="text-3xl md:text-[48px] font-semibold text-center font-montserrat mb-8">Featured Classes</h2>
+      <p className="text-3xl md:text-[48px] font-semibold text-center font-montserrat mb-8">Start your scuba journey with our comprehensive PADI certified courses</p>
       <Carousel setApi={setApi} className="w-full container mx-auto">
         <CarouselContent className="flex items-stretch">
           {courses.map((course, index) => (
