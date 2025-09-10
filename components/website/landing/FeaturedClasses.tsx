@@ -27,21 +27,21 @@ interface Course {
   ageRestriction?: string;
 }
 
-interface FeatureCardProps {
-  image: string;
-  title: string;
-  description: string;
-  rating: number;
-  reviews: number;
-  duration: string;
-  students: number;
-  features: string[];
-  price: string;
-  ageRestriction?: string;
-  onSeeMore: () => void;
-  onBookNow: () => void;
-  children?: React.ReactNode;
-}
+// interface FeatureCardProps {
+//   image: string;
+//   title: string;
+//   description: string;
+//   rating: number;
+//   reviews: number;
+//   duration: string;
+//   students: number;
+//   features: string[];
+//   price: string;
+//   ageRestriction?: string;
+//   onSeeMore: () => void;
+//   onBookNow: () => void;
+//   children?: React.ReactNode;
+// }
 
 // ----------------------
 // Data
