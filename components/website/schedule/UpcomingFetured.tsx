@@ -104,7 +104,7 @@ const courses = [
 ];
 
 const UpcomingFetured = () => {
-  const [current, setCurrent] = React.useState(0);
+  const [current,] = React.useState(0);
 
   const itemsPerPage = 4;
   const totalPages = Math.ceil(courses.length / itemsPerPage);

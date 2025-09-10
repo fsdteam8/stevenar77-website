@@ -10,7 +10,7 @@ import {
   Clock,
   Locate,
   Star,
-  UserRound,
+ 
 } from "lucide-react";
 
 // Dummy data (reuse your courses array)
@@ -104,7 +104,7 @@ const courses = [
 ];
 
 const CourseFeatured = () => {
-  const [current, setCurrent] = React.useState(0);
+  const [current] = React.useState(0);
 
   const itemsPerPage = 4;
   const totalPages = Math.ceil(courses.length / itemsPerPage);
