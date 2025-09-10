@@ -13,9 +13,9 @@ const OurPartners = () => {
         </p>
 
         {/* Content */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 justify-center gap-12 text-[#27303F]">
+        <div className="mt-12 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2   gap-12 text-[#27303F]">
           {/* Left Column */}
-          <div>
+          <div className=" mx-auto">
             <h3 className="font-semibold text-lg text-[#27303F] mb-4">
               Dive Gear Vendors:
             </h3>
@@ -32,9 +32,9 @@ const OurPartners = () => {
           </div>
 
           {/* Right Column */}
-          <div className="space-y-8">
+          <div className="space-y-8  mx-auto">
             <div>
-              <h3 className="font-semibold text-lg mb-4">Dive Gear Vendors:</h3>
+              <h3 className="font-semibold text-lg text-[#27303F] mb-4">Dive Gear Vendors:</h3>
               <ul className="space-y-2 font-normal leading-[150%] text-[#68706A">
                 <li>• Malibu Scuba Repair</li>
                 <li>• Atomic Aquatics</li>
