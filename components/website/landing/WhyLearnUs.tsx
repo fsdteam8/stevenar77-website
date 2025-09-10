@@ -4,7 +4,7 @@ import { Users } from "lucide-react";
 
 const WhyLearnUs = () => {
   return (
-    <div className="mt-[60px] lg:mt-[80px]">
+    <div className="mt-[60px] lg:mt-[80px] mx-auto container">
       <div className="mb-[30px]  text-center">
         <h2 className="text-[#252F3F] text-[48px]  leading-[120%] pb-2">
           Why Learn with Us

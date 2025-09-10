@@ -152,8 +152,8 @@ const Navbar = () => {
     { name: "Schedule", path: "/schedule" },
     { name: "Trips", path: "/trips" },
     { name: "Shop", path: "/shop" },
-    { name: "Community ", path: "/community " },
-    { name: "About Us", path: "/about-Us" },
+    { name: "Community ", path: "/community" },
+    { name: "About Us", path: "/about-us" },
     { name: "Contact Us", path: "/contact-us" },
   ];
 

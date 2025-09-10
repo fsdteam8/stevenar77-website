@@ -23,17 +23,17 @@ const Footer = () => {
               className="mb-4"
             />
             <p className="text-sm text-white max-w-xs">
-              South Florida&apos;s premier PADI dive center. Discover the ocean, join our community, and experience the adventure of a lifetime.
-
+              South Florida&apos;s premier PADI dive center. Discover the ocean,
+              join our community, and experience the adventure of a lifetime.
             </p>
             <div className="socails flex mt-4 gap-2">
-                <FaFacebookSquare className="text-4xl  text-white duration-700 hover:text-blue-600" />
-                <div className="relative group">
-                  <FaInstagramSquare className="text-4xl duration-700  text-white" />
-                  <div className="absolute hidden  group-hover:block h-[90%] w-[90%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition text-white duration-700 bg-gradient-to-r from-[#fa7e1e] via-[#d62976] to-[#4f5bd5] rounded-xs mix-blend-overlay" />
-                </div>
-                <FaTwitter className="text-4xl  text-white duration-700 hover:text-blue-400" />
+              <FaFacebookSquare className="text-4xl  text-white duration-700 hover:text-blue-600" />
+              <div className="relative group">
+                <FaInstagramSquare className="text-4xl duration-700  text-white" />
+                <div className="absolute hidden  group-hover:block h-[90%] w-[90%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition text-white duration-700 bg-gradient-to-r from-[#fa7e1e] via-[#d62976] to-[#4f5bd5] rounded-xs mix-blend-overlay" />
               </div>
+              <FaTwitter className="text-4xl  text-white duration-700 hover:text-blue-400" />
+            </div>
           </div>
 
           {/* Quick Links */}
@@ -61,7 +61,7 @@ const Footer = () => {
                   href="/search"
                   className="text-sm text-white hover:text-primary transition-colors"
                 >
-                  Courses 
+                  Courses
                 </Link>
               </li>
               <li>
@@ -116,7 +116,7 @@ const Footer = () => {
                   href="/blogs"
                   className="text-sm text-white hover:text-primary transition-colors"
                 >
-                  Advances Open Water 
+                  Advances Open Water
                 </Link>
               </li>
               <li>
@@ -145,7 +145,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/terms-conditions"
+                  href="/terms-condition"
                   className="text-sm text-white hover:text-primary transition-colors"
                 >
                   Terms & Conditions
@@ -153,7 +153,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/terms-conditions"
+                  href="/privacy-pollicy"
                   className="text-sm text-white hover:text-primary transition-colors"
                 >
                   Privacy Pollicy
@@ -181,9 +181,7 @@ const Footer = () => {
           <div className="space-y-6">
             <div className="space-y-4">
               <h3 className="font-semibold text-white text-lg">Newsletter</h3>
-              <p className="text-sm text-white">
-                Subscribe for updates & news
-              </p>
+              <p className="text-sm text-white">Subscribe for updates & news</p>
               <div className="flex w-full gap-2 max-w-md">
                 <Input
                   type="email"
@@ -194,7 +192,6 @@ const Footer = () => {
                   Subscribe
                 </Button>
               </div>
-              
             </div>
           </div>
         </div>
@@ -202,7 +199,8 @@ const Footer = () => {
         {/* Divider and Copyright */}
         <div className="mt-5 pt-5 border-t border-primary/20">
           <p className="text-center text-sm pb-0 text-white">
-            © 2025 ALH Hub. All rights reserved.
+            © 2024 Scuba Life. All rights reserved. | PADI Dive Center #S-12345
+            | Licensed & Insured
           </p>
         </div>
       </div>
