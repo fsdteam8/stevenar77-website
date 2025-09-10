@@ -22,67 +22,25 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useSession, signOut } from "next-auth/react";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-
-// Interfaces
-interface UserAvatar {
-  url: string;
-}
-
-interface SessionUser {
-  id: string;
-  name?: string;
-  image?: string;
-  role?: string;
-}
-
-interface Session {
-  user?: SessionUser;
-}
-
-interface UserResponse {
-  success: boolean;
-  message: string;
-  data: {
-    avatar?: UserAvatar;
-    name?: string;
-    role?: string;
-    _id: string;
-  };
-}
-
-// Helper function to get session from localStorage
-const getSessionFromStorage = (): Session | null => {
-  if (typeof window === "undefined") return null;
-  const sessionStr = localStorage.getItem("session");
-  return sessionStr ? JSON.parse(sessionStr) : null;
-};
 
 const Navbar = () => {
   const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const [session, setSession] = useState<Session | null>(null);
-  const [status, setStatus] = useState<
-    "loading" | "authenticated" | "unauthenticated"
-  >("loading");
+  const { data: session, status } = useSession();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
+  console.log(session);
   const isLoggedIn = !!session?.user;
-  const displayAvatar = avatarUrl || session?.user?.image || undefined;
+  const displayAvatar = avatarUrl || session?.user?.email || undefined;
 
-  // Load session on mount
-  useEffect(() => {
-    const loadedSession = getSessionFromStorage();
-    setSession(loadedSession);
-    setStatus(loadedSession ? "authenticated" : "unauthenticated");
-  }, []);
-
-  // Fetch user avatar
+  // Fetch user avatar from API
   useEffect(() => {
     const fetchUser = async () => {
       if (!session?.user?.id) return;
@@ -90,7 +48,7 @@ const Navbar = () => {
       try {
         const res = await fetch(`${baseUrl}/user/${session.user.id}`);
         if (!res.ok) throw new Error("Failed to fetch user");
-        const data: UserResponse = await res.json();
+        const data = await res.json();
         if (data.success && data.data.avatar?.url) {
           setAvatarUrl(data.data.avatar.url);
         } else {
@@ -129,12 +87,9 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("session");
-    setSession(null);
-    setStatus("unauthenticated");
+  const handleLogout = async () => {
     setLogoutModalOpen(false);
-    window.location.href = "/login";
+    await signOut({ callbackUrl: "/login" });
   };
 
   const getInitials = (name?: string | null) => {
@@ -203,14 +158,14 @@ const Navbar = () => {
                       <Avatar className="h-10 w-10">
                         <AvatarImage
                           src={displayAvatar}
-                          alt={session.user?.name || ""}
+                          alt={session.user?.email || ""}
                         />
                         <AvatarFallback>
-                          {getInitials(session.user?.name)}
+                          {getInitials(session.user?.email)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col text-left">
-                        <div className="font-medium">{session.user?.name}</div>
+                        <div className="font-medium">{session.user?.email}</div>
                         <div className="text-sm text-muted-foreground">
                           {session.user?.role}
                         </div>
@@ -245,10 +200,10 @@ const Navbar = () => {
                 <Avatar className="h-8 w-8">
                   <AvatarImage
                     src={displayAvatar}
-                    alt={session.user?.name || ""}
+                    alt={session.user?.email || ""}
                   />
                   <AvatarFallback>
-                    {getInitials(session.user?.name)}
+                    {getInitials(session.user?.email)}
                   </AvatarFallback>
                 </Avatar>
               )}
@@ -306,14 +261,14 @@ const Navbar = () => {
                   <Avatar className="h-8 w-8">
                     <AvatarImage
                       src={displayAvatar}
-                      alt={session.user?.name || ""}
+                      alt={session.user?.email || ""}
                     />
                     <AvatarFallback>
-                      {getInitials(session.user?.name)}
+                      {getInitials(session.user?.email)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col text-left">
-                    <div className="font-medium">{session.user?.name}</div>
+                    <div className="font-medium">{session.user?.email}</div>
                     <div className="text-sm text-muted-foreground">
                       {session.user?.role}
                     </div>
