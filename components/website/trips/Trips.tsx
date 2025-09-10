@@ -21,7 +21,7 @@ There are more than 50 dive sites scattered around the north and west sides of t
         reverse={false}
       />
       <TripsCard
-        image="/images/TripsCard2.png"
+        image="/images/tripsCard2.png"
         title="St Croix, U.S. Virgin Island"
         shortDescription="Nowhere else in the Caribbean can you dive coral reefs, wrecks, walls and a pier – all in one day if you like!
 There are more than 50 dive sites scattered around the north and west sides of the island. St. Croix offers variety and there is something for everyone; beginner, intermediate and advanced. The underwater world is stunning! Colorful fish and coral reefs, forests of sea fans and sea whips, while other marine animals hide in caverns and under ledges. Observe turtles, bright parrotfish, blue tangs, queen triggerfish, moray eels and so much more."
@@ -30,7 +30,7 @@ There are more than 50 dive sites scattered around the north and west sides of t
         reverse={true}
       />
       <TripsCard
-        image="/images/TripsCard3.png"
+        image="/images/tripsCard3.png"
         title="St Croix, U.S. Virgin Island"
         shortDescription="Nowhere else in the Caribbean can you dive coral reefs, wrecks, walls and a pier – all in one day if you like!
 There are more than 50 dive sites scattered around the north and west sides of the island. St. Croix offers variety and there is something for everyone; beginner, intermediate and advanced. The underwater world is stunning! Colorful fish and coral reefs, forests of sea fans and sea whips, while other marine animals hide in caverns and under ledges. Observe turtles, bright parrotfish, blue tangs, queen triggerfish, moray eels and so much more."
@@ -39,7 +39,7 @@ There are more than 50 dive sites scattered around the north and west sides of t
         reverse={false}
       />
       <TripsCard
-        image="/images/TripsCard4.png"
+        image="/images/tripsCard4.png"
         title="St Croix, U.S. Virgin Island"
         shortDescription="Nowhere else in the Caribbean can you dive coral reefs, wrecks, walls and a pier – all in one day if you like!
 There are more than 50 dive sites scattered around the north and west sides of the island. St. Croix offers variety and there is something for everyone; beginner, intermediate and advanced. The underwater world is stunning! Colorful fish and coral reefs, forests of sea fans and sea whips, while other marine animals hide in caverns and under ledges. Observe turtles, bright parrotfish, blue tangs, queen triggerfish, moray eels and so much more."
