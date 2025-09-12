@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { useContact } from "@/services/hooks/contact/useContact";
 
 const formSchema = z.object({
   firstName: z.string().min(1, "First Name is required"),
@@ -31,6 +32,7 @@ const formSchema = z.object({
 });
 
 export default function GetInTouch() {
+  const contactMutation = useContact();
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,14 +48,18 @@ export default function GetInTouch() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
+  const { agree, ...payload } = values; // exclude "agree" before sending
 
-    // শুধু console এ data দেখানো হবে
-    console.log("Form Data:", values);
-    toast.success("Form submitted successfully!");
-
-    setLoading(false);
-  }
+  contactMutation.mutate(payload, {
+    onSuccess: (res) => {
+      toast.success(res.message || "Message sent successfully!");
+      form.reset();
+    },
+    onError: (err) => {
+      toast.error(err.message || "Something went wrong. Please try again.");
+    },
+  });
+}
 
   return (
     <div className="bg-[#FFFEFD] py-2 md:py-32">
