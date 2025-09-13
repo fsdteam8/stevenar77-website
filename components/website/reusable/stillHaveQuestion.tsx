@@ -7,7 +7,7 @@ const StillHaveQuestion = ({
   subHeading = "Our team is here to provide personalized guidance and support reach out anytime.", // Default subheading
   buttonText = "Contact Us", // Default button text
   showButton = true, // Flag to conditionally render the button
-  buttonlink = "/"
+  buttonlink = "/contact-us"
 }) => {
   return (
    <section className="p-4 sm:p-20 bg-[#F8F9FA] bg-cover">

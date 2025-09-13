@@ -13,12 +13,14 @@ import {
 } from "@/components/ui/pagination";
 import ShopProductCard from "../shared/ShopProductCard";
 import { useProducts } from "@/services/hooks/product/useProducts";
+import { useRouter } from "next/navigation";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data, isLoading, isError, error } = useProducts();
+    const router = useRouter();
 
   if (isLoading) return <p className="text-center">Loading...</p>;
   if (isError) return <p className="text-center text-red-500">{error.message}</p>;
@@ -53,7 +55,7 @@ const Products = () => {
               rating={product.averageRating}
               reviews={product.totalReviews}
               price={product.price}
-              onSeeMore={() => console.log("See details:", product._id)}
+              onSeeMore={() => router.push(`/shop/${product._id}`)}
               onBookNow={() => console.log("Add to cart:", product._id)}
             />
           ))}
