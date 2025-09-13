@@ -1,4 +1,5 @@
 "use client"
+import CourseFeatured from '@/components/website/course/CourseFeatured'
 import Familyreviews from '@/components/website/landing/Familyreviews'
 import StillHaveQuestion from '@/components/website/reusable/stillHaveQuestion'
 import Hero from '@/components/website/shared/Hero'
@@ -13,6 +14,7 @@ const page = () => {
       backgroundImage="/images/imagewater.jpg"
       size= "small"
       />
+      <CourseFeatured />
       <Familyreviews />
       <StillHaveQuestion />
     </div>

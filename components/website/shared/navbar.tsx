@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { CircleUserRound, LogOut, Menu, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -147,7 +147,7 @@ const Navbar = () => {
           </div>
 
           {/* Right Section */}
-          <div className="flex-shrink-0 flex items-center gap-4">
+          <div className=" flex items-center gap-4">
             {status === "loading" ? (
               <LoadingPlaceholder />
             ) : isLoggedIn ? (
@@ -172,16 +172,18 @@ const Navbar = () => {
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="end">
+                  <DropdownMenuContent className="w-56 " align="end">
                     <Link href="/account">
-                      <DropdownMenuItem>Profile</DropdownMenuItem>
+                      <DropdownMenuItem className="cursor-pointer">
+                        <CircleUserRound /> Profile
+                      </DropdownMenuItem>
                     </Link>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => setLogoutModalOpen(true)}
-                      className="text-red-500"
+                      className="text-red-500 cursor-pointer"
                     >
-                      Log out
+                      <LogOut /> Log out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
