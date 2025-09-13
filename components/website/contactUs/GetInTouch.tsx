@@ -33,7 +33,7 @@ const formSchema = z.object({
 
 export default function GetInTouch() {
   const contactMutation = useContact();
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,7 +48,7 @@ export default function GetInTouch() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-  const { agree, ...payload } = values; // exclude "agree" before sending
+  const {  ...payload } = values; // exclude "agree" before sending
 
   contactMutation.mutate(payload, {
     onSuccess: (res) => {

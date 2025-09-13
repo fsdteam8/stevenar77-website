@@ -3,16 +3,16 @@ import StillHaveQuestion from "@/components/website/reusable/stillHaveQuestion";
 import Hero from "@/components/website/shared/Hero";
 import React from "react";
 
-export default function page() {
+export default function Page() {
   return (
     <div>
       <Hero
-        title="Courses Details"
-        subtitle="Start your underwater adventure with our comprehensive beginner courses. From your first breath underwater to becoming a certified diver."
+        title="Course Details"
+        subtitle="Start your underwater adventure with our comprehensive courses."
         backgroundImage="/images/imagewater.jpg"
         size="small"
       />
-      <Rescuedivers />
+      <Rescuedivers /> 
       <StillHaveQuestion />
     </div>
   );
