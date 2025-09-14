@@ -15,7 +15,7 @@ export interface Review {
   _id: string;
   userId: User | null;       // user may be null
   facility?: Facility | null; // facility is optional
-  productId: string;          // included in API response
+  productId?: string;         // optional now
   star: number;
   comment: string;
   createdAt: string;

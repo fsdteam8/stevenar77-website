@@ -33,7 +33,7 @@ export default function Trips() {
           image={trip.images?.[0]?.url || "/images/default-trip.jpg"}
           title={trip.title}
           shortDescription={trip.description}
-          seeMoreLink={`/trips/${trip._id}`} // dynamic route
+          seeMoreLink= {`/trips/${trip._id}`} // dynamic route
           bookNowLink={`/booking/${trip._id}`} // dynamic booking route
           reverse={index % 2 === 1} // alternate layout
         />
