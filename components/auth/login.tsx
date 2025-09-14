@@ -50,7 +50,7 @@ export default function Login() {
       password: values.password,
       redirect: false,
     });
-    redirect("/dashboard");
+    redirect("/account");
  
   };
 
