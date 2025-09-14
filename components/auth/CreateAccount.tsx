@@ -66,16 +66,17 @@ export default function CreateAccount() {
 
       const token = res?.data?.accessToken;
 
-      if (typeof window !== "undefined") {
-        localStorage.setItem("userEmail", values.email);
-        if (token) {
-          localStorage.setItem("accessToken", token);  
-        }
-      }
+      // if (typeof window !== "undefined") {
+      //   localStorage.setItem("userEmail", values.email);
+      //   if (token) {
+      //     localStorage.setItem("accessToken", token);  
+      //   }
+      // }
+      // console.log(res)
 
       toast.success("Account created successfully!");
       form.reset();
-      router.push("/verify-otp");
+      router.push( `/verify-otp?token=${token}&mode=register`);
     } catch (error) {
       console.error("Registration failed:", error);
       toast.error("Something went wrong. Please try again.");
