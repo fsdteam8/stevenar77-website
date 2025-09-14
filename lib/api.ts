@@ -15,12 +15,12 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 //  New user Registration
 export const createUserRegistration = async (userData: {
-  firstName: string; 
+  firstName: string;
   lastName: string;
   email: string;
   password: string;
@@ -29,14 +29,26 @@ export const createUserRegistration = async (userData: {
   return response.data;
 };
 
-// ---------------- Verify OTP ----------------
-export const verifyOtpRequest = (data: { otp: string }, token: string) => {
+// forgot password with email
+export const postForgotPassword = async (email: { email: string }) => {
+  const res = await api.post(`/auth/forgot-password`, email);
+  return res.data;
+};
 
-  console.log("Sending OTP with token:", token); // Debugging line
-  console.log("OTP Data:", data); // Debugging line
-  return api.post("/user/verify-email", data, {
-    headers: {
-      Authorization: `Bearer ${token}`,  
-    },
-  });
+// reset password in forgatepassword
+export const postResetPassword = async (
+  newPassword: { newPassword: string },
+  token: string,
+) => {
+  try {
+    const res = await api.post("/auth/reset-password", newPassword, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch {
+    throw new Error("Failed to reset password");
+  }
 };

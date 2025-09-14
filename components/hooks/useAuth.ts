@@ -1,9 +1,8 @@
 // hooks/useAuth.ts
 "use client";
 
-import { createUserRegistration, verifyOtpRequest } from "@/lib/api";
+import { createUserRegistration, postForgotPassword } from "@/lib/api";
 import { useState } from "react";
-import { toast } from "sonner";
 
 interface SignUpData {
   firstName: string;
@@ -12,17 +11,20 @@ interface SignUpData {
   password: string;
 }
 
-// interface  {
-//   otp: string;
-// }
+interface ForgotPasswordData {
+  email: string;
+}
 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
+  // Sign up
   const signUp = async (data: SignUpData) => {
     setLoading(true);
     setError(null);
+    setSuccess(null);
     try {
       const response = await createUserRegistration(data);
       setLoading(false);
@@ -34,26 +36,22 @@ export const useAuth = () => {
     }
   };
 
-  const onVerifyOtp = async (values: { otp: string }, token: string) => {
+  // Forgot password
+  const forgotPassword = async (data: ForgotPasswordData) => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
     try {
-      if (!token) {
-        toast.error("No token found. Please sign up again.");
-        return;
-      }
-
-      // OTP + Token backend এ পাঠানো
-      const res = await verifyOtpRequest({ otp: values.otp }, token);
-
-      toast.success("OTP verified successfully!");
-      console.log("Verify OTP response:", res.data);
-
-      // সব clear করে দাও
-      localStorage.clear();
-    } catch (error) {
-      console.error("OTP verification failed:", error);
-      toast.error("Invalid OTP. Please try again.");
+      const response = await postForgotPassword(data);
+      setLoading(false);
+      setSuccess("Password reset email sent successfully");
+      return response;
+    } catch (err) {
+      setError("Failed to send reset email");
+      setLoading(false);
+      throw err;
     }
   };
 
-  return { signUp, onVerifyOtp, loading, error };
+  return { signUp, forgotPassword, loading, error, success };
 };
