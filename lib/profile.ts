@@ -8,27 +8,80 @@ export interface UserProfile {
   email: string;
   role: string;
   isVerified: boolean;
+  phone?: string;
+  dateOfBirth?: string | null;
+  streetAddress?: string | null;
+  location?: string | null;
+  postalCode?: string | null;
+  image?: {
+    public_id: string;
+    url: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
 
+// GET profile
 export const getMyProfile = async (): Promise<UserProfile> => {
   const session = await getSession();
-
-  if (!session?.accessToken) {
-    throw new Error("User is not authenticated");
-  }
+  if (!session?.accessToken) throw new Error("User is not authenticated");
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/my-profile`, {
+    headers: { Authorization: `Bearer ${session.accessToken}` },
+  });
+
+  if (!res.ok) throw new Error("Failed to fetch profile");
+  const data = await res.json();
+  return data.data;
+};
+
+// PUT update profile
+export interface UpdateProfilePayload {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  streetAddress?: string;
+  location?: string;
+  postalCode?: string;
+  phoneNumber?: string;
+  dateOfBirth?: string;
+}
+
+export const updateProfile = async (payload: UpdateProfilePayload): Promise<UserProfile> => {
+  const session = await getSession();
+  if (!session?.accessToken) throw new Error("User is not authenticated");
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/update-profile`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) throw new Error("Failed to update profile");
+  const data = await res.json();
+  return data.data;
+};
+
+// POST upload avatar
+export const uploadAvatar = async (file: File): Promise<UserProfile> => {
+  const session = await getSession();
+  if (!session?.accessToken) throw new Error("User is not authenticated");
+
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/upload-avatar`, {
+    method: "POST",
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
     },
+    body: formData,
   });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch profile");
-  }
-
+  if (!res.ok) throw new Error("Failed to upload avatar");
   const data = await res.json();
-  return data.data; // return the user object
+  return data.data;
 };
