@@ -7,9 +7,9 @@ import { ProfilePage } from "./pages/profile-page";
 import { CourseHistoryPage } from "./pages/course-history-page";
 import { TripsHistoryPage } from "./pages/trips-history-page";
 import { ShopHistoryPage } from "./pages/shop-history-page";
-import { ChangePasswordPage } from "./pages/change-password-page";
 import { Header } from "./header";
 import { Sidebar } from "./sidebar";
+import { ChangePasswordPage } from "./pages/change-password-page";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("profile");
