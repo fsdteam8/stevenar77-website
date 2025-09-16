@@ -83,7 +83,7 @@ const CourseFeatured: React.FC = () => {
             <FeatureCard
               {...course}
               onSeeMore={() => router.push(`/courses/${course.id}`)}
-              onBookNow={() => console.log("Book Now:", course.title)}
+              onBookNow={() => router.push(`/courses/book/${course.id}`)}
             >
               {/* Content */}
               <div className="p-5 space-y-4">

@@ -1,4 +1,3 @@
-import Familyreviews from "@/components/website/landing/Familyreviews";
 import StillHaveQuestion from "@/components/website/reusable/stillHaveQuestion";
 import Hero from "@/components/website/shared/Hero";
 import Products from "@/components/website/shop/products";
@@ -14,7 +13,7 @@ const page = () => {
         size="small"
       />
       <Products />
-      <Familyreviews />
+       
       <StillHaveQuestion />
     </div>
   );

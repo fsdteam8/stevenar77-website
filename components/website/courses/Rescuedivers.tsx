@@ -6,6 +6,7 @@ import { useParams } from "next/navigation"; // Next 13+ dynamic routing
 import { Plus, Minus } from "lucide-react";
 import { useCourse } from "@/services/hooks/courses/useCourse";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Rescuedivers = () => {
   const params = useParams();
@@ -83,6 +84,7 @@ const Rescuedivers = () => {
               </div>
                 <div className="w-3/4 mt-6">
                   <div className="w-full mt-5 sm:mt-0">
+                    <Link href="courses/book/${course_id}"></Link>
                     <Button
                       onClick={handleBookNow}
                       className="min-w-full sm:w-auto    text-center bg-teal-600 hover:bg-teal-700 text-white font-semibold px-20 py-6 flex items-center rounded-lg transition-colors text-lg"

@@ -2,15 +2,15 @@
 
 import React from "react";
 import ReviewForm from "@/components/website/reusable/ReviewForm";
-import { useSubmitReview } from "@/services/hooks/review/useSubmitReview";
+import { useSubmitProductReview } from "@/services/hooks/review/useSubmitProductReview";
 
-interface CourseReviewProps {
+interface ProductReviewProps {
   userId: string;
-  classId: string;
+  productId: string;
 }
 
-const CourseReview: React.FC<CourseReviewProps> = ({ userId, classId }) => {
-  const { mutate, isPending, isError, isSuccess, error } = useSubmitReview();
+const ProductReview: React.FC<ProductReviewProps> = ({ userId, productId }) => {
+  const { mutate, isPending, isError, isSuccess, error } = useSubmitProductReview();
 
   const handleReviewSubmit = (reviewData: { rating: number; description: string }) => {
     if (reviewData.rating === 0) {
@@ -22,8 +22,8 @@ const CourseReview: React.FC<CourseReviewProps> = ({ userId, classId }) => {
     }
 
     mutate({
-      userId: userId , 
-      classId: classId ,
+      userId: userId,
+      productId: productId,
       star: reviewData.rating,
       comment: reviewData.description,
     });
@@ -33,7 +33,7 @@ const CourseReview: React.FC<CourseReviewProps> = ({ userId, classId }) => {
     <section className="py-16 bg-gray-50">
       <ReviewForm
         onSubmit={handleReviewSubmit}
-        isSubmitting={isPending} // ✅ fixed (use isPending, not isLoading)
+        isSubmitting={isPending}
         submitStatus={
           isSuccess
             ? { type: "success", message: "Review submitted successfully!" }
@@ -46,4 +46,4 @@ const CourseReview: React.FC<CourseReviewProps> = ({ userId, classId }) => {
   );
 };
 
-export default CourseReview;
+export default ProductReview;

@@ -48,6 +48,37 @@ export interface ReviewsByCourseResponse {
   data: ReviewByCourse[];
 }
 
+
+
+// ----------------------
+// PRODUCT REVIEW TYPES
+// ----------------------
+export interface SubmitProductReviewPayload {
+  userId: string;
+  productId: string;
+  star: number;
+  comment: string;
+}
+
+export interface ProductReview {
+  _id: string;
+  userId: string;
+  productId: string;
+  star: number;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface SubmitProductReviewResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: ProductReview;
+}
+
+
 export const submitReview = async (
   payload: SubmitReviewPayload,
   token: string
@@ -69,6 +100,9 @@ export const submitReview = async (
   return res.json();
 };
 
+
+
+
 // API call to get reviews by courseId
 export const getReviewsByCourseId = async (
   courseId: string
@@ -87,6 +121,28 @@ export const getReviewsByCourseId = async (
   if (!res.ok) {
     const errorData = await res.json().catch(() => null);
     throw new Error(errorData?.message || "Failed to fetch reviews");
+  }
+
+  return res.json();
+};
+
+// Submit a product review
+export const submitProductReview = async (
+  payload: SubmitProductReviewPayload,
+  token?: string
+): Promise<SubmitProductReviewResponse> => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviews`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => null);
+    throw new Error(errorData?.message || "Failed to submit product review");
   }
 
   return res.json();
