@@ -67,7 +67,7 @@ export function Sidebar({ activeTab, onNavigate }: SidebarProps) {
               key={item.id}
               onClick={() => handleNavigate(item.id)}
               className={cn(
-                "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors",
+                "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left cursor-pointer transition-colors",
                 isActive && !isLogout && "sidebar-active",
                 !isActive && !isLogout && "text-[#68706a] hover:bg-[#f8f9fa]",
                 isLogout && "text-[#e5102e] hover:bg-[#feecee]",
