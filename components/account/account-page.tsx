@@ -10,6 +10,7 @@ import { ShopHistoryPage } from "./pages/shop-history-page";
 import { Header } from "./header";
 import { Sidebar } from "./sidebar";
 import { ChangePasswordPage } from "./pages/change-password-page";
+import { signOut } from "next-auth/react";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -54,7 +55,7 @@ export default function DashboardPage() {
         onClose={() => setShowLogoutModal(false)}
         onConfirm={() => {
           setShowLogoutModal(false);
-          // Handle logout logic here
+          signOut({ callbackUrl: "/login" });
         }}
       />
     </div>
