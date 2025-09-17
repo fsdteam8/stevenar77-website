@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CircleUserRound, LogOut, Menu, X } from "lucide-react";
@@ -23,8 +23,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useSession, signOut } from "next-auth/react";
-
-const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+import { useUser } from "@/services/hooks/user/useUser";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -32,35 +31,14 @@ const Navbar = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const { data: session, status } = useSession();
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
- 
   const isLoggedIn = !!session?.user;
-  const displayAvatar = avatarUrl || session?.user?.email || undefined;
 
-  // Fetch user avatar from API
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!session?.user?.id) return;
+  // Use custom hook for user info
+  const { user, loading } = useUser(session?.user?.id);
 
-      try {
-        const res = await fetch(`${baseUrl}/user/${session.user.id}`);
-        if (!res.ok) throw new Error("Failed to fetch user");
-        const data = await res.json();
-        if (data.success && data.data.avatar?.url) {
-          setAvatarUrl(data.data.avatar.url);
-        } else {
-          setAvatarUrl(null);
-        }
-      } catch (error) {
-        console.error("Error fetching user avatar:", error);
-        setAvatarUrl(null);
-      }
-    };
-
-    fetchUser();
-  }, [session?.user?.id]);
+  const displayAvatar = user?.avatar?.url || session?.user?.email || undefined;
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -115,6 +93,7 @@ const Navbar = () => {
   const LoadingPlaceholder = () => (
     <div className="h-10 w-24 bg-gray-200 rounded animate-pulse"></div>
   );
+
 
   return (
     <header className="sticky top-0 h-full bg-white z-50 shadow-sm">

@@ -1,23 +1,23 @@
+// lib/course.ts
 import axios from "axios";
 
 // ----------------------
-// Types
+// Types matching actual API response
 // ----------------------
 export interface CourseDetail {
   _id: string;
   title: string;
-  images?: { public_id: string; url: string }[];
-  shortDescription: string;
-  longDescription: string;
-  courseLevel: string;
-  features: string[];
-  price: number;
-  courseDate: string;
-  location?: string;
-  requiredAge?: number;
-  requiredHeight?: number;
-  maxDepth?: number;
-  courseDuration: string;
+  image?: { 
+    public_id: string; 
+    url: string 
+  }; // Single image object, not array
+  description: string; // This is the main description
+  price: number[]; // Array of prices
+  courseIncludes: string[]; // This is the features array
+  duration: string;
+  totalReviews: number;
+  avgRating: number;
+  totalParticipates: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -36,5 +36,10 @@ export async function fetchCourseById(id: string): Promise<CourseDetail> {
   const response = await axios.get<CourseResponse>(
     `${process.env.NEXT_PUBLIC_API_URL}/class/${id}`
   );
+  
+  if (!response.data.success) {
+    throw new Error(response.data.message || "Failed to fetch course");
+  }
+  
   return response.data.data;
 }

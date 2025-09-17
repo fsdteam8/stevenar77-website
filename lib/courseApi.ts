@@ -4,17 +4,17 @@ import axios from "axios";
 export interface CourseData {
   _id: string;
   title: string;
-  shortDescription: string;
-  courseLevel: string;
-  features: string[];
-  price: number;
-  longDescription: string;
-  courseDate: string;
-  location: string;
-  requiredAge: number;
-  requiredHeight: number;
-  maxDepth: number;
-  courseDuration: string;
+  description: string;
+  price: number[]; // array from API
+  courseIncludes: string[];
+  duration: string;
+  totalReviews: number;
+  avgRating: number;
+  totalParticipates: number;
+  image?: {
+    public_id: string;
+    url: string;
+  };
   createdAt: string;
   updatedAt: string;
 }

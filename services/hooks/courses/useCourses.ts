@@ -4,13 +4,13 @@ import { fetchCourses, CourseData } from "@/lib/courseApi";
 
 export function useCourses() {
   return useQuery<CourseData[], Error>({
-    queryKey: ["courses"],  
+    queryKey: ["courses"],
     queryFn: async () => {
       const response = await fetchCourses();
       if (!response.success) {
         throw new Error(response.message || "Failed to fetch courses");
       }
-      return response.data;
+      return response.data; // ✅ return only the actual course list
     },
   });
 }

@@ -11,24 +11,10 @@ import { Button } from "@/components/ui/button";
 import FeatureCard from "../shared/FeatureCard";
 import { ChevronLeft, ChevronRight, Clock, Star, UserRound } from "lucide-react";
 import { useCourses } from "@/services/hooks/courses/useCourses";
-import { useRouter } from "next/navigation";
+import { CourseData } from "@/lib/courseApi";
 
-// ----------------------
-// Types
-// ----------------------
-interface CourseData {
-  _id: string;
-  title: string;
-  shortDescription: string;
-  courseDuration: string;
-  features: string[];
-  price: number;
-  requiredAge: number;
-  location: string;
-  images?: { public_id: string; url: string }[];
-}
-
-interface Course {
+// Type for the mapped course data used in the component
+interface MappedCourse {
   id: string;
   image: string;
   title: string;
@@ -42,52 +28,94 @@ interface Course {
   ageRestriction: string;
   location: string;
 }
+import { useRouter } from "next/navigation";
 
-// ----------------------
-// Component
-// ----------------------
 const FeaturedClasses: React.FC = () => {
   const { data: apiCourses, isLoading, isError, error } = useCourses();
   const [api, setApi] = React.useState<CarouselApi | null>(null);
   const [current, setCurrent] = React.useState<number>(0);
   const router = useRouter();
 
-  // Map API response to Course type
-  const courses: Course[] = React.useMemo(() => {
-    return apiCourses?.map((c: CourseData) => ({
+  // ✅ Map API response to match actual CourseData structure
+  const courses = React.useMemo(() => {
+    if (!apiCourses || !Array.isArray(apiCourses)) return [];
+    
+    return apiCourses.map((c: CourseData) => ({
       id: c._id,
-      image: c.images?.[0]?.url || "/asset/card.png",
-      title: c.title,
-      description: c.shortDescription,
-      rating: 4.5, // placeholder, replace with actual rating if API provides
-      reviews: 0, // placeholder, replace with actual reviews if API provides
-      duration: c.courseDuration,
-      students: 0, // placeholder, replace with actual students count if available
-      features: c.features,
-      price: `$${c.price.toFixed(2)}`,
-      ageRestriction: `${c.requiredAge}+`,
-      location: c.location,
-    })) || [];
+      image: c.image?.url || "/asset/card.png",
+      title: c.title || "Untitled Course",
+      description: c.description || "No description available",
+      rating: c.avgRating || 4.5,
+      reviews: c.totalReviews || 0,
+      duration: c.duration || "Duration TBD",
+      students: c.totalParticipates || 0,
+      features: Array.isArray(c.courseIncludes) ? c.courseIncludes : [],
+      // Handle price array - take first price or calculate average
+      price: Array.isArray(c.price) && c.price.length > 0 
+        ? `${Number(c.price[0]).toFixed(2)}` 
+        : "Contact for Price",
+      ageRestriction: "16+", // Default since not in API
+      location: "Location TBD", // Default since not in API
+    }));
   }, [apiCourses]);
 
-  // Handle carousel selection
+  // ✅ Carousel selection tracking
   React.useEffect(() => {
     if (!api) return;
-
-    const onSelect = () => setCurrent(api.selectedScrollSnap());
+    
+    const onSelect = () => {
+      setCurrent(api.selectedScrollSnap());
+    };
+    
     api.on("select", onSelect);
-    onSelect();
-
-    return (): void => {
+    onSelect(); // Set initial value
+    
+    return () => {
       api.off("select", onSelect);
     };
   }, [api]);
 
-  const itemsPerPage = 4;
-  const totalPages = Math.ceil(courses.length / itemsPerPage);
+  // Calculate total items and pages for dots
+  const totalItems = courses.length;
+  const itemsPerView = 3; // Adjust based on your carousel settings
+  const totalDots = Math.max(1, totalItems - itemsPerView + 1);
 
-  if (isLoading) return <p className="text-center py-10">Loading classes...</p>;
-  if (isError) return <p className="text-center py-10 text-red-500">Error: {error?.message}</p>;
+  // ✅ Loading & Error state with better error handling
+  if (isLoading) {
+    return (
+      <section className="py-10">
+        <div className="flex justify-center items-center h-64">
+          <p className="text-center text-gray-600">Loading classes...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (isError) {
+    return (
+      <section className="py-10">
+        <div className="flex justify-center items-center h-64">
+          <p className="text-center text-red-500">
+            Error loading classes: {error?.message || "Something went wrong"}
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  // Handle empty state
+  if (!courses || courses.length === 0) {
+    return (
+      <section className="py-10">
+        <h2 className="text-3xl md:text-[48px] font-semibold text-center font-montserrat mb-4">
+          Featured Classes
+        </h2>
+        <div className="flex justify-center items-center h-64">
+          <p className="text-center text-gray-600">No classes available at the moment.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-10">
@@ -101,19 +129,25 @@ const FeaturedClasses: React.FC = () => {
       <Carousel setApi={setApi} className="w-full container mx-auto">
         <CarouselContent className="flex items-stretch">
           {courses.map((course) => (
-            <CarouselItem key={course.id} className="md:basis-1/2 h-full lg:basis-1/3">
+            <CarouselItem
+              key={course.id}
+              className="md:basis-1/2 lg:basis-1/3 h-full"
+            >
               <FeatureCard
                 {...course}
                 onSeeMore={() => router.push(`/courses/${course.id}`)}
-                onBookNow={() => console.log("Book Now:", course.title)}
+                onBookNow={() => {
+                  console.log("Book Now:", course.title);
+                  // Add actual booking logic here
+                }}
               >
                 <div className="p-5 space-y-4">
                   {/* Title + Rating */}
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-xl md:text-[24px] font-medium text-[#27303F] leading-[120%]">
+                  <div className="flex justify-between items-start gap-2">
+                    <h2 className="text-xl md:text-[24px] font-medium text-[#27303F] leading-[120%] flex-1">
                       {course.title}
                     </h2>
-                    <div className="flex items-center text-sm text-gray-600 gap-1">
+                    <div className="flex items-center text-sm text-gray-600 gap-1 flex-shrink-0">
                       <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
                       <span>{course.rating}</span>
                       <span className="text-[#68706A] font-normal text-[12px] leading-[150%]">
@@ -123,40 +157,47 @@ const FeaturedClasses: React.FC = () => {
                   </div>
 
                   {/* Description */}
-                  <p className="text-[#68706A] font-normal leading-[150%] mt-[10px] text-sm md:text-[16px]">
+                  <p className="text-[#68706A] leading-[150%] text-sm md:text-[16px]">
                     {course.description}
                   </p>
 
                   {/* Duration + Students */}
-                  <div className="flex justify-between items-center text-sm mt-[10px] text-gray-500">
-                    <span className="flex items-center text-[16px] text-[#68706A] leading-[150%] gap-2">
+                  <div className="flex justify-between items-center text-sm text-gray-500">
+                    <span className="flex items-center text-[16px] text-[#68706A] gap-2">
                       <Clock className="h-4 w-4" />
                       {course.duration}
                     </span>
-                    <span className="flex items-center font-normal gap-2 mt-[10px]">
+                    <span className="flex items-center font-normal gap-2">
                       <UserRound className="h-4 w-4" />
-                      <span className="text-[12px] text-[#68706A]">{course.students} Students</span>
+                      <span className="text-[12px] text-[#68706A]">
+                        {course.students} Students
+                      </span>
                     </span>
                   </div>
 
                   {/* Features */}
-                  <div>
-                    <p className="font-medium mb-4 mt-[20px] text-[20px] leading-[120%] text-[#27303F]">
-                      Course Includes:
-                    </p>
-                    <ul className="space-y-2 text-[#68706A]">
-                      {course.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center text-[16px] font-normal gap-2">
-                          <span className="h-2 w-2 rounded-full bg-cyan-600" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  {course.features.length > 0 && (
+                    <div>
+                      <p className="font-medium mb-4 text-[20px] text-[#27303F]">
+                        Course Includes:
+                      </p>
+                      <ul className="space-y-2 text-[#68706A]">
+                        {course.features.map((feature, idx) => (
+                          <li
+                            key={idx}
+                            className="flex items-center text-[16px] gap-2"
+                          >
+                            <span className="h-2 w-2 rounded-full bg-cyan-600 flex-shrink-0" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
                   {/* Price + Age */}
                   <div className="flex justify-between items-center">
-                    <p className="text-xl md:text-[24px] leading-[120%] font-medium text-gray-900">
+                    <p className="text-xl md:text-[24px] font-medium text-gray-900">
                       {course.price}
                     </p>
                     <span className="text-xs text-[#0694A2] font-normal">
@@ -170,27 +211,42 @@ const FeaturedClasses: React.FC = () => {
         </CarouselContent>
       </Carousel>
 
-      {/* Bottom Controls */}
-      <div className="flex items-center justify-center gap-4 mt-6">
-        <Button variant="outline" size="icon" onClick={() => api?.scrollPrev()}>
-          <ChevronLeft className="w-5 h-5" />
-        </Button>
+      {/* Bottom Controls - Only show if there are enough items */}
+      {totalItems > itemsPerView && (
+        <div className="flex items-center justify-center gap-4 mt-6">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={() => api?.scrollPrev()}
+            disabled={current === 0}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </Button>
 
-        {/* Dots */}
-        <div className="flex gap-2">
-          {Array.from({ length: totalPages }).map((_, i) => (
-            <button
-              key={i}
-              className={`h-3 w-3 rounded-full ${i === current ? "bg-teal-600" : "bg-gray-300"}`}
-              onClick={() => api?.scrollTo(i)}
-            />
-          ))}
+          {/* Dots */}
+          <div className="flex gap-2">
+            {Array.from({ length: totalDots }).map((_, i) => (
+              <button
+                key={i}
+                className={`h-3 w-3 rounded-full transition-colors ${
+                  i === current ? "bg-teal-600" : "bg-gray-300"
+                }`}
+                onClick={() => api?.scrollTo(i)}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={() => api?.scrollNext()}
+            disabled={current >= totalDots - 1}
+          >
+            <ChevronRight className="w-5 h-5" />
+          </Button>
         </div>
-
-        <Button variant="outline" size="icon" onClick={() => api?.scrollNext()}>
-          <ChevronRight className="w-5 h-5" />
-        </Button>
-      </div>
+      )}
     </section>
   );
 };
