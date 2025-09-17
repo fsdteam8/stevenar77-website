@@ -5,20 +5,22 @@ import { Button } from "@/components/ui/button";
 import FeatureCard from "../shared/FeatureCard";
 import { ChevronLeft, ChevronRight, Clock, Locate, Star } from "lucide-react";
 import { useCourses } from "@/services/hooks/courses/useCourses";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 
 // ----------------------
-// Types
+// Types - Updated to match actual API response
 // ----------------------
 interface CourseData {
   _id: string;
   title: string;
-  shortDescription: string;
-  courseDuration: string;
+  shortDescription?: string; // Made optional
+  description?: string; // Added as alternative
+  courseDuration?: string; // Made optional
+  duration?: string; // Added as alternative
   location?: string;
   requiredAge?: number;
-  price: number;
-  features: string[];
+  price: number | number[];
+  features?: string[]; // Made optional
   images?: { public_id: string; url: string }[];
 }
 
@@ -45,33 +47,48 @@ const CourseFeatured: React.FC = () => {
   const [current] = React.useState(0);
   const router = useRouter();
 
-  // Map API response to FeatureCard format
+  // Map API response to FeatureCard format with better error handling
   const courses: Course[] = React.useMemo(() => {
-    return apiCourses?.map((c: CourseData) => ({
+    if (!apiCourses || !Array.isArray(apiCourses)) {
+      return [];
+    }
+
+    return apiCourses.map((c: CourseData) => ({
       id: c._id,
       image: c.images?.[0]?.url || "/asset/card.png", // Use first image or fallback
-      title: c.title,
-      description: c.shortDescription,
+      title: c.title || "Untitled Course",
+      description:
+        c.shortDescription || c.description || "No description available",
       rating: 4.5, // Placeholder, replace if API provides rating
       reviews: 0, // Placeholder, replace if API provides reviews
-      duration: c.courseDuration,
-      location: c.location || "N/A",
+      duration: c.courseDuration || c.duration || "Duration not specified",
+      location: c.location || "Location not specified",
       students: 0, // Placeholder, replace if API provides student count
       features: c.features || [],
-      price: `$${c.price.toFixed(2)}`,
+      price:
+        Array.isArray(c.price) && c.price.length > 0
+          ? `$${Number(c.price[0]).toFixed(2)}`
+          : c.price != null
+            ? `$${Number(c.price).toFixed(2)}`
+            : "Price not available",
       ageRestriction: c.requiredAge ? `${c.requiredAge}+` : undefined,
-    })) || [];
+    }));
   }, [apiCourses]);
 
-  if (isLoading)
-    return <p className="text-center py-10">Loading courses...</p>;
+  if (isLoading) return <p className="text-center py-10">Loading courses...</p>;
 
   if (isError)
     return (
       <p className="text-center py-10 text-red-500">
-        Error: {error?.message}
+        Error: {error?.message || "Failed to load courses"}
       </p>
     );
+
+  if (!courses.length) {
+    return (
+      <p className="text-center py-10">No courses available at the moment.</p>
+    );
+  }
 
   return (
     <section className="py-10">
@@ -83,7 +100,7 @@ const CourseFeatured: React.FC = () => {
             <FeatureCard
               {...course}
               onSeeMore={() => router.push(`/courses/${course.id}`)}
-              onBookNow={() => console.log("Book Now:", course.title)}
+              onBookNow={() => router.push(`/courses/book/${course.id}`)}
             >
               {/* Content */}
               <div className="p-5 space-y-4">
@@ -120,23 +137,25 @@ const CourseFeatured: React.FC = () => {
                   {course.description}
                 </p>
 
-                {/* Features */}
-                <div>
-                  <p className="font-medium mb-4 mt-[20px] text-[20px] leading-[120%] text-[#27303F]">
-                    Course Includes:
-                  </p>
-                  <ul className="space-y-2 text-[#68706A]">
-                    {course.features.map((feature, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-center text-[16px] font-normal gap-2"
-                      >
-                        <span className="h-2 w-2 rounded-full bg-cyan-600" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {/* Features - Only show if features exist */}
+                {course.features.length > 0 && (
+                  <div>
+                    <p className="font-medium mb-4 mt-[20px] text-[20px] leading-[120%] text-[#27303F]">
+                      Course Includes:
+                    </p>
+                    <ul className="space-y-2 text-[#68706A]">
+                      {course.features.map((feature, idx) => (
+                        <li
+                          key={idx}
+                          className="flex items-center text-[16px] font-normal gap-2"
+                        >
+                          <span className="h-2 w-2 rounded-full bg-cyan-600" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 {/* Price + Age */}
                 <div className="flex justify-end items-center">

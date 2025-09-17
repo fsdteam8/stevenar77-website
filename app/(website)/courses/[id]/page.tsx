@@ -1,9 +1,21 @@
 import Rescuedivers from "@/components/website/courses/Rescuedivers";
-import StillHaveQuestion from "@/components/website/reusable/stillHaveQuestion";
+import CourseReview from "@/components/website/courses/CourseReview";
 import Hero from "@/components/website/shared/Hero";
 import React from "react";
+import ReviewShowByCourseID from "@/components/website/courses/ReviewShowByCourseID";
 
-export default function Page() {
+// ✅ Page receives params from Next.js routing
+interface PageProps {
+  params: { id: string }; // dynamic segment e.g. /courses/[id]
+}
+
+export default function Page({ params }: PageProps) {
+  // Get classId from route
+  const classId = params.id;
+
+  // TODO: Replace with real userId from auth (e.g. NextAuth session)
+  const userId = "68bf6996f02adb6fb1fef5a0";
+
   return (
     <div>
       <Hero
@@ -12,9 +24,11 @@ export default function Page() {
         backgroundImage="/images/imagewater.jpg"
         size="small"
       />
-      <Rescuedivers /> 
-      
-      <StillHaveQuestion />
+      <Rescuedivers />
+
+      <ReviewShowByCourseID courseId={classId} />
+
+      <CourseReview userId={userId} classId={classId} />
     </div>
   );
 }

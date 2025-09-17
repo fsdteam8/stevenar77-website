@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -54,14 +55,14 @@ export default function TripsCard({
           {/* Buttons */}
           <div className="flex gap-4 mt-4 flex-wrap">
             <Link href={seeMoreLink}>
-              <button className="border border-[#0694A2] text-[#0694A2] px-12 py-2 md:px-20 rounded-md hover:bg-[#0694A2] hover:text-white transition cursor-pointer">
+              <Button className="border border-[#0694A2] text-gray-800 px-12 py-2 md:px-20 rounded-md hover:bg-gray-200 bg-transparent  transition cursor-pointer">
                 See More
-              </button>
+              </Button>
             </Link>
             <Link href={bookNowLink}>
-              <button className="bg-[#0694A2] text-white px-12 py-2 md:px-20 rounded-md hover:bg-[#057c88] transition cursor-pointer">
+              <Button className="bg-[#0694A2] text-white px-12 py-2 md:px-20 rounded-md hover:bg-[#057c88] transition cursor-pointer">
                 Book Now
-              </button>
+              </Button>
             </Link>
           </div>
         </div>
