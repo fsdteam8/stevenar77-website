@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams , useRouter } from "next/navigation";
 import { Plus, Minus } from "lucide-react";
 import { useCourse } from "@/services/hooks/courses/useCourse";
 import { Button } from "@/components/ui/button";
@@ -14,14 +14,15 @@ const CourseDetails = () => {
   const { data: course, isLoading, isError, error } = useCourse(courseId);
 
   const [quantity, setQuantity] = useState(1);
+  const router = useRouter();
 
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity >= 1) setQuantity(newQuantity);
   };
 
   const handleBookNow = () => {
-    console.log(`Booking ${quantity} course(s) of ${course?.title}`);
-    // Add actual booking logic here
+      if (!course) return;
+  router.push(`/courses/book/${course._id}`);
   };
 
   // Loading state
