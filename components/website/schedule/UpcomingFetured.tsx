@@ -56,7 +56,7 @@ const UpcomingFeatured = () => {
       </h2>
 
       <div className="w-full flex flex-wrap justify-between container mx-auto">
-        {apiCourses?.map((course: CourseData) => (
+        {(apiCourses as unknown as CourseData[])?.map((course) => (
           <div key={course._id} className="md:w-[48%]">
             <FeatureCard
               image={course.images?.[0]?.url || "/asset/card.png"}
