@@ -64,7 +64,7 @@ const FeaturedClasses: React.FC = () => {
       duration: c.courseDuration,
       students: 0, // placeholder, replace with actual students count if available
       features: c.features,
-      price: `$${c.price.toFixed(2)}`,
+      price: `$${Number(c.price).toFixed(2)}`,
       ageRestriction: `${c.requiredAge}+`,
       location: c.location,
     })) || [];
