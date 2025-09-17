@@ -20,8 +20,8 @@ export function useUser(userId?: string) {
         } else {
           setData(null);
         }
-      } catch (err: any) {
-        setError(err);
+      } catch (err: unknown) {
+        setError(err as Error);
         setData(null);
       } finally {
         setLoading(false);

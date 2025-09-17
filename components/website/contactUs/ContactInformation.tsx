@@ -37,7 +37,7 @@ export default function ContactInformation() {
             <div className="space-y-4 pt-1 md:pt-6">
               <div className="flex items-center gap-3">
                 <Mail className="text-primary w-5 h-5" />
-                <span className="text-[#343A40] text-base">support@alhhub.com</span>
+                <span className="text-[#343A40] text-base">support@scubastevenar.com</span>
               </div>
 
               <div className="flex items-center gap-3">

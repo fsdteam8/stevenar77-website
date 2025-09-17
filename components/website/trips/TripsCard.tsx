@@ -61,7 +61,7 @@ export default function TripsCard({
             </Link>
             <Link href={bookNowLink}>
               <Button className="bg-[#0694A2] text-white px-12 py-2 md:px-20 rounded-md hover:bg-[#057c88] transition cursor-pointer">
-                Book Now
+                Buy Now
               </Button>
             </Link>
           </div>
