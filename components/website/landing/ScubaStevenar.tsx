@@ -12,7 +12,7 @@ const ScubaStevenar = () => {
           <div className="order-2 md:order-1">
             {/* Heading */}
             <h1 className="text-3xl md:text-5xl text-[#27303F] font-semibold font-montserrat mb-3">
-              Steve &quot;Scuba SteveNar&quot;
+              Steve &quot;Scuba Stevenar&quot;
             </h1>
 
             {/* Description */}
