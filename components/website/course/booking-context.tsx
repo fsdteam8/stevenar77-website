@@ -9,13 +9,18 @@ interface BookingState {
   course: {
     id: string
     name: string
-    price: number
+    price: number | number[] // Updated to support both single and multiple prices
     duration: string
     age: string
   }
+  pricing?: string
+  addOn?: boolean
   participants: number
   selectedDate: Date | null
   selectedTime: string
+  addOnSelected: boolean;
+  selectedPricing?: string;
+  selectedPriceIndex?: number; // Added for tracking selected price index
   personalInfo: {
     name: string
     email: string
@@ -60,6 +65,9 @@ type BookingAction =
   | { type: "SET_LIABILITY_AGREEMENT"; payload: Partial<BookingState["liabilityAgreement"]> }
   | { type: "SET_DOCUMENTS"; payload: File[] }
   | { type: "SET_SIGNATURE"; payload: string }
+  | { type: "SET_PRICING"; payload: string }
+  | { type: "SET_ADDON"; payload: boolean }
+  | { type: "SET_PRICE_INDEX"; payload: number } // Added action for price index
 
 const initialState: BookingState = {
   currentStep: 0,
@@ -70,9 +78,14 @@ const initialState: BookingState = {
     duration: "3-4 days",
     age: "10+",
   },
+  pricing: undefined,
+  addOn: false,
   participants: 1,
   selectedDate: null,
   selectedTime: "",
+  addOnSelected: false,
+  selectedPricing: undefined,
+  selectedPriceIndex: 0, // Added with default value
   personalInfo: {
     name: "",
     email: "",
@@ -129,6 +142,12 @@ function bookingReducer(state: BookingState, action: BookingAction): BookingStat
       return { ...state, documents: action.payload }
     case "SET_SIGNATURE":
       return { ...state, signature: action.payload }
+    case "SET_PRICING":
+      return { ...state, pricing: action.payload }
+    case "SET_ADDON":
+      return { ...state, addOn: action.payload }
+    case "SET_PRICE_INDEX": // Added case for price index
+      return { ...state, selectedPriceIndex: action.payload }
     default:
       return state
   }

@@ -1,18 +1,29 @@
-"use client"
+"use client";
 
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar } from "@/components/ui/calendar"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useState } from "react"
-import { useBooking } from "./booking-context"
-import Image from "next/image"
+import { Card, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { useBooking } from "./booking-context";
+import Image from "next/image";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export function BookingContent() {
-  const { state, dispatch } = useBooking()
-  const [showPersonalInfo, setShowPersonalInfo] = useState(false)
+  const { state, dispatch } = useBooking();
+  const [showPersonalInfo, setShowPersonalInfo] = useState(false);
+
+  // New local state for pricing and add-ons
+  const [selectedPricing, setSelectedPricing] = useState<string | null>(null);
+  // const [addOnSelected, setAddOnSelected] = useState<boolean>(false);
 
   const availableTimes = [
     "12:00 PM",
@@ -23,28 +34,44 @@ export function BookingContent() {
     "07:00 AM",
     "08:00 PM",
     "05:00 PM",
-  ]
+  ];
 
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
-      dispatch({ type: "SET_DATE", payload: date })
-      setShowPersonalInfo(true)
+      dispatch({ type: "SET_DATE", payload: date });
+      setShowPersonalInfo(true);
     }
-  }
+  };
 
   const handleTimeSelect = (time: string) => {
-    dispatch({ type: "SET_TIME", payload: time })
-  }
+    dispatch({ type: "SET_TIME", payload: time });
+  };
 
   const handlePersonalInfoChange = (field: string, value: string) => {
-    dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } })
-  }
+    dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
+  };
+
+  const handlePricingChange = (value: string) => {
+    setSelectedPricing(value);
+    dispatch({ type: "SET_PRICING", payload: value });
+  };
+
+  // const handleAddOnChange = () => {
+  //   setAddOnSelected(!addOnSelected);
+  //   dispatch({ type: "SET_ADDON", payload: !addOnSelected });
+  // };
+
+  const handleAddOnChange = (checked: boolean | "indeterminate" | undefined) => {
+    dispatch({ type: "SET_ADDON", payload: checked === true });
+  };
 
   return (
     <div className="space-y-6">
       {/* Course Selection */}
       <Card className="p-6">
-        <h2 className="text-xl font-semibold mb-4 text-[#343a40]">Select Your Course</h2>
+        <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
+          Select Your Course
+        </h2>
         <div className="flex items-center gap-4 p-4 border-2 border-[#0694a2] rounded-lg bg-blue-50">
           <Image
             src="/scuba-diving-underwater-scene.jpg"
@@ -56,10 +83,13 @@ export function BookingContent() {
           <div className="flex-1">
             <h3 className="font-semibold text-[#343a40]">Open Water Diver</h3>
             <p className="text-sm text-[#6c757d] mb-2">
-              The most popular scuba course in the world! Get your first scuba diving certification.
+              The most popular scuba course in the world! Get your first scuba
+              diving certification.
             </p>
             <div className="flex items-center gap-4 text-sm text-[#6c757d]">
-              <span className="bg-[#0694a2] text-white px-2 py-1 rounded text-xs">BEST DEAL</span>
+              <span className="bg-[#0694a2] text-white px-2 py-1 rounded text-xs">
+                BEST DEAL
+              </span>
               <span>⏱️ 3-4 days</span>
               <span>👥 Age 10+</span>
             </div>
@@ -71,12 +101,77 @@ export function BookingContent() {
         </div>
       </Card>
 
+      <Card className="p-6">
+        <CardHeader className="pb-4">
+          <h2 className="text-2xl font-semibold text-[#343a40]">
+            Choose Your Pricing + Add-On
+          </h2>
+        </CardHeader>
+
+        <div className="flex p-6 justify-between items-center gap-5">
+          <div className="space-y-8 ">
+            <div className="space-y-2">
+              <p className="font-medium text-[#343a40] mb-2">Pricing</p>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  checked={selectedPricing === "3-day"}
+                  onCheckedChange={(checked) =>
+                    checked && handlePricingChange("3-day")
+                  }
+                  id="pricing-3-day"
+                  className="w-5 h-5 border border-[#6c757d] "
+                  aria-labelledby="label-3-day"
+                />
+                <span id="label-3-day">3 Day Dive Program — $199</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  checked={selectedPricing === "5-day"}
+                  onCheckedChange={(checked) =>
+                    checked && handlePricingChange("5-day")
+                  }
+                  id="pricing-5-day"
+                  className="w-5 h-5"
+                  aria-labelledby="label-5-day"
+                />
+                <span id="label-5-day">5 Day Dive Program — $399</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Add-On */}
+          <div className=" space-y-2">
+            <div className="">
+              <p className="font-medium text-[#343a40] mb-2">Add-On</p>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  checked={state.addOn}
+                  onCheckedChange={handleAddOnChange}
+                  id="addon-catalina"
+                  className="w-5 h-5"
+                  aria-labelledby="label-addon-catalina"
+                />
+
+                <span id="label-addon-catalina">Catalina Weekend — $999</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </Card>
+
       {/* Number of Participants */}
       <Card className="p-6">
-        <h2 className="text-xl font-semibold mb-4 text-[#343a40]">Number of Participants</h2>
+        <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
+          Number of Participants
+        </h2>
         <Select
           value={state.participants.toString()}
-          onValueChange={(value) => dispatch({ type: "SET_PARTICIPANTS", payload: Number.parseInt(value) })}
+          onValueChange={(value) =>
+            dispatch({
+              type: "SET_PARTICIPANTS",
+              payload: Number.parseInt(value),
+            })
+          }
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="1 person" />
@@ -93,7 +188,9 @@ export function BookingContent() {
 
       {/* Date Selection */}
       <Card className="p-6">
-        <h2 className="text-xl font-semibold mb-4 text-[#343a40]">Select Date or Time</h2>
+        <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
+          Select Date or Time
+        </h2>
         <div className="grid md:grid-cols-2 gap-6">
           <div>
             <h3 className="font-medium mb-3 text-center">February 2025</h3>
@@ -119,7 +216,11 @@ export function BookingContent() {
                   variant={state.selectedTime === time ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleTimeSelect(time)}
-                  className={state.selectedTime === time ? "bg-[#0694a2] hover:bg-[#0694a2]/90" : ""}
+                  className={
+                    state.selectedTime === time
+                      ? "bg-[#0694a2] hover:bg-[#0694a2]/90"
+                      : ""
+                  }
                 >
                   {time}
                 </Button>
@@ -130,7 +231,7 @@ export function BookingContent() {
       </Card>
 
       {/* Personal Information */}
-      {showPersonalInfo && (
+      {/* {showPersonalInfo && (
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4 text-[#343a40]">Personal Information</h2>
           <div className="grid md:grid-cols-2 gap-4">
@@ -234,7 +335,7 @@ export function BookingContent() {
             </div>
           </div>
         </Card>
-      )}
+      )} */}
     </div>
-  )
+  );
 }
