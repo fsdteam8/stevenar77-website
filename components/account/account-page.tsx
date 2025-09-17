@@ -10,10 +10,12 @@ import { ShopHistoryPage } from "./pages/shop-history-page";
 import { Header } from "./header";
 import { Sidebar } from "./sidebar";
 import { ChangePasswordPage } from "./pages/change-password-page";
-
+ 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("profile");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+ 
 
   const handleNavigation = (tab: string) => {
     if (tab === "logout") {

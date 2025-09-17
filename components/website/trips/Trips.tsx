@@ -4,11 +4,11 @@ import React from "react";
 import Hero from "../shared/Hero";
 import TripsCard from "./TripsCard";
 import { useTrips } from "@/services/hooks/trip/useTrips";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 export default function Trips() {
   const { data: trips, isLoading, isError, error } = useTrips();
-  const router = useRouter();
+  // const router = useRouter();
 
   if (isLoading) return <p className="text-center py-10">Loading trips...</p>;
   if (isError)

@@ -52,3 +52,24 @@ export const postResetPassword = async (
     throw new Error("Failed to reset password");
   }
 };
+
+// Get All User
+export const getAllUser = async () => {
+  try {
+    const res = await api.get(`/user/all-users`);
+    return res.data;
+  } catch (error) {
+    console.error("Failed to fetch all users:", error);
+    throw error;
+  }
+};
+
+// Get All User Conversation
+export const getUserConversation = async (userId: string) => {
+  try {
+    const res = await api.get(`/conversation/${userId}`);
+    return res.data;
+  } catch {
+    console.error("Error fetching conversations");
+  }
+};

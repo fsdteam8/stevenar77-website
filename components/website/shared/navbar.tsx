@@ -35,8 +35,7 @@ const Navbar = () => {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
-
-  console.log(session);
+ 
   const isLoggedIn = !!session?.user;
   const displayAvatar = avatarUrl || session?.user?.email || undefined;
 
@@ -110,6 +109,7 @@ const Navbar = () => {
     { name: "Community ", path: "/community" },
     { name: "About Us", path: "/about-us" },
     { name: "Contact Us", path: "/contact-us" },
+    { name: "Messaging", path: "/messaging" },
   ];
 
   const LoadingPlaceholder = () => (
