@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useTrip } from "@/services/hooks/trip/useTrip";
+import { Button } from "@/components/ui/button";
+import { Minus, Plus } from "lucide-react";
 
 export default function TripsDetails() {
   const params = useParams();
@@ -52,32 +54,32 @@ export default function TripsDetails() {
           </p>
 
           <div className="flex items-center gap-3 pb-4 mt-5">
-            <button
+            <Button
               onClick={decrease}
-              className="border border-[#68706A] px-3 py-1 cursor-pointer"
+              className="border border-[#68706A] bg-transparent hover:bg-gray-200 px-3 py-1 cursor-pointer"
             >
-              -
-            </button>
+              <Minus className="text-gray-800" />
+            </Button>
             <span className="text-lg">{quantity}</span>
-            <button
+            <Button
               onClick={increase}
-              className="border border-[#68706A] px-3 py-1 cursor-pointer"
+              className="border border-primary hover:bg-teal-50 px-3 py-1 cursor-pointer"
             >
-              +
-            </button>
+              <Plus className="text-gray-800"/>
+            </Button>
             <span className="ml-4 text-lg font-semibold">
               $ {trip.price * quantity}
             </span>
           </div>
 
-          <button
+          <Button
             onClick={() =>
               console.log("Buy Now:", quantity, trip.price * quantity)
             }
             className="bg-[#0694A2] border border-[#0694A2] text-white px-24 py-2 rounded-md cursor-pointer w-full md:w-auto"
           >
             Buy Now
-          </button>
+          </Button>
         </div>
       </div>
 

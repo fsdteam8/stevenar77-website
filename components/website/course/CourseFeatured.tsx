@@ -58,7 +58,8 @@ const CourseFeatured: React.FC = () => {
       location: c.location || "N/A",
       students: 0, // Placeholder, replace if API provides student count
       features: c.features || [],
-      price: `$${c.price.toFixed(2)}`,
+      // price: `$${c.price.toFixed(2)}`,
+      price: c.price != null ? `$${Number(c.price).toFixed(2)}` : "N/A",
       ageRestriction: c.requiredAge ? `${c.requiredAge}+` : undefined,
     })) || [];
   }, [apiCourses]);

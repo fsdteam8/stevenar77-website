@@ -1,10 +1,11 @@
-import { BookingPage } from '@/components/website/course/booking-page'
+import TripBooking from '@/components/website/trips/TripBooking'
 import React from 'react'
 
 const page = () => {
   return (
     <div>
-       <BookingPage />
+        <TripBooking />
+        
     </div>
   )
 }
