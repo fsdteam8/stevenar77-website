@@ -10,151 +10,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ShopProductCard from "../shared/ShopProductCard";
-import { ShopProductCard as ShopProductCardType } from "@/types/shopProductCard";
-
-// Dummy product data
-const products: ShopProductCardType[] = [
-  {
-    image: "/images/product-1.jpg",
-    title: "Organic Apple",
-    description: "Fresh and juicy organic apples.",
-    rating: 4.5,
-    reviews: 24,
-    price: 2.99,
-    onSeeMore: () => alert("See more details for Organic Apple"),
-    onBookNow: () => alert("Added Organic Apple to cart"),
-  },
-  {
-    image: "/images/product-2.jpg",
-    title: "Fresh Carrots",
-    description: "Crunchy and sweet organic carrots.",
-    rating: 4.7,
-    reviews: 18,
-    price: 1.99,
-    onSeeMore: () => alert("See more details for Fresh Carrots"),
-    onBookNow: () => alert("Added Fresh Carrots to cart"),
-  },
-  {
-    image: "/images/product-4.jpg",
-    title: "Almond Milk",
-    description: "Healthy and tasty almond milk.",
-    rating: 4.8,
-    reviews: 32,
-    price: 3.49,
-    onSeeMore: () => alert("See more details for Almond Milk"),
-    onBookNow: () => alert("Added Almond Milk to cart"),
-  },
-  {
-    image: "/images/product-2.jpg",
-    title: "Greek Yogurt",
-    description: "Creamy and protein-rich Greek yogurt.",
-    rating: 4.6,
-    reviews: 28,
-    price: 4.99,
-    onSeeMore: () => alert("See more details for Greek Yogurt"),
-    onBookNow: () => alert("Added Greek Yogurt to cart"),
-  },
-  {
-    image: "/images/product-1.jpg",
-    title: "Whole Grain Bread",
-    description: "Nutritious whole grain bread.",
-    rating: 4.4,
-    reviews: 15,
-    price: 3.99,
-    onSeeMore: () => alert("See more details for Whole Grain Bread"),
-    onBookNow: () => alert("Added Whole Grain Bread to cart"),
-  },
-  {
-    image: "/images/product-2.jpg",
-    title: "Organic Bananas",
-    description: "Naturally ripened and sweet organic bananas.",
-    rating: 4.9,
-    reviews: 42,
-    price: 1.49,
-    onSeeMore: () => alert("See more details for Organic Bananas"),
-    onBookNow: () => alert("Added Organic Bananas to cart"),
-  },
-  {
-    image: "/images/product-1.jpg",
-    title: "Quinoa Pack",
-    description: "High-protein organic quinoa.",
-    rating: 4.7,
-    reviews: 19,
-    price: 5.99,
-    onSeeMore: () => alert("See more details for Quinoa Pack"),
-    onBookNow: () => alert("Added Quinoa Pack to cart"),
-  },
-  {
-    image: "/images/product-3.jpg",
-    title: "Chia Seeds",
-    description: "Nutritious organic chia seeds packed with Omega-3.",
-    rating: 4.8,
-    reviews: 30,
-    price: 4.29,
-    onSeeMore: () => alert("See more details for Chia Seeds"),
-    onBookNow: () => alert("Added Chia Seeds to cart"),
-  },
-  {
-    image: "/images/product-4.jpg",
-    title: "Free-Range Eggs",
-    description: "Farm-fresh free-range eggs from happy hens.",
-    rating: 4.9,
-    reviews: 35,
-    price: 3.99,
-    onSeeMore: () => alert("See more details for Free-Range Eggs"),
-    onBookNow: () => alert("Added Free-Range Eggs to cart"),
-  },
-  {
-    image: "/images/product-1.jpg",
-    title: "Organic Spinach",
-    description: "Tender and fresh organic spinach leaves.",
-    rating: 4.6,
-    reviews: 22,
-    price: 2.49,
-    onSeeMore: () => alert("See more details for Organic Spinach"),
-    onBookNow: () => alert("Added Organic Spinach to cart"),
-  },
-  {
-    image: "/images/product-2.jpg",
-    title: "Avocado",
-    description: "Creamy and ripe organic avocados.",
-    rating: 4.8,
-    reviews: 27,
-    price: 1.79,
-    onSeeMore: () => alert("See more details for Avocado"),
-    onBookNow: () => alert("Added Avocado to cart"),
-  },
-  {
-    image: "/images/product-3.jpg",
-    title: "Oatmeal Cookies",
-    description: "Delicious and healthy homemade oatmeal cookies.",
-    rating: 4.5,
-    reviews: 16,
-    price: 3.59,
-    onSeeMore: () => alert("See more details for Oatmeal Cookies"),
-    onBookNow: () => alert("Added Oatmeal Cookies to cart"),
-  },
-  {
-    image: "/images/product-1.jpg",
-    title: "Kale Chips",
-    description: "Crunchy and flavorful baked kale chips.",
-    rating: 4.3,
-    reviews: 14,
-    price: 2.99,
-    onSeeMore: () => alert("See more details for Kale Chips"),
-    onBookNow: () => alert("Added Kale Chips to cart"),
-  },
-];
+import { useProducts } from "@/services/hooks/product/useProducts";
+import { useRouter } from "next/navigation";
 
 const ProductCarousel = () => {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
+  const router = useRouter();
+
+  const { data, isLoading, isError, error } = useProducts();
+
+  const products = data?.data?.products || [];
 
   React.useEffect(() => {
-    if (!api) {
-      return;
-    }
+    if (!api) return;
 
     setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap() + 1);
@@ -164,7 +34,6 @@ const ProductCarousel = () => {
     };
 
     api.on("select", handleSelect);
-
     return () => {
       api?.off("select", handleSelect);
     };
@@ -182,6 +51,18 @@ const ProductCarousel = () => {
     api?.scrollTo(index);
   }, [api]);
 
+  if (isLoading) {
+    return <p className="text-center py-10">Loading featured products...</p>;
+  }
+
+  if (isError) {
+    return (
+      <p className="text-center text-red-500 py-10">
+        {error.message || "Failed to load products"}
+      </p>
+    );
+  }
+
   return (
     <section className="py-10 space-y-8 lg:space-y-20">
       <div className="text-center mb-12">
@@ -193,8 +74,8 @@ const ProductCarousel = () => {
         </p>
       </div>
 
-      <Carousel 
-        setApi={setApi} 
+      <Carousel
+        setApi={setApi}
         className="w-full container mx-auto px-4 sm:px-6 lg:px-8"
         opts={{
           align: "start",
@@ -202,12 +83,23 @@ const ProductCarousel = () => {
         }}
       >
         <CarouselContent className="-ml-2 md:-ml-4">
-          {products.map((product, index) => (
+          {products.map((product) => (
             <CarouselItem
-              key={`${product.title}-${index}`}
+              key={product._id}
               className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
             >
-              <ShopProductCard {...product} />
+              <ShopProductCard
+                image={product.images?.[0]?.url || "/images/default-product.jpg"}
+                title={product.title}
+                description={product.shortDescription}
+                rating={product.averageRating}
+                reviews={product.totalReviews}
+                price={product.price}
+                onSeeMore={() => router.push(`/shop/${product._id}`)}
+                onBookNow={() =>
+                  router.push(`/checkout?productId=${product._id}&qty=1`)
+                }
+              />
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -215,9 +107,9 @@ const ProductCarousel = () => {
 
       {/* Bottom Controls */}
       <div className="flex items-center justify-center gap-4 mt-6 px-4">
-        <Button 
-          variant="outline" 
-          size="icon" 
+        <Button
+          variant="outline"
+          size="icon"
           onClick={scrollPrev}
           className="shrink-0"
           disabled={current === 1}
@@ -238,9 +130,9 @@ const ProductCarousel = () => {
           ))}
         </div>
 
-        <Button 
-          variant="outline" 
-          size="icon" 
+        <Button
+          variant="outline"
+          size="icon"
           onClick={scrollNext}
           className="shrink-0"
           disabled={current === count}

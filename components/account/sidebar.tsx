@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import useIsMobile from "@/services/hooks/use-mobile";
 import Image from "next/image";
+import Link from "next/link";
 
 interface SidebarProps {
   activeTab: string;
@@ -44,13 +45,15 @@ export function Sidebar({ activeTab, onNavigate }: SidebarProps) {
   const SidebarContent = () => (
     <div className="p-6 ">
       <div className="flex items-center justify-center space-x-3 mb-8">
-        <Image
-          src={"/images/logo.png"}
-          alt=""
-          width={200}
-          height={200}
-          className="w-[65px] h-[62px] rounded-full object-cover"
-        />
+        <Link href="/">
+          <Image
+            src={"/images/logo.png"}
+            alt=""
+            width={200}
+            height={200}
+            className="w-[65px] h-[62px] rounded-full object-cover"
+          />
+        </Link>
       </div>
 
       <nav className="space-y-2">
@@ -64,10 +67,10 @@ export function Sidebar({ activeTab, onNavigate }: SidebarProps) {
               key={item.id}
               onClick={() => handleNavigate(item.id)}
               className={cn(
-                "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors",
+                "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left cursor-pointer transition-colors",
                 isActive && !isLogout && "sidebar-active",
                 !isActive && !isLogout && "text-[#68706a] hover:bg-[#f8f9fa]",
-                isLogout && "text-[#e5102e] hover:bg-[#feecee]"
+                isLogout && "text-[#e5102e] hover:bg-[#feecee]",
               )}
             >
               <Icon className="w-5 h-5" />

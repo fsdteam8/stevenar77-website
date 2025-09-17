@@ -1,10 +1,12 @@
 import VerifyOTP from "@/components/auth/VerifyOTP";
-import React from "react";
+import React, { Suspense } from "react";
 
 export default function page() {
   return (
     <div>
-      <VerifyOTP />
+      <Suspense>
+        <VerifyOTP />
+      </Suspense>
     </div>
   );
 }

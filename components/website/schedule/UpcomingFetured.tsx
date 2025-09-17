@@ -1,178 +1,126 @@
 "use client";
 
 import * as React from "react";
-import {} from "@/components/ui/carousel";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import FeatureCard from "../shared/FeatureCard";
 import {
   Calendar,
   ChevronLeft,
   ChevronRight,
-  Clock,
   Locate,
   Star,
 } from "lucide-react";
+import { useCourses } from "@/services/hooks/courses/useCourses";
 
-// Dummy data (reuse your courses array)
-const courses = [
-  {
-    image: "/asset/card.png",
-    title: "Open Water Diver",
-    description: "Your entry point into scuba life.",
-    rating: 4.8,
-    reviews: 32,
-    duration: "3-4 days",
-    location: "dhaka",
-    students: 156,
-    features: [
-      "Instructor-led practice",
-      "2 dives at Catalina",
-      "Certification paperwork",
-      "Certificate of participation",
-    ],
-    price: "$999",
-    ageRestriction: "10+",
-  },
-  {
-    image: "/asset/card.png",
-    title: "Advanced Open Water",
-    description: "Level up your diving with advanced techniques.",
-    rating: 4.7,
-    reviews: 28,
-    duration: "5 days",
-    students: 120,
-    features: [
-      "Deep diving",
-      "Navigation skills",
-      "Wreck dive",
-      "Certification paperwork",
-    ],
-    price: "$1,299",
-    ageRestriction: "15+",
-  },
-  {
-    image: "/asset/card.png",
-    title: "Rescue Diver",
-    description: "Learn how to prevent and manage diving emergencies.",
-    rating: 4.9,
-    reviews: 40,
-    duration: "6 days",
-    students: 90,
-    features: [
-      "Rescue scenarios",
-      "Emergency training",
-      "Dive accident management",
-      "Certification paperwork",
-    ],
-    price: "$1,499",
-    ageRestriction: "15+",
-  },
-  {
-    image: "/asset/card.png",
-    title: "Dive Master",
-    description: "Take the first step to becoming a pro diver.",
-    rating: 5.0,
-    reviews: 50,
-    duration: "2-3 weeks",
-    students: 60,
-    features: [
-      "Professional training",
-      "Leadership skills",
-      "Assisting instructors",
-      "Certification paperwork",
-    ],
-    price: "$2,499",
-    ageRestriction: "18+",
-  },
-  {
-    image: "/asset/card.png",
-    title: "Dive Master",
-    description: "Take the first step to becoming a pro diver.",
-    rating: 5.0,
-    reviews: 50,
-    duration: "2-3 weeks",
-    students: 60,
-    features: [
-      "Professional training",
-      "Leadership skills",
-      "Assisting instructors",
-      "Certification paperwork",
-    ],
-    price: "$2,499",
-    ageRestriction: "18+",
-  },
-];
+// ----------------------
+// Types
+// ----------------------
+interface CourseData {
+  _id: string;
+  title: string;
+  shortDescription: string;
+  courseDuration: string;
+  location?: string;
+  requiredAge?: number;
+  price: number;
+  features: string[];
+  images?: { public_id: string; url: string }[];
+}
 
-const UpcomingFetured = () => {
-  const [current,] = React.useState(0);
+// ----------------------
+// Component
+// ----------------------
+const UpcomingFeatured = () => {
+  const router = useRouter();
+  const { data: apiCourses, isLoading, isError, error } = useCourses();
+  const [current] = React.useState(0);
 
   const itemsPerPage = 4;
-  const totalPages = Math.ceil(courses.length / itemsPerPage);
+  const totalPages = Math.ceil((apiCourses?.length || 0) / itemsPerPage);
+
+  if (isLoading)
+    return <p className="text-center py-10">Loading courses...</p>;
+
+  if (isError)
+    return (
+      <p className="text-center py-10 text-red-500">
+        Error: {error?.message}
+      </p>
+    );
+
   return (
     <section className="py-10">
       <h2 className="text-3xl font-bold text-center mb-8">
         Upcoming Classes - Quick View
       </h2>
 
-      <div className="w-full flex flex-wrap justify-between container  mx-auto">
-        {courses.map((course, index) => (
-          <div key={index} className="md:w-[48%] ">
+      <div className="w-full flex flex-wrap justify-between container mx-auto">
+        {(apiCourses as unknown as CourseData[])?.map((course) => (
+          <div key={course._id} className="md:w-[48%]">
             <FeatureCard
-              {...course}
-              onSeeMore={() => console.log("See More:", course.title)}
+              image={course.images?.[0]?.url || "/asset/card.png"}
+              title={course.title}
+              description={course.shortDescription}
+              rating={4.5} // placeholder unless API has ratings
+              reviews={0} // placeholder unless API has reviews
+              duration={course.courseDuration}
+              location={course.location || "N/A"}
+              students={0} // placeholder unless API has student count
+              features={course.features}
+              price={`$${course.price.toFixed(2)}`}
+              ageRestriction={course.requiredAge ? `${course.requiredAge}+` : ""}
+              onSeeMore={() => router.push(`/courses/${course._id}`)} // ✅ navigate to details
               onBookNow={() => console.log("Book Now:", course.title)}
             >
-              {/* Content */}
               <div className="p-5 space-y-4">
+                {/* Age */}
+                {course.requiredAge && (
+                  <p className="text-[#0694A2] font-normal leading-[150%]">
+                    Age {course.requiredAge}+
+                  </p>
+                )}
+
                 {/* Title + Rating */}
-                <p className="text-[#0694A2] font-normal leading-[150%] ">
-                  Age1 5+
-                </p>
                 <div className="flex justify-between items-center">
-                  <h2 className="text-xl md:text-[24px]  font-medium text-[#27303F] leading-[120%]">
+                  <h2 className="text-xl md:text-[24px] font-medium text-[#27303F] leading-[120%]">
                     {course.title}
                   </h2>
                   <div className="flex items-center text-sm text-gray-600 gap-1">
                     <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                    <span>{course.rating}</span>
-                    <span className="text-[#68706A] font-normal text-[12px] leading-[150%] ">
-                      ({course.reviews} reviews)
+                    <span>4.5</span>
+                    <span className="text-[#68706A] font-normal text-[12px]">
+                      (0 reviews)
                     </span>
                   </div>
                 </div>
 
-                {/* Duration + Students */}
+                {/* Duration + Location */}
                 <div className="flex flex-col gap-2 items-start text-sm mt-[10px] text-gray-500">
-                  <span className="flex items-center text-[16px] text-[#68706A] leading-[150%] gap-2">
+                  <span className="flex items-center text-[16px] gap-2">
                     <Calendar className="h-4 w-4" />
-                    {course.duration}
+                    {course.courseDuration}
                   </span>
-                  <span className="flex items-center text-[16px] text-[#68706A] leading-[150%] gap-2">
-                    <Clock className="h-4 w-4" />
-                    {course.duration}
-                  </span>
-                  {course?.location?.length || -1 >= 0 ? (
+                  {course.location && (
                     <span className="flex items-center gap-2">
                       <Locate className="h-4 w-4" />
                       <span className="text-[12px] text-[#68706A]">
                         {course.location}
                       </span>
                     </span>
-                  ) : (
-                    ""
                   )}
                 </div>
 
                 {/* Features */}
                 <div>
-                  <p className="font-medium mb-4 mt-[20px] text-[20px] leading-[120%] text-[#27303F]">
+                  <p className="font-medium mb-4 mt-[20px] text-[20px] text-[#27303F]">
                     Course Includes:
                   </p>
-                  <ul className="space-y-2  text-[#68706A]">
-                    {course.features.map((feature, index) => (
+                  <ul className="space-y-2 text-[#68706A]">
+                    {course.features.map((feature, idx) => (
                       <li
-                        key={index}
-                        className="flex items-center text-[16px] font-normal gap-2"
+                        key={idx}
+                        className="flex items-center text-[16px] gap-2"
                       >
                         <span className="h-2 w-2 rounded-full bg-cyan-600" />
                         {feature}
@@ -183,17 +131,15 @@ const UpcomingFetured = () => {
 
                 {/* Price + Age */}
                 <div className="flex justify-between items-center">
-                  <p className="text-xl md:text-[24px] leading-[120%]  font-medium text-gray-900">
-                    {course.price}
+                  <p className="text-xl md:text-[24px] font-medium text-gray-900">
+                    ${course.price.toFixed(2)}
                   </p>
-                  {course.ageRestriction && (
+                  {course.requiredAge && (
                     <span className="text-xs text-[#0694A2] font-normal">
-                      Age {course.ageRestriction}
+                      Age {course.requiredAge}+
                     </span>
                   )}
                 </div>
-
-                {/* Buttons */}
               </div>
             </FeatureCard>
           </div>
@@ -206,7 +152,6 @@ const UpcomingFetured = () => {
           <ChevronLeft className="w-5 h-5" />
         </Button>
 
-        {/* Dots */}
         <div className="flex gap-2">
           {Array.from({ length: totalPages }).map((_, i) => (
             <button
@@ -226,4 +171,4 @@ const UpcomingFetured = () => {
   );
 };
 
-export default UpcomingFetured;
+export default UpcomingFeatured;
