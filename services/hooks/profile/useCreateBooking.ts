@@ -76,18 +76,19 @@ export const useCreateBooking = () => {
       formData.append('lastPhysicalExamination', payload.lastPhysicalExamination);
       formData.append('fitnessLevel', payload.fitnessLevel);
       formData.append('price', payload.price.toString());
-
+      // formData.append('classDate', Array(payload.classDate).toString());
       // Add arrays
       payload.classDate.forEach(date => {
-        formData.append('classDate[]', date);
+        formData.append('classDate', date);
       });
+      console.log(payload.classDate);
 
       payload.medicalHistory.forEach(condition => {
-        formData.append('medicalHistory[]', condition);
+        formData.append('medicalHistory', condition);
       });
 
       payload.activityLevelSpecificQuestions.forEach(question => {
-        formData.append('activityLevelSpecificQuestions[]', question);
+        formData.append('activityLevelSpecificQuestions', question);
       });
 
       // Add files

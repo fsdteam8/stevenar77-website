@@ -102,7 +102,7 @@ export const api = {
 
     console.log("Session in postFormData:", formData);
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const response = await fetch(`${API_BASE_URL}/class/bookings`, {
       method: 'POST',
       headers: {
         // Don't set Content-Type for FormData, let browser set it

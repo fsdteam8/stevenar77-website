@@ -136,10 +136,7 @@ const FeaturedClasses: React.FC = () => {
               <FeatureCard
                 {...course}
                 onSeeMore={() => router.push(`/courses/${course.id}`)}
-                onBookNow={() => {
-                  console.log("Book Now:", course.title);
-                  // Add actual booking logic here
-                }}
+                onBookNow={() => router.push(`/courses/book/${course.id}`)}
               >
                 <div className="p-5 space-y-4">
                   {/* Title + Rating */}
