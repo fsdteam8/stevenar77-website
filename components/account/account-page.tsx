@@ -16,6 +16,8 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("profile");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
+ 
+
   const handleNavigation = (tab: string) => {
     if (tab === "logout") {
       setShowLogoutModal(true);
