@@ -33,7 +33,6 @@ const Navbar = () => {
   const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
-
   const isLoggedIn = !!session?.user;
 
   // Use custom hook for user info
@@ -88,6 +87,7 @@ const Navbar = () => {
     { name: "Community ", path: "/community" },
     { name: "About Us", path: "/about-us" },
     { name: "Contact Us", path: "/contact-us" },
+    { name: "Messaging", path: "/messaging" },
   ];
 
   const LoadingPlaceholder = () => (
