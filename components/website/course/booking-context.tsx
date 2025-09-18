@@ -4,54 +4,56 @@ import type React from "react"
 
 import { createContext, useContext, useReducer, type ReactNode } from "react"
 
-interface BookingState {
-  currentStep: number
+// booking-context.tsx
+export interface BookingState {
+  currentStep: number;
   course: {
-    id: string
-    name: string
-    price: number | number[] // Updated to support both single and multiple prices
-    duration: string
-    age: string
-  }
-  pricing?: string
-  addOn?: boolean
-  participants: number
-  selectedDate: Date | null
-  selectedTime: string
+    id: string;
+    name: string;
+    price: number | number[];
+    duration: string;
+    age: string;
+  };
+  pricing?: string;
+  addOn?: boolean;
+  participants: number;
+  selectedDate: Date | null;
+  selectedTime: string;
   addOnSelected: boolean;
   selectedPricing?: string;
-  selectedPriceIndex?: number; // Added for tracking selected price index
+  selectedPriceIndex?: number;
   personalInfo: {
-    name: string
-    email: string
-    phone: string
-    dateOfBirth: string
-    address: string
-    city: string
-    state: string
-    postalCode: string
-    emergencyContact: string
-    courseName: string
-  }
-  medicalHistory: Record<string, boolean>
+    name: string;
+    email: string;
+    phone: string;
+    dateOfBirth: string;
+    address: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    emergencyContact: string;
+    courseName: string;
+  };
+  medicalHistory: Record<string, boolean>;
   activityQuestions: {
-    swimmingLevel: string
-    divingExperience: string
-    lastPhysicalExam: string
-    fitnessLevel: string
-    physicalApproval: boolean
-    canSwim200m: boolean
-    claustrophobia: boolean
-    panicAttacks: boolean
-  }
+    swimmingLevel: string;
+    divingExperience: string;
+    lastPhysicalExam: string;
+    fitnessLevel: string;
+    physicalApproval: boolean;
+    canSwim200m: boolean;
+    claustrophobia: boolean;
+    panicAttacks: boolean;
+  };
   liabilityAgreement: {
-    releaseOfLiability: boolean
-    medicalFitness: boolean
-    equipmentTraining: boolean
-  }
-  documents: File[]
-  signature: string
+    releaseOfLiability: boolean;
+    medicalFitness: boolean;
+    equipmentTraining: boolean;
+  };
+  documents: File[];
+  signature: string;
 }
+
 
 type BookingAction =
   | { type: "SET_STEP"; payload: number }

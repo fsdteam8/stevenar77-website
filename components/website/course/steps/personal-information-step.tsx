@@ -108,7 +108,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div className="space-y-2" >
+        {/* <div className="space-y-2" >
           <Label htmlFor="courseName">Course Name</Label>
           <Select value={state.personalInfo.courseName} onValueChange={(value) => handleChange("courseName", value)}>
             <SelectTrigger>
@@ -120,7 +120,7 @@ export function PersonalInformationStep() {
               <SelectItem value="rescue-diver">Rescue Diver</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
       </div>
     </div>
   )
