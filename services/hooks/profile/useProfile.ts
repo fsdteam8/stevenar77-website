@@ -8,3 +8,5 @@ export const useProfile = () => {
     queryFn: getMyProfile,
   });
 };
+
+

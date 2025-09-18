@@ -34,12 +34,13 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
       <div className="container mx-auto h-full">
         <div className="py-1 my-5 w-full h-full overflow-hidden rounded-2xl shadow-lg bg-white">
           {/* Course Image */}
-          <div className="relative h-52 w-full">
+          <div className="relative w-full">
             <Image
               src={image}
               alt={title}
-              fill
-              className="object-cover"
+              width={600}
+              height={400}
+              className="object-cover w-full aspect-[5/3]"
               priority
             />
           </div>

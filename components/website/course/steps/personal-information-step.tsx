@@ -17,7 +17,7 @@ export function PersonalInformationStep() {
       <h2 className="text-2xl font-semibold mb-6 text-[#343a40]">Personal Information</h2>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div>
+        <div className="space-y-2">
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
@@ -27,7 +27,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div>
+        <div className="space-y-2">
           <Label htmlFor="email">Email Address</Label>
           <Input
             id="email"
@@ -38,7 +38,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div>
+        <div className="space-y-2">
           <Label htmlFor="phone">Phone Number</Label>
           <Input
             id="phone"
@@ -48,7 +48,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div>
+        <div className="space-y-2">
           <Label htmlFor="dob">Date of Birth</Label>
           <Input
             id="dob"
@@ -58,7 +58,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div className="md:col-span-2">
+        <div className="md:col-span-2 space-y-2">
           <Label htmlFor="address">Address</Label>
           <Input
             id="address"
@@ -68,7 +68,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div>
+        <div className="space-y-2" >
           <Label htmlFor="city">City</Label>
           <Input
             id="city"
@@ -78,7 +78,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div>
+        <div className="space-y-2" >
           <Label htmlFor="state">State</Label>
           <Input
             id="state"
@@ -88,7 +88,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div>
+        <div className="space-y-2" >
           <Label htmlFor="postal">Postal Code</Label>
           <Input
             id="postal"
@@ -98,7 +98,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div>
+        <div className="space-y-2" >
           <Label htmlFor="emergency">Emergency Contact</Label>
           <Input
             id="emergency"
@@ -108,7 +108,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div>
+        {/* <div className="space-y-2" >
           <Label htmlFor="courseName">Course Name</Label>
           <Select value={state.personalInfo.courseName} onValueChange={(value) => handleChange("courseName", value)}>
             <SelectTrigger>
@@ -120,7 +120,7 @@ export function PersonalInformationStep() {
               <SelectItem value="rescue-diver">Rescue Diver</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
       </div>
     </div>
   )

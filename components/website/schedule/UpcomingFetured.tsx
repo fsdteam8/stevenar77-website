@@ -20,11 +20,13 @@ interface CourseData {
   _id: string;
   title: string;
   shortDescription: string;
-  courseDuration: string;
+  duration: string;
+  avgRating: number;
+  totalReviews: number;
   location?: string;
   requiredAge?: number;
-  price: number;
-  features: string[];
+  price: number[];
+  courseIncludes: string[];
   images?: { public_id: string; url: string }[];
 }
 
@@ -39,15 +41,14 @@ const UpcomingFeatured = () => {
   const itemsPerPage = 4;
   const totalPages = Math.ceil((apiCourses?.length || 0) / itemsPerPage);
 
-  if (isLoading)
-    return <p className="text-center py-10">Loading courses...</p>;
+  if (isLoading) return <p className="text-center py-10">Loading courses...</p>;
 
   if (isError)
     return (
-      <p className="text-center py-10 text-red-500">
-        Error: {error?.message}
-      </p>
+      <p className="text-center py-10 text-red-500">Error: {error?.message}</p>
     );
+
+  console.log("Ciiiiiiiiiii: ", apiCourses);
 
   return (
     <section className="py-10">
@@ -64,12 +65,14 @@ const UpcomingFeatured = () => {
               description={course.shortDescription}
               rating={4.5} // placeholder unless API has ratings
               reviews={0} // placeholder unless API has reviews
-              duration={course.courseDuration}
+              duration={course.duration}
               location={course.location || "N/A"}
               students={0} // placeholder unless API has student count
-              features={course.features}
-              price={`$${course.price.toFixed(2)}`}
-              ageRestriction={course.requiredAge ? `${course.requiredAge}+` : ""}
+              features={course.courseIncludes}
+              price={`$${course?.price[0]?.toFixed(2)}`}
+              ageRestriction={
+                course.requiredAge ? `${course.requiredAge}+` : ""
+              }
               onSeeMore={() => router.push(`/courses/${course._id}`)} // ✅ navigate to details
               onBookNow={() => console.log("Book Now:", course.title)}
             >
@@ -88,9 +91,9 @@ const UpcomingFeatured = () => {
                   </h2>
                   <div className="flex items-center text-sm text-gray-600 gap-1">
                     <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                    <span>4.5</span>
+                    <span>{course.avgRating}</span>
                     <span className="text-[#68706A] font-normal text-[12px]">
-                      (0 reviews)
+                      ({course.totalReviews} reviews)
                     </span>
                   </div>
                 </div>
@@ -99,7 +102,7 @@ const UpcomingFeatured = () => {
                 <div className="flex flex-col gap-2 items-start text-sm mt-[10px] text-gray-500">
                   <span className="flex items-center text-[16px] gap-2">
                     <Calendar className="h-4 w-4" />
-                    {course.courseDuration}
+                    {course.duration}
                   </span>
                   {course.location && (
                     <span className="flex items-center gap-2">
@@ -117,7 +120,7 @@ const UpcomingFeatured = () => {
                     Course Includes:
                   </p>
                   <ul className="space-y-2 text-[#68706A]">
-                    {course.features.map((feature, idx) => (
+                    {course?.courseIncludes.map((feature, idx) => (
                       <li
                         key={idx}
                         className="flex items-center text-[16px] gap-2"
@@ -132,7 +135,7 @@ const UpcomingFeatured = () => {
                 {/* Price + Age */}
                 <div className="flex justify-between items-center">
                   <p className="text-xl md:text-[24px] font-medium text-gray-900">
-                    ${course.price.toFixed(2)}
+                    ${course?.price[0].toFixed(2)}
                   </p>
                   {course.requiredAge && (
                     <span className="text-xs text-[#0694A2] font-normal">

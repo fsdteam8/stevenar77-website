@@ -4,49 +4,56 @@ import type React from "react"
 
 import { createContext, useContext, useReducer, type ReactNode } from "react"
 
-interface BookingState {
-  currentStep: number
+// booking-context.tsx
+export interface BookingState {
+  currentStep: number;
   course: {
-    id: string
-    name: string
-    price: number
-    duration: string
-    age: string
-  }
-  participants: number
-  selectedDate: Date | null
-  selectedTime: string
+    id: string;
+    name: string;
+    price: number | number[];
+    duration: string;
+    age: string;
+  };
+  pricing?: string;
+  addOn?: boolean;
+  participants: number;
+  selectedDate: Date | null;
+  selectedTime: string;
+  addOnSelected: boolean;
+  selectedPricing?: string;
+  selectedPriceIndex?: number;
   personalInfo: {
-    name: string
-    email: string
-    phone: string
-    dateOfBirth: string
-    address: string
-    city: string
-    state: string
-    postalCode: string
-    emergencyContact: string
-    courseName: string
-  }
-  medicalHistory: Record<string, boolean>
+    name: string;
+    email: string;
+    phone: string;
+    dateOfBirth: string;
+    address: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    emergencyContact: string;
+    courseName: string;
+  };
+  medicalHistory: Record<string, boolean>;
   activityQuestions: {
-    swimmingLevel: string
-    divingExperience: string
-    lastPhysicalExam: string
-    fitnessLevel: string
-    physicalApproval: boolean
-    canSwim200m: boolean
-    claustrophobia: boolean
-    panicAttacks: boolean
-  }
+    swimmingLevel: string;
+    divingExperience: string;
+    lastPhysicalExam: string;
+    fitnessLevel: string;
+    physicalApproval: boolean;
+    canSwim200m: boolean;
+    claustrophobia: boolean;
+    panicAttacks: boolean;
+  };
   liabilityAgreement: {
-    releaseOfLiability: boolean
-    medicalFitness: boolean
-    equipmentTraining: boolean
-  }
-  documents: File[]
-  signature: string
+    releaseOfLiability: boolean;
+    medicalFitness: boolean;
+    equipmentTraining: boolean;
+  };
+  documents: File[];
+  signature: string;
 }
+
 
 type BookingAction =
   | { type: "SET_STEP"; payload: number }
@@ -60,6 +67,9 @@ type BookingAction =
   | { type: "SET_LIABILITY_AGREEMENT"; payload: Partial<BookingState["liabilityAgreement"]> }
   | { type: "SET_DOCUMENTS"; payload: File[] }
   | { type: "SET_SIGNATURE"; payload: string }
+  | { type: "SET_PRICING"; payload: string }
+  | { type: "SET_ADDON"; payload: boolean }
+  | { type: "SET_PRICE_INDEX"; payload: number } // Added action for price index
 
 const initialState: BookingState = {
   currentStep: 0,
@@ -70,9 +80,14 @@ const initialState: BookingState = {
     duration: "3-4 days",
     age: "10+",
   },
+  pricing: undefined,
+  addOn: false,
   participants: 1,
   selectedDate: null,
   selectedTime: "",
+  addOnSelected: false,
+  selectedPricing: undefined,
+  selectedPriceIndex: 0, // Added with default value
   personalInfo: {
     name: "",
     email: "",
@@ -129,6 +144,12 @@ function bookingReducer(state: BookingState, action: BookingAction): BookingStat
       return { ...state, documents: action.payload }
     case "SET_SIGNATURE":
       return { ...state, signature: action.payload }
+    case "SET_PRICING":
+      return { ...state, pricing: action.payload }
+    case "SET_ADDON":
+      return { ...state, addOn: action.payload }
+    case "SET_PRICE_INDEX": // Added case for price index
+      return { ...state, selectedPriceIndex: action.payload }
     default:
       return state
   }
