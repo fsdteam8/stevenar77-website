@@ -62,7 +62,7 @@ const Hero: React.FC<HeroProps> = ({
                 {primaryButtonText}
               </Button>
             )}
-            {secondaryButtonText && (
+            {/* {secondaryButtonText && (
               <Button
                 size="lg"
                 variant="outline"
@@ -71,7 +71,7 @@ const Hero: React.FC<HeroProps> = ({
               >
                 {secondaryButtonText}
               </Button>
-            )}
+            )} */}
           </div>
         )}
       </div>

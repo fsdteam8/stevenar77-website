@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -29,25 +30,25 @@ const ScubaStevenar = () => {
             </p>
 
             <p className="text-[#6B7280] leading-[150%] font-normal text-[16px]  mb-3">
-              He’s explored oceans around the world — from the Galapagos to St.
+              He&apos;s explored oceans around the world — from the Galapagos to St.
               Croix, Socorro to the Maldives, La Paz to Cozumel, Thailand,
               Hawaii, the B.V.I., and Fiji. For Steve, the ocean is magic, and
-              he’s honored to share that wonder while teaching divers to safely
+              he&apos;s honored to share that wonder while teaching divers to safely
               explore it.
             </p>
 
             <p className="text-[#6B7280] leading-[150%] font-normal text-[16px]  mb-2">
-              At Scuba Life, Steve doesn’t just teach dives — he builds
+              At Scuba Life, Steve doesn&apos;t just teach dives — he builds
               confidence, sparks curiosity, and welcomes you into a community of
               ocean explorers.
             </p>
 
             {/* Booking Section */}
             <div className="pt-4">
-              <Link href="#">
-                <button className="inline-block text-center cursor-pointer  text-[#0694A2] font-normal px-8 border-2 border-[#0694A2] py-2 rounded-lg transition-colors">
+              <Link href="/about-us">
+                <Button className="inline-block text-center cursor-pointer  text-[#0694A2] text-base  font-medium px-8 border-2 border-[#0694A2] py-2 rounded-lg bg-transparent hover:bg-[#0694A2] hover:text-white transition">
                   See More
-                </button>
+                </Button>
               </Link>
             </div>
           </div>
