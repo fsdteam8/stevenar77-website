@@ -82,6 +82,7 @@ export function BookingContent() {
     dispatch({ type: "SET_ADDON", payload: checked === true });
   };
 console.log(state);
+console.log("finding class/course id",state.course)
   return (
     <div className="space-y-6">
       {/* Course Selection */}
