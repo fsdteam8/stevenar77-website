@@ -20,8 +20,8 @@ const ProductCarousel = () => {
   const router = useRouter();
 
   const { data, isLoading, isError, error } = useProducts();
-
-  const products = data?.data?.products || [];
+  
+  const products = data || [];
 
   React.useEffect(() => {
     if (!api) return;
@@ -47,9 +47,12 @@ const ProductCarousel = () => {
     api?.scrollNext();
   }, [api]);
 
-  const scrollTo = React.useCallback((index: number) => {
-    api?.scrollTo(index);
-  }, [api]);
+  const scrollTo = React.useCallback(
+    (index: number) => {
+      api?.scrollTo(index);
+    },
+    [api],
+  );
 
   if (isLoading) {
     return <p className="text-center py-10">Loading featured products...</p>;
@@ -83,26 +86,30 @@ const ProductCarousel = () => {
         }}
       >
         <CarouselContent className="-ml-2 md:-ml-4">
-          {products.map((product) => (
-            <CarouselItem
-              key={product._id}
-              className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
-            >
-              <ShopProductCard
-                image={product.images?.[0]?.url || "/images/default-product.jpg"}
-                title={product.title}
-                description={product.shortDescription}
-                rating={product.averageRating}
-                reviews={product.totalReviews}
-                price={product.price}
-                onSeeMore={() => router.push(`/shop/${product._id}`)}
-                onBookNow={() =>
-                  router.push(`/checkout?productId=${product._id}&qty=1`)
-                }
-              />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
+  {products.map((product) => (
+    <CarouselItem
+      key={product._id}
+      className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+    >
+      {/* Fixed height wrapper */}
+      <div className="h-[450px] sm:h-[500px] lg:h-[550px] flex flex-col">
+        <ShopProductCard
+          image={product.previewUrl || "/images/default-product.jpg"}
+          title={product.title}
+          description={product.description.replace(/<\/?[^>]+(>|$)/g, "")} // strip HTML tags
+          rating={product.averageRating || 0}
+          reviews={product.totalReviews || 0}
+          price={product.price || 0}
+          onSeeMore={() => router.push(`/shop/${product._id}`)}
+          onBookNow={() =>
+            router.push(`/checkout?productId=${product._id}&qty=1`)
+          }
+        />
+      </div>
+    </CarouselItem>
+  ))}
+</CarouselContent>
+
       </Carousel>
 
       {/* Bottom Controls */}
