@@ -17,6 +17,11 @@ const nextConfig = {
         hostname: "images.unsplash.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "gelato-api-live.s3.eu-west-1.amazonaws.com",
+        pathname: "/**",
+      },
     ],
   },
 };

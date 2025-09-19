@@ -1,14 +1,12 @@
-"use client"
-
-import type React from "react"
-
-import { createContext, useContext, useReducer, type ReactNode } from "react"
-
 // booking-context.tsx
+"use client";
+import type React from "react";
+import { createContext, useContext, useReducer, type ReactNode } from "react";
+
 export interface BookingState {
   currentStep: number;
   course: {
-    id: string;
+    _id: string;
     name: string;
     price: number | number[];
     duration: string;
@@ -18,7 +16,10 @@ export interface BookingState {
   addOn?: boolean;
   participants: number;
   selectedDate: Date | null;
-  selectedTime: string;
+  selectedTime: {
+    label: string; // for UI (e.g. "2:00 PM")
+    iso: string | null; // for API (e.g. "2025-09-18T14:00:00.000Z")
+  } | null;
   addOnSelected: boolean;
   selectedPricing?: string;
   selectedPriceIndex?: number;
@@ -54,27 +55,41 @@ export interface BookingState {
   signature: string;
 }
 
-
 type BookingAction =
   | { type: "SET_STEP"; payload: number }
+  | { type: "SET_ID"; payload: string }
   | { type: "SET_COURSE"; payload: BookingState["course"] }
   | { type: "SET_PARTICIPANTS"; payload: number }
   | { type: "SET_DATE"; payload: Date }
-  | { type: "SET_TIME"; payload: string }
-  | { type: "SET_PERSONAL_INFO"; payload: Partial<BookingState["personalInfo"]> }
+  | { type: "SET_TIME"; payload: BookingState["selectedTime"] }
+
+  | {
+      type: "SET_PERSONAL_INFO";
+      payload: Partial<BookingState["personalInfo"]>;
+    }
   | { type: "SET_MEDICAL_HISTORY"; payload: Record<string, boolean> }
-  | { type: "SET_ACTIVITY_QUESTIONS"; payload: Partial<BookingState["activityQuestions"]> }
-  | { type: "SET_LIABILITY_AGREEMENT"; payload: Partial<BookingState["liabilityAgreement"]> }
+  | {
+      type: "SET_ACTIVITY_QUESTIONS";
+      payload: Partial<BookingState["activityQuestions"]>;
+    }
+  | {
+      type: "SET_LIABILITY_AGREEMENT";
+      payload: Partial<BookingState["liabilityAgreement"]>;
+    }
   | { type: "SET_DOCUMENTS"; payload: File[] }
   | { type: "SET_SIGNATURE"; payload: string }
   | { type: "SET_PRICING"; payload: string }
   | { type: "SET_ADDON"; payload: boolean }
-  | { type: "SET_PRICE_INDEX"; payload: number } // Added action for price index
+  | { type: "SET_PRICE_INDEX"; payload: number }; // Added action for price index
+
+const pathname = window?.location?.pathname || "";
+
+const exactPath = pathname.split("/")[3] || "";
 
 const initialState: BookingState = {
   currentStep: 0,
   course: {
-    id: "open-water-diver",
+    _id: exactPath,
     name: "Open Water Diver",
     price: 450,
     duration: "3-4 days",
@@ -84,7 +99,10 @@ const initialState: BookingState = {
   addOn: false,
   participants: 1,
   selectedDate: null,
-  selectedTime: "",
+  selectedTime: {
+    label: "",
+    iso: null,
+  },
   addOnSelected: false,
   selectedPricing: undefined,
   selectedPriceIndex: 0, // Added with default value
@@ -118,58 +136,74 @@ const initialState: BookingState = {
   },
   documents: [],
   signature: "",
-}
+};
 
-function bookingReducer(state: BookingState, action: BookingAction): BookingState {
+function bookingReducer(
+  state: BookingState,
+  action: BookingAction,
+): BookingState {
   switch (action.type) {
     case "SET_STEP":
-      return { ...state, currentStep: action.payload }
+      return { ...state, currentStep: action.payload };
     case "SET_COURSE":
-      return { ...state, course: action.payload }
+      return { ...state, course: action.payload };
     case "SET_PARTICIPANTS":
-      return { ...state, participants: action.payload }
+      return { ...state, participants: action.payload };
     case "SET_DATE":
-      return { ...state, selectedDate: action.payload }
+      return { ...state, selectedDate: action.payload };
     case "SET_TIME":
-      return { ...state, selectedTime: action.payload }
+      return { ...state, selectedTime: action.payload };
     case "SET_PERSONAL_INFO":
-      return { ...state, personalInfo: { ...state.personalInfo, ...action.payload } }
+      return {
+        ...state,
+        personalInfo: { ...state.personalInfo, ...action.payload },
+      };
     case "SET_MEDICAL_HISTORY":
-      return { ...state, medicalHistory: action.payload }
+      return { ...state, medicalHistory: action.payload };
     case "SET_ACTIVITY_QUESTIONS":
-      return { ...state, activityQuestions: { ...state.activityQuestions, ...action.payload } }
+      return {
+        ...state,
+        activityQuestions: { ...state.activityQuestions, ...action.payload },
+      };
     case "SET_LIABILITY_AGREEMENT":
-      return { ...state, liabilityAgreement: { ...state.liabilityAgreement, ...action.payload } }
+      return {
+        ...state,
+        liabilityAgreement: { ...state.liabilityAgreement, ...action.payload },
+      };
     case "SET_DOCUMENTS":
-      return { ...state, documents: action.payload }
+      return { ...state, documents: action.payload };
     case "SET_SIGNATURE":
-      return { ...state, signature: action.payload }
+      return { ...state, signature: action.payload };
     case "SET_PRICING":
-      return { ...state, pricing: action.payload }
+      return { ...state, pricing: action.payload };
     case "SET_ADDON":
-      return { ...state, addOn: action.payload }
+      return { ...state, addOn: action.payload };
     case "SET_PRICE_INDEX": // Added case for price index
-      return { ...state, selectedPriceIndex: action.payload }
+      return { ...state, selectedPriceIndex: action.payload };
     default:
-      return state
+      return state;
   }
 }
 
 const BookingContext = createContext<{
-  state: BookingState
-  dispatch: React.Dispatch<BookingAction>
-} | null>(null)
+  state: BookingState;
+  dispatch: React.Dispatch<BookingAction>;
+} | null>(null);
 
 export function BookingProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(bookingReducer, initialState)
+  const [state, dispatch] = useReducer(bookingReducer, initialState);
 
-  return <BookingContext.Provider value={{ state, dispatch }}>{children}</BookingContext.Provider>
+  return (
+    <BookingContext.Provider value={{ state, dispatch }}>
+      {children}
+    </BookingContext.Provider>
+  );
 }
 
 export function useBooking() {
-  const context = useContext(BookingContext)
+  const context = useContext(BookingContext);
   if (!context) {
-    throw new Error("useBooking must be used within a BookingProvider")
+    throw new Error("useBooking must be used within a BookingProvider");
   }
-  return context
+  return context;
 }

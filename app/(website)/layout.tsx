@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <>
-    <TopHeader />
+      <TopHeader />
       <Navbar /> {children} <Footer />
     </>
   );

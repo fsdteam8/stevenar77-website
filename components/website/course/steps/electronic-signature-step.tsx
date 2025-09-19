@@ -43,7 +43,7 @@ export function ElectronicSignatureStep() {
             className="mt-1 data-[state=checked]:bg-[#0694a2] data-[state=checked]:border-[#0694a2]"
           />
           <Label htmlFor="agreement" className="text-[#68706a] cursor-pointer">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+            I agree that my electronic signature is the legal equivalent of my handwritten signature.
           </Label>
         </div>
       </div>
