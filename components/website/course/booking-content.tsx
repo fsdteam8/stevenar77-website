@@ -10,8 +10,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useBooking } from "./booking-context";
 import Image from "next/image";
@@ -30,8 +28,8 @@ export function BookingContent() {
     "11:00 AM",
     "10:00 AM",
     "09:00 AM",
-    "09:00 AM",
     "07:00 AM",
+    "06:00 AM",
     "08:00 PM",
     "05:00 PM",
   ];
@@ -43,28 +41,47 @@ export function BookingContent() {
     }
   };
 
-  const handleTimeSelect = (time: string) => {
-    dispatch({ type: "SET_TIME", payload: time });
+  const handleTimeSelect = (timeLabel: string) => {
+    if (state.selectedDate) {
+      // Parse the human-readable time string
+      const [hoursMinutes, modifier] = timeLabel.split(" ");
+      const [rawHours, minutes] = hoursMinutes.split(":").map(Number);
+      let hours = rawHours;
+
+      if (modifier === "PM" && hours < 12) hours += 12;
+      if (modifier === "AM" && hours === 12) hours = 0;
+
+      const selectedDateTime = new Date(state.selectedDate);
+      selectedDateTime.setHours(hours, minutes, 0, 0);
+
+      dispatch({
+        type: "SET_TIME",
+        payload: {
+          label: timeLabel, // 👈 for showing to users
+          iso: selectedDateTime.toISOString(), // 👈 for sending to API
+        },
+      });
+    } else {
+      dispatch({
+        type: "SET_TIME",
+        payload: { label: timeLabel, iso: null },
+      });
+    }
   };
 
-  const handlePersonalInfoChange = (field: string, value: string) => {
-    dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
-  };
+  
 
   const handlePricingChange = (value: string) => {
     setSelectedPricing(value);
     dispatch({ type: "SET_PRICING", payload: value });
   };
 
-  // const handleAddOnChange = () => {
-  //   setAddOnSelected(!addOnSelected);
-  //   dispatch({ type: "SET_ADDON", payload: !addOnSelected });
-  // };
-
-  const handleAddOnChange = (checked: boolean | "indeterminate" | undefined) => {
+  const handleAddOnChange = (
+    checked: boolean | "indeterminate" | undefined,
+  ) => {
     dispatch({ type: "SET_ADDON", payload: checked === true });
   };
-
+console.log(state);
   return (
     <div className="space-y-6">
       {/* Course Selection */}
@@ -213,11 +230,13 @@ export function BookingContent() {
               {availableTimes.map((time, index) => (
                 <Button
                   key={time + index}
-                  variant={state.selectedTime === time ? "default" : "outline"}
+                  variant={
+                    state.selectedTime?.label === time ? "default" : "outline"
+                  }
                   size="sm"
                   onClick={() => handleTimeSelect(time)}
                   className={
-                    state.selectedTime === time
+                    state.selectedTime?.label === time
                       ? "bg-[#0694a2] hover:bg-[#0694a2]/90"
                       : ""
                   }
@@ -229,113 +248,6 @@ export function BookingContent() {
           </div>
         </div>
       </Card>
-
-      {/* Personal Information */}
-      {/* {showPersonalInfo && (
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4 text-[#343a40]">Personal Information</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                placeholder="Full Name Here"
-                value={state.personalInfo.name}
-                onChange={(e) => handlePersonalInfoChange("name", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="example@example.com"
-                value={state.personalInfo.email}
-                onChange={(e) => handlePersonalInfoChange("email", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                placeholder="+1234567890"
-                value={state.personalInfo.phone}
-                onChange={(e) => handlePersonalInfoChange("phone", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="dob">Date of Birth</Label>
-              <Input
-                id="dob"
-                placeholder="mm/dd/yyyy"
-                value={state.personalInfo.dateOfBirth}
-                onChange={(e) => handlePersonalInfoChange("dateOfBirth", e.target.value)}
-              />
-            </div>
-            <div className="md:col-span-2">
-              <Label htmlFor="address">Address</Label>
-              <Input
-                id="address"
-                placeholder="Street Address"
-                value={state.personalInfo.address}
-                onChange={(e) => handlePersonalInfoChange("address", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="city">City</Label>
-              <Input
-                id="city"
-                placeholder="City"
-                value={state.personalInfo.city}
-                onChange={(e) => handlePersonalInfoChange("city", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="state">State</Label>
-              <Input
-                id="state"
-                placeholder="State"
-                value={state.personalInfo.state}
-                onChange={(e) => handlePersonalInfoChange("state", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="postal">Postal Code</Label>
-              <Input
-                id="postal"
-                placeholder="Postal Code"
-                value={state.personalInfo.postalCode}
-                onChange={(e) => handlePersonalInfoChange("postalCode", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="emergency">Emergency Contact</Label>
-              <Input
-                id="emergency"
-                placeholder="Emergency Contact Number"
-                value={state.personalInfo.emergencyContact}
-                onChange={(e) => handlePersonalInfoChange("emergencyContact", e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="courseName">Course Name</Label>
-              <Select
-                value={state.personalInfo.courseName}
-                onValueChange={(value) => handlePersonalInfoChange("courseName", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Name" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="open-water">Open Water Diver</SelectItem>
-                  <SelectItem value="advanced-open-water">Advanced Open Water</SelectItem>
-                  <SelectItem value="rescue-diver">Rescue Diver</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </Card>
-      )} */}
     </div>
   );
 }

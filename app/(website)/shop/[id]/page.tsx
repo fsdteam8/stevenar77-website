@@ -54,8 +54,8 @@ export default function Page({ params }: PageProps) {
         size="small"
       />
       <ProductDetails />
-      <ProductReviewDes   />
-      <ProductReview userId={userId} productId={productId} />
+      {/* <ProductReviewDes   /> */}
+      {/* <ProductReview userId={userId} productId={productId} /> */}
       <ProductCarousel />
     </div>
   );

@@ -79,7 +79,7 @@ export function LiabilityReleaseStep() {
               className="mt-1"
             />
             <Label htmlFor="release" className="text-[#68706a] cursor-pointer">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+              I have read and agree to the terms of the Liability Release Agreement.
             </Label>
           </div>
 
@@ -91,7 +91,7 @@ export function LiabilityReleaseStep() {
               className="mt-1 data-[state=checked]:bg-[#0694a2] data-[state=checked]:border-[#0694a2]"
             />
             <Label htmlFor="medical" className="text-[#68706a] cursor-pointer">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+              I confirm that I am medically fit to participate in scuba diving activities.
             </Label>
           </div>
 
@@ -103,7 +103,7 @@ export function LiabilityReleaseStep() {
               className="mt-1"
             />
             <Label htmlFor="equipment" className="text-[#68706a] cursor-pointer">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+              I comply with all the terms and conditions stated above.
             </Label>
           </div>
         </div>
