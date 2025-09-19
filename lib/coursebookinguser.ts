@@ -1,7 +1,6 @@
 // // lib/coursebookinguser.ts
 // import { getSession } from "next-auth/react";
 
-import { getSession } from "next-auth/react";
 
 // const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
@@ -68,6 +67,8 @@ import { getSession } from "next-auth/react";
 // };
 
 // lib/api.ts
+import { getSession } from "next-auth/react";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 export class ApiError extends Error {

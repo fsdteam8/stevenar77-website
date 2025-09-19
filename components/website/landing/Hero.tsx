@@ -1,6 +1,10 @@
 'use client'
+import { useRouter } from "next/navigation";
 import Hero from "../shared/Hero";
 export default function HomeHero() {
+
+  const route = useRouter();
+
   return (
     <Hero
       title="Dive Into Adventure"
@@ -9,7 +13,7 @@ export default function HomeHero() {
       showButtons
       primaryButtonText="View Classes"
       secondaryButtonText="See Schedule"
-      onPrimaryClick={() => console.log("Classes clicked")}
+      onPrimaryClick={() => route.push("/courses")}
       onSecondaryClick={() => console.log("Schedule clicked")}
       
     />
