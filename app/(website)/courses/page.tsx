@@ -1,6 +1,7 @@
 "use client"
 import CourseFeatured from '@/components/website/course/CourseFeatured'
-import Familyreviews from '@/components/website/landing/Familyreviews'
+import WhyLearnUs from '@/components/website/landing/WhyLearnUs'
+// import Familyreviews from '@/components/website/landing/Familyreviews'
 import StillHaveQuestion from '@/components/website/reusable/stillHaveQuestion'
 import Hero from '@/components/website/shared/Hero'
 import React from 'react'
@@ -15,7 +16,8 @@ const page = () => {
       size= "small"
       />
       <CourseFeatured />
-      <Familyreviews />
+      <WhyLearnUs />
+      {/* <Familyreviews /> */}
       <StillHaveQuestion />
     </div>
   )

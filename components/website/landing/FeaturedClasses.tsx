@@ -165,10 +165,9 @@ const FeaturedClasses: React.FC = () => {
                   {/* Description */}
                   <p
                     className="text-[#68706A] leading-[150%] text-sm md:text-[16px] line-clamp-3"
-                    // line-clamp-3 truncates to 3 lines with ellipsis
-                  >
-                    {course.description}
-                  </p>
+                    dangerouslySetInnerHTML={{ __html: course.description }}
+                  />
+
                   <Button
                     onClick={() => router.push(`/courses/${course.id}`)}
                     className="text-cyan-600 bg-transparent hover:bg-gray-50 hover:underline text-sm font-semibold"
@@ -198,17 +197,16 @@ const FeaturedClasses: React.FC = () => {
                         Course Includes:
                       </p>
                       <ul className="space-y-2 text-[#68706A] line-clamp-5">
-  {course.features.map((feature, idx) => (
-    <li
-      key={idx}
-      className="flex items-center text-[16px] gap-2"
-    >
-      <span className="h-2 w-2 rounded-full bg-cyan-600 flex-shrink-0" />
-      <span>{feature}</span>
-    </li>
-  ))}
-</ul>
-
+                        {course.features.map((feature, idx) => (
+                          <li
+                            key={idx}
+                            className="flex items-center text-[16px] gap-2"
+                          >
+                            <span className="h-2 w-2 rounded-full bg-cyan-600 flex-shrink-0" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   )}
 

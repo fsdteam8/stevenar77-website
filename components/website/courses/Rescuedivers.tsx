@@ -6,7 +6,6 @@ import { useParams, useRouter } from "next/navigation";
 import { Plus, Minus } from "lucide-react";
 import { useCourse } from "@/services/hooks/courses/useCourse";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 const CourseDetails = () => {
   const params = useParams();
@@ -36,45 +35,45 @@ const CourseDetails = () => {
         "Barred green website, fire, boots, regulator, BCD, and computer",
         "Ikeun-i-trip fiery tickets to Costima Island",
         "Two-night story at The Harmosa Hotel",
-        "Official PKU Open Water Diver certification paperwork"
-      ]
+        "Official PKU Open Water Diver certification paperwork",
+      ],
     },
     {
       title: "Where You'll Learn",
       items: [
         "Classroom & Pool: At our Ageure Hills dive shop and nearby pool",
-        "Ocean Diving: Coelho Point Dive Park, Catalina Island — 5000th easiest entry with steps, handrails, and clear water"
-      ]
+        "Ocean Diving: Coelho Point Dive Park, Catalina Island — 5000th easiest entry with steps, handrails, and clear water",
+      ],
     },
     {
       title: "Who Can Join",
       items: [
         "Anyone age 10+ in good health",
         "Agas 10–14 may earn the Junior Open Water certification",
-        "Completion of a standard medical statement is required"
-      ]
+        "Completion of a standard medical statement is required",
+      ],
     },
     {
       title: "Your Class Experience",
       items: [
         "Weekend One — Classroom & Pool: Learn scales theory in a relaxed classroom, then practice in the pool to build comfort step by step.",
-        "Weekend Two — Catalina Ocean Drive: Make four dives at Centro Point Dive Park with instructor support. Explore fully forests learning with sea flora, fishachecks, and Giant Black Sea Bass."
-      ]
+        "Weekend Two — Catalina Ocean Drive: Make four dives at Centro Point Dive Park with instructor support. Explore fully forests learning with sea flora, fishachecks, and Giant Black Sea Bass.",
+      ],
     },
     {
       title: "When Classes Are Offered",
       items: [
         "Once a month (see calendar for dates), year-round (except major holidays)",
-        "Summer Mile quickly — early booking recommended"
-      ]
+        "Summer Mile quickly — early booking recommended",
+      ],
     },
     {
       title: "What You'll Need",
       items: [
         "Personal gear: Mask and shortest (titles during skiss for comfort)",
-        "Everything else is provided — walkup, fire, boots, regulator, BCD, and computer"
-      ]
-    }
+        "Everything else is provided — walkup, fire, boots, regulator, BCD, and computer",
+      ],
+    },
   ];
 
   // Loading state
@@ -273,18 +272,18 @@ const CourseDetails = () => {
             </div>
           </div>
           <div className="mx-auto container">
-            <div className="w-full flex flex-col sm:flex-row gap-5 justify-between items-start">
-              <div className="w-full space-y-12">
+            <div className="w-full grid grid-cols-3 gap-5 justify-between items-start">
+              <div className="w-full col-span-2 space-y-12">
                 {/* Content Section */}
                 <div className="order-2 md:order-1">
                   <h1 className="text-4xl md:text-5xl text-[#27303F] font-bold mb-6">
                     {course.title}
                   </h1>
+                  <p
+                    className="text-gray-700 leading-relaxed text-lg mb-8"
+                    dangerouslySetInnerHTML={{ __html: course.description }}
+                  />
 
-                  <p className="text-gray-700 leading-relaxed text-lg mb-8">
-                    {course.description}
-                  </p>
-                  
                   {/* Features - Course Includes */}
                   {course.courseIncludes &&
                     course.courseIncludes.length > 0 && (
@@ -307,32 +306,13 @@ const CourseDetails = () => {
                 </div>
               </div>
 
-              <div className="w-full">
+              <div className="w-full col-span-1">
                 {/* Conditional Pricing Layout */}
                 {hasSinglePrice
                   ? renderSinglePriceLayout()
                   : renderMultiplePriceLayout()}
               </div>
             </div>
-          </div>
-          
-          {/* Dummy Data Sections */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-            {courseSections.map((section, index) => (
-              <div key={index} className="  p-6 rounded-lg  ">
-                <h3 className="text-xl font-semibold text-[#27303F] mb-4">
-                  {section.title}
-                </h3>
-                <ul className="space-y-3">
-                  {section.items.map((item, idx) => (
-                    <li key={idx} className="flex items-start">
-                      <div className="w-2 h-2 bg-teal-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                      <span className="text-gray-700">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
           </div>
         </div>
       </section>
