@@ -10,8 +10,8 @@ export default function page() {
     <div className="">
       <HomeHero />
       <FeaturedClasses />
-      <ScubaStevenar />
       <WhyLearnUs />
+      <ScubaStevenar />
       <StillHaveQuestion />
     </div>
   );
