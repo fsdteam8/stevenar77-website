@@ -205,18 +205,17 @@ console.log("finding class/course id",state.course)
       </Card>
 
       {/* Date Selection */}
-      <Card className="p-6">
+      {/* <Card className="p-6">
         <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
           Select Date or Time
         </h2>
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-medium mb-3 text-center">February 2025</h3>
             <Calendar
               mode="single"
               selected={state.selectedDate || undefined}
               onSelect={handleDateSelect}
-              className="rounded-md border"
+              className="rounded-md border w-full"
               classNames={{
                 day_selected:
                   "bg-[#0694a2] text-white hover:bg-[#0694a2] hover:text-white focus:bg-[#0694a2] focus:text-white",
@@ -247,6 +246,49 @@ console.log("finding class/course id",state.course)
               ))}
             </div>
           </div>
+        </div>
+      </Card> */}
+
+      <Card className="p-6">
+        <h2 className="text-xl font-semibold mb-4 text-[#343a40]">Select Date or Time</h2>
+        <div className="space-y-6">
+          <div>
+            <Calendar
+              mode="single"
+              selected={state.selectedDate || undefined}
+              onSelect={handleDateSelect}
+              className="rounded-md border w-full"
+              classNames={{
+                day_selected:
+                  "bg-[#0694a2] text-white hover:bg-[#0694a2] hover:text-white focus:bg-[#0694a2] focus:text-white",
+                day_today: "bg-[#0694a2] text-white",
+              }}
+            />
+            {state.selectedDate && <p className="text-red-500 text-sm mt-2"></p>}
+          </div>
+
+          <div>
+            {/* <h3 className="font-medium mb-3">Available Time</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {availableTimes.map((time, index) => (
+                <Button
+                  key={time + index}
+                  variant={
+                    state.selectedTime?.label === time ? "default" : "outline"
+                  }
+                  size="sm"
+                  onClick={() => handleTimeSelect(time)}
+                  className={
+                    state.selectedTime?.label === time
+                      ? "bg-[#0694a2] hover:bg-[#0694a2]/90"
+                      : ""
+                  }
+                >
+                  {time}
+                </Button>
+              ))}
+            </div> */}
+        </div>
         </div>
       </Card>
     </div>
