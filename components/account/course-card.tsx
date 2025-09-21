@@ -66,7 +66,7 @@ export function CourseCard({
           <Image
             width={100}
             height={100}
-            src={imageUrl || "/placeholder.svg"}
+            src={imageUrl || "/images/imagewater.jpg"}
             alt={title}
             className="w-full h-full object-cover"
           />

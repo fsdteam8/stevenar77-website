@@ -8,6 +8,7 @@ import {
   ShoppingBag,
   LogOut,
   Menu,
+  ShoppingBasket,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -31,7 +32,8 @@ export function Sidebar({ activeTab, onNavigate }: SidebarProps) {
     { id: "change-password", label: "Changes Password", icon: Lock },
     { id: "course-history", label: "Course History", icon: BookOpen },
     { id: "trips-history", label: "Trips History", icon: MapPin },
-    { id: "shop-history", label: "Shop History", icon: ShoppingBag },
+    { id: "order-history", label: "Order History", icon: ShoppingBasket},
+    // { id: "shop-history", label: "Shop History", icon: ShoppingBag },
     { id: "logout", label: "Log Out", icon: LogOut },
   ];
 

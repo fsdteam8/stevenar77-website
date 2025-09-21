@@ -5,6 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 export interface Product {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [x: string]: any;
   _id: string;
   title: string;
   shortDescription: string;

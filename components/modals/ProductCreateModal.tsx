@@ -1,23 +1,23 @@
 "use client";
-
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import ProductCreate from "../website/shop/ProductCreate";
+import ProductCreate from "../website/order/ProductCreate";
+
 
 interface ProductCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
+  productId: string;
 }
 
-export function ProductCreateModal({ isOpen, onClose }: ProductCreateModalProps) {
+export function ProductCreateModal({ isOpen, onClose, productId }: ProductCreateModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl p-0">
+      <DialogContent className="min-w-[700px] p-0">
         <DialogHeader className="p-6 border-b">
-          <DialogTitle className="text-lg font-semibold">Create New Product</DialogTitle>
+          <DialogTitle className="text-lg font-semibold">Create Order</DialogTitle>
         </DialogHeader>
-        
         <div className="p-6">
-          <ProductCreate />
+          <ProductCreate productId={productId} onClose={onClose} />
         </div>
       </DialogContent>
     </Dialog>

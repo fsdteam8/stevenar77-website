@@ -1,29 +1,25 @@
+// lib/products.ts
 import axios from "axios";
 
-export interface Variant {
-  _id: string;
-  name: string;
-  price: number;
-  stock?: number;
+export interface GelatoProduct {
+  id: string;
+  title: string;
+  description: string;
+  previewUrl?: string;
+  // other gelato-specific fields
 }
 
 export interface Product {
   _id: string;
   title: string;
   shortDescription: string;
+  longDescription: string;
   price: number;
   images: { public_id: string; url: string }[];
-  category: string;
-  longDescription: string;
-  inStock: boolean;
-  featured: string[];
   totalReviews: number;
   averageRating: number;
-  quantity: number;
-  createdAt: string;
-  updatedAt: string;
-  variants?: Variant[]; // optional
-  metadata?: Record<string, unknown>[];
+  variants?: { _id: string; name: string; price: number }[];
+  // etc.
 }
 
 export interface ProductResponse {
@@ -33,28 +29,12 @@ export interface ProductResponse {
   data: Product;
 }
 
-export async function getProductById(
-  productId: string,
-): Promise<ProductResponse> {
-  const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/product/${productId}`,
-  );
-  return response.data as ProductResponse;
-}
-/**
- * Get product price dynamically
- */
-export async function getProductPrice(
-  id: string,
-): Promise<ApiResponse<Product>> {
-  const response = await axios.get<ApiResponse<Product>>(
-    `${process.env.NEXT_PUBLIC_API_URL}/product/get-price/${id}`,
-  );
+export async function getProductById(productId: string): Promise<ProductResponse> {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/shop/${productId}`);
   return response.data;
 }
-interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  statusCode: number;
-  data: T;
+
+export async function getGelatoProductById(productId: string): Promise<{ data: GelatoProduct }> {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/get-price/${productId}`);
+  return response.data;
 }
