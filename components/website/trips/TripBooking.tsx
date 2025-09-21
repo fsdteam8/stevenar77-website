@@ -83,7 +83,7 @@ function TripBookingContent() {
             <TripForm />
           </div>
           <div className="lg:col-span-1">
-            <TripSummary />
+            <TripSummary trip={trip} />
           </div>
         </div>
       </main>

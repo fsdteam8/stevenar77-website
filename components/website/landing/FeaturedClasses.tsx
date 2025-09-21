@@ -213,7 +213,7 @@ const FeaturedClasses: React.FC = () => {
                   {/* Price + Age */}
                   <div className="flex justify-between items-center">
                     <p className="text-xl md:text-[24px] font-medium text-gray-900">
-                      {course.price}
+                      ${course.price}
                     </p>
                     <span className="text-xs text-[#0694A2] font-normal">
                       Age {course.ageRestriction}

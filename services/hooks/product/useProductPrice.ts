@@ -1,12 +1,13 @@
-// services/hooks/product/useProductPrice.ts
-import { getProductPrice } from "@/lib/products";
+import { getGelatoProductById } from "@/lib/products";
 import { useQuery } from "@tanstack/react-query";
-// import { getProductPrice, } from "@/services/api/product";
 
 export const useProductPrice = (id: string) => {
   return useQuery({
     queryKey: ["productPrice", id],
-    queryFn: () => getProductPrice(id),
+    queryFn: async () => {
+      const res = await getGelatoProductById(id);
+      return res.data; // contains the GelatoProduct, including price if available
+    },
     enabled: !!id,
   });
 };

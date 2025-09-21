@@ -6,8 +6,13 @@ import Image from "next/image";
 import { useTripCheckout } from "@/services/hooks/trip/useTripCheckout";
 import { useState } from "react";
 import { useTripBooking } from "../course/steps/TripBookingContext";
+import { Trip } from "@/services/hooks/trip/useTrip";
 
-export function TripSummary() {
+interface TripSummaryProps {
+  trip: Trip;
+}
+
+export function TripSummary({ trip }: TripSummaryProps) {
   const { state } = useTripBooking();
   const checkout = useTripCheckout(state.tripId);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -57,21 +62,26 @@ export function TripSummary() {
 
   return (
     <Card className="p-6 sticky top-4">
-      <h2 className="text-xl font-semibold mb-4 text-[#343a40]">Trip Summary</h2>
+      <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
+        Trip Summary
+      </h2>
 
       <div className="space-y-4">
         {/* Trip Info */}
         <div className="flex items-center gap-3">
           <Image
-            src="/scuba-diving-course-thumbnail.jpg"
-            alt="Trip thumbnail"
+            src={trip.images[0]?.url || "/images/default.png"}
+            alt={trip.title}
             width={64}
             height={48}
             className="rounded object-cover"
           />
+
           <div>
             <h3 className="font-medium text-[#343a40]">{state.course.name}</h3>
-            <p className="text-sm text-[#6c757d]">Duration: {state.course.duration}</p>
+            <p className="text-sm text-[#6c757d]">
+              Duration: {state.course.duration}
+            </p>
             <p className="text-sm text-[#6c757d]">Age: {state.course.age}</p>
           </div>
         </div>
@@ -80,15 +90,11 @@ export function TripSummary() {
         <div className="border-t pt-4 space-y-2 text-sm text-[#6c757d]">
           <p>
             <span className="font-medium">First Name:</span>{" "}
-            {firstName || (
-              <span className="text-red-500 italic">Required</span>
-            )}
+            {firstName || <span className="text-red-500 italic">Required</span>}
           </p>
           <p>
             <span className="font-medium">Last Name:</span>{" "}
-            {lastName || (
-              <span className="text-red-500 italic">Required</span>
-            )}
+            {lastName || <span className="text-red-500 italic">Required</span>}
           </p>
           <p>
             <span className="font-medium">Phone:</span>{" "}
@@ -107,7 +113,9 @@ export function TripSummary() {
         {/* Pricing */}
         <div className="border-t pt-4 space-y-2">
           <div className="flex justify-between">
-            <span className="text-[#6c757d]">Trip fee (x{state.participants})</span>
+            <span className="text-[#6c757d]">
+              Trip fee (x{state.participants})
+            </span>
             <span className="font-medium">${state.course.price}</span>
           </div>
           <div className="flex justify-between">
@@ -153,7 +161,9 @@ export function TripSummary() {
 
         {/* What's Included */}
         <div className="mt-6">
-          <h3 className="font-medium mb-3 text-[#343a40]">What&apos;s Included</h3>
+          <h3 className="font-medium mb-3 text-[#343a40]">
+            What&apos;s Included
+          </h3>
           <ul className="space-y-2 text-sm text-[#6c757d]">
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>
@@ -164,8 +174,8 @@ export function TripSummary() {
               Pool training
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>
-              4 open water dives
+              <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>4 open
+              water dives
             </li>
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>
