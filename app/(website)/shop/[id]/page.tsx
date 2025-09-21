@@ -43,7 +43,7 @@ export default function Page({ params }: PageProps) {
   const productId = params.id;
 
   // TODO: Replace with real userId from auth (e.g. NextAuth session)
-  const userId = "68bf6996f02adb6fb1fef5a0";
+  
 
   return (
     <div className="bg-[#FFFEFD]">

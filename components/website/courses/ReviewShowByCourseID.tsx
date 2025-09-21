@@ -45,20 +45,20 @@ const ReviewShowByCourseID: React.FC<Props> = ({ courseId }) => {
           {/* Responsive layout & margin */}
           {data.data.map((review) => (
             <ReviewCard
-              key={review._id}
+              key={review?._id}
               review={{
-                _id: review._id,
+                _id: review?._id,
                 userId: {
-                  _id: review.userId._id,
-                  firstName: review.userId.firstName || "Unknown",
-                  lastName: review.userId.lastName || "",
-                  email: review.userId.email || "",
+                  _id: review?.userId._id,
+                  firstName: review?.userId.firstName || "Jhon",
+                  lastName: review?.userId.lastName || "",
+                  email: review?.userId.email || "",
                 },
-                star: review.star,
-                comment: review.comment,
-                createdAt: review.createdAt,
-                updatedAt: review.updatedAt,
-                __v: review.__v,
+                star: review?.star,
+                comment: review?.comment,
+                createdAt: review?.createdAt,
+                updatedAt: review?.updatedAt,
+                __v: review?.__v,
               }}
             />
           ))}

@@ -339,9 +339,11 @@ const CourseFeatured: React.FC = () => {
                 </div>
 
                 {/* Description */}
-                <p className="text-[#68706A] font-normal leading-[150%] mt-[10px] text-sm md:text-[16px]">
-                  {course.description}
-                </p>
+
+                <p
+                  className="text-[#68706A] font-normal leading-[150%] mt-[10px] text-sm md:text-[16px]"
+                  dangerouslySetInnerHTML={{ __html: course.description }}
+                />
 
                 {/* Features */}
                 {course.features.length > 0 && (

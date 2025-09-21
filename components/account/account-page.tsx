@@ -11,6 +11,7 @@ import { Header } from "./header";
 import { Sidebar } from "./sidebar";
 import { ChangePasswordPage } from "./pages/change-password-page";
 import { signOut } from "next-auth/react";
+import OrderHistoryPage from "./pages/order-history-page";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -34,8 +35,10 @@ export default function DashboardPage() {
         return <CourseHistoryPage />;
       case "trips-history":
         return <TripsHistoryPage />;
-      case "shop-history":
-        return <ShopHistoryPage />;
+      // case "shop-history":
+      //   return <ShopHistoryPage />;
+      case "order-history":
+          return <OrderHistoryPage />
       case "change-password":
         return <ChangePasswordPage />;
       default:
