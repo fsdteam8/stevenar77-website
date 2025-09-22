@@ -48,8 +48,9 @@ export default function TripsCard({
           <h1 className="text-[#27303F] text-2xl font-semibold">{title}</h1>
 
           {/* Short Description */}
-          <p className="text-[#68706A] text-base font-medium my-3 italic leading-relaxed">
-            {shortDescription}
+          <p className="text-[#68706A] text-base font-medium my-3 italic leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: shortDescription }}>
+            {/* {shortDescription} */}
           </p>
 
           {/* Buttons */}

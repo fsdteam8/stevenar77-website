@@ -38,7 +38,7 @@ const Navbar = () => {
   // Use custom hook for user info
   const { user, loading } = useUser(session?.user?.id);
 
-  const displayAvatar = user?.avatar?.url || session?.user?.email || undefined;
+  const displayAvatar = user?.avatar?.url || undefined;
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -92,7 +92,6 @@ const Navbar = () => {
     <div className="h-10 w-24 bg-gray-200 rounded animate-pulse"></div>
   );
 
-
   return (
     <header className="sticky top-0 h-full bg-white z-50 shadow-sm">
       <div className="container mx-auto px-4">
@@ -133,10 +132,22 @@ const Navbar = () => {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage
-                          src={displayAvatar}
-                          alt={session.user?.email || ""}
-                        />
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage
+                            src={displayAvatar}
+                            alt={
+                              // session.user?.name ||
+                              session.user?.email ||
+                              "User"
+                            }
+                          />
+                          <AvatarFallback>
+                            {getInitials(
+                              session.user?.email,
+                            )}
+                          </AvatarFallback>
+                        </Avatar>
+
                         <AvatarFallback>
                           {getInitials(session.user?.email)}
                         </AvatarFallback>
