@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Hero from "../shared/Hero";
+// import Hero from "../shared/Hero";
 import TripsCard from "./TripsCard";
 import { useTrips } from "@/services/hooks/trip/useTrips";
 // import { useRouter } from "next/navigation";
@@ -20,12 +20,12 @@ export default function Trips() {
 
   return (
     <div>
-      <Hero
+      {/* <Hero
         title="International Diving Trips"
         subtitle="Start your underwater adventure with our comprehensive beginner courses. From your first breath underwater to becoming a certified diver."
         backgroundImage="/images/imagewater.jpg"
         size="small"
-      />
+      /> */}
 
       {trips?.map((trip, index) => (
         <TripsCard

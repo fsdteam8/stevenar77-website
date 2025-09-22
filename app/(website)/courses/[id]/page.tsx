@@ -1,6 +1,6 @@
 import Rescuedivers from "@/components/website/courses/Rescuedivers";
 import CourseReview from "@/components/website/courses/CourseReview";
-import Hero from "@/components/website/shared/Hero";
+// import Hero from "@/components/website/shared/Hero";
 import React from "react";
 import ReviewShowByCourseID from "@/components/website/courses/ReviewShowByCourseID";
 
@@ -18,12 +18,12 @@ export default function Page({ params }: PageProps) {
 
   return (
     <div>
-      <Hero
+      {/* <Hero
         title="Course Details"
         subtitle="Start your underwater adventure with our comprehensive courses."
         backgroundImage="/images/imagewater.jpg"
         size="small"
-      />
+      /> */}
       <Rescuedivers />
 
       <ReviewShowByCourseID courseId={classId} />
