@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 export interface UserProfile {
   _id: string;
@@ -15,17 +16,27 @@ export interface UserProfile {
 }
 
 export function useMyProfile() {
+  const { data: session } = useSession();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const getProfile = async () => {
-      setLoading(true); // make sure loading starts
+      if (!session?.accessToken) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
       try {
-        const res = await fetch("/user/my-profile", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/my-profile`, {
           method: "GET",
-          credentials: "include", // important for sending cookies/session
+          headers: {
+            "Authorization": `Bearer ${session.accessToken}`,
+            "Content-Type": "application/json",
+          },
         });
 
         if (!res.ok) {
@@ -49,7 +60,7 @@ export function useMyProfile() {
     };
 
     getProfile();
-  }, []);
+  }, [session?.accessToken]);
 
   return { user, loading, error };
 }
