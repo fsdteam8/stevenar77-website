@@ -32,6 +32,7 @@ export function PersonalInformationStep() {
             placeholder="Full Name Here"
             value={state.personalInfo.name}
             onChange={(e) => handleChange("name", e.target.value)}
+            required
           />
         </div>
 
@@ -43,6 +44,7 @@ export function PersonalInformationStep() {
             placeholder="example@example.com"
             value={state.personalInfo.email}
             onChange={(e) => handleChange("email", e.target.value)}
+            required
           />
         </div>
 
@@ -53,6 +55,7 @@ export function PersonalInformationStep() {
             placeholder="+1234567890"
             value={state.personalInfo.phone}
             onChange={(e) => handleChange("phone", e.target.value)}
+            required
           />
         </div>
 
@@ -63,6 +66,7 @@ export function PersonalInformationStep() {
             placeholder="mm/dd/yyyy"
             value={state.personalInfo.dateOfBirth}
             onChange={(e) => handleChange("dateOfBirth", e.target.value)}
+            required
           />
         </div>
 
@@ -73,6 +77,7 @@ export function PersonalInformationStep() {
             placeholder="Street Address"
             value={state.personalInfo.address}
             onChange={(e) => handleChange("address", e.target.value)}
+            required
           />
         </div>
 
@@ -103,6 +108,7 @@ export function PersonalInformationStep() {
             placeholder="Postal Code"
             value={state.personalInfo.postalCode}
             onChange={(e) => handleChange("postalCode", e.target.value)}
+            required
           />
         </div>
 
@@ -113,17 +119,22 @@ export function PersonalInformationStep() {
             placeholder="Emergency Contact Number"
             value={state.personalInfo.emergencyContact}
             onChange={(e) => handleChange("emergencyContact", e.target.value)}
+            required
           />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="gender">Gender</Label>
-          <Input
-            id="gender"
-            placeholder="Male/Female"
-            // value={state.personalInfo.postalCode}
-            // onChange={(e) => handleChange("postalCode", e.target.value)}
-          />
+          <Select defaultValue="male" required>
+            <SelectTrigger>
+              <SelectValue placeholder="Select gender" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="male">Male</SelectItem>
+              <SelectItem value="female">Female</SelectItem>
+              <SelectItem value="others">Others</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-2">
@@ -133,6 +144,7 @@ export function PersonalInformationStep() {
             placeholder="Shoe Size"
             // value={state.personalInfo.emergencyContact}
             // onChange={(e) => handleChange("emergencyContact", e.target.value)}
+            required
           />
         </div>
 
@@ -143,6 +155,7 @@ export function PersonalInformationStep() {
             placeholder="5'4''"
             // value={state.personalInfo.postalCode}
             // onChange={(e) => handleChange("postalCode", e.target.value)}
+            required
           />
         </div>
 
@@ -153,22 +166,11 @@ export function PersonalInformationStep() {
             placeholder="50lbs"
             // value={state.personalInfo.emergencyContact}
             // onChange={(e) => handleChange("emergencyContact", e.target.value)}
+            required
           />
         </div>
 
-        {/* <div className="space-y-2" >
-          <Label htmlFor="courseName">Course Name</Label>
-          <Select value={state.personalInfo.courseName} onValueChange={(value) => handleChange("courseName", value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select Name" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="open-water">Open Water Diver</SelectItem>
-              <SelectItem value="advanced-open-water">Advanced Open Water</SelectItem>
-              <SelectItem value="rescue-diver">Rescue Diver</SelectItem>
-            </SelectContent>
-          </Select>
-        </div> */}
+        
       </div>
     </div>
   );

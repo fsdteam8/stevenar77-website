@@ -143,7 +143,8 @@ export function BookingSummary() {
         {/* Course Info */}
         <div className="flex items-center gap-3">
           <Image
-            src="/scuba-diving-course-thumbnail.jpg"
+            // src="/scuba-diving-course-thumbnail.jpg"
+            src= {state.course.image || "/scuba-diving-course-thumbnail.jpg"}
             alt="Course thumbnail"
             width={64}
             height={48}
