@@ -1,20 +1,28 @@
-"use client"
+"use client";
 
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useBooking } from "../booking-context"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useBooking } from "../booking-context";
 
 export function PersonalInformationStep() {
-  const { state, dispatch } = useBooking()
+  const { state, dispatch } = useBooking();
 
   const handleChange = (field: string, value: string) => {
-    dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } })
-  }
+    dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
+  };
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6 text-[#343a40]">Personal Information</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-[#343a40]">
+        Personal Information
+      </h2>
 
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
@@ -68,7 +76,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div className="space-y-2" >
+        <div className="space-y-2">
           <Label htmlFor="city">City</Label>
           <Input
             id="city"
@@ -78,7 +86,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div className="space-y-2" >
+        <div className="space-y-2">
           <Label htmlFor="state">State</Label>
           <Input
             id="state"
@@ -88,7 +96,7 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div className="space-y-2" >
+        <div className="space-y-2">
           <Label htmlFor="postal">Postal Code</Label>
           <Input
             id="postal"
@@ -98,13 +106,53 @@ export function PersonalInformationStep() {
           />
         </div>
 
-        <div className="space-y-2" >
+        <div className="space-y-2">
           <Label htmlFor="emergency">Emergency Contact</Label>
           <Input
             id="emergency"
             placeholder="Emergency Contact Number"
             value={state.personalInfo.emergencyContact}
             onChange={(e) => handleChange("emergencyContact", e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="gender">Gender</Label>
+          <Input
+            id="gender"
+            placeholder="Male/Female"
+            // value={state.personalInfo.postalCode}
+            // onChange={(e) => handleChange("postalCode", e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="shoesize">Shoe Sizes</Label>
+          <Input
+            id="shoesize"
+            placeholder="Shoe Size"
+            // value={state.personalInfo.emergencyContact}
+            // onChange={(e) => handleChange("emergencyContact", e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="height">Height</Label>
+          <Input
+            id="height"
+            placeholder="5'4''"
+            // value={state.personalInfo.postalCode}
+            // onChange={(e) => handleChange("postalCode", e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="weight">Weight</Label>
+          <Input
+            id="weight"
+            placeholder="50lbs"
+            // value={state.personalInfo.emergencyContact}
+            // onChange={(e) => handleChange("emergencyContact", e.target.value)}
           />
         </div>
 
@@ -123,5 +171,5 @@ export function PersonalInformationStep() {
         </div> */}
       </div>
     </div>
-  )
+  );
 }
