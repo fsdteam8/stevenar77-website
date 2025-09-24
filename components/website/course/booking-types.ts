@@ -9,6 +9,7 @@ export interface BookingState {
     duration: string;
     age: string;
     image?: string;
+    classDates?: string[];
   };
   pricing?: string;
   addOn?: boolean;
@@ -32,6 +33,11 @@ export interface BookingState {
     postalCode: string;
     emergencyContact: string;
     courseName: string;
+    // gender: "male" || "female";
+    shoeSize: string;
+    hight: string;
+    weight: string;
+    gender:  "male" | "female" | "others";
   };
   medicalHistory: Record<string, boolean>;
   activityQuestions: {

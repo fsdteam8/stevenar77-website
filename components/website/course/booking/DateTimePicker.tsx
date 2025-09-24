@@ -8,6 +8,9 @@ import { useBooking } from "../booking-context";
 export function DateTimePicker() {
   const { state, dispatch } = useBooking();
 
+
+  console.log(state.course.classDates)
+  
   const availableTimes = [
     "12:00 PM",
     "11:00 AM",
@@ -18,6 +21,8 @@ export function DateTimePicker() {
     "08:00 PM",
     "05:00 PM",
   ];
+
+
 
   const handleDateSelect = (date: Date | undefined) => {
     if (date) dispatch({ type: "SET_DATE", payload: date });
