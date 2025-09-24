@@ -9,7 +9,13 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import FeatureCard from "../shared/FeatureCard";
-import { ChevronLeft, ChevronRight, Clock, Star, UserRound } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Star,
+  UserRound,
+} from "lucide-react";
 import { useCourses } from "@/services/hooks/courses/useCourses";
 import { CourseData } from "@/lib/courseApi";
 
@@ -39,7 +45,7 @@ const FeaturedClasses: React.FC = () => {
   // ✅ Map API response to match actual CourseData structure
   const courses = React.useMemo(() => {
     if (!apiCourses || !Array.isArray(apiCourses)) return [];
-    
+
     return apiCourses.map((c: CourseData) => ({
       id: c._id,
       image: c.image?.url || "/asset/card.png",
@@ -51,9 +57,10 @@ const FeaturedClasses: React.FC = () => {
       students: c.totalParticipates || 0,
       features: Array.isArray(c.courseIncludes) ? c.courseIncludes : [],
       // Handle price array - take first price or calculate average
-      price: Array.isArray(c.price) && c.price.length > 0 
-        ? `${Number(c.price[0]).toFixed(2)}` 
-        : "Contact for Price",
+      price:
+        Array.isArray(c.price) && c.price.length > 0
+          ? `${Number(c.price[0]).toFixed(2)}`
+          : "Contact for Price",
       ageRestriction: "16+", // Default since not in API
       location: "Location TBD", // Default since not in API
     }));
@@ -62,14 +69,14 @@ const FeaturedClasses: React.FC = () => {
   // ✅ Carousel selection tracking
   React.useEffect(() => {
     if (!api) return;
-    
+
     const onSelect = () => {
       setCurrent(api.selectedScrollSnap());
     };
-    
+
     api.on("select", onSelect);
     onSelect(); // Set initial value
-    
+
     return () => {
       api.off("select", onSelect);
     };
@@ -111,7 +118,9 @@ const FeaturedClasses: React.FC = () => {
           Featured Classes
         </h2>
         <div className="flex justify-center items-center h-64">
-          <p className="text-center text-gray-600">No classes available at the moment.</p>
+          <p className="text-center text-gray-600">
+            No classes available at the moment.
+          </p>
         </div>
       </section>
     );
@@ -136,10 +145,7 @@ const FeaturedClasses: React.FC = () => {
               <FeatureCard
                 {...course}
                 onSeeMore={() => router.push(`/courses/${course.id}`)}
-                onBookNow={() => {
-                  console.log("Book Now:", course.title);
-                  // Add actual booking logic here
-                }}
+                onBookNow={() => router.push(`/courses/book/${course.id}`)}
               >
                 <div className="p-5 space-y-4">
                   {/* Title + Rating */}
@@ -157,9 +163,18 @@ const FeaturedClasses: React.FC = () => {
                   </div>
 
                   {/* Description */}
-                  <p className="text-[#68706A] leading-[150%] text-sm md:text-[16px]">
-                    {course.description}
-                  </p>
+                  <p
+                    className="text-[#68706A] leading-[150%] text-sm md:text-[16px] line-clamp-3"
+                    dangerouslySetInnerHTML={{ __html: course.description }}
+                  />
+
+                  <Button
+                    onClick={() => router.push(`/courses/${course.id}`)}
+                    className="text-cyan-600 bg-transparent hover:bg-gray-50 hover:underline text-sm font-semibold"
+                    aria-label={`See more about ${course.title}`}
+                  >
+                    See more
+                  </Button>
 
                   {/* Duration + Students */}
                   <div className="flex justify-between items-center text-sm text-gray-500">
@@ -181,7 +196,7 @@ const FeaturedClasses: React.FC = () => {
                       <p className="font-medium mb-4 text-[20px] text-[#27303F]">
                         Course Includes:
                       </p>
-                      <ul className="space-y-2 text-[#68706A]">
+                      <ul className="space-y-2 text-[#68706A] line-clamp-5">
                         {course.features.map((feature, idx) => (
                           <li
                             key={idx}
@@ -198,7 +213,7 @@ const FeaturedClasses: React.FC = () => {
                   {/* Price + Age */}
                   <div className="flex justify-between items-center">
                     <p className="text-xl md:text-[24px] font-medium text-gray-900">
-                      {course.price}
+                      ${course.price}
                     </p>
                     <span className="text-xs text-[#0694A2] font-normal">
                       Age {course.ageRestriction}
@@ -214,9 +229,9 @@ const FeaturedClasses: React.FC = () => {
       {/* Bottom Controls - Only show if there are enough items */}
       {totalItems > itemsPerView && (
         <div className="flex items-center justify-center gap-4 mt-6">
-          <Button 
-            variant="outline" 
-            size="icon" 
+          <Button
+            variant="outline"
+            size="icon"
             onClick={() => api?.scrollPrev()}
             disabled={current === 0}
           >
@@ -237,9 +252,9 @@ const FeaturedClasses: React.FC = () => {
             ))}
           </div>
 
-          <Button 
-            variant="outline" 
-            size="icon" 
+          <Button
+            variant="outline"
+            size="icon"
             onClick={() => api?.scrollNext()}
             disabled={current >= totalDots - 1}
           >

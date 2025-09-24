@@ -6,6 +6,22 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
+// interface CourseCardProps {
+//   id: string;
+//   title: string;
+//   description: string;
+//   date: string;
+//   time: string;
+//   location: string;
+//   participants: number;
+//   price: number;
+//   status: "complete" | "pending";
+//   imageUrl: string;
+//   isHighlighted?: boolean;
+//   onView: (id: string) => void;
+//   onDelete?: (id: string) => void;
+// }
+
 interface CourseCardProps {
   id: string;
   title: string;
@@ -18,9 +34,10 @@ interface CourseCardProps {
   status: "complete" | "pending";
   imageUrl: string;
   isHighlighted?: boolean;
-  onView: (id: string) => void;
-  onDelete?: (id: string) => void;
+  onView?: (id: string) => void;      // made optional
+  onDelete?: (id: string) => void;    // optional
 }
+
 
 export function CourseCard({
   id,
@@ -49,7 +66,7 @@ export function CourseCard({
           <Image
             width={100}
             height={100}
-            src={imageUrl || "/placeholder.svg"}
+            src={imageUrl || "/images/imagewater.jpg"}
             alt={title}
             className="w-full h-full object-cover"
           />
@@ -101,7 +118,7 @@ export function CourseCard({
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => onView(id)}
+                onClick={() => onView?.(id)}
                 className="text-[#68706a] hover:text-[#0694a2]"
               >
                 <Eye className="w-4 h-4" />

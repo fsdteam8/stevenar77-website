@@ -2,13 +2,14 @@
 
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useBooking } from "./booking-context"
+import { BookingState, useBooking } from "./booking-context"
 import { PersonalInformationStep } from "./steps/personal-information-step"
 import { MedicalHistoryStep } from "./steps/medical-history-step"
 import { ActivityQuestionsStep } from "./steps/activity-questions-step"
 import { LiabilityReleaseStep } from "./steps/liability-release-step"
 import { DocumentUploadStep } from "./steps/document-upload-step"
 import { ElectronicSignatureStep } from "./steps/electronic-signature-step"
+// import { FaArrowRight } from "react-icons/fa"
 
 const steps = [
   { id: 0, title: "Personal Information", component: PersonalInformationStep },
@@ -17,19 +18,93 @@ const steps = [
   { id: 3, title: "Liability Release Agreement", component: LiabilityReleaseStep },
   { id: 4, title: "Medical Certifications & Document", component: DocumentUploadStep },
   { id: 5, title: "Electronic Signature", component: ElectronicSignatureStep },
+  { id: 6, title: "All Information Done", component: null },
 ]
+
+// Validation functions for each step
+const validateStep = (stepIndex: number, state: BookingState) => {
+  switch (stepIndex) {
+    case 0: // Personal Information Step
+      const { personalInfo } = state;
+      return !!(
+        personalInfo.name?.trim() &&
+        personalInfo.email?.trim() &&
+        personalInfo.phone?.trim() &&
+        personalInfo.dateOfBirth?.trim() &&
+        personalInfo.address?.trim() &&
+        personalInfo.postalCode?.trim() &&
+        personalInfo.emergencyContact?.trim()
+        // Note: gender, shoesize, height, weight need to be added to types and connected to state
+      );
+    
+    case 1: // Medical History Step
+      // This step is considered valid if user has interacted with it
+      // Since all conditions can be false (user has no medical conditions)
+      // We just need to ensure the medicalHistory object exists
+      return state.medicalHistory !== undefined;
+    
+    case 2: // Activity Questions Step
+      const { activityQuestions } = state;
+      return !!(
+        activityQuestions.swimmingLevel?.trim() &&
+        activityQuestions.divingExperience?.trim() &&
+        activityQuestions.lastPhysicalExam?.trim() &&
+        activityQuestions.fitnessLevel?.trim() &&
+        activityQuestions.physicalApproval === true &&
+        activityQuestions.canSwim200m === true &&
+        typeof activityQuestions.claustrophobia === 'boolean' &&
+        typeof activityQuestions.panicAttacks === 'boolean'
+      );
+    
+    case 3: // Liability Release Step
+      const { liabilityAgreement } = state;
+      return !!(
+        liabilityAgreement.releaseOfLiability === true &&
+        liabilityAgreement.medicalFitness === true &&
+        liabilityAgreement.equipmentTraining === true
+      );
+    
+    case 4: // Document Upload Step
+      // This step might be optional depending on requirements
+      // If documents are required, uncomment the next line:
+      // return state.documents.length > 0;
+      
+      // If documents are optional:
+      return true;
+    
+    case 5: // Electronic Signature Step
+      return !!(
+        state.signature?.trim()
+        // Note: The 'agreed' checkbox from ElectronicSignatureStep needs to be added to BookingState
+        // and connected to the booking context for full validation
+      );
+    case 6: //All information done
+      return true;
+    
+    default:
+      return false;
+  }
+};
 
 export function MultiStepForm() {
   const { state, dispatch } = useBooking()
-
+  
   const currentStepData = steps[state.currentStep]
   const CurrentStepComponent = currentStepData?.component
-
+  
+  // Check if current step is valid
+  const isCurrentStepValid = validateStep(state.currentStep, state)
+  
   const handleNext = () => {
-    if (state.currentStep < steps.length - 1) {
-      dispatch({ type: "SET_STEP", payload: state.currentStep + 1 })
+    if (isLastStep && isCurrentStepValid) {
+      // Handle form completion/submission here
+      console.log("Form completed!", state);
+      // You might want to dispatch a completion action or call an API
+      // dispatch({ type: "COMPLETE_BOOKING" });
+    } else if (state.currentStep < steps.length - 1 && isCurrentStepValid) {
+      dispatch({ type: "SET_STEP", payload: state.currentStep + 1 });
     }
-  }
+  };
 
   const handleBack = () => {
     if (state.currentStep > 0) {
@@ -60,10 +135,34 @@ export function MultiStepForm() {
       </div>
 
       {/* Step Content */}
-      {CurrentStepComponent && <CurrentStepComponent />}
+      {/* {CurrentStepComponent && <CurrentStepComponent />} */}
+
+      {/* Step Content */}
+      {isLastStep ? (
+        // Show completion message on final step
+        <div className="text-center space-y-6 py-8">
+          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+            <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-3xl font-semibold text-[#343a40] mb-2">All Information Done!  </h3>
+            {/* <div className="bg-primary rounded-full inline-block p-5">
+              <FaArrowRight className="text-4xl text-white mx-auto"/>
+            </div> */}
+            <p className="text-[#6c757d] text-lg">You have successfully completed all required information.</p>
+          </div>
+          <div className="bg-teal-500 rounded-md  p-5">
+            <p className="text-5xl font-bold text-white">Now Move on to Procced to Payment</p>
+          </div>
+        </div>
+      ) : (
+        CurrentStepComponent && <CurrentStepComponent />
+      )}
 
       {/* Navigation Buttons */}
-      <div className="flex justify-between mt-8">
+      {/* <div className="flex justify-between mt-8">
         <Button
           variant="outline"
           onClick={handleBack}
@@ -74,12 +173,34 @@ export function MultiStepForm() {
         </Button>
         <Button
           onClick={handleNext}
-          disabled={isLastStep}
-          className="px-8 py-2 bg-[#0694a2] hover:bg-[#0694a2]/90 text-white"
+          disabled={!isCurrentStepValid}
+          className="px-8 py-2 bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLastStep ? "Complete" : "Next"}
         </Button>
-      </div>
+      </div> */}
+      <div className="flex justify-between mt-8">
+  <Button
+    variant="outline"
+    onClick={handleBack}
+    disabled={state.currentStep === 0}
+    className="px-8 py-2 border-[#0694a2] text-[#0694a2] hover:bg-[#0694a2] hover:text-white bg-transparent"
+  >
+    Back
+  </Button>
+  
+  {/* Hide the Complete button on the 7th step (index 6) */}
+  {state.currentStep !== 6 && (
+    <Button
+      onClick={handleNext}
+      disabled={!isCurrentStepValid}
+      className="px-8 py-2 bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {isLastStep ? "Complete" : "Next"}
+    </Button>
+  )}
+</div>
+
     </Card>
   )
 }

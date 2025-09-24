@@ -53,7 +53,7 @@ const ShopProductCard: React.FC<ShopProductCardType> = ({
             className="flex-1 bg-[#0694A2] text-base font-medium text-white hover:bg-cyan-700"
             onClick={onBookNow}
           >
-            Add To Cart
+            Buy Now 
           </Button>
         </div>
       </div>

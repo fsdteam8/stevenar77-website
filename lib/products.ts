@@ -1,21 +1,25 @@
 // lib/products.ts
 import axios from "axios";
 
+export interface GelatoProduct {
+  id: string;
+  title: string;
+  description: string;
+  previewUrl?: string;
+  // other gelato-specific fields
+}
+
 export interface Product {
   _id: string;
   title: string;
   shortDescription: string;
+  longDescription: string;
   price: number;
   images: { public_id: string; url: string }[];
-  category: string;
-  longDescription: string;
-  inStock: boolean;
-  featured: string[];
   totalReviews: number;
   averageRating: number;
-  quantity: number;
-  createdAt: string;
-  updatedAt: string;
+  variants?: { _id: string; name: string; price: number }[];
+  // etc.
 }
 
 export interface ProductResponse {
@@ -26,8 +30,11 @@ export interface ProductResponse {
 }
 
 export async function getProductById(productId: string): Promise<ProductResponse> {
-  const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/product/${productId}`
-  );
-  return response.data as ProductResponse;
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/shop/${productId}`);
+  return response.data;
+}
+
+export async function getGelatoProductById(productId: string): Promise<{ data: GelatoProduct }> {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/get-price/${productId}`);
+  return response.data;
 }

@@ -48,8 +48,9 @@ export default function TripsCard({
           <h1 className="text-[#27303F] text-2xl font-semibold">{title}</h1>
 
           {/* Short Description */}
-          <p className="text-[#68706A] text-base font-medium my-3 italic leading-relaxed">
-            {shortDescription}
+          <p className="text-[#68706A] text-base font-medium my-3 italic leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: shortDescription }}>
+            {/* {shortDescription} */}
           </p>
 
           {/* Buttons */}
@@ -61,7 +62,7 @@ export default function TripsCard({
             </Link>
             <Link href={bookNowLink}>
               <Button className="bg-[#0694A2] text-white px-12 py-2 md:px-20 rounded-md hover:bg-[#057c88] transition cursor-pointer">
-                Book Now
+                Buy Now
               </Button>
             </Link>
           </div>

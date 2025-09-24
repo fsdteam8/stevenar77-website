@@ -1,196 +1,135 @@
 "use client";
 
 import { useState } from "react";
-
-import { CourseDetailModal } from "@/components/modals/course-detail-modal";
-import { DeleteConfirmationModal } from "@/components/modals/delete-confirmation-modal";
 import { CourseCard } from "../course-card";
 import { Pagination } from "../pagination";
+import { CourseDetailModal } from "@/components/modals/course-detail-modal";
+import { useMyBookings } from "@/services/hooks/booking/useBookings";
 
-const mockCourses = [
-  {
-    id: "1",
-    title: "Advances Open Water Diver",
-    description:
-      "Continue your adventure with 5 adventure dives to enhance your skills.",
-    date: "Thursday, September 24",
-    time: "09:00 AM",
-    location: "Catalina Island",
-    participants: 1,
-    price: 349,
-    status: "complete" as const,
-    imageUrl: "/underwater-scuba-diving.png",
-    instructor: 'Steve "Scuba SteveNar"',
-    rating: 4.8,
-    reviews: 32,
-    courseIncludes: [
-      "Pool training session",
-      "Basic equipment included",
-      "Professional instruction",
-      "Certificate of participation",
-    ],
-    contactDate: "Thursday, September 24",
-    contactPhone: "+123456789",
-  },
-  {
-    id: "2",
-    title: "Advances Open Water Diver",
-    description:
-      "Continue your adventure with 5 adventure dives to enhance your skills.",
-    date: "Thursday, September 24",
-    time: "09:00 AM",
-    location: "Catalina Island",
-    participants: 1,
-    price: 349,
-    status: "pending" as const,
-    imageUrl: "/underwater-scuba-diving.png",
-    instructor: 'Steve "Scuba SteveNar"',
-    rating: 4.8,
-    reviews: 32,
-    courseIncludes: [
-      "Pool training session",
-      "Basic equipment included",
-      "Professional instruction",
-      "Certificate of participation",
-    ],
-    contactDate: "Thursday, September 24",
-    contactPhone: "+123456789",
-  },
-  {
-    id: "3",
-    title: "Advances Open Water Diver",
-    description:
-      "Continue your adventure with 5 adventure dives to enhance your skills.",
-    date: "Thursday, September 24",
-    time: "09:00 AM",
-    location: "Catalina Island",
-    participants: 1,
-    price: 349,
-    status: "complete" as const,
-    imageUrl: "/images/diving.png",
-    instructor: 'Steve "Scuba SteveNar"',
-    rating: 4.8,
-    reviews: 32,
-    courseIncludes: [
-      "Pool training session",
-      "Basic equipment included",
-      "Professional instruction",
-      "Certificate of participation",
-    ],
-    contactDate: "Thursday, September 24",
-    contactPhone: "+123456789",
-  },
-  {
-    id: "4",
-    title: "Advances Open Water Diver",
-    description:
-      "Continue your adventure with 5 adventure dives to enhance your skills.",
-    date: "Thursday, September 24",
-    time: "09:00 AM",
-    location: "Catalina Island",
-    participants: 1,
-    price: 349,
-    status: "pending" as const,
-    imageUrl: "/underwater-scuba-diving.png",
-    instructor: 'Steve "Scuba SteveNar"',
-    rating: 4.8,
-    reviews: 32,
-    courseIncludes: [
-      "Pool training session",
-      "Basic equipment included",
-      "Professional instruction",
-      "Certificate of participation",
-    ],
-    contactDate: "Thursday, September 24",
-    contactPhone: "+123456789",
-  },
-];
+interface CourseCardData {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+  participants: number;
+  price: number;
+  status: "complete" | "pending";
+  imageUrl: string;
+  instructor: string;
+  rating: number;
+  reviews: number;
+  courseIncludes: string[];
+  contactDate: string;
+  contactPhone: string;
+}
 
 export function CourseHistoryPage() {
+  const { data: bookings = [], isLoading, isError, error } = useMyBookings();
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCourse, setSelectedCourse] = useState<
-    (typeof mockCourses)[0] | null
-  >(null);
-  const [highlightedCourse, setHighlightedCourse] = useState<string | null>(
-    null
+  const [selectedCourse, setSelectedCourse] = useState<CourseCardData | null>(
+    null,
   );
-  const [deleteConfirmation, setDeleteConfirmation] = useState<{
-    isOpen: boolean;
-    courseId: string | null;
-    courseTitle: string;
-  }>({
-    isOpen: false,
-    courseId: null,
-    courseTitle: "",
+  const [highlightedCourse, setHighlightedCourse] = useState<string | null>(
+    null,
+  );
+
+  // Only show "paid" bookings
+  const paidBookings = bookings.filter((b) => b.status === "paid");
+
+  // Map API bookings to CourseCardData
+  const mappedBookings: CourseCardData[] = paidBookings.map((b) => {
+    type ClassData = {
+      title?: string;
+      description?: string;
+      image?: { url?: string };
+      instructor?: string;
+      rating?: number;
+      reviews?: number;
+      courseIncludes?: string[];
+    };
+    const cls: ClassData =
+      typeof b.classId === "object" && b.classId !== null ? (b.classId as ClassData) : {};
+
+    return {
+      id: b._id,
+      title: cls.title || "Untitled",
+      description: cls.description || "",
+      date: b.classDate?.[0]
+        ? new Date(b.classDate[0]).toDateString()
+        : "Unknown date",
+      time: b.classDate?.[0]
+        ? new Date(b.classDate[0]).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "Unknown time",
+      location: cls.title || "Unknown location",
+      participants: b.participant,
+      price: b.totalPrice,
+      status: "complete", // always mark as complete for display
+      imageUrl: cls?.image?.url || "/images/imagewater.jpg",
+      instructor: cls.instructor || "Instructor N/A",
+      rating: cls.rating || 0,
+      reviews: cls.reviews || 0,
+      courseIncludes: cls.courseIncludes || [],
+      contactDate: b.classDate?.[0] || "",
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      contactPhone: (b as any).contactPhone || "N/A",
+    };
   });
 
   const resultsPerPage = 5;
-  const totalResults = 12;
+  const totalResults = mappedBookings.length;
   const totalPages = Math.ceil(totalResults / resultsPerPage);
+  const displayedBookings = mappedBookings.slice(
+    (currentPage - 1) * resultsPerPage,
+    currentPage * resultsPerPage,
+  );
 
-  const handleViewCourse = (courseId: string) => {
-    const course = mockCourses.find((c) => c.id === courseId);
-    if (course) {
-      setSelectedCourse(course);
-      setHighlightedCourse(courseId);
-    }
+  const handleViewCourse = (id: string) => {
+    const course = mappedBookings.find((c) => c.id === id) || null;
+    setSelectedCourse(course);
+    setHighlightedCourse(id);
   };
 
-  const handleDeleteCourse = (courseId: string) => {
-    const course = mockCourses.find((c) => c.id === courseId);
-    if (course) {
-      setDeleteConfirmation({
-        isOpen: true,
-        courseId,
-        courseTitle: course.title,
-      });
-    }
-  };
-
-  const handleConfirmDelete = () => {
-    if (deleteConfirmation.courseId) {
-      console.log("Delete course:", deleteConfirmation.courseId);
-    }
-    setDeleteConfirmation({
-      isOpen: false,
-      courseId: null,
-      courseTitle: "",
-    });
-  };
-
-  const handleCloseDeleteModal = () => {
-    setDeleteConfirmation({
-      isOpen: false,
-      courseId: null,
-      courseTitle: "",
-    });
-  };
+  if (isLoading) return <p className="text-center py-10">Loading...</p>;
+  if (isError)
+    return (
+      <p className="text-center py-10 text-red-500">Error: {error?.message}</p>
+    );
+  if (mappedBookings.length === 0)
+    return (
+      <div className="text-center py-20">
+        <p className="text-lg font-medium">You have no paid bookings yet.</p>
+      </div>
+    );
 
   return (
     <div className="container mx-auto px-2 sm:px-0">
       <div className="space-y-3 sm:space-y-4">
-        {mockCourses.map((course) => (
+        {displayedBookings.map((booking) => (
           <CourseCard
-            key={course.id}
-            {...course}
-            isHighlighted={highlightedCourse === course.id}
+            key={booking.id}
+            {...booking}
+            isHighlighted={highlightedCourse === booking.id}
             onView={handleViewCourse}
-            onDelete={
-              course.status === "pending" ? handleDeleteCourse : undefined
-            }
           />
         ))}
       </div>
 
-      <div className="mt-6 sm:mt-8">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalResults={totalResults}
-          resultsPerPage={resultsPerPage}
-          onPageChange={setCurrentPage}
-        />
-      </div>
+      {totalPages > 1 && (
+        <div className="mt-6 sm:mt-8">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalResults={totalResults}
+            resultsPerPage={resultsPerPage}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
 
       <CourseDetailModal
         course={selectedCourse}
@@ -199,14 +138,6 @@ export function CourseHistoryPage() {
           setSelectedCourse(null);
           setHighlightedCourse(null);
         }}
-      />
-
-      <DeleteConfirmationModal
-        isOpen={deleteConfirmation.isOpen}
-        onClose={handleCloseDeleteModal}
-        onConfirm={handleConfirmDelete}
-        message={`Are you sure you want to delete "${deleteConfirmation.courseTitle}"?`}
-        itemType="course"
       />
     </div>
   );

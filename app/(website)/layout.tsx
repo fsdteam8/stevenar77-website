@@ -3,6 +3,7 @@ import "../globals.css";
 import Navbar from "@/components/website/shared/navbar";
 import Footer from "@/components/website/shared/footer";
 import TopHeader from "@/components/website/shared/TopHeader";
+import MessagButton from "@/components/website/shared/MessagButton";
 
 export const metadata: Metadata = {
   title: "Dive Into Adventure",
@@ -16,8 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <>
-    <TopHeader />
+      <TopHeader />
       <Navbar /> {children} <Footer />
+      <MessagButton />
     </>
   );
 }

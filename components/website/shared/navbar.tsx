@@ -23,7 +23,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useSession, signOut } from "next-auth/react";
-import { useUser } from "@/services/hooks/user/useUser";
+import { useMyProfile } from "@/services/hooks/user/useMyProfile";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -31,14 +31,28 @@ const Navbar = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const { data: session, status } = useSession();
+  const { user, loading } = useMyProfile();
+
   const [isOpen, setIsOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+
+  const menuWrapperRef = useRef<HTMLDivElement>(null);
+
   const isLoggedIn = !!session?.user;
 
-  // Use custom hook for user info
-  const { user,  } = useUser(session?.user?.id);
+  // Determine avatar URL and display name
+  const displayAvatar = user?.image?.url || "";
+  const displayName =
+    user?.firstName && user?.lastName
+      ? `${user.firstName} ${user.lastName}`
+      : user?.email || "User";
 
-  const displayAvatar = user?.avatar?.url || session?.user?.email || undefined;
+  const getInitials = (name: string) =>
+    name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -64,44 +78,47 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
+
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      menuWrapperRef.current &&
+      !menuWrapperRef.current.contains(event.target as Node)
+    ) {
+      setIsOpen(false);
+    }
+  };
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, []);
+
+
   const handleLogout = async () => {
     setLogoutModalOpen(false);
     await signOut({ callbackUrl: "/login" });
   };
 
-  const getInitials = (name?: string | null) => {
-    if (!name) return "UN";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  };
-
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Courses", path: "/courses" },
-    { name: "Schedule", path: "/schedule" },
     { name: "Trips", path: "/trips" },
     { name: "Shop", path: "/shop" },
-    { name: "Community ", path: "/community" },
+    { name: "Community", path: "/community" },
     { name: "About Us", path: "/about-us" },
     { name: "Contact Us", path: "/contact-us" },
-    { name: "Messaging", path: "/messaging" },
   ];
 
   const LoadingPlaceholder = () => (
     <div className="h-10 w-24 bg-gray-200 rounded animate-pulse"></div>
   );
 
-
   return (
-    <header className="sticky top-0 h-full bg-white z-50 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white shadow-sm">
       <div className="container mx-auto px-4">
-        <nav className="flex justify-between items-center py-[15px]">
+        <nav className="flex justify-between items-center py-4">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center">
-            <Image src={"/images/logo.png"} alt="logo" width={64} height={64} />
+            <Image src="/images/logo.png" alt="logo" width={64} height={64} />
           </Link>
 
           {/* Desktop Navigation */}
@@ -113,7 +130,7 @@ const Navbar = () => {
                   <li
                     key={item.name}
                     className={`transition rounded-md ${
-                      isActive ? "text-teal-500 " : "text-gray-700"
+                      isActive ? "text-teal-500" : "text-gray-700"
                     } hover:bg-gray-200 hover:text-teal-500`}
                   >
                     <Link href={item.path} className="px-3 py-1 block">
@@ -126,166 +143,177 @@ const Navbar = () => {
           </div>
 
           {/* Right Section */}
-          <div className=" flex items-center gap-4">
-            {status === "loading" ? (
-              <LoadingPlaceholder />
-            ) : isLoggedIn ? (
-              <div className="hidden md:block">
+          <div className="  flex items-center gap-4">
+            <div className="hidden md:flex ">
+              {status === "loading" || loading ? (
+                <LoadingPlaceholder />
+              ) : isLoggedIn ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage
-                          src={displayAvatar}
-                          alt={session.user?.email || ""}
-                        />
-                        <AvatarFallback>
-                          {getInitials(session.user?.email)}
-                        </AvatarFallback>
+                        {displayAvatar ? (
+                          <AvatarImage src={displayAvatar} alt={displayName} />
+                        ) : (
+                          <AvatarFallback>
+                            {getInitials(displayName)}
+                          </AvatarFallback>
+                        )}
                       </Avatar>
                       <div className="flex flex-col text-left">
-                        <div className="font-medium">{session.user?.email}</div>
+                        <div className="font-medium">{displayName}</div>
                         <div className="text-sm text-muted-foreground">
-                          {session.user?.role}
+                          {user?.role}
                         </div>
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56 " align="end">
+                  <DropdownMenuContent className="w-56" align="end">
                     <Link href="/account">
-                      <DropdownMenuItem className="cursor-pointer">
+                      <DropdownMenuItem>
                         <CircleUserRound /> Profile
                       </DropdownMenuItem>
                     </Link>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => setLogoutModalOpen(true)}
-                      className="text-red-500 cursor-pointer"
+                      className="text-red-500"
                     >
                       <LogOut /> Log out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </div>
-            ) : (
-              <div className="hidden md:block">
+              ) : (
                 <Button className="bg-primary">
                   <Link href="/login">Sign in</Link>
                 </Button>
-              </div>
-            )}
-
-            {/* Mobile Avatar & Hamburger */}
-            <div className="md:hidden flex items-center gap-2">
-              {isLoggedIn && (
-                <Avatar className="h-8 w-8">
-                  <AvatarImage
-                    src={displayAvatar}
-                    alt={session.user?.email || ""}
-                  />
-                  <AvatarFallback>
-                    {getInitials(session.user?.email)}
-                  </AvatarFallback>
-                </Avatar>
               )}
-              <Button
-                ref={buttonRef}
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsOpen((prev) => !prev)}
+            </div>
+
+            {/* Mobile Hamburger & Menu */}
+            <div ref={menuWrapperRef} className="md:hidden relative">
+              {/* Hamburger button */}
+              <div className="flex items-center justify-end gap-2">
+                {isLoggedIn && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Avatar className="h-8 w-8 cursor-pointer">
+                        {displayAvatar ? (
+                          <AvatarImage src={displayAvatar} alt={displayName} />
+                        ) : (
+                          <AvatarFallback>
+                            {getInitials(displayName)}
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" align="end">
+                      <Link href="/account">
+                        <DropdownMenuItem>
+                          <CircleUserRound /> Profile
+                        </DropdownMenuItem>
+                      </Link>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="text-red-500 cursor-pointer"
+                        onClick={() => setLogoutModalOpen(true)}
+                      >
+                        <LogOut /> Log out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+
+                <Button
+                  ref={buttonRef}
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsOpen((prev) => !prev)}
+                >
+                  {isOpen ? <X size={24} /> : <Menu size={24} />}
+                </Button>
+              </div>
+
+              {/* Mobile Menu */}
+              <div
+                className={`fixed top-20 left-0 w-full h-[calc(100vh-5rem)] bg-white z-40 overflow-y-auto transition-transform duration-300 ease-in-out ${
+                  isOpen ? "translate-x-0" : "-translate-x-full"
+                }`}
               >
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
-              </Button>
+                <div className="container mx-auto px-4 py-6 flex flex-col gap-6">
+                  <ul className="flex flex-col gap-2 font-poppins text-lg">
+                    {navItems.map((item) => {
+                      const isActive = pathname === item.path;
+                      return (
+                        <li
+                          key={item.name}
+                          className={`transition rounded-md ${
+                            isActive
+                              ? "text-teal-500 bg-gray-200"
+                              : "text-gray-700"
+                          } hover:bg-gray-200`}
+                        >
+                          <Link
+                            href={item.path}
+                            onClick={() => setIsOpen(false)}
+                            className="block px-4 py-2"
+                          >
+                            {item.name}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  {isLoggedIn && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          className="w-full flex items-center gap-2 justify-start text-left mt-6"
+                          variant="ghost"
+                        >
+                          <Avatar className="h-8 w-8">
+                            {displayAvatar ? (
+                              <AvatarImage
+                                src={displayAvatar}
+                                alt={displayName}
+                              />
+                            ) : (
+                              <AvatarFallback>
+                                {getInitials(displayName)}
+                              </AvatarFallback>
+                            )}
+                          </Avatar>
+                          <div className="flex flex-col text-left">
+                            <div className="font-medium">{displayName}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {user?.role}
+                            </div>
+                          </div>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-full" align="start">
+                        <Link href="/account">
+                          <DropdownMenuItem>
+                            <CircleUserRound /> Profile
+                          </DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="text-red-500 cursor-pointer"
+                          onClick={() => setLogoutModalOpen(true)}
+                        >
+                          <LogOut /> Log out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </nav>
-
-        {/* Mobile Menu */}
-        <div
-          ref={menuRef}
-          className={`md:hidden fixed top-20 left-0 w-full h-[calc(100vh-5rem)] bg-white z-40 overflow-y-auto transition-transform duration-300 ease-in-out ${
-            isOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <div className="container mx-auto px-4 py-6">
-            <ul className="flex flex-col gap-2 font-poppins text-lg">
-              {navItems.map((item) => {
-                const isActive = pathname === item.path;
-                return (
-                  <li
-                    key={item.name}
-                    className={`transition rounded-md ${
-                      isActive ? "text-teal-500 bg-gray-200" : "text-gray-700"
-                    } hover:bg-gray-200`}
-                  >
-                    <Link
-                      href={item.path}
-                      onClick={() => setIsOpen(false)}
-                      className="block px-4 py-2"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-
-            <div className="mt-8">
-              {status === "loading" ? (
-                <LoadingPlaceholder />
-              ) : isLoggedIn ? (
-                <Button
-                  className="w-full text-primary flex items-center justify-center gap-2"
-                  variant="ghost"
-                  onClick={() => setLogoutModalOpen(true)}
-                >
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage
-                      src={displayAvatar}
-                      alt={session.user?.email || ""}
-                    />
-                    <AvatarFallback>
-                      {getInitials(session.user?.email)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col text-left">
-                    <div className="font-medium">{session.user?.email}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {session.user?.role}
-                    </div>
-                  </div>
-                </Button>
-              ) : (
-                <Button className="bg-primary w-full">
-                  <Link href="/login" onClick={() => setIsOpen(false)}>
-                    Sign in
-                  </Link>
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
       </div>
-
-      {/* Logout Confirmation Modal */}
-      <Dialog open={logoutModalOpen} onOpenChange={setLogoutModalOpen}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Are you sure?</DialogTitle>
-            <DialogDescription>
-              You are about to log out of your account.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex justify-end gap-4">
-            <Button variant="outline" onClick={() => setLogoutModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={handleLogout}>
-              Yes, Log out
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </header>
   );
 };

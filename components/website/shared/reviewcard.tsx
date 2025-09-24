@@ -24,7 +24,8 @@ export function ReviewCard({ review }: ReviewCardProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-1">
               <Image
-                src={'/images/profile-mini.jpg'}
+                // src={ {} ||'/images/profile-mini.jpg'}
+                src={review?.userId?.email || '/images/profile-mini.jpg'}
                 alt="profile image"
                 className="rounded-full"
                 width={50}
@@ -35,7 +36,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
                   {fullName}
                 </h3>
                 <p className="flex flex-row text-sm text-gray-600">
-                  {location}, {review?.facility?.name}
+                  {location}, {review?.facility?.address}
                 </p>
               </div>
             </div>

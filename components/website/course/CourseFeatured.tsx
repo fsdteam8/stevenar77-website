@@ -13,15 +13,19 @@ import { useRouter } from "next/navigation";
 interface CourseData {
   _id: string;
   title: string;
-  shortDescription?: string; // Made optional
-  description?: string; // Added as alternative
-  courseDuration?: string; // Made optional
-  duration?: string; // Added as alternative
+  shortDescription?: string;
+  description?: string;
+  courseDuration?: string;
+  duration?: string;
   location?: string;
   requiredAge?: number;
   price: number | number[];
-  features?: string[]; // Made optional
-  images?: { public_id: string; url: string }[];
+  features?: string[];
+  image?: { public_id: string; url: string }; // ✅ single image, not array
+  courseIncludes?: string[];
+  avgRating?: number;
+  totalReviews?: number;
+  participates?: number;
 }
 
 interface Course {
@@ -43,36 +47,36 @@ interface Course {
 // Component
 // ----------------------
 const CourseFeatured: React.FC = () => {
-  const { data: apiCourses, isLoading, isError, error } = useCourses();
+  const { data: apiCourses, isLoading, isError, error } = useCourses(); // Removed explicit type argument
   const [current] = React.useState(0);
   const router = useRouter();
 
   // Map API response to FeatureCard format with better error handling
   const courses: Course[] = React.useMemo(() => {
-    if (!apiCourses || !Array.isArray(apiCourses)) {
-      return [];
-    }
+    if (!apiCourses || !Array.isArray(apiCourses)) return [];
 
-    return apiCourses.map((c: CourseData) => ({
-      id: c._id,
-      image: c.images?.[0]?.url || "/asset/card.png", // Use first image or fallback
-      title: c.title || "Untitled Course",
-      description:
-        c.shortDescription || c.description || "No description available",
-      rating: 4.5, // Placeholder, replace if API provides rating
-      reviews: 0, // Placeholder, replace if API provides reviews
-      duration: c.courseDuration || c.duration || "Duration not specified",
-      location: c.location || "Location not specified",
-      students: 0, // Placeholder, replace if API provides student count
-      features: c.features || [],
-      price:
-        Array.isArray(c.price) && c.price.length > 0
-          ? `$${Number(c.price[0]).toFixed(2)}`
-          : c.price != null
-            ? `$${Number(c.price).toFixed(2)}`
-            : "Price not available",
-      ageRestriction: c.requiredAge ? `${c.requiredAge}+` : undefined,
-    }));
+    return apiCourses.map(
+      (c: CourseData): Course => ({
+        id: c._id,
+        image: c.image?.url || "/asset/card.png", // ✅ fixed
+        title: c.title || "Untitled Course",
+        description:
+          c.shortDescription || c.description || "No description available",
+        rating: c.avgRating ?? 0, // ✅ use API rating
+        reviews: c.totalReviews ?? 0, // ✅ use API reviews
+        duration: c.courseDuration || c.duration || "Duration not specified",
+        location: c.location || "Location not specified",
+        students: c.participates ?? 0, // ✅ use API participates
+        features: c.courseIncludes || [], // ✅ matches API key
+        price:
+          Array.isArray(c.price) && c.price.length > 0
+            ? `$${Number(c.price[0]).toFixed(2)}`
+            : c.price != null
+              ? `$${Number(c.price).toFixed(2)}`
+              : "Price not available",
+        ageRestriction: c.requiredAge ? `${c.requiredAge}+` : undefined,
+      }),
+    );
   }, [apiCourses]);
 
   if (isLoading) return <p className="text-center py-10">Loading courses...</p>;
@@ -80,15 +84,15 @@ const CourseFeatured: React.FC = () => {
   if (isError)
     return (
       <p className="text-center py-10 text-red-500">
-        Error: {error?.message || "Failed to load courses"}
+        Error:{" "}
+        {error instanceof Error ? error.message : "Failed to load courses"}
       </p>
     );
 
-  if (!courses.length) {
+  if (!courses.length)
     return (
       <p className="text-center py-10">No courses available at the moment.</p>
     );
-  }
 
   return (
     <section className="py-10">
@@ -133,11 +137,13 @@ const CourseFeatured: React.FC = () => {
                 </div>
 
                 {/* Description */}
-                <p className="text-[#68706A] font-normal leading-[150%] mt-[10px] text-sm md:text-[16px]">
-                  {course.description}
-                </p>
 
-                {/* Features - Only show if features exist */}
+                <p
+                  className="text-[#68706A] font-normal leading-[150%] mt-[10px] text-sm md:text-[16px]"
+                  dangerouslySetInnerHTML={{ __html: course.description }}
+                />
+
+                {/* Features */}
                 {course.features.length > 0 && (
                   <div>
                     <p className="font-medium mb-4 mt-[20px] text-[20px] leading-[120%] text-[#27303F]">
@@ -179,7 +185,6 @@ const CourseFeatured: React.FC = () => {
         <Button variant="outline" size="icon">
           <ChevronLeft className="w-5 h-5" />
         </Button>
-        {/* Dots */}
         <div className="flex gap-2">
           {Array.from({ length: Math.ceil(courses.length / 4) }).map((_, i) => (
             <button
