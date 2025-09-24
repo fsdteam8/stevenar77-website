@@ -1,9 +1,14 @@
 // context/booking/booking-reducer.ts
 import { BookingState, BookingAction } from "./booking-types";
 
-export function createInitialState(
-  initialCourse?: { id: string; name: string; price: number; age: string; image?: string }
-): BookingState {
+export function createInitialState(initialCourse?: {
+  id: string;
+  name: string;
+  price: number;
+  age: string;
+  image?: string;
+  classDates?: string[];
+}): BookingState {
   let courseId = initialCourse?.id || "";
 
   // fallback: extract from URL if no id passed
@@ -21,6 +26,7 @@ export function createInitialState(
       duration: "3-4 days",
       age: initialCourse?.age || "10+",
       image: initialCourse?.image, // keep image if passed
+      classDates: initialCourse?.classDates,
     },
     pricing: undefined,
     addOn: false,
@@ -41,6 +47,10 @@ export function createInitialState(
       postalCode: "",
       emergencyContact: "",
       courseName: initialCourse?.name || "", // pre-fill courseName if available
+      shoeSize: "",
+      hight: "",
+      weight: "",
+      gender: "male",
     },
     medicalHistory: {},
     activityQuestions: {
@@ -65,7 +75,7 @@ export function createInitialState(
 
 export function bookingReducer(
   state: BookingState,
-  action: BookingAction
+  action: BookingAction,
 ): BookingState {
   switch (action.type) {
     case "SET_STEP":

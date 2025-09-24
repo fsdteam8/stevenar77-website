@@ -110,13 +110,33 @@ export function BookingSummary() {
     return true;
   };
 
-  const handleProceedToPayment = async () => {
+//   const handleProceedToPayment = async () => {
+//   if (!validateBooking()) return;
+
+//   try {
+//     const bookingPayload = {
+//       ...mapBookingStateToPayload(state),
+//       selectedTime: state.selectedTime?.iso, // 👈 send ISO string only
+//     };
+
+//     console.log("Booking payload:", bookingPayload);
+//     await createBookingMutation.mutateAsync(bookingPayload);
+//   } catch (error) {
+//     console.error("Booking failed:", error);
+//     setValidationError("Failed to create booking. Please try again.");
+//   }
+//   console.warn(state.selectedTime,)
+// };
+
+const selectedTime = '10:00';
+
+const handleProceedToPayment = async () => {
   if (!validateBooking()) return;
 
   try {
     const bookingPayload = {
       ...mapBookingStateToPayload(state),
-      selectedTime: state.selectedTime?.iso, // 👈 send ISO string only
+      selectedTime: "10:00", // Fixed time instead of state.selectedTime?.iso
     };
 
     console.log("Booking payload:", bookingPayload);
@@ -125,7 +145,6 @@ export function BookingSummary() {
     console.error("Booking failed:", error);
     setValidationError("Failed to create booking. Please try again.");
   }
-  console.warn(state.selectedTime,)
 };
 
 
@@ -178,7 +197,8 @@ export function BookingSummary() {
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               <span>⏰</span>
-              <span>{state.selectedTime?.label || "Not selected"}</span>
+              {/* <span>{state.selectedTime?.label || "Not selected"}</span> */}
+              <span>{selectedTime}am</span>
             </div>
           </div>
         </div>

@@ -98,6 +98,11 @@ export interface BookingPayload {
   activityLevelSpecificQuestions: string[];
   medicalDocuments: File[];
   price: number;
+    // Personal info
+  gender: string;
+  shoeSize: string;
+  hight: string;   // or height
+  weight: string;
 }
 
 export interface BookingResponse {
