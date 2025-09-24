@@ -21,7 +21,7 @@ const Footer = () => {
   return (
     <footer className="bg-[#010D13] text-white py-4 lg:py-5">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-12">
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <Image
@@ -146,7 +146,7 @@ const Footer = () => {
           </div>
 
           {/*  Newsletter */}
-          <div className="space-y-6">
+          {/* <div className="space-y-6">
             <div className="space-y-4">
               <h3 className="font-semibold text-white text-lg">Newsletter</h3>
               <p className="text-sm text-white">Subscribe for updates & news</p>
@@ -161,7 +161,7 @@ const Footer = () => {
                 </Button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Divider and Copyright */}

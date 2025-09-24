@@ -1,101 +1,90 @@
+// import Image from "next/image";
 // import React from "react";
 
 // const OurPartners = () => {
-
-
-//   const diveGearVendors = [
-//     "Bare", 
-//     "Atomic Aquatics", 
-//     "Stahlsac", 
-//     "Zeagle", 
-//     "Oceanic", 
-//     "Sherwood", 
-//     "Light And Motion", 
-//     "Sea and Sea"
+//   // Data for the content
+//   const partners = [
+//     {
+//       title: "Dive Gear Vendors",
+//       items: [
+//         "Bare",
+//         "Atomic Aquatics",
+//         "Stahlsac",
+//         "Zeagle",
+//         "Oceanic",
+//         "Sherwood",
+//         "Light And Motion",
+//         "Sea and Sea",
+//       ],
+//     },
+//     {
+//       title: " Dive Gear Vendors",
+//       items: ["Malibu Scuba Repair", "Atomic Aquatics"],
+//     },
+//     {
+//       title: "Training Partners",
+//       items: ["Divers Alert Network", "LA Scuba Diving"],
+//     },
+//     {
+//       title: "Catalina Island",
+//       items: ["Catalina Divers", "Antonio's Pizzaria"],
+//     },
 //   ];
-
-//   const additionalVendors = [
-//     "Malibu Scuba Repair", 
-//     "Atomic Aquatics"
-//   ];
-
-//   const trainingPartners = [
-//     "Divers Alert Network", 
-//     "LA Scuba Diving"
-//   ];
-
-//   const catalinaIsland = [
-//     "Catalina Divers", 
-//     "Antonio's Pizzaria"
-//   ];
-
 
 //   // Render list items dynamically
-//   const renderList = (items) => (
-//     <ul className="space-y-2 font-normal text-[#4A5568]">
+//   //eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   const renderList = (items: any[]) => (
+//     <ul className="space-y-2 font-normal text-[#68706A]">
 //       {items.map((item, index) => (
-//         <li key={index} className="hover:text-teal-400 hover:underline">
+//         <li key={index} className=" hover:text-primary  ">
 //           • {item}
 //         </li>
 //       ))}
 //     </ul>
 //   );
 
-
 //   return (
-//     <section className="py-16 bg-white">
+//     <section className="py-20 bg-white">
 //       <div className="container mx-auto px-4">
-//         {/* Heading */}
-//         <h2 className="text-3xl md:text-4xl font-bold text-center text-[#27303F]">
-//           Our Partners
-//         </h2>
-//         <p className="mt-3 text-2xl md:text-[32px] text-center text-[#27303F]">
-//           Without our partners we wouldn&apos;t be able to do the things we do:
-//         </p>
-
-//         {/* Content */}
-//         <div className="mt-12 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2   gap-12 text-[#27303F]">
-//           {/* Left Column */}
-//           <div className=" mx-auto">
-//             <h3 className="font-semibold text-lg text-[#27303F] mb-4">
-//               Dive Gear Vendors:
-//             </h3>
-//             <ul className="space-y-2 font-normal leading-[150%] text-[#68706A">
-//               <li>• Bare</li>
-//               <li>• Atomic Aquatics</li>
-//               <li>• Stahlsac</li>
-//               <li>• Zeagle</li>
-//               <li>• Oceanic</li>
-//               <li>• Sherwood</li>
-//               <li>• Light And Motion</li>
-//               <li>• Sea and Sea</li>
-//             </ul>
+//         <div className="flex justify-between gap-2">
+//           <div className="w-full">
+//             <Image src={"/images/detailes2.png"} alt="" width={500} className="object-cover" height={500} />
 //           </div>
+//           <div className="">
+//             {/* Heading */}
+//             <h2 className="text-3xl md:text-4xl font-bold text-start text-[#27303F]">
+//               Our Partners
+//             </h2>
+//             <p className="mt-3 text-2xl md:text-[32px] text-start text-[#27303F]">
+//               Without our partners we wouldn&apos;t be able to do the things we
+//               do:
+//             </p>
 
-//           {/* Right Column */}
-//           <div className="space-y-8  mx-auto">
-//             <div>
-//               <h3 className="font-semibold text-lg text-[#27303F] mb-4">Dive Gear Vendors:</h3>
-//               <ul className="space-y-2 font-normal leading-[150%] text-[#68706A">
-//                 <li>• Malibu Scuba Repair</li>
-//                 <li>• Atomic Aquatics</li>
-//               </ul>
-//             </div>
+//             {/* Content */}
+//             <div className="mt-12 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 text-[#27303F]">
+//               {/* Left Column */}
+//               <div className="mx-auto">
+//                 {partners.slice(0, 1).map((section, index) => (
+//                   <div key={index}>
+//                     <h3 className="font-semibold text-lg text-[#27303F] mb-4">
+//                       {section.title}
+//                     </h3>
+//                     {renderList(section.items)}
+//                   </div>
+//                 ))}
+//               </div>
 
-//             <div>
-//               <h3 className="font-semibold text-lg mb-4">Training Partners:</h3>
-//               <ul className="space-y-2 font-normal leading-[150%] text-[#68706A">
-//                 <li>• Divers Alert Network</li>
-//                 <li>• LA Scuba Diving</li>
-//               </ul>
-//             </div>
-
-//             <div>
-//               <h3 className="font-semibold text-lg mb-4">Catalina Island</h3>
-//               <ul className="space-y-2 font-normal leading-[150%] text-[#68706A">
-//                 <li>• Catalina Divers</li>
-//                 <li>• Antonio&apos;s Pizzaria</li>
-//               </ul>
+//               {/* Right Column */}
+//               <div className="space-y-8 mx-auto">
+//                 {partners.slice(1).map((section, index) => (
+//                   <div key={index}>
+//                     <h3 className="font-semibold text-lg text-[#27303F] mb-4">
+//                       {section.title}
+//                     </h3>
+//                     {renderList(section.items)}
+//                   </div>
+//                 ))}
+//               </div>
 //             </div>
 //           </div>
 //         </div>
@@ -107,7 +96,7 @@
 // export default OurPartners;
 
 
-
+import Image from "next/image";
 import React from "react";
 
 const OurPartners = () => {
@@ -116,45 +105,35 @@ const OurPartners = () => {
     {
       title: "Dive Gear Vendors",
       items: [
-        "Bare", 
-        "Atomic Aquatics", 
-        "Stahlsac", 
-        "Zeagle", 
-        "Oceanic", 
-        "Sherwood", 
-        "Light And Motion", 
-        "Sea and Sea"
-      ]
+        "Bare",
+        "Atomic Aquatics",
+        "Stahlsac",
+        "Zeagle",
+        "Oceanic",
+        "Sherwood",
+        "Light And Motion",
+        "Sea and Sea",
+      ],
     },
     {
-      title: "Additional Dive Gear Vendors",
-      items: [
-        "Malibu Scuba Repair", 
-        "Atomic Aquatics"
-      ]
+      title: "Dive Gear Vendors",
+      items: ["Malibu Scuba Repair", "Atomic Aquatics"],
     },
     {
       title: "Training Partners",
-      items: [
-        "Divers Alert Network", 
-        "LA Scuba Diving"
-      ]
+      items: ["Divers Alert Network", "LA Scuba Diving"],
     },
     {
       title: "Catalina Island",
-      items: [
-        "Catalina Divers", 
-        "Antonio's Pizzaria"
-      ]
-    }
+      items: ["Catalina Divers", "Antonio's Pizzaria"],
+    },
   ];
 
   // Render list items dynamically
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const renderList = (items: any[]) => (
+  const renderList = (items: string[]) => (
     <ul className="space-y-2 font-normal text-[#68706A]">
       {items.map((item, index) => (
-        <li key={index} className=" hover:text-primary hover:font-semibold">
+        <li key={index} className="hover:text-primary">
           • {item}
         </li>
       ))}
@@ -163,39 +142,51 @@ const OurPartners = () => {
 
   return (
     <section className="py-20 bg-white">
+      
       <div className="container mx-auto px-4">
-        {/* Heading */}
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-[#27303F]">
-          Our Partners
-        </h2>
-        <p className="mt-3 text-2xl md:text-[32px] text-center text-[#27303F]">
-          Without our partners we wouldn&apos;t be able to do the things we do:
-        </p>
-
-        {/* Content */}
-        <div className="mt-12 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 text-[#27303F]">
-          {/* Left Column */}
-          <div className="mx-auto">
-            {partners.slice(0, 1).map((section, index) => (
-              <div key={index}>
-                <h3 className="font-semibold text-lg text-[#27303F] mb-4">
-                  {section.title}
-                </h3>
-                {renderList(section.items)}
-              </div>
-            ))}
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Left Column: Image */}
+          <div className="w-full md:w-1/2">
+            <Image
+              src="/images/detailes2.png"
+              alt="Our Partners"
+              width={500}
+              height={500}
+              layout="responsive"
+              className="object-cover rounded-lg"
+            />
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-8 mx-auto">
-            {partners.slice(1).map((section, index) => (
-              <div key={index}>
-                <h3 className="font-semibold text-lg text-[#27303F] mb-4">
-                  {section.title}
-                </h3>
-                {renderList(section.items)}
+          {/* Right Column: Content */}
+          <div className="w-full md:w-1/2 space-y-8">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#27303F] text-center md:text-left">
+              Our Partners
+            </h2>
+            <p className="mt-4 text-xl md:text-2xl text-[#27303F] text-center md:text-left">
+              Without our partners we wouldn&apos;t be able to do the things we do:
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              {/* Left Column for first partner section */}
+              <div>
+                {partners.slice(0, 1).map((section, index) => (
+                  <div key={index}>
+                    <h3 className="font-semibold text-lg text-[#27303F] mb-4">{section.title}</h3>
+                    {renderList(section.items)}
+                  </div>
+                ))}
               </div>
-            ))}
+
+              {/* Right Column for the remaining partner sections */}
+              <div>
+                {partners.slice(1).map((section, index) => (
+                  <div key={index}>
+                    <h3 className="font-semibold text-lg text-[#27303F] mb-4">{section.title}</h3>
+                    {renderList(section.items)}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
