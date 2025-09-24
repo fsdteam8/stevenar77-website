@@ -36,7 +36,7 @@ const Navbar = () => {
   const isLoggedIn = !!session?.user;
 
   // Use custom hook for user info
-  const { user, loading } = useUser(session?.user?.id);
+  const { user,  } = useUser(session?.user?.id);
 
   const displayAvatar = user?.avatar?.url || session?.user?.email || undefined;
 

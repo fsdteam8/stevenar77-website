@@ -14,20 +14,20 @@ import { useCourses } from "@/services/hooks/courses/useCourses";
 import { CourseData } from "@/lib/courseApi";
 
 // Type for the mapped course data used in the component
-interface MappedCourse {
-  id: string;
-  image: string;
-  title: string;
-  description: string;
-  rating: number;
-  reviews: number;
-  duration: string;
-  students: number;
-  features: string[];
-  price: string;
-  ageRestriction: string;
-  location: string;
-}
+// interface MappedCourse {
+//   id: string;
+//   image: string;
+//   title: string;
+//   description: string;
+//   rating: number;
+//   reviews: number;
+//   duration: string;
+//   students: number;
+//   features: string[];
+//   price: string;
+//   ageRestriction: string;
+//   location: string;
+// }
 import { useRouter } from "next/navigation";
 
 const FeaturedClasses: React.FC = () => {

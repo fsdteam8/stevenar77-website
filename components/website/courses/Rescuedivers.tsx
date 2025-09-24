@@ -6,7 +6,6 @@ import { useParams } from "next/navigation";
 import { Plus, Minus } from "lucide-react";
 import { useCourse } from "@/services/hooks/courses/useCourse";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 const CourseDetails = () => {
   const params = useParams();
