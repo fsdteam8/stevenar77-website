@@ -78,20 +78,18 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
-
-useEffect(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      menuWrapperRef.current &&
-      !menuWrapperRef.current.contains(event.target as Node)
-    ) {
-      setIsOpen(false);
-    }
-  };
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => document.removeEventListener("mousedown", handleClickOutside);
-}, []);
-
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        menuWrapperRef.current &&
+        !menuWrapperRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleLogout = async () => {
     setLogoutModalOpen(false);
@@ -103,7 +101,6 @@ useEffect(() => {
     { name: "Courses", path: "/courses" },
     { name: "Trips", path: "/trips" },
     { name: "Shop", path: "/shop" },
-    { name: "Community", path: "/community" },
     { name: "About Us", path: "/about-us" },
     { name: "Contact Us", path: "/contact-us" },
   ];
@@ -153,7 +150,11 @@ useEffect(() => {
                     <Button variant="ghost" className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
                         {displayAvatar ? (
-                          <AvatarImage src={displayAvatar} alt={displayName} />
+                          <AvatarImage
+                            className="object-cover"
+                            src={displayAvatar}
+                            alt={displayName}
+                          />
                         ) : (
                           <AvatarFallback>
                             {getInitials(displayName)}
@@ -199,7 +200,11 @@ useEffect(() => {
                     <DropdownMenuTrigger asChild>
                       <Avatar className="h-8 w-8 cursor-pointer">
                         {displayAvatar ? (
-                          <AvatarImage src={displayAvatar} alt={displayName} />
+                          <AvatarImage
+                            className="object-cover"
+                            src={displayAvatar}
+                            alt={displayName}
+                          />
                         ) : (
                           <AvatarFallback>
                             {getInitials(displayName)}
@@ -275,6 +280,7 @@ useEffect(() => {
                           <Avatar className="h-8 w-8">
                             {displayAvatar ? (
                               <AvatarImage
+                                className="object-cover"
                                 src={displayAvatar}
                                 alt={displayName}
                               />
