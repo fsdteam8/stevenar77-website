@@ -25,22 +25,29 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
+  // // If user is not authenticated and tries to access protected paths
+  // if (!token && !isPublicPath && !isAuthPath) {
+  //   const loginUrl = new URL("/login", req.url);
+  //   loginUrl.searchParams.set("callbackUrl", req.url);
+  //   return NextResponse.redirect(loginUrl);
+  // }
+
   // If user is not authenticated and tries to access protected paths
   if (!token && !isPublicPath && !isAuthPath) {
-    const loginUrl = new URL("/login", req.url);
-    loginUrl.searchParams.set("callbackUrl", req.url);
-    return NextResponse.redirect(loginUrl);
+    if (pathname.startsWith("/account")) {
+      // Account pages → login
+      const loginUrl = new URL("/login", req.url);
+      loginUrl.searchParams.set("callbackUrl", req.url);
+      return NextResponse.redirect(loginUrl);
+    } else {
+      // Other protected pages → error page
+      return NextResponse.redirect(new URL("/not-found", req.url));
+    }
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    "/account",
-    "/courses/book/:id",
-    "/trips/book/:id",
-    "/messaging",
-
-  ],
+  matcher: ["/account", "/courses/book/:id", "/trips/book/:id", "/messaging"],
 };
