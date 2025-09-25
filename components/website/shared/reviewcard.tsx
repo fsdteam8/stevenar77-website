@@ -11,10 +11,10 @@ interface ReviewCardProps {
 
 export function ReviewCard({ review }: ReviewCardProps) {
   // Concatenate first and last name
-  const fullName = `${review.userId.firstName} ${review.userId.lastName}`;
+  const fullName = `${review.userId?.firstName} ${review.userId?.lastName}`;
   
   // Use facility address or fallback to facility name
-  const location = review.facility.address || review.facility.name;
+  const location = review?.facility?.address || review?.facility?.name;
   
   return (
     <Card className="w-full h-full overflow-hidden bg-white shadow-xs hover:shadow-sm transition-shadow duration-300">
@@ -24,7 +24,8 @@ export function ReviewCard({ review }: ReviewCardProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-1">
               <Image
-                src={'/images/profile-mini.jpg'}
+                // src={ {} ||'/images/profile-mini.jpg'}
+                src={review?.userId?.email || '/images/profile-mini.jpg'}
                 alt="profile image"
                 className="rounded-full"
                 width={50}
@@ -35,7 +36,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
                   {fullName}
                 </h3>
                 <p className="flex flex-row text-sm text-gray-600">
-                  {location}, {review.facility.name}
+                  {location}, {review?.facility?.address}
                 </p>
               </div>
             </div>

@@ -49,7 +49,7 @@ export function ProfileCard({
         {showEditButton && (
           <Button
             size="sm"
-            className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-white/20 hover:bg-white/30 text-white border-white/30"
+            className="absolute z-10 top-25 sm:top-35 right-35 sm:right-50 bg-primary  hover:bg-teal-500 text-white border-white/30"
             onClick={onEdit}
           >
             <Edit className="w-4 h-4" />

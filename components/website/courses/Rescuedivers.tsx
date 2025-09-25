@@ -2,229 +2,315 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { Plus, Minus } from "lucide-react";
+import { useCourse } from "@/services/hooks/courses/useCourse";
+import { Button } from "@/components/ui/button";
 
-const Rescuedivers = () => {
+const CourseDetails = () => {
+  const params = useParams();
+  const courseId = params?.id as string;
+  const { data: course, isLoading, isError, error } = useCourse(courseId);
+
   const [quantity, setQuantity] = useState(1);
-  const price = 450;
+  const [selectedPriceIndex, setSelectedPriceIndex] = useState(0);
+  const router = useRouter();
 
   const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity >= 1) {
-      setQuantity(newQuantity);
-    }
+    if (newQuantity >= 1) setQuantity(newQuantity);
   };
 
   const handleBookNow = () => {
-    // Add your booking logic here
-    console.log(`Booking ${quantity} Rescue Diver course(s)`);
+    if (!course) return;
+    router.push(`/courses/book/${course._id}`);
   };
 
-  return (
-    <div>
-      <section className="mt-20">
-        <div className="px-4 sm:px-8 lg:px-16 py-10 md:py-14 lg:py-16 bg-[#F8F9FA]">
-          <div className="mx-auto container">
-            {/* Content Grid */}
-            <div className="grid md:grid-cols-2 gap-10 items-start">
-              {/* Text Section */}
-              <div className="order-2 md:order-1">
-                {/* Heading */}
-                <h1 className="text-4xl md:text-5xl text-[#27303F] font-bold  mb-6">
-                  Rescue Diver
-                </h1>
+  // Dummy data mapping for course sections
+  const courseSections = [
+    {
+      title: "What's Included",
+      items: [
+        "Professional instructor guidelines — classroom, pool, and ocean",
+        "All course materials for learning dive theory",
+        "Barred green website, fire, boots, regulator, BCD, and computer",
+        "Ikeun-i-trip fiery tickets to Costima Island",
+        "Two-night story at The Harmosa Hotel",
+        "Official PKU Open Water Diver certification paperwork",
+      ],
+    },
+    {
+      title: "Where You'll Learn",
+      items: [
+        "Classroom & Pool: At our Ageure Hills dive shop and nearby pool",
+        "Ocean Diving: Coelho Point Dive Park, Catalina Island — 5000th easiest entry with steps, handrails, and clear water",
+      ],
+    },
+    {
+      title: "Who Can Join",
+      items: [
+        "Anyone age 10+ in good health",
+        "Agas 10–14 may earn the Junior Open Water certification",
+        "Completion of a standard medical statement is required",
+      ],
+    },
+    {
+      title: "Your Class Experience",
+      items: [
+        "Weekend One — Classroom & Pool: Learn scales theory in a relaxed classroom, then practice in the pool to build comfort step by step.",
+        "Weekend Two — Catalina Ocean Drive: Make four dives at Centro Point Dive Park with instructor support. Explore fully forests learning with sea flora, fishachecks, and Giant Black Sea Bass.",
+      ],
+    },
+    {
+      title: "When Classes Are Offered",
+      items: [
+        "Once a month (see calendar for dates), year-round (except major holidays)",
+        "Summer Mile quickly — early booking recommended",
+      ],
+    },
+    {
+      title: "What You'll Need",
+      items: [
+        "Personal gear: Mask and shortest (titles during skiss for comfort)",
+        "Everything else is provided — walkup, fire, boots, regulator, BCD, and computer",
+      ],
+    },
+  ];
 
-                {/* Description */}
-                <p className="text-gray-700 leading-relaxed text-lg mb-8">
-                  The Rescue Diver course is by far the most challenging and
-                  rewarding of the non-professional classes we offer. Your
-                  awareness of other divers will extend beyond your dive buddy
-                  and begin to encompass all dive related activity around you.
-                  You will gain the confidence to assist other divers, from
-                  helping an injured diver underwater to preventing an emergency
-                  from occurring in the first place
-                </p>
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center">
+        <p className="text-center py-10 text-lg">Loading course...</p>
+      </div>
+    );
+  }
 
-                {/* Course Features List */}
-                <div className="mb-12">
-                  <ul className="space-y-4">
-                    <li className="flex items-start">
-                      <div className="w-2 h-2 bg-teal-600 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                      <span className="text-gray-700 text-lg">
-                        Instructor Time
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <div className="w-2 h-2 bg-teal-600 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                      <span className="text-gray-700 text-lg">
-                        Academic Materials
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <div className="w-2 h-2 bg-teal-600 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                      <span className="text-gray-700 text-lg">
-                        Classroom Session
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <div className="w-2 h-2 bg-teal-600 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                      <span className="text-gray-700 text-lg">
-                        Pool Session
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <div className="w-2 h-2 bg-teal-600 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                      <span className="text-gray-700 text-lg">
-                        Open Water training
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <div className="w-2 h-2 bg-teal-600 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                      <span className="text-gray-700 text-lg">
-                        Certification Paperwork
-                      </span>
-                    </li>
-                  </ul>
-                </div>
+  // Error state
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center">
+        <p className="text-center py-10 text-red-500 text-lg">
+          Error: {error?.message || "Something went wrong"}
+        </p>
+      </div>
+    );
+  }
 
-                {/* Booking Section */}
-                <div className="border-t border-gray-200 pt-8">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                    {/* Quantity and Price */}
-                    <div className="flex items-center gap-6">
-                      {/* Quantity Selector */}
-                      <div className="flex items-center">
-                        <button
-                          onClick={() => handleQuantityChange(quantity - 1)}
-                          className="p-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                          disabled={quantity <= 1}
-                          aria-label="Decrease quantity"
-                        >
-                          <Minus className="w-4 h-4 cursor-pointer  text-gray-600" />
-                        </button>
+  // Course not found
+  if (!course) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center">
+        <p className="text-center py-10 text-lg">Course not found.</p>
+      </div>
+    );
+  }
 
-                        <span className="px-4 py-3 text-lg font-medium text-gray-900  text-center">
-                          {quantity}
-                        </span>
+  // Check if single or multiple prices
+  const hasSinglePrice =
+    !course.price || !Array.isArray(course.price) || course.price.length <= 1;
+  const hasMultiplePrices =
+    course.price && Array.isArray(course.price) && course.price.length > 1;
 
-                        <button
-                          onClick={() => handleQuantityChange(quantity + 1)}
-                          className="p-3 border border-gray-300 bg-teal-600 text-white hover:bg-teal-700 transition-colors rounded-md"
-                          aria-label="Increase quantity"
-                        >
-                          <Plus className="w-4 h-4 cursor-pointer" />
-                        </button>
-                      </div>
+  // Get price display - handle price array
+  const getPriceDisplay = () => {
+    if (
+      !course.price ||
+      !Array.isArray(course.price) ||
+      course.price.length === 0
+    ) {
+      return "Price not available";
+    }
 
-                      {/* Price */}
-                      <div className="text-2xl font-bold text-gray-900">
-                        $ {price.toLocaleString()}
-                      </div>
-                    </div>
+    if (course.price.length === 1) {
+      return `$${course.price[0].toLocaleString()}`;
+    }
+
+    // Multiple prices - show range
+    const minPrice = Math.min(...course.price);
+    const maxPrice = Math.max(...course.price);
+    return `$${minPrice.toLocaleString()} - $${maxPrice.toLocaleString()}`;
+  };
+
+  // Render Single Price Layout (like Image 1)
+  const renderSinglePriceLayout = () => (
+    <div className="border-t border-gray-200 pt-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div>
+          <div className="flex items-center gap-6">
+            {/* Quantity Controls */}
+            <div className="flex items-center">
+              <Button
+                onClick={() => handleQuantityChange(quantity - 1)}
+                variant="outline"
+                size="sm"
+                disabled={quantity <= 1}
+                className="p-3 border border-gray-300 rounded-md bg-transparent hover:bg-gray-100"
+              >
+                <Minus className="w-4 h-4 text-gray-600" />
+              </Button>
+
+              <span className="px-4 py-3 text-lg font-medium text-gray-900 text-center min-w-[60px]">
+                {quantity}
+              </span>
+
+              <Button
+                onClick={() => handleQuantityChange(quantity + 1)}
+                size="sm"
+                className="p-3 border border-gray-300 bg-teal-600 text-white hover:bg-teal-700 rounded-md"
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* Price Display */}
+            <div className="text-2xl font-bold text-gray-900">
+              {getPriceDisplay()}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Book Now Button */}
+      <div className="w-full mt-6">
+        <Button
+          onClick={handleBookNow}
+          className="w-full sm:w-auto text-center bg-teal-600 hover:bg-teal-700 text-white font-semibold px-20 py-6 rounded-lg transition-colors text-lg"
+        >
+          Book Now
+        </Button>
+      </div>
+    </div>
+  );
+
+  // Render Multiple Price Layout (like Image 2)
+  const renderMultiplePriceLayout = () => (
+    <div className="border-t border-gray-200 pt-8">
+      {/* Pricing Section */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold text-[#27303F] mb-6">Pricing</h3>
+        <div className="space-y-4">
+          {course.price.map((price, index) => (
+            <div
+              key={index}
+              className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                selectedPriceIndex === index
+                  ? "border-teal-600 bg-teal-50"
+                  : "border-gray-200 hover:border-gray-300"
+              }`}
+              onClick={() => setSelectedPriceIndex(index)}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-semibold text-gray-900">
+                    {/* You can customize these labels based on your data structure */}
+                    {index === 0 && "5 Days Program"}
+                    {index === 1 && "3 Days Upgrade"}
+                    {index === 2 && "Weekend Special"}
+                    {index > 2 && `Option ${index + 1}`}
                   </div>
-                  <div className=" w-full mt-5">
-                    {/* Book Now Button */}
-                    <button
-                      onClick={handleBookNow}
-                      className="min-w-full sm:w-auto inline-block text-center cursor-pointer bg-teal-600 hover:bg-teal-700 text-white font-semibold px-20 py-4 rounded-lg transition-colors text-lg "
-                    >
-                      Book Now
-                    </button>
+                  <div className="text-sm text-gray-600 mt-1">
+                    {/* Add descriptions if available in your data */}
+                    {index === 0 &&
+                      "Full certification, the gold-guide comfort step by step"}
+                    {index === 1 &&
+                      "If you already have a 2 dive/tour (bring a p. Third buoyancy or termos)"}
+                    {index === 2 && "Weekend intensive program"}
                   </div>
                 </div>
-              </div>
-
-              {/* Image Section */}
-              <div className="rounded-lg overflow-hidden shadow-md order-1 md:order-2">
-                <Image
-                  src="/images/rescue-image.png"
-                  alt="Rescue Diver training"
-                  width={800}
-                  height={700}
-                  className="object-cover w-full h-full"
-                />
+                <div className="text-xl font-bold text-gray-900">
+                  ${price.toLocaleString()}
+                </div>
               </div>
             </div>
-            <div className="mt-10">
-              <div className="text-start">
-                <div className="mb-6">
-                  <h2 className="text-3xl font-montserrat text-[#27303F] mb-4 font-semibold">
-                    Descriptions
-                  </h2>
-                  <p className="text-base  text-gray-500 ">
-                    Demonstrating mastery of the skills taught in the Rescue
-                    Diver course is not easy, and not everyone who takes the
-                    class through PCH graduates. However, the challenge is
-                    absolutely worth the reward, and the knowledge gained
-                    through the training becomes applicable in many aspects of a
-                    students life outside of scuba. You will start with learning
-                    how to identify signs of panic in other divers and go all
-                    the way to managing a full diver rescue scenario using the
-                    full on-site staff of PCH Scuba. Being a solid rescue diver
-                    earns you the respect of recreational and professional
-                    divers alike. Rescue Diver training is also a prerequiste
-                    for the Master Scuba Diver Program and is included in the
-                    price of that program. It is also a requirement for all of
-                    the Professional certifications we offer.
-                  </p>
+          ))}
+        </div>
+      </div>
+
+      {/* Add-on Section */}
+      <div className="mb-8">
+        <h4 className="text-lg font-semibold text-[#27303F] mb-4">Add-on</h4>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div>
+              <div className="font-medium text-gray-900">Catalina Weekend</div>
+              <div className="text-sm text-gray-600">
+                Leisure dig ferry 2 day night (food day)
+              </div>
+            </div>
+            <div className="font-semibold text-gray-900">+$148</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Book Now Button */}
+      <div className="w-full">
+        <Button
+          onClick={handleBookNow}
+          className="w-full text-center bg-teal-600 hover:bg-teal-700 text-white font-semibold py-4 rounded-lg transition-colors text-lg"
+        >
+          Book Now
+        </Button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#F8F9FA]">
+      <section className="pt-20 container mx-auto">
+        <div className="px-4 sm:px-8 lg:px-16 py-10 md:py-14 lg:py-16 space-y-8">
+          <div className="">
+            {/* Image Section */}
+            <div className="rounded-lg overflow-hidden w-350 h-200 shadow-md order-1 md:order-2">
+              <Image
+                src={course.image?.url || "/images/course-placeholder.png"}
+                alt={course.title}
+                width={600}
+                height={400}
+                className="object-cover w-full h-full"
+                priority
+              />
+            </div>
+          </div>
+          <div className="mx-auto container">
+            <div className="w-full grid grid-cols-3 gap-5 justify-between items-start">
+              <div className="w-full col-span-2 space-y-12">
+                {/* Content Section */}
+                <div className="order-2 md:order-1">
+                  <h1 className="text-4xl md:text-5xl text-[#27303F] font-bold mb-6">
+                    {course.title}
+                  </h1>
+                  <p
+                    className="text-gray-700 leading-relaxed text-lg mb-8"
+                    dangerouslySetInnerHTML={{ __html: course.description }}
+                  />
+
+                  {/* Features - Course Includes */}
+                  {course.courseIncludes &&
+                    course.courseIncludes.length > 0 && (
+                      <div className="mb-12">
+                        <h3 className="text-xl font-semibold text-[#27303F] mb-4">
+                          Course Includes:
+                        </h3>
+                        <ul className="space-y-4">
+                          {course.courseIncludes.map((item, idx) => (
+                            <li key={idx} className="flex items-start">
+                              <div className="w-2 h-2 bg-teal-600 rounded-full mt-2 mr-4 flex-shrink-0"></div>
+                              <span className="text-gray-700 text-lg">
+                                {item}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                 </div>
-                <div className="mb-6">
-                  <h2 className="text-3xl font-montserrat text-[#27303F] mb-4 font-semibold">
-                    Who can participate…
-                  </h2>
-                  <p className="text-base  text-gray-500 ">
-                    Any diver that has successfully completed the Advanced Open
-                    Water class is qualified to begin the Rescue Diver class.
-                    PCH Scuba also highly recommends the Search and Recovery
-                    Specialty as a prerequiste to beginning Rescue Diver
-                    training.
-                  </p>
-                </div>
-                <div className="mb-6">
-                  <h2 className="text-3xl font-montserrat text-[#27303F] mb-4 font-semibold">
-                    What is the class like…
-                  </h2>
-                  <p className="text-base  text-gray-500 ">
-                    The Rescue Diver class is a combination of academic work,
-                    pool training and open water demonstration. You will begin
-                    with a  classroom session to go over your knowledge reviews
-                    and answers your questions. We will also talk about
-                    different scenarios and what is expected from the course. 
-                    You will then move to the pool on Sunday and be ready to
-                    learn how to manage different rescue scenarios and rescue
-                    breathing. You&apos;ll cover how to respond to both surface
-                    and underwater emergencies, how to recognize active and
-                    passive panic and how to approach panicked divers. In-water
-                    rescue breathing will be practiced until you are able to
-                    remove the gear from a non-responsive diver, while towing
-                    them and administering rescue breaths all at the same time.
-                  </p>
-                  <p className="text-base  text-gray-500 mt-4">
-                    Once you have confidence in the academics and pool work, we
-                    take you to the ocean so we can work on the ways of getting
-                    an unconscious diver out of the water, and drill you again
-                    on the pool work you did in the unpredictable environment of
-                    open water. Finally, you bring it all together by managing a
-                    full &double;missing diver &double; rescue scenario from the
-                    initial contact with the lost diver&apos;s buddy to
-                    simulating CPR after getting the unconscious diver out of
-                    the water. PCH Scuba rescue scenarios are intense and
-                    you&apos;ll know you&apos;re ready for the real thing when
-                    you&apos;re done.
-                  </p>
-                </div>
-                <div className="mb-6">
-                  <h2 className="text-3xl font-montserrat text-[#27303F] mb-4 font-semibold">
-                    Where will you learn…
-                  </h2>
-                  <p className="text-base  text-gray-500 ">
-                    The academic portion of the class is taught at the shop. The
-                    pool work is performed at the San Fernando Regional Pool.
-                    Open water work is conducted at Casino Point Dive Park on
-                    Catalina. You will need to be First Aid/CPR certified.
-                    Please contact us about this requirement! We offer the
-                    Emergency First Response Course to fulfill this requirement.
-                  </p>
-                </div>
+              </div>
+
+              <div className="w-full col-span-1">
+                {/* Conditional Pricing Layout */}
+                {hasSinglePrice
+                  ? renderSinglePriceLayout()
+                  : renderMultiplePriceLayout()}
               </div>
             </div>
           </div>
@@ -234,4 +320,4 @@ const Rescuedivers = () => {
   );
 };
 
-export default Rescuedivers;
+export default CourseDetails;

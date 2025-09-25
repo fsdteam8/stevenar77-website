@@ -2,7 +2,8 @@
 
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api/v1";
+const baseUrl =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api/v1";
 
 declare module "next-auth" {
   interface Session {
@@ -18,7 +19,7 @@ declare module "next-auth" {
     id: string;
     email: string;
     role: string;
-    token: string; 
+    token: string;
   }
 }
 
@@ -67,7 +68,7 @@ const handler = NextAuth({
           // console.log("API Login Response:", );
 
           return {
-            id: user?._id || "unknown",
+            id: user?.id || user?._id || "unknown",
             email: user?.email || credentials.email,
             role: user?.role || "",
             token, // accessToken from backend
@@ -92,7 +93,35 @@ const handler = NextAuth({
         token.role = user?.role as string;
         token.accessToken = user?.token as string;
       }
-      return token;
+
+      // Check if access token has expired
+      const tokenExpiry = Date.now() + 3600000; // 1 hour from now
+      if (Date.now() < tokenExpiry) {
+        return token;
+      }
+
+      try {
+        // Try to refresh the token
+        const response = await fetch(`${baseUrl}/auth/refresh-token`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token.accessToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("RefreshAccessTokenError");
+        }
+
+        const data = await response.json();
+        return {
+          ...token,
+          accessToken: data.accessToken,
+        };
+      } catch (error) {
+        console.error("Error refreshing access token", error);
+        return { ...token, error: "RefreshAccessTokenError" };
+      }
     },
 
     async session({ session, token }) {
@@ -103,6 +132,11 @@ const handler = NextAuth({
           role: token.role as string,
         };
         session.accessToken = token.accessToken as string;
+
+        if (token.error === "RefreshAccessTokenError") {
+          // If there's a token error, you might want to redirect to sign in
+          session.error = "RefreshAccessTokenError";
+        }
       }
       return session;
     },

@@ -7,13 +7,17 @@ import { ProfilePage } from "./pages/profile-page";
 import { CourseHistoryPage } from "./pages/course-history-page";
 import { TripsHistoryPage } from "./pages/trips-history-page";
 import { ShopHistoryPage } from "./pages/shop-history-page";
-import { ChangePasswordPage } from "./pages/change-password-page";
 import { Header } from "./header";
 import { Sidebar } from "./sidebar";
+import { ChangePasswordPage } from "./pages/change-password-page";
+import { signOut } from "next-auth/react";
+import OrderHistoryPage from "./pages/order-history-page";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("profile");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+ 
 
   const handleNavigation = (tab: string) => {
     if (tab === "logout") {
@@ -31,8 +35,10 @@ export default function DashboardPage() {
         return <CourseHistoryPage />;
       case "trips-history":
         return <TripsHistoryPage />;
-      case "shop-history":
-        return <ShopHistoryPage />;
+      // case "shop-history":
+      //   return <ShopHistoryPage />;
+      case "order-history":
+          return <OrderHistoryPage />
       case "change-password":
         return <ChangePasswordPage />;
       default:
@@ -54,7 +60,7 @@ export default function DashboardPage() {
         onClose={() => setShowLogoutModal(false)}
         onConfirm={() => {
           setShowLogoutModal(false);
-          // Handle logout logic here
+          signOut({ callbackUrl: "/login" });
         }}
       />
     </div>

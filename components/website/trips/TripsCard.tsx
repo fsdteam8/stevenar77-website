@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -47,21 +48,22 @@ export default function TripsCard({
           <h1 className="text-[#27303F] text-2xl font-semibold">{title}</h1>
 
           {/* Short Description */}
-          <p className="text-[#68706A] text-base font-medium my-3 italic leading-relaxed">
-            {shortDescription}
+          <p className="text-[#68706A] text-base font-medium my-3 italic leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: shortDescription }}>
+            {/* {shortDescription} */}
           </p>
 
           {/* Buttons */}
           <div className="flex gap-4 mt-4 flex-wrap">
             <Link href={seeMoreLink}>
-              <button className="border border-[#0694A2] text-[#0694A2] px-12 py-2 md:px-20 rounded-md hover:bg-[#0694A2] hover:text-white transition cursor-pointer">
+              <Button className="border border-[#0694A2] text-gray-800 px-12 py-2 md:px-20 rounded-md hover:bg-gray-200 bg-transparent  transition cursor-pointer">
                 See More
-              </button>
+              </Button>
             </Link>
             <Link href={bookNowLink}>
-              <button className="bg-[#0694A2] text-white px-12 py-2 md:px-20 rounded-md hover:bg-[#057c88] transition cursor-pointer">
-                Book Now
-              </button>
+              <Button className="bg-[#0694A2] text-white px-12 py-2 md:px-20 rounded-md hover:bg-[#057c88] transition cursor-pointer">
+                Buy Now
+              </Button>
             </Link>
           </div>
         </div>

@@ -30,18 +30,20 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   children,
 }) => {
   return (
-    <section className="h-full">
-      <div className="py-1  w-full h-full flex  flex-col justify-between  overflow-hidden rounded-2xl shadow-lg bg-white">
-        {/* Course Image */}
-        <div className="relative h-52 w-full">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
+    <section>
+      <div className="container mx-auto h-full">
+        <div className="py-1 my-5 w-full h-full overflow-hidden rounded-2xl shadow-lg bg-white">
+          {/* Course Image */}
+          <div className="relative w-full ">
+            <Image
+              src={image}
+              alt={title}
+              width={600}
+              height={400}
+              className="object-cover w-full aspect-[5/3]"
+              priority
+            />
+          </div>
 
         {children}
 
@@ -61,6 +63,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
           </Button>
         </div>
       </div>
+    </div>
     </section>
   );
 };

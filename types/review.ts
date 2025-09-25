@@ -1,24 +1,24 @@
-
 interface User {
-    _id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
 interface Facility {
-    _id: string;
-    name: string;
-    address?: string;
+  _id: string;
+  name: string;
+  address?: string;
 }
 
 export interface Review {
-    _id: string;
-    userId: User;
-    facility: Facility;
-    star: number;
-    comment: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
+  _id: string;
+  userId: User | null;       // user may be null
+  facility?: Facility | null; // facility is optional
+  productId?: string;         // optional now
+  star: number;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }

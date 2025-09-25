@@ -16,12 +16,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { postResetPassword } from "@/lib/api";
 
 // ✅ Validation schema
 const resetPasswordSchema = z
   .object({
     password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z
+      .string()
+      .min(6, "Password must be at least 6 characters"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -33,6 +38,9 @@ type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = encodeURIComponent(searchParams.get("token") || "");
 
   const form = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
@@ -42,15 +50,26 @@ export default function ResetPassword() {
     },
   });
 
-  const onSubmit = (values: ResetPasswordFormValues) => {
-    setLoading(true);
-    console.log("Changing password:", values.password);
+  const onSubmit = async (values: ResetPasswordFormValues) => {
+    if (!token) {
+      toast.error("Token not found. Try again.");
+      return;
+    }
 
-    // Simulate API call
-    setTimeout(() => {
+    setLoading(true);
+
+    try {
+      const res = await postResetPassword(
+        { newPassword: values.password },
+        token,
+      );
+      toast.success(res.message || "Password changed successfully!");
+      router.push("/login");  
+    } catch {
+      toast.error("Failed to reset password");
+    } finally {
       setLoading(false);
-      alert("Password changed successfully!");
-    }, 1500);
+    }
   };
 
   return (
@@ -89,7 +108,11 @@ export default function ResetPassword() {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
                       >
-                        {showPassword ? <EyeOff className="w-5 h-5 cursor-pointer" /> : <Eye className="w-5 h-5 cursor-pointer" />}
+                        {showPassword ? (
+                          <EyeOff className="w-5 h-5 cursor-pointer" />
+                        ) : (
+                          <Eye className="w-5 h-5 cursor-pointer" />
+                        )}
                       </button>
                     </div>
                   </FormControl>
@@ -120,7 +143,11 @@ export default function ResetPassword() {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 "
                       >
-                        {showPassword ? <EyeOff className="w-5 h-5 cursor-pointer" /> : <Eye className="w-5 h-5 cursor-pointer" />}
+                        {showPassword ? (
+                          <EyeOff className="w-5 h-5 cursor-pointer" />
+                        ) : (
+                          <Eye className="w-5 h-5 cursor-pointer" />
+                        )}
                       </button>
                     </div>
                   </FormControl>
