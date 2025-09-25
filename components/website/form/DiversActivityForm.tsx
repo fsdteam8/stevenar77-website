@@ -1,204 +1,1181 @@
-// "use client"
-// import React, { useRef, useState } from 'react'
+// "use client";
+
+// import Image from "next/image";
+// import { useState, useRef } from "react";
+
+// const loadHTML2Canvas = async () => {
+//   const { default: html2canvas } = await import("html2canvas");
+//   return html2canvas;
+// };
 
 // const DiversActivityForm = () => {
-//   const formRef = useRef(null)
-//   const [isExporting, setIsExporting] = useState(false)
+//   const [participantName, setParticipantName] = useState("");
+//   const [policyNumber,setPolicyNumber] = useState("");
+//   const [signature, setSignature] = useState("");
+//   const [guardianSignature, setGuardianSignature] = useState("");
+//   const [date, setDate] = useState("");
+//   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-//   const exportToPDF = async () => {
-//     if (formRef.current) {
-//       setIsExporting(true)
-//       try {
-//         // Dynamically import html2canvas and jsPDF
-//         const html2canvas = (await import('html2canvas')).default
-//         const jsPDF = (await import('jspdf')).default
+//   const formRef = useRef<HTMLDivElement>(null);
 
-//         const canvas = await html2canvas(formRef.current, {
-//           scale: 2,
-//           useCORS: true,
-//           backgroundColor: '#ffffff',
-//           width: formRef.current.offsetWidth,
-//           height: formRef.current.offsetHeight,
-//         })
-
-//         const imgData = canvas.toDataURL('image/png')
-        
-//         // Calculate PDF dimensions (A4 size)
-//         const pdfWidth = 210; // A4 width in mm
-//         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-        
-//         const pdf = new jsPDF({
-//           orientation: pdfHeight > pdfWidth ? 'portrait' : 'landscape',
-//           unit: 'mm',
-//           format: [pdfWidth, pdfHeight]
-//         });
-
-//         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-//         pdf.save('padi-liability-form.pdf');
-
-//       } catch (error) {
-//         console.error('Error generating PDF:', error)
-//         alert('Error generating PDF. Please try again.')
-//       } finally {
-//         setIsExporting(false)
-//       }
+//   const handlePrint = async () => {
+//     if (!participantName || !signature || !date) {
+//       alert(
+//         "Please fill in required fields: Participant Name, Signature, Date",
+//       );
+//       return;
 //     }
-//   }
+
+//     setIsGeneratingPDF(true);
+
+//     try {
+//       if (!formRef.current) throw new Error("Form reference not found");
+
+//       const html2canvas = await loadHTML2Canvas();
+
+//       const tempStyle = document.createElement("style");
+//       tempStyle.textContent = `
+//         .print-area * {
+//           color: rgb(0, 0, 0) !important;
+//           background-color: rgb(255, 255, 255) !important;
+//           border-color: rgb(0, 0, 0) !important;
+//           box-shadow: none !important;
+//         }
+//         .print-area input {
+//           color: rgb(0, 0, 0) !important;
+//           background-color: transparent !important;
+//           border-color: rgb(0, 0, 0) !important;
+//         }
+//         .print-area .border-gray-900 {
+//           border-color: rgb(17, 24, 39) !important;
+//         }
+//         .print-area .text-xl, .print-area .font-bold {
+//           color: rgb(0, 0, 0) !important;
+//         }
+//       `;
+//       document.head.appendChild(tempStyle);
+
+//       // Wait for styles to apply
+//       await new Promise((resolve) => setTimeout(resolve, 500));
+
+//       const canvas = await html2canvas(formRef.current, {
+//         scale: 2,
+//         useCORS: true,
+//         allowTaint: false,
+//         backgroundColor: "#ffffff",
+//         logging: false,
+//         imageTimeout: 10000,
+//         removeContainer: true,
+//         ignoreElements: (element) => {
+//           return element.classList.contains("no-print");
+//         },
+//         onclone: (clonedDoc) => {
+//           // Force all elements to use safe RGB colors
+//           const allElements = clonedDoc.querySelectorAll("*");
+//           allElements.forEach((el: Element) => {
+//             const htmlEl = el as HTMLElement;
+//             if (htmlEl.style) {
+//               htmlEl.style.color = "rgb(0, 0, 0)";
+//               if (htmlEl.tagName !== "INPUT") {
+//                 htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
+//               }
+//               htmlEl.style.borderColor = "rgb(0, 0, 0)";
+//               // Remove any potentially problematic CSS properties
+//               htmlEl.style.removeProperty("filter");
+//               htmlEl.style.removeProperty("backdrop-filter");
+//               htmlEl.style.removeProperty("box-shadow");
+//             }
+//           });
+//         },
+//       });
+
+//       document.head.removeChild(tempStyle);
+
+//       const imgData = canvas.toDataURL("image/png", 1.0);
+
+//       // Create a new window with the image for PDF printing
+//       const printWindow = window.open("", "_blank");
+//       if (printWindow) {
+//         const fileName = `PADI_Liability_Form_${participantName
+//           .replace(/[^a-zA-Z0-9\s]/g, "")
+//           .replace(/\s+/g, "_")
+//           .trim()}_${new Date().toISOString().split("T")[0]}`;
+
+//         printWindow.document.write(`
+//           <!DOCTYPE html>
+//           <html>
+//             <head>
+//               <title>${fileName}</title>
+//               <style>
+//                 body {
+//                   margin: 0;
+//                   padding: 0;
+//                   display: flex;
+//                   justify-content: center;
+//                   align-items: center;
+//                   min-height: 100vh;
+//                   background: white;
+//                 }
+//                 img {
+//                   max-width: 100%;
+//                   height: auto;
+//                   display: block;
+//                 }
+//                 @media print {
+//                   body { margin: 0; }
+//                   img {
+//                     width: 100%;
+//                     height: auto;
+//                     page-break-inside: avoid;
+//                   }
+//                 }
+//               </style>
+//             </head>
+//             <body>
+//               <img src="${imgData}" alt="PADI Liability Form" />
+//             </body>
+//           </html>
+//         `);
+//         printWindow.document.close();
+
+//         // Wait for image to load then trigger print dialog
+//         printWindow.onload = () => {
+//           setTimeout(() => {
+//             printWindow.print();
+//           }, 500);
+//         };
+//       } else {
+//         throw new Error(
+//           "Unable to open print window. Please check your browser's popup settings.",
+//         );
+//       }
+//     } catch (error: unknown) {
+//       console.error("Error generating PDF:", error);
+//       const errorMessage =
+//         error instanceof Error ? error.message : "Unknown error occurred";
+
+//       if (errorMessage.includes("lab") || errorMessage.includes("color")) {
+//         alert(
+//           `PDF generation failed due to color parsing issue. This is a browser compatibility issue.\n\nPlease try:\n1. Using a different browser (Chrome/Firefox)\n2. Refreshing the page and trying again\n3. Using the browser print function as an alternative`,
+//         );
+//       } else {
+//         const userChoice = confirm(
+//           `PDF generation failed: ${errorMessage}\n\nUse browser print instead?`,
+//         );
+//         if (userChoice) {
+//           const printStyle = document.createElement("style");
+//           printStyle.textContent = `
+//             @media print {
+//               body * { visibility: hidden; }
+//               .print-area, .print-area * { visibility: visible; }
+//               .print-area {
+//                 position: absolute;
+//                 left: 0;
+//                 top: 0;
+//                 width: 100% !important;
+//                 margin: 0 !important;
+//                 padding: 20px !important;
+//               }
+//               .no-print { display: none !important; }
+//             }
+//           `;
+//           document.head.appendChild(printStyle);
+//           window.print();
+//           setTimeout(() => document.head.removeChild(printStyle), 1000);
+//         }
+//       }
+//     } finally {
+//       setIsGeneratingPDF(false);
+//     }
+//   };
 
 //   return (
-//     <div className="w-full">
+//     <div className="min-h-screen bg-gray-100 py-6">
 //       {/* Export Button */}
-//       <div className="mb-4 text-center">
+//       <div className="max-w-6xl mx-auto mb-4 no-print">
 //         <button
-//           onClick={exportToPDF}
-//           disabled={isExporting}
-//           className={`${
-//             isExporting 
-//               ? 'bg-gray-400 cursor-not-allowed' 
-//               : 'bg-blue-600 hover:bg-blue-700'
-//           } text-white font-bold py-2 px-6 rounded transition-colors duration-200`}
+//           onClick={handlePrint}
+//           disabled={isGeneratingPDF}
+//           className={`font-bold py-3 px-6 rounded-lg transition duration-200 w-full ${
+//             isGeneratingPDF
+//               ? "bg-gray-400 cursor-not-allowed text-gray-700"
+//               : "bg-blue-600 hover:bg-blue-700 text-white"
+//           }`}
 //         >
-//           {isExporting ? 'Generating PDF...' : 'Export to PDF'}
+//           {isGeneratingPDF ? "Generating PDF..." : "Export as PDF"}
 //         </button>
-//         <p className="text-sm text-gray-600 mt-2">
-//           Downloads the form as a PDF document
-//         </p>
 //       </div>
 
-//       {/* Form Container */}
-//       <div 
+//       {/* Form Content */}
+//       <div
 //         ref={formRef}
-//         className="max-w-4xl mx-auto p-6 font-sans text-xs leading-tight bg-white border border-gray-200 shadow-lg"
-//         style={{ 
-//           minWidth: '794px', // A4 width in pixels at 96dpi
-//           fontFamily: 'Arial, sans-serif'
-//         }}
+//         className="print-area max-w-6xl mx-auto bg-white p-10 text-sm leading-relaxed font-serif shadow-lg"
 //       >
-//       {/* Header Section */}
-//       <div className="flex items-center mb-5 border-b-4 border-black pb-3">
-//         <div className="mr-5">
-//           <div className="w-20 h-20 border-2 border-black rounded-full flex items-center justify-center relative mb-2">
-//             <div className="w-16 h-16 border-2 border-black rounded-full relative bg-white">
-//               <div className="absolute top-2 left-2 w-12 h-12 border border-black rounded-full"></div>
-//               <div className="absolute top-4 left-1 w-14 h-6 border-t border-b border-black"></div>
+//         {/* ---------------- Page 1 ---------------- */}
+//         <div className="flex items-center pb-4">
+//           <div className="mr-6 flex-shrink-0">
+//             <Image
+//               src={"/images/pdf-logo.jpg"}
+//               alt="Padi logo"
+//               width={200}
+//               height={200}
+//               crossOrigin="anonymous"
+//             />
+//           </div>
+//           <div className="flex">
+//             <div>
+//               <h1 className="text-center font-bold text-xl mb-1">
+//                 Release of Liability/Assumption of Risk/Non-agency
+//                 Acknowledgment Form
+//               </h1>
+//               <h2 className="text-center text-4xl font-bold mb-4">
+//                 DIVER ACTIVITIES
+//               </h2>
+//               <hr className="my-2 border-2 border-gray-900" />
 //             </div>
 //           </div>
-//           <div className="text-2xl font-bold tracking-widest">PADI</div>
 //         </div>
-//         <div className="flex-1 text-center">
-//           <div className="text-sm font-bold mb-1">Release of Liability/Assumption of Risk/Non-agency Acknowledgment Form</div>
-//           <div className="text-lg font-bold tracking-widest">DIVER ACTIVITIES</div>
+//         <div className=" ml-10 ">
+//           <p className="text-basecapitalize font-bold text-start">
+//             Please read carefully and !ll in all blanks before signing.
+//           </p>
+//           <div className="">
+//             <div className="mt-8">
+//               <h3 className="text-center font-bold text-2xl mt-2 mb-3">
+//                 NON-AGENCY DISCLOSURE AND ACKNOWLEDGMENT AGREEMENT
+//               </h3>
+//             </div>
+
+//             <p>
+//               I understand and agree that PADI Members (“Members”), including
+//               <span className="border-full underline border-gray-900 text-xl font-bold px-2">
+//                 Scuba Life & their instructors
+//               </span>{" "}
+//               and/or any individual PADI Instructors and Divemasters associated
+//               with the program in which I am participating, are licensed to use
+//               various PADI Trademarks and to conduct PADI training, but are not
+//               agents, employees or franchisees of PADI Americas, Inc., or its
+//               parent, subsidiary and af!liated corporations (“PADI”). I further
+//               understand that Member business activities are independent, and
+//               are neither owned nor operated by PADI, and that while PADI
+//               establishes the standards for PADI diver training programs, it is
+//               not responsible for, nor does it have the right to control, the
+//               operation of the Members&apos; business activities and the
+//               day-to-day conduct of PADI programs and supervision of divers by
+//               the Members or their associated staff. I further understand and
+//               agree on behalf of myself, my heirs and my estate that in the
+//               event of an injury or death during this activity, neither I nor my
+//               estate shall seek to hold PADI liable for the actions, inactions
+//               or negligence of the entities listed above and/or the instructors
+//               and divemasters associated with the activity
+//             </p>
+//           </div>
+
+//           <div className="">
+//             <div className="mt-8">
+//               <h3 className="text-center font-bold text-2xl mt-2 mb-3">
+//                 LIABILITY RELEASE AND ASSUMPTION OF RISK AGREEMENT
+//               </h3>
+//             </div>
+
+//             <p>
+//               I,{" "}
+//               <input
+//                 type="text"
+//                 value={participantName}
+//                 onChange={(e) => setParticipantName(e.target.value)}
+//                 placeholder="Participant Name"
+//                 className="border-b border-black w-46 h-8 px-1 bg-transparent focus:outline-none"
+//               />{" "}
+//               hereby affirm that I am a certified scuba diver trained in safe
+//               dive practices, or a student diver under the control and
+//               supervision of a certified scuba instructor. I know that skin
+//               diving, freediving and scuba diving have inherent risks including
+//               those risks associated with boat travel to and from the dive site
+//               (hereinafter “Excursion”), which may result in serious injury or
+//               death. understand that scuba diving with compressed air involves
+//               certain inherent risks; including but not limited to decompression
+//               sickness, embolism or other hyperbaric/air expansion injury that
+//               require treatment in a recompression chamber. If I am scuba diving
+//               with oxygen enriched air (“Enriched Air”) or other gas blends
+//               including oxygen, I also understand that it involves inherent
+//               risks of oxygen toxicity and/or improper mixtures of breathing
+//               gas. I acknowledge this Excursion includes risks of slipping or
+//               falling while on board the boat, being cut or struck by a boat
+//               while in the water, injuries occurring while getting on or off a
+//               boat, and other perils of the sea. I further understand that the
+//               Excursion will be conducted at a site that is remote, either by
+//               time or distance or both, from a recompression chamber. I still
+//               choose to proceed with the Excursion in spite of the absence of a
+//               recompression chamber in proximity to the dive site(s).
+//             </p>
+
+//             <p className="mt-4">
+//               I understand and agr store/resort ee that neither
+//               <span className="border-full underline border-gray-900 text-xl font-bold px-2">
+//                 Scuba Life & their instructors
+//               </span>{" "}
+//               ; nor the dive professional(s) who may be present at the dive
+//               site, nor PADI Americas, Inc., nor any of their af!liate and
+//               subsidiary corporations, nor any of their respective employees,
+//               of!cers, agents, contractors and assigns (hereinafter “Released
+//               Parties”) may be held liable or responsible in any way for any
+//               injury, death or other damages to me, my family, estate, heirs or
+//               assigns that may occur during the Excursion as a result of my
+//               participation in the Excursion or as a result of the negligence of
+//               any party, including the Released Parties, whether passive or
+//               active.
+//             </p>
+
+//             <p className="mt-6">
+//               I af!rm I am in good mental and physical !tness for the Excursion.
+//               I further state that I will not participate in the Excursion if I
+//               am under the in&quot;uence of alcohol or any drugs that are
+//               contraindicated to diving. If I am taking medication, I af!rm that
+//               I have seen a physician and have approval to dive while under the
+//               in&quot;uence of the medication/drugs. I understand that diving is
+//               a physically strenuous activity and that I will be exerting myself
+//               during the Excursion and that if I am injured as a result of heart
+//               attack, panic, hyperventilation, drowning or any other cause, that
+//               I expressly assume the risk of said injuries and that I will not
+//               hold the Released Parties responsible for the same.
+//             </p>
+
+//             <p className="mt-6">
+//               I am aware that safe dive practices suggest diving with a buddy
+//               unless trained as a self-reliant diver. I am aware it is my
+//               responsibility to plan my dive allowing for my diving experience
+//               and limitations, and the prevailing water conditions and
+//               environment. I will not hold the Released Parties responsible for
+//               my failure to safely plan my dive, dive my plan, and follow the
+//               instructions and dive brie!ng of the dive professional(s).
+//             </p>
+
+//             <p className="mt-6">
+//               If diving from a boat, I will be present at and attentive to the
+//               brie!ng given by the boat crew. If there is anything I do not
+//               understand I will notify the boat crew or captain immediately. I
+//               acknowledge it is my responsibility to plan my dives as
+//               no-decompression dives, and within parameters that allow me to
+//               make a safety stop before ascending to the surface, arriving on
+//               board the vessel with gas remaining in my cylinder as a measure of
+//               safety. If I become distressed on the surface I will immediately
+//               drop my weights and in&qout;ate my BCD (orally or with low
+//               pressure in&qout;ator) to establish buoyancy on the surface.
+//             </p>
+//           </div>
+//           <div className="flex justify-between text-xs italic mt-6">
+//             <p className="">Product No. 10086 (Rev. 02/21) Version 3.0</p>{" "}
+//             <p className="">- page 1 of 2 -</p> <p className="">© PADI 2021</p>
+//           </div>
 //         </div>
-//       </div>
 
-//       {/* Content Paragraphs */}
-//       <div className="text-justify mb-4">
-//         I am aware safe dive practices recommend a refresher or guided orientation dive following a period of diving inactivity. I understand 
-//         such refresher/guided dive is available for an additional fee. If I choose not to follow this recommendation I will not hold the Released 
-//         Parties responsible for my decision.
-//       </div>
+//         {/* ---------------- Page 2 ---------------- */}
+//         <div className="mt-12 border-t pt-8">
+//           <div className="flex items-center pb-4">
+//             <div className="mr-6 flex-shrink-0">
+//               <Image
+//                 src={"/images/pdf-logo.jpg"}
+//                 alt="Padi logo"
+//                 width={200}
+//                 height={200}
+//                 crossOrigin="anonymous"
+//               />
+//             </div>
 
-//       <div className="text-justify mb-4">
-//         I acknowledge Released Parties may provide an in-water guide (hereinafter "Guide") during the Excursion. The Guide is present to 
-//         assist in navigation during the dive and identifying local flora and fauna. If I choose to dive with the Guide I acknowledge it is my 
-//         responsibility to stay in proximity to the Guide during the dive. I assume all risks associated with my choice whether to dive in proximity 
-//         to the Guide or to dive independent of the Guide. I acknowledge my participation in diving is at my own risk and peril.
-//       </div>
+//             <div className="flex-1">
+//               <div>
+//                 <h1 className="text-center font-bold text-xl mb-1">
+//                   Release of Liability/Assumption of Risk/Non-agency
+//                   Acknowledgment Form
+//                 </h1>
+//                 <h2 className="text-center text-4xl font-bold mb-4">
+//                   DIVER ACTIVITIES
+//                 </h2>
+//                 <hr className="my-2 border-2 border-gray-900" />
+//               </div>
+//             </div>
+//           </div>
+//           <div className=" ml-10 ">
+//             <p className="mt-6">
+//               I am aware safe dive practices recommend a refresher or guided
+//               orientation dive following a period of diving inactivity. I
+//               understand such refresher/guided dive is available for an
+//               additional fee. If I choose not to follow this recommendation I
+//               will not hold the Released Parties responsible for my decision.
+//             </p>
 
-//       <div className="text-justify mb-4">
-//         I affirm it is my responsibility to inspect all of the equipment I will be using prior to the leaving the dock for the Excursion and that I 
-//         should not dive if the equipment is not functioning properly. I will not hold the Released Parties responsible for my failure to inspect 
-//         the equipment prior to diving or if I choose to dive with equipment that may not be functioning properly.
-//       </div>
+//             <p className="mt-6">
+//               I acknowledge Released Parties may provide an in-water guide
+//               (hereinafter “Guide”) during the Excursion. The Guide is present
+//               to assist in navigation during the dive and identifying local "ora
+//               and fauna. If I choose to dive with the Guide I acknowledge it is
+//               my responsibility to stay in proximity to the Guide during the
+//               dive. I assume all risks associated with my choice whether to dive
+//               in proximity to the Guide or to dive independent of the Guide. I
+//               acknowledge my participation in diving is at my own risk and
+//               peril.
+//             </p>
 
-//       <div className="text-justify mb-4">
-//         I acknowledge Released Parties have made no representation to me, implied or otherwise, that they or their crew can or will perform 
-//         affective rescues or render first aid. In the event I show signs of distress or call for aid I would like assistance and will not hold the 
-//         Released Parties, their crew, dive boats or passengers responsible for their actions in attempting the performance of rescue or first aid.
-//       </div>
+//             <p className="mt-6">
+//               I af!rm it is my responsibility to inspect all of the equipment I
+//               will be using prior to the leaving the dock for the Excursion and
+//               that I should not dive if the equipment is not functioning
+//               properly. I will not hold the Released Parties responsible for my
+//               failure to inspect the equipment prior to diving or if I choose to
+//               dive with equipment that may not be functioning properly.
+//             </p>
 
-//       <div className="text-justify mb-4">
-//         I hereby state and agree that this Agreement will be effective for all Excursions in which I participate for one (1) year from the date 
-//         on which I sign this Agreement.
-//       </div>
+//             <p className="mt-6">
+//               I acknowledge Released Parties have made no representation to me,
+//               implied or otherwise, that they or their crew can or will perform
+//               affective rescues or render !rst aid. In the event I show signs of
+//               distress or call for aid I would like assistance and will not hold
+//               the Released Parties, their crew, dive boats or passengers
+//               responsible for their actions in attempting the performance of
+//               rescue or !rst aid.
+//             </p>
 
-//       <div className="text-justify mb-4">
-//         I further state that I am of lawful age and legally competent to sign this liability release, or that I have acquired the written consent of 
-//         my parent or guardian. I understand the terms herein are contractual and not a mere recital, and that I have signed this Agreement 
-//         of my own free act and with the knowledge that I hereby agree to waive my legal rights. I further agree that if any provision of 
-//         this Agreement is found to be unenforceable or invalid, that provision shall be severed from this Agreement. The remainder of this 
-//         Agreement will then be construed as though the unenforceable provision had never been contained herein. I understand and agree 
-//         that I am not only giving up my right to sue the Released Parties but also any rights my heirs, assigns, or beneficiaries may have to 
-//         sue the Released Parties resulting from my death. I further represent that I have the authority to do so and that my heirs, assigns, and 
-//         beneficiaries will be estopped from claiming otherwise because of my representations to the Released Parties.
-//       </div>
+//             <p className="mt-6">
+//               I hereby state and agree that this Agreement will be effective for
+//               all Excursions in which I participate for one (1) year from the
+//               date on which I sign this Agreement.
+//             </p>
 
-//       <div className="text-justify mb-4">
-//         I, <span className="inline-block w-72 border-b border-black h-5"></span>, BY THIS INSTRUMENT, AGREE TO EXEMPT AND RELEASE THE RELEASED 
-//         PARTIES DEFINED ABOVE FROM ALL LIABILITY OR RESPONSIBILITY WHATSOEVER FOR PERSONAL INJURY, PROPERTY DAMAGE OR 
-//         WRONGFUL DEATH HOWEVER CAUSED, INCLUDING BUT NOT LIMITED TO THE NEGLIGENCE OF THE RELEASED PARTIES, WHETHER 
-//         PASSIVE OR ACTIVE.
-//       </div>
+//             <p className="mt-6">
+//               I further state that I am of lawful age and legally competent to
+//               sign this liability release, or that I have acquired the written
+//               consent of my parent or guardian. I understand the terms herein
+//               are contractual and not a mere recital, and that I have signed
+//               this Agreement of my own free act and with the knowledge that I
+//               hereby agree to waive my legal rights. I further agree that if any
+//               provision of this Agreement is found to be unenforceable or
+//               invalid, that provision shall be severed from this Agreement. The
+//               remainder of this Agreement will then be construed as though the
+//               unenforceable provision had never been contained herein. I
+//               understand and agree that I am not only giving up my right to sue
+//               the Released Parties but also any rights my heirs, assigns, or
+//               bene!ciaries may have to sue the Released Parties resulting from
+//               my death. I further represent that I have the authority to do so
+//               and that my heirs, assigns, and bene!ciaries will be estopped from
+//               claiming otherwise because of my representations to the Released
+//               Parties.
+//             </p>
 
-//       <div className="font-bold my-5">
-//         I HAVE FULLY INFORMED MYSELF AND MY HEIRS OF THE CONTENTS OF THIS NON-AGENCY DISCLOSURE AND ACKNOWLEDGMENT 
-//         AGREEMENT, AND LIABILITY RELEASE AND ASSUMPTION OF RISK AGREEMENT BY READING BOTH BEFORE SIGNING BELOW ON 
-//         BEHALF OF MYSELF AND MY HEIRS.
-//       </div>
+//             <p className="mt-6">
+//               I,{" "}
+//               <input
+//                 type="text"
+//                 value={participantName}
+//                 onChange={(e) => setParticipantName(e.target.value)}
+//                 placeholder="Participant Name"
+//                 className="border-b border-black w-46 h-8 px-1 bg-transparent focus:outline-none"
+//               />{" "}
+//               , BY THIS INSTRUMENT, AGREE TO EXEMPT AND RELEASE THE RELEASED
+//               PARTIES DEFINED ABOVE FROM ALL LIABILITY OR RESPONSIBILITY
+//               WHATSOEVER FOR PERSONAL INJURY, PROPERTY DAMAGE OR WRONGFUL DEATH
+//               HOWEVER CAUSED, INCLUDING BUT NOT LIMITED TO THE NEGLIGENCE OF THE
+//               RELEASED PARTIES, WHETHER PASSIVE OR ACTIVE.
+//             </p>
 
-//       {/* Signature Section */}
-//       <div className="grid grid-cols-2 gap-5 items-end mt-8">
-//         <div>
-//           <div className="border-b border-black h-8 mb-1"></div>
-//           <div className="text-xs text-center">Participant Signature</div>
+//             <p className=" mt-6 mb-6">
+//               I HAVE FULLY INFORMED MYSELF AND MY HEIRS OF THE CONTENTS OF THIS
+//               NON-AGENCY DISCLOSURE AND ACKNOWLEDGMENT AGREEMENT, AND LIABILITY
+//               RELEASE AND ASSUMPTION OF RISK AGREEMENT BY READING BOTH BEFORE
+//               SIGNING BELOW ON BEHALF OF MYSELF AND MY HEIRS.
+//             </p>
+//           </div>
 //         </div>
-//         <div>
-//           <div className="border-b border-black h-8 mb-1"></div>
-//           <div className="text-xs text-center">Date (Day/Month/Year)</div>
-//         </div>
-//       </div>
 
-//       <div className="grid grid-cols-2 gap-5 items-end mt-6">
-//         <div>
-//           <div className="border-b border-black h-8 mb-1"></div>
-//           <div className="text-xs text-center">Signature of Parent of Guardian (where applicable)</div>
-//         </div>
-//         <div>
-//           <div className="border-b border-black h-8 mb-1"></div>
-//           <div className="text-xs text-center">Date (Day/Month/Year)</div>
-//         </div>
-//       </div>
+//         <div className="mt-8 w-full space-y-6">
+//           <div className="flex  gap-10">
+//             <div className="flex-5 w-full">
+//               <label className="block text-center font-semibold mb-1">
+//                 Participant Signature:
+//               </label>
+//               <input
+//                 type="text"
+//                 value={signature}
+//                 onChange={(e) => setSignature(e.target.value)}
+//                 placeholder="Signature"
+//                 className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+//               />
+//             </div>
+//             <div className="flex-2">
+//               <label className="block  text-sm mb-1">Date (DD/MM/YYYY):</label>
+//               <input
+//                 type="text"
+//                 value={date}
+//                 onChange={(e) => setDate(e.target.value)}
+//                 placeholder="DD/MM/YYYY"
+//                 className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+//               />
+//             </div>
+//           </div>
 
-//       {/* Insurance Section */}
-//       <div className="flex items-center gap-3 mt-5">
-//         <span>Diver Accident Insurance?</span>
-//         <div className="w-4 h-4 border border-black"></div>
-//         <span>NO</span>
-//         <div className="w-4 h-4 border border-black"></div>
-//         <span>YES</span>
-//         <span className="ml-5">Policy Number</span>
-//         <div className="inline-block w-48 border-b border-black h-5 ml-3"></div>
-//       </div>
-
-//       {/* Footer */}
-//       <div className="text-center mt-8 text-xs">
-//         - page 2 of 2 -
-//       </div>
+//           <div className="flex  gap-10">
+//             <div className="flex-5 w-full">
+//               <div>
+//                 <label className="block text-center  text-sm mb-1">
+//                   Parent/Guardian Signature (if applicable):
+//                 </label>
+//                 <input
+//                   type="text"
+//                   value={guardianSignature}
+//                   onChange={(e) => setGuardianSignature(e.target.value)}
+//                   placeholder="Parent/Guardian Signature"
+//                   className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+//                 />
+//               </div>
+//             </div>
+//             <div className="flex-2">
+//               <label className="block text-sm mb-1">Date (DD/MM/YYYY):</label>
+//               <input
+//                 type="text"
+//                 value={date}
+//                 onChange={(e) => setDate(e.target.value)}
+//                 placeholder="DD/MM/YYYY"
+//                 className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+//               />
+//             </div>
+//           </div>
+//         </div>
+//         <div className="mt-6 flex gap-5">
+//           <div className="">
+//             <p className="">Diver Accident Insurance?</p>
+//           <input type="radio">yes</input>
+//           <input type="radio">no</input>
+//           </div>
+//                 <div className="">
+//                     Policy Number{" "}
+//               <input
+//                 type="text"
+//                 value={participantName}
+//                 onChange={(e) => setPolicyNumber(e.target.value)}
+//                 placeholder="Participant Name"
+//                 className="border-b border-black w-46 h-8 px-1 bg-transparent focus:outline-none"
+//               />{" "}
+//                 </div>
+//         </div>
 //       </div>
 //     </div>
-//   )
-// }
+//   );
+// };
 
-// export default DiversActivityForm
+// export default DiversActivityForm;
 
-import React from 'react'
+"use client";
+
+import Image from "next/image";
+import { useState, useRef } from "react";
+
+const loadHTML2Canvas = async () => {
+  const { default: html2canvas } = await import("html2canvas");
+  return html2canvas;
+};
 
 const DiversActivityForm = () => {
-  return (
-    <div>
-        
-    </div>
-  )
-}
+  const [participantName, setParticipantName] = useState("");
+  const [policyNumber, setPolicyNumber] = useState("");
+  const [hasInsurance, setHasInsurance] = useState<boolean | null>(null);
+  const [signature, setSignature] = useState("");
+  const [guardianSignature, setGuardianSignature] = useState("");
+  const [date, setDate] = useState("");
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-export default DiversActivityForm
+  const formRef = useRef<HTMLDivElement>(null);
+
+  const handlePrint = async () => {
+    if (!participantName || !signature || !date) {
+      alert(
+        "Please fill in required fields: Participant Name, Signature, Date",
+      );
+      return;
+    }
+
+    if (hasInsurance === null) {
+      alert("Please select whether you have Diver Accident Insurance");
+      return;
+    }
+
+    if (hasInsurance && !policyNumber.trim()) {
+      alert(
+        "Please enter your Policy Number since you have Diver Accident Insurance",
+      );
+      return;
+    }
+
+    setIsGeneratingPDF(true);
+
+    try {
+      if (!formRef.current) throw new Error("Form reference not found");
+
+      const html2canvas = await loadHTML2Canvas();
+
+      const tempStyle = document.createElement("style");
+      tempStyle.textContent = `
+        .print-area * {
+          color: rgb(0, 0, 0) !important;
+          background-color: rgb(255, 255, 255) !important;
+          border-color: rgb(0, 0, 0) !important;
+          box-shadow: none !important;
+        }
+        .print-area input {
+          color: rgb(0, 0, 0) !important;
+          background-color: transparent !important;
+          border-color: rgb(0, 0, 0) !important;
+        }
+        .print-area .border-gray-900 {
+          border-color: rgb(17, 24, 39) !important;
+        }
+        .print-area .text-xl, .print-area .font-bold {
+          color: rgb(0, 0, 0) !important;
+        }
+      `;
+      document.head.appendChild(tempStyle);
+
+      // Wait for styles to apply
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const canvas = await html2canvas(formRef.current, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: "#ffffff",
+        logging: false,
+        imageTimeout: 10000,
+        removeContainer: true,
+        ignoreElements: (element) => {
+          return element.classList.contains("no-print");
+        },
+        onclone: (clonedDoc) => {
+          // Force all elements to use safe RGB colors
+          const allElements = clonedDoc.querySelectorAll("*");
+          allElements.forEach((el: Element) => {
+            const htmlEl = el as HTMLElement;
+            if (htmlEl.style) {
+              htmlEl.style.color = "rgb(0, 0, 0)";
+              if (htmlEl.tagName !== "INPUT") {
+                htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
+              }
+              htmlEl.style.borderColor = "rgb(0, 0, 0)";
+              // Remove any potentially problematic CSS properties
+              htmlEl.style.removeProperty("filter");
+              htmlEl.style.removeProperty("backdrop-filter");
+              htmlEl.style.removeProperty("box-shadow");
+            }
+          });
+        },
+      });
+
+      document.head.removeChild(tempStyle);
+
+      const imgData = canvas.toDataURL("image/png", 1.0);
+
+      // Create a new window with the image for PDF printing
+      const printWindow = window.open("", "_blank");
+      if (printWindow) {
+        const fileName = `PADI_Liability_Form_${participantName
+          .replace(/[^a-zA-Z0-9\s]/g, "")
+          .replace(/\s+/g, "_")
+          .trim()}_${new Date().toISOString().split("T")[0]}`;
+
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>${fileName}</title>
+              <style>
+                body { 
+                  margin: 0; 
+                  padding: 0; 
+                  display: flex; 
+                  justify-content: center; 
+                  align-items: center; 
+                  min-height: 100vh;
+                  background: white;
+                }
+                img { 
+                  max-width: 100%; 
+                  height: auto; 
+                  display: block;
+                }
+                @media print {
+                  body { margin: 0; }
+                  img { 
+                    width: 100%; 
+                    height: auto; 
+                    page-break-inside: avoid;
+                  }
+                }
+              </style>
+            </head>
+            <body>
+              <img src="${imgData}" alt="PADI Liability Form" />
+            </body>
+          </html>
+        `);
+        printWindow.document.close();
+
+        // Wait for image to load then trigger print dialog
+        printWindow.onload = () => {
+          setTimeout(() => {
+            printWindow.print();
+          }, 500);
+        };
+      } else {
+        throw new Error(
+          "Unable to open print window. Please check your browser's popup settings.",
+        );
+      }
+    } catch (error: unknown) {
+      console.error("Error generating PDF:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
+
+      if (errorMessage.includes("lab") || errorMessage.includes("color")) {
+        alert(
+          `PDF generation failed due to color parsing issue. This is a browser compatibility issue.\n\nPlease try:\n1. Using a different browser (Chrome/Firefox)\n2. Refreshing the page and trying again\n3. Using the browser print function as an alternative`,
+        );
+      } else {
+        const userChoice = confirm(
+          `PDF generation failed: ${errorMessage}\n\nUse browser print instead?`,
+        );
+        if (userChoice) {
+          const printStyle = document.createElement("style");
+          printStyle.textContent = `
+            @media print {
+              body * { visibility: hidden; }
+              .print-area, .print-area * { visibility: visible; }
+              .print-area { 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 20px !important;
+              }
+              .no-print { display: none !important; }
+            }
+          `;
+          document.head.appendChild(printStyle);
+          window.print();
+          setTimeout(() => document.head.removeChild(printStyle), 1000);
+        }
+      }
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 py-6">
+      {/* Export Button */}
+      <div className="max-w-6xl mx-auto mb-4 no-print">
+        <button
+          onClick={handlePrint}
+          disabled={isGeneratingPDF}
+          className={`font-bold py-3 px-6 rounded-lg transition duration-200 w-full ${
+            isGeneratingPDF
+              ? "bg-gray-400 cursor-not-allowed text-gray-700"
+              : "bg-blue-600 hover:bg-blue-700 text-white"
+          }`}
+        >
+          {isGeneratingPDF ? "Generating PDF..." : "Export as PDF"}
+        </button>
+      </div>
+
+      {/* Form Content */}
+      <div
+        ref={formRef}
+        className="print-area max-w-6xl mx-auto bg-white p-10 text-sm leading-relaxed font-serif shadow-lg"
+      >
+        {/* ---------------- Page 1 ---------------- */}
+        <div className="flex items-center pb-4">
+          <div className="flex items-center pb-4">
+            <div className="mr-6 flex-shrink-0">
+              <Image
+                src={"/images/pdf-logo.jpg"}
+                alt="Padi logo"
+                width={200}
+                height={200}
+                crossOrigin="anonymous"
+              />
+            </div>
+
+            <div className="flex-1">
+              <div>
+                <h1 className="text-center font-bold text-xl mb-1">
+                  Release of Liability/Assumption of Risk/Non-agency
+                  Acknowledgment Form
+                </h1>
+                <h2 className="text-center text-4xl font-bold mb-4">
+                  DIVER ACTIVITIES
+                </h2>
+                <hr className="my-2 border-2 border-gray-900" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className=" ml-10 ">
+          <p className="text-basecapitalize font-bold text-start">
+            Please read carefully and !ll in all blanks before signing.
+          </p>
+          <div className="">
+            <div className="mt-8">
+              <h3 className="text-center font-bold text-2xl mt-2 mb-3">
+                NON-AGENCY DISCLOSURE AND ACKNOWLEDGMENT AGREEMENT
+              </h3>
+            </div>
+
+            <p>
+              I understand and agree that PADI Members (“Members”), including
+              <span className="border-full underline border-gray-900 text-xl font-bold px-2">
+                Scuba Life & their instructors
+              </span>{" "}
+              and/or any individual PADI Instructors and Divemasters associated
+              with the program in which I am participating, are licensed to use
+              various PADI Trademarks and to conduct PADI training, but are not
+              agents, employees or franchisees of PADI Americas, Inc., or its
+              parent, subsidiary and af!liated corporations (“PADI”). I further
+              understand that Member business activities are independent, and
+              are neither owned nor operated by PADI, and that while PADI
+              establishes the standards for PADI diver training programs, it is
+              not responsible for, nor does it have the right to control, the
+              operation of the Members&apos; business activities and the
+              day-to-day conduct of PADI programs and supervision of divers by
+              the Members or their associated staff. I further understand and
+              agree on behalf of myself, my heirs and my estate that in the
+              event of an injury or death during this activity, neither I nor my
+              estate shall seek to hold PADI liable for the actions, inactions
+              or negligence of the entities listed above and/or the instructors
+              and divemasters associated with the activity
+            </p>
+          </div>
+
+          <div className="">
+            <div className="mt-8">
+              <h3 className="text-center font-bold text-2xl mt-2 mb-3">
+                LIABILITY RELEASE AND ASSUMPTION OF RISK AGREEMENT
+              </h3>
+            </div>
+
+            <p>
+              I,{" "}
+              <input
+                type="text"
+                value={participantName}
+                onChange={(e) => setParticipantName(e.target.value)}
+                placeholder="Participant Name"
+                className="border-b border-black w-46 h-8 px-1 bg-transparent focus:outline-none"
+              />{" "}
+              hereby affirm that I am a certified scuba diver trained in safe
+              dive practices, or a student diver under the control and
+              supervision of a certified scuba instructor. I know that skin
+              diving, freediving and scuba diving have inherent risks including
+              those risks associated with boat travel to and from the dive site
+              (hereinafter “Excursion”), which may result in serious injury or
+              death. understand that scuba diving with compressed air involves
+              certain inherent risks; including but not limited to decompression
+              sickness, embolism or other hyperbaric/air expansion injury that
+              require treatment in a recompression chamber. If I am scuba diving
+              with oxygen enriched air (“Enriched Air”) or other gas blends
+              including oxygen, I also understand that it involves inherent
+              risks of oxygen toxicity and/or improper mixtures of breathing
+              gas. I acknowledge this Excursion includes risks of slipping or
+              falling while on board the boat, being cut or struck by a boat
+              while in the water, injuries occurring while getting on or off a
+              boat, and other perils of the sea. I further understand that the
+              Excursion will be conducted at a site that is remote, either by
+              time or distance or both, from a recompression chamber. I still
+              choose to proceed with the Excursion in spite of the absence of a
+              recompression chamber in proximity to the dive site(s).
+            </p>
+
+            <p className="mt-4">
+              I understand and agr store/resort ee that neither
+              <span className="border-full underline border-gray-900 text-xl font-bold px-2">
+                Scuba Life & their instructors
+              </span>{" "}
+              ; nor the dive professional(s) who may be present at the dive
+              site, nor PADI Americas, Inc., nor any of their af!liate and
+              subsidiary corporations, nor any of their respective employees,
+              of!cers, agents, contractors and assigns (hereinafter “Released
+              Parties”) may be held liable or responsible in any way for any
+              injury, death or other damages to me, my family, estate, heirs or
+              assigns that may occur during the Excursion as a result of my
+              participation in the Excursion or as a result of the negligence of
+              any party, including the Released Parties, whether passive or
+              active.
+            </p>
+
+            <p className="mt-6">
+              I af!rm I am in good mental and physical !tness for the Excursion.
+              I further state that I will not participate in the Excursion if I
+              am under the in&quot;uence of alcohol or any drugs that are
+              contraindicated to diving. If I am taking medication, I af!rm that
+              I have seen a physician and have approval to dive while under the
+              in&quot;uence of the medication/drugs. I understand that diving is
+              a physically strenuous activity and that I will be exerting myself
+              during the Excursion and that if I am injured as a result of heart
+              attack, panic, hyperventilation, drowning or any other cause, that
+              I expressly assume the risk of said injuries and that I will not
+              hold the Released Parties responsible for the same.
+            </p>
+
+            <p className="mt-6">
+              I am aware that safe dive practices suggest diving with a buddy
+              unless trained as a self-reliant diver. I am aware it is my
+              responsibility to plan my dive allowing for my diving experience
+              and limitations, and the prevailing water conditions and
+              environment. I will not hold the Released Parties responsible for
+              my failure to safely plan my dive, dive my plan, and follow the
+              instructions and dive brie!ng of the dive professional(s).
+            </p>
+
+            <p className="mt-6">
+              If diving from a boat, I will be present at and attentive to the
+              brie!ng given by the boat crew. If there is anything I do not
+              understand I will notify the boat crew or captain immediately. I
+              acknowledge it is my responsibility to plan my dives as
+              no-decompression dives, and within parameters that allow me to
+              make a safety stop before ascending to the surface, arriving on
+              board the vessel with gas remaining in my cylinder as a measure of
+              safety. If I become distressed on the surface I will immediately
+              drop my weights and in&qout;ate my BCD (orally or with low
+              pressure in&qout;ator) to establish buoyancy on the surface.
+            </p>
+          </div>
+          <div className="flex justify-between text-xs italic mt-6">
+            <p className="">Product No. 10086 (Rev. 02/21) Version 3.0</p>{" "}
+            <p className="">- page 1 of 2 -</p> <p className="">© PADI 2021</p>
+          </div>
+        </div>
+
+        {/* ---------------- Page 2 ---------------- */}
+        <div className="mt-12 border-t pt-8">
+          <div className="flex items-center pb-4">
+            <div className="mr-6 flex-shrink-0">
+              <Image
+                src={"/images/pdf-logo.jpg"}
+                alt="Padi logo"
+                width={200}
+                height={200}
+                crossOrigin="anonymous"
+              />
+            </div>
+
+            <div className="flex-1">
+              <div>
+                <h1 className="text-center font-bold text-xl mb-1">
+                  Release of Liability/Assumption of Risk/Non-agency
+                  Acknowledgment Form
+                </h1>
+                <h2 className="text-center text-4xl font-bold mb-4">
+                  DIVER ACTIVITIES
+                </h2>
+                <hr className="my-2 border-2 border-gray-900" />
+              </div>
+            </div>
+          </div>
+          <div className=" ml-10 ">
+            <p className="mt-6">
+              I am aware safe dive practices recommend a refresher or guided
+              orientation dive following a period of diving inactivity. I
+              understand such refresher/guided dive is available for an
+              additional fee. If I choose not to follow this recommendation I
+              will not hold the Released Parties responsible for my decision.
+            </p>
+
+            <p className="mt-6">
+              I acknowledge Released Parties may provide an in-water guide
+              (hereinafter “Guide”) during the Excursion. The Guide is present
+              to assist in navigation during the dive and identifying local flora
+              and fauna. If I choose to dive with the Guide I acknowledge it is
+              my responsibility to stay in proximity to the Guide during the
+              dive. I assume all risks associated with my choice whether to dive
+              in proximity to the Guide or to dive independent of the Guide. I
+              acknowledge my participation in diving is at my own risk and
+              peril.
+            </p>
+
+            <p className="mt-6">
+              I af!rm it is my responsibility to inspect all of the equipment I
+              will be using prior to the leaving the dock for the Excursion and
+              that I should not dive if the equipment is not functioning
+              properly. I will not hold the Released Parties responsible for my
+              failure to inspect the equipment prior to diving or if I choose to
+              dive with equipment that may not be functioning properly.
+            </p>
+
+            <p className="mt-6">
+              I acknowledge Released Parties have made no representation to me,
+              implied or otherwise, that they or their crew can or will perform
+              affective rescues or render !rst aid. In the event I show signs of
+              distress or call for aid I would like assistance and will not hold
+              the Released Parties, their crew, dive boats or passengers
+              responsible for their actions in attempting the performance of
+              rescue or !rst aid.
+            </p>
+
+            <p className="mt-6">
+              I hereby state and agree that this Agreement will be effective for
+              all Excursions in which I participate for one (1) year from the
+              date on which I sign this Agreement.
+            </p>
+
+            <p className="mt-6">
+              I further state that I am of lawful age and legally competent to
+              sign this liability release, or that I have acquired the written
+              consent of my parent or guardian. I understand the terms herein
+              are contractual and not a mere recital, and that I have signed
+              this Agreement of my own free act and with the knowledge that I
+              hereby agree to waive my legal rights. I further agree that if any
+              provision of this Agreement is found to be unenforceable or
+              invalid, that provision shall be severed from this Agreement. The
+              remainder of this Agreement will then be construed as though the
+              unenforceable provision had never been contained herein. I
+              understand and agree that I am not only giving up my right to sue
+              the Released Parties but also any rights my heirs, assigns, or
+              bene!ciaries may have to sue the Released Parties resulting from
+              my death. I further represent that I have the authority to do so
+              and that my heirs, assigns, and bene!ciaries will be estopped from
+              claiming otherwise because of my representations to the Released
+              Parties.
+            </p>
+
+            <p className="mt-6">
+              I,{" "}
+              <input
+                type="text"
+                value={participantName}
+                onChange={(e) => setParticipantName(e.target.value)}
+                placeholder="Participant Name"
+                className="border-b border-black w-50 h-8 px-1 bg-transparent focus:outline-none"
+              />{" "}
+              , BY THIS INSTRUMENT, AGREE TO EXEMPT AND RELEASE THE RELEASED
+              PARTIES DEFINED ABOVE FROM ALL LIABILITY OR RESPONSIBILITY
+              WHATSOEVER FOR PERSONAL INJURY, PROPERTY DAMAGE OR WRONGFUL DEATH
+              HOWEVER CAUSED, INCLUDING BUT NOT LIMITED TO THE NEGLIGENCE OF THE
+              RELEASED PARTIES, WHETHER PASSIVE OR ACTIVE.
+            </p>
+
+            <p className=" mt-6 mb-6">
+              I HAVE FULLY INFORMED MYSELF AND MY HEIRS OF THE CONTENTS OF THIS
+              NON-AGENCY DISCLOSURE AND ACKNOWLEDGMENT AGREEMENT, AND LIABILITY
+              RELEASE AND ASSUMPTION OF RISK AGREEMENT BY READING BOTH BEFORE
+              SIGNING BELOW ON BEHALF OF MYSELF AND MY HEIRS.
+            </p>
+          </div>
+        </div>
+
+        <div className="ml-10">
+          <div className="mt-8 w-full space-y-6">
+            <div className="flex  gap-10">
+              <div className="flex-5 w-full">
+                <label className="block text-center font-semibold mb-1">
+                  Participant Signature:
+                </label>
+                <input
+                  type="text"
+                  value={signature}
+                  onChange={(e) => setSignature(e.target.value)}
+                  placeholder="Signature"
+                  className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+                />
+              </div>
+              <div className="flex-2">
+                <label className="block  text-sm mb-1">
+                  Date (DD/MM/YYYY):
+                </label>
+                <input
+                  type="text"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  placeholder="DD/MM/YYYY"
+                  className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex  gap-10">
+              <div className="flex-5 w-full">
+                <div>
+                  <label className="block text-center  text-sm mb-1">
+                    Parent/Guardian Signature (if applicable):
+                  </label>
+                  <input
+                    type="text"
+                    value={guardianSignature}
+                    onChange={(e) => setGuardianSignature(e.target.value)}
+                    placeholder="Parent/Guardian Signature"
+                    className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+                  />
+                </div>
+              </div>
+              <div className="flex-2">
+                <label className="block text-sm mb-1">Date (DD/MM/YYYY):</label>
+                <input
+                  type="text"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  placeholder="DD/MM/YYYY"
+                  className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mt-6 flex gap-5">
+            <div className="flex items-center gap-4">
+              <p className="font-semibold">Diver Accident Insurance?</p>
+              <label className="flex items-center gap-1">
+                <input
+                  type="radio"
+                  name="insurance"
+                  value="yes"
+                  checked={hasInsurance === true}
+                  onChange={() => setHasInsurance(true)}
+                  className="w-4 h-4"
+                />
+                <span>Yes</span>
+              </label>
+              <label className="flex items-center gap-1">
+                <input
+                  type="radio"
+                  name="insurance"
+                  value="no"
+                  checked={hasInsurance === false}
+                  onChange={() => {
+                    setHasInsurance(false);
+                    setPolicyNumber(""); // Clear policy number when "no" is selected
+                  }}
+                  className="w-4 h-4"
+                />
+                <span>No</span>
+              </label>
+            </div>
+            <div className="flex items-center gap-2">
+              <label
+                className={`font-semibold ${!hasInsurance ? "text-gray-400" : ""}`}
+              >
+                Policy Number:
+              </label>
+              <input
+                type="text"
+                value={policyNumber}
+                onChange={(e) => setPolicyNumber(e.target.value)}
+                placeholder={hasInsurance ? "Enter policy number" : "N/A"}
+                disabled={!hasInsurance}
+                className={`border-b border-black w-48 h-8 px-1 bg-transparent focus:outline-none ${
+                  !hasInsurance ? "text-gray-400 cursor-not-allowed" : ""
+                }`}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DiversActivityForm;

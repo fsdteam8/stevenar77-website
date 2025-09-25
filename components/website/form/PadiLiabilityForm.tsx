@@ -211,173 +211,176 @@ export default function PadiLiabilityForm() {
         className="print-area max-w-6xl mx-auto bg-white p-10 text-sm leading-relaxed font-serif shadow-lg"
       >
         {/* ---------------- Page 1 ---------------- */}
-        <div className="flex items-center pb-4">
-          <div className="mr-6 flex-shrink-0">
-            <Image
-              src={"/images/pdf-logo.jpg"}
-              alt="Padi logo"
-              width={200}
-              height={200}
-              crossOrigin="anonymous"
-            />
+        <div className="">
+          <div className="flex items-center pb-4">
+            <div className="mr-6 flex-shrink-0">
+              <Image
+                src={"/images/pdf-logo.jpg"}
+                alt="Padi logo"
+                width={200}
+                height={200}
+                crossOrigin="anonymous"
+              />
+            </div>
+            <div className="flex-1">
+              <div>
+                <h1 className="text-center font-bold text-xl mb-1">
+                  Release of Liability/Assumption of Risk/Non-agency
+                  Acknowledgment Form
+                </h1>
+                <h2 className="text-center text-4xl font-bold mb-4">
+                  Continuing Education Administrative Document
+                </h2>
+                <hr className="my-2 border-2 border-gray-900" />
+                <p className="capitalize text-center font-bold text-2xl mb-6">
+                  NOTE: Also complete and attach the Diver Medical Form (Product
+                  No. 10346)
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="flex-1">
-            <div>
-              <h1 className="text-center font-bold text-xl mb-1">
-                Release of Liability/Assumption of Risk/Non-agency
-                Acknowledgment Form
-              </h1>
-              <h2 className="text-center text-4xl font-bold mb-4">
-                Continuing Education Administrative Document
-              </h2>
-              <hr className="my-2 border-2 border-gray-900" />
-              <p className="capitalize text-center font-bold text-2xl mb-6">
-                NOTE: Also complete and attach the Diver Medical Form (Product
-                No. 10346)
+          <div className="flex">
+            <div className="flex-1 pr-4">
+              <p className="mb-4 ">
+                This is a statement in which you are informed of the established
+                safe diving practices for skin and scuba diving. These practices
+                have been compiled for your review and acknowledgment and are
+                intended to increase your comfort and safety in diving.
+                <span className="font-bold">
+                  Your signature on this statement is required
+                </span>{" "}
+                as proof that you are aware of these safe diving practices. Read
+                and discuss the statement prior to signing it. If you are a
+                minor,this form must also be signed by a parent or guardian.
+              </p>
+
+              <p className="mb-2">
+                I,{" "}
+                <input
+                  type="text"
+                  value={participantName}
+                  onChange={(e) => setParticipantName(e.target.value)}
+                  placeholder="Participant Name"
+                  className="border-b border-black w-46 h-8 px-1 bg-transparent focus:outline-none"
+                />{" "}
+                understand that as a diver I should:
+              </p>
+
+              <ol className="!list-decimal ml-6 space-y-2">
+                <li>
+                  Maintain good mental and physical fitness for diving. Avoid
+                  being under the influence of alcohol or dangerous drugs when
+                  diving. Keep proficient in diving skills, striving to increase
+                  them through continuing education and reviewing them in
+                  controlled conditions after a period of diving inactivity, and
+                  refer to my course materials to stay current and refresh
+                  myself on important information.
+                </li>
+                <li>
+                  Be familiar with my dive sites. If not, obtain a formal diving
+                  orientation from a knowledgeable, local source. If diving
+                  conditions are worse than those in which I am experienced,
+                  postpone diving or select an alternate site with better
+                  conditions. Engage only in diving activities consistent with
+                  my training and experience. Do not engage in cave or technical
+                  diving unless specifically trained to do so.
+                </li>
+                <li>
+                  Use complete, well-maintained, reliable equipment with which I
+                  am familiar, and inspect it for correct fit and function prior
+                  to each dive. Have a buoyancy control device, low-pressure
+                  buoyancy control inflation system, submersible pressure gauge
+                  and alternate air source and dive planning/monitoring device
+                  (dive computer, RDP/dive tables—whichever you are trained to
+                  use) when scuba diving. Deny use of my equipment to
+                  uncertified divers.
+                </li>
+                <li>
+                  Listen carefully to dive briefings and directions and respect
+                  the advice of those supervising my diving activities.
+                  Recognize that additional training is recommended for
+                  participation in specialty diving activities, in other
+                  geographic areas and after periods of inactivity that exceed
+                  six months.
+                </li>
+              </ol>
+            </div>
+            <div className="flex-1 pr-4">
+              <ol className="!list-decimal ml-6 space-y-2" start={5}>
+                <li>
+                  Adhere to the buddy system throughout every dive. Plan dives –
+                  including communications, procedures for reuniting in case of
+                  separation and emergency procedures – with my buddy.
+                </li>
+                <li>
+                  Be proficient in dive planning (dive computer or dive table
+                  use). Make all dives no decompression dives and allow a margin
+                  of safety. Have a means to monitor depth and time underwater.
+                  Limit maximum depth to my level of training and experience.
+                  Ascend at a rate of not more than 18 metres/60 feet per
+                  minute. Be a SAFE diver – Slowly Ascend From Every dive. Make
+                  a safety stop as an added precaution, usually at 5 metres/15
+                  feet for three minutes or longer.
+                </li>
+                <li>
+                  Maintain proper buoyancy. Adjust weighting at the surface for
+                  neutral buoyancy with no air in my buoyancy control device.
+                  Maintain neutral buoyancy while underwater. Be buoyant for
+                  surface swimming and resting. Have weights clear for easy
+                  removal, and establish buoyancy when in distress while diving.
+                  Carry at least one surface signaling device (such as signal
+                  tube, whistle, mirror).
+                </li>
+                <li>
+                  Breathe properly for diving. Never breath-hold or skip-breathe
+                  when breathing compressed air, and avoid excessive
+                  hyperventilation when breath-hold diving. Avoid overexertion
+                  while in and underwater and dive within my limitations.
+                </li>
+                <li>
+                  Use a boat, float or other surface support station, whenever
+                  feasible.
+                </li>
+                <li>
+                  Know and obey local dive laws and regulations, including fish
+                  and game and dive flag laws. I have read the above statements
+                  and have had any questions answered to my satisfaction.
+                </li>
+              </ol>
+
+              <p className="mt-4">
+                I understand the importance and purposes of these established
+                practices. I recognize they are for my own safety and
+                well-being, and that failure to adhere to them can place me in
+                jeopardy when diving.
               </p>
             </div>
           </div>
-        </div>
-        <div className="flex">
-          <div className="flex-1 pr-4">
-            <p className="mb-4 ">
-              This is a statement in which you are informed of the established
-              safe diving practices for skin and scuba diving. These practices
-              have been compiled for your review and acknowledgment and are
-              intended to increase your comfort and safety in diving.
-              <span className="font-bold">
-                Your signature on this statement is required
-              </span>{" "}
-              as proof that you are aware of these safe diving practices. Read
-              and discuss the statement prior to signing it. If you are a
-              minor,this form must also be signed by a parent or guardian.
-            </p>
+          <hr className="my-2 border-2 border-gray-900" />
+          <h3 className="text-start font-bold text-2xl mt-2 mb-3">
+            NON-AGENCY DISCLOSURE AND ACKNOWLEDGMENT AGREEMENT
+          </h3>
 
-            <p className="mb-2">
-              I,{" "}
-              <input
-                type="text"
-                value={participantName}
-                onChange={(e) => setParticipantName(e.target.value)}
-                placeholder="Participant Name"
-                className="border-b border-black w-46 h-8 px-1 bg-transparent focus:outline-none"
-              />{" "}
-              understand that as a diver I should:
-            </p>
+          <p>
+            I understand and agree that PADI Members (&quot;Members&quot;),
+            including
+            <span className="border-full underline border-gray-900 text-xl font-bold px-2">
+              Scuba Life & their instructors
+            </span>
+            and/or any individual PADI Instructors and Divemasters associated
+            with the program in which I am participating, are licensed to use
+            various PADI Trademarks and to conduct PADI training, but are not
+            agents, employees or franchisees of PADI Americas, Inc, or its
+            parent, subsidiary and affiliated corporations (&quot;PADI&quot;). I
+            further understand that Member business activities are independent,
+            and are neither owned nor operated by PADI...
+          </p>
 
-            <ol className="!list-decimal ml-6 space-y-2">
-              <li>
-                Maintain good mental and physical fitness for diving. Avoid
-                being under the influence of alcohol or dangerous drugs when
-                diving. Keep proficient in diving skills, striving to increase
-                them through continuing education and reviewing them in
-                controlled conditions after a period of diving inactivity, and
-                refer to my course materials to stay current and refresh myself
-                on important information.
-              </li>
-              <li>
-                Be familiar with my dive sites. If not, obtain a formal diving
-                orientation from a knowledgeable, local source. If diving
-                conditions are worse than those in which I am experienced,
-                postpone diving or select an alternate site with better
-                conditions. Engage only in diving activities consistent with my
-                training and experience. Do not engage in cave or technical
-                diving unless specifically trained to do so.
-              </li>
-              <li>
-                Use complete, well-maintained, reliable equipment with which I
-                am familiar, and inspect it for correct fit and function prior
-                to each dive. Have a buoyancy control device, low-pressure
-                buoyancy control inflation system, submersible pressure gauge
-                and alternate air source and dive planning/monitoring device
-                (dive computer, RDP/dive tables—whichever you are trained to
-                use) when scuba diving. Deny use of my equipment to uncertified
-                divers.
-              </li>
-              <li>
-                Listen carefully to dive briefings and directions and respect
-                the advice of those supervising my diving activities. Recognize
-                that additional training is recommended for participation in
-                specialty diving activities, in other geographic areas and after
-                periods of inactivity that exceed six months.
-              </li>
-            </ol>
+          <div className="flex justify-between text-xs italic mt-6">
+            <p className="">Product No. 10038 (Rev. 02/21)</p>{" "}
+            <p className="">Version 2.0</p>{" "}
+            <p className="">Page 1 of 2 © PADI 2021</p>
           </div>
-          <div className="flex-1 pr-4">
-            <ol className="!list-decimal ml-6 space-y-2" start={5}>
-              <li>
-                Adhere to the buddy system throughout every dive. Plan dives –
-                including communications, procedures for reuniting in case of
-                separation and emergency procedures – with my buddy.
-              </li>
-              <li>
-                Be proficient in dive planning (dive computer or dive table
-                use). Make all dives no decompression dives and allow a margin
-                of safety. Have a means to monitor depth and time underwater.
-                Limit maximum depth to my level of training and experience.
-                Ascend at a rate of not more than 18 metres/60 feet per minute.
-                Be a SAFE diver – Slowly Ascend From Every dive. Make a safety
-                stop as an added precaution, usually at 5 metres/15 feet for
-                three minutes or longer.
-              </li>
-              <li>
-                Maintain proper buoyancy. Adjust weighting at the surface for
-                neutral buoyancy with no air in my buoyancy control device.
-                Maintain neutral buoyancy while underwater. Be buoyant for
-                surface swimming and resting. Have weights clear for easy
-                removal, and establish buoyancy when in distress while diving.
-                Carry at least one surface signaling device (such as signal
-                tube, whistle, mirror).
-              </li>
-              <li>
-                Breathe properly for diving. Never breath-hold or skip-breathe
-                when breathing compressed air, and avoid excessive
-                hyperventilation when breath-hold diving. Avoid overexertion
-                while in and underwater and dive within my limitations.
-              </li>
-              <li>
-                Use a boat, float or other surface support station, whenever
-                feasible.
-              </li>
-              <li>
-                Know and obey local dive laws and regulations, including fish
-                and game and dive flag laws. I have read the above statements
-                and have had any questions answered to my satisfaction.
-              </li>
-            </ol>
-
-            <p className="mt-4">
-              I understand the importance and purposes of these established
-              practices. I recognize they are for my own safety and well-being,
-              and that failure to adhere to them can place me in jeopardy when
-              diving.
-            </p>
-          </div>
-        </div>
-        <hr className="my-2 border-2 border-gray-900" />
-        <h3 className="text-start font-bold text-2xl mt-2 mb-3">
-          NON-AGENCY DISCLOSURE AND ACKNOWLEDGMENT AGREEMENT
-        </h3>
-
-        <p>
-          I understand and agree that PADI Members (&quot;Members&quot;),
-          including
-          <span className="border-full underline border-gray-900 text-xl font-bold px-2">
-            Scuba Life & their instructors
-          </span>
-          and/or any individual PADI Instructors and Divemasters associated with
-          the program in which I am participating, are licensed to use various
-          PADI Trademarks and to conduct PADI training, but are not agents,
-          employees or franchisees of PADI Americas, Inc, or its parent,
-          subsidiary and affiliated corporations (&quot;PADI&quot;). I further
-          understand that Member business activities are independent, and are
-          neither owned nor operated by PADI...
-        </p>
-
-        <div className="flex justify-between text-xs italic mt-6">
-          <p className="">Product No. 10038 (Rev. 02/21)</p>{" "}
-          <p className="">Version 2.0</p>{" "}
-          <p className="">Page 1 of 2 © PADI 2021</p>
         </div>
 
         {/* ---------------- Page 2 ---------------- */}
