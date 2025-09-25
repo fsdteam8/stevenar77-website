@@ -47,9 +47,9 @@ export function createInitialState(initialCourse?: {
       postalCode: "",
       emergencyContact: "",
       courseName: initialCourse?.name || "", // pre-fill courseName if available
-      shoeSize: "",
-      hight: "",
-      weight: "",
+      shoeSize: 10,
+      hight: 5,
+      weight: 20,
       gender: "male",
     },
     medicalHistory: {},

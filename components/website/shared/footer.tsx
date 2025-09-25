@@ -9,10 +9,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const Footer = () => {
+  const quickLinks = [
+    { href: "/", text: "Home" },
+    { href: "/courses", text: "Course" },
+    { href: "/trips", text: "Trips" },
+    { href: "/shop", text: "Shop" },
+    { href: "/about-us", text: "About us" },
+    { href: "/contact-us", text: "Contact Us" },
+  ];
+
   return (
     <footer className="bg-[#010D13] text-white py-4 lg:py-5">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-12">
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <Image
@@ -23,79 +32,38 @@ const Footer = () => {
               className="mb-4"
             />
             <p className="text-sm text-white max-w-xs">
-              South Florida&apos;s premier PADI dive center. Discover the ocean,
-              join our community, and experience the adventure of a lifetime.
+              Los Angeles & Ventura Counties Premier Diving Center.
             </p>
             <div className="socails flex mt-4 gap-2">
-              <FaFacebookSquare className="text-4xl  text-white duration-700 hover:text-blue-600" />
+              <Link href="https://www.facebook.com/" target="_blank">
+                <FaFacebookSquare className="text-4xl  text-white duration-700 hover:text-blue-600" />
+              </Link>
               <div className="relative group">
-                <FaInstagramSquare className="text-4xl duration-700  text-white" />
+                <Link href="https://www.facebook.com/" target="_blank">
+                  <FaInstagramSquare className="text-4xl duration-700  text-white" />
+                </Link>
                 <div className="absolute hidden  group-hover:block h-[90%] w-[90%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition text-white duration-700 bg-gradient-to-r from-[#fa7e1e] via-[#d62976] to-[#4f5bd5] rounded-xs mix-blend-overlay" />
               </div>
-              <FaTwitter className="text-4xl  text-white duration-700 hover:text-blue-400" />
+              <Link href="https://www.facebook.com/" target="_blank">
+                <FaTwitter className="text-4xl  text-white duration-700 hover:text-blue-400" />
+              </Link>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Quick Links</h3>
+            <h3 className="font-semibold text-lg text-white">Quick Links</h3>
             <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/"
-                  className="text-sm text-white hover:text-primary transition-colors"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/"
-                  className="text-sm text-white hover:text-primary transition-colors"
-                >
-                  About us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/search"
-                  className="text-sm text-white hover:text-primary transition-colors"
-                >
-                  Courses
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about-us"
-                  className="text-sm text-white hover:text-primary transition-colors"
-                >
-                  Schedule
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about-us"
-                  className="text-sm text-white hover:text-primary transition-colors"
-                >
-                  Community
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about-us"
-                  className="text-sm text-white hover:text-primary transition-colors"
-                >
-                  contact us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about-us"
-                  className="text-sm text-white hover:text-primary transition-colors"
-                >
-                  FAQs
-                </Link>
-              </li>
+              {quickLinks.map((link, idx) => (
+                <li key={idx}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-white hover:text-primary transition-colors"
+                  >
+                    {link.text}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -166,19 +134,19 @@ const Footer = () => {
             <h3 className="font-semibold text-lg">Contact Us</h3>
             <ul className="space-y-2 text-sm text-white">
               <li className="flex gap-2 items-center">
-                <Mail size={15} /> support@albinhub.com
+                <Mail size={15} /> scubastevenar@gmail.com
               </li>
               <li className="flex gap-2 items-center">
-                <Phone size={15} /> +1 (555) 123-4567
+                <Phone size={15} /> 714-728-2300
               </li>
               <li className="flex gap-2 items-center">
-                <MapPin size={15} /> 123 Core Street, City, State, 2P
+                <MapPin size={15} /> Los Angeles & Ventura Counties
               </li>
             </ul>
           </div>
 
           {/*  Newsletter */}
-          <div className="space-y-6">
+          {/* <div className="space-y-6">
             <div className="space-y-4">
               <h3 className="font-semibold text-white text-lg">Newsletter</h3>
               <p className="text-sm text-white">Subscribe for updates & news</p>
@@ -193,14 +161,13 @@ const Footer = () => {
                 </Button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Divider and Copyright */}
         <div className="mt-5 pt-5 border-t border-primary/20">
           <p className="text-center text-sm pb-0 text-white">
-            © 2024 Scuba Life. All rights reserved. | PADI Dive Center #S-12345
-            | Licensed & Insured
+            © 2024 Scuba Life. All rights reserved.
           </p>
         </div>
       </div>

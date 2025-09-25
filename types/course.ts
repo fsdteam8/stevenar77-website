@@ -100,9 +100,9 @@ export interface BookingPayload {
   price: number;
     // Personal info
   gender: string;
-  shoeSize: string;
-  hight: string;   // or height
-  weight: string;
+  shoeSize: number;
+  hight: number;   // or height
+  weight: number;
 }
 
 export interface BookingResponse {
