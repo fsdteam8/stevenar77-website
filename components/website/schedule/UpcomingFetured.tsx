@@ -110,13 +110,15 @@ const UpcomingFetured = () => {
   const totalPages = Math.ceil(courses.length / itemsPerPage);
   return (
     <section className="py-10">
+      <div className="container mx-auto">
+
       <h2 className="text-3xl font-bold text-center mb-8">
         Upcoming Classes - Quick View
       </h2>
 
-      <div className="w-full flex flex-wrap justify-between container  mx-auto">
+      <div className="w-full flex flex-wrap gap-6 justify-between items-stretch ">
         {courses.map((course, index) => (
-          <div key={index} className="md:w-[48%] ">
+          <div key={index} className="md:w-[48%]">
             <FeatureCard
               {...course}
               onSeeMore={() => console.log("See More:", course.title)}
@@ -221,6 +223,7 @@ const UpcomingFetured = () => {
         <Button variant="outline" size="icon">
           <ChevronRight className="w-5 h-5" />
         </Button>
+      </div>
       </div>
     </section>
   );

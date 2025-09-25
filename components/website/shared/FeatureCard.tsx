@@ -30,37 +30,35 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   children,
 }) => {
   return (
-    <section>
-      <div className="container mx-auto h-full">
-        <div className="py-1 my-5 w-full h-full overflow-hidden rounded-2xl shadow-lg bg-white">
-          {/* Course Image */}
-          <div className="relative h-52 w-full">
-            <Image
-              src={image}
-              alt={title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
+    <section className="h-full">
+      <div className="py-1  w-full h-full flex  flex-col justify-between  overflow-hidden rounded-2xl shadow-lg bg-white">
+        {/* Course Image */}
+        <div className="relative h-52 w-full">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
 
-          {children}
+        {children}
 
-          <div className="flex gap-3 px-4 pb-4">
-            <Button
-              variant="outline"
-              className="flex-1 text-[16px] py-3 px-[16px] font-medium leading-[150%] text-[#0694A2]"
-              onClick={onSeeMore}
-            >
-              See More
-            </Button>
-            <Button
-              className="flex-1 bg-[#0694A2]  py-3 px-[16px] text-white hover:bg-cyan-700"
-              onClick={onBookNow}
-            >
-              Book Now
-            </Button>
-          </div>
+        <div className="flex gap-3 px-4 pb-4">
+          <Button
+            variant="outline"
+            className="flex-1 text-[16px] py-3 px-[16px] font-medium leading-[150%] text-[#0694A2]"
+            onClick={onSeeMore}
+          >
+            See More
+          </Button>
+          <Button
+            className="flex-1 bg-[#0694A2]  py-3 px-[16px] text-white hover:bg-cyan-700"
+            onClick={onBookNow}
+          >
+            Book Now
+          </Button>
         </div>
       </div>
     </section>

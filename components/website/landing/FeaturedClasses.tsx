@@ -9,7 +9,13 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import FeatureCard from "../shared/FeatureCard";
-import { ChevronLeft, ChevronRight, Clock, Star, UserRound } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Star,
+  UserRound,
+} from "lucide-react";
 
 // ----------------------
 // Types
@@ -141,15 +147,19 @@ const FeaturedClasses: React.FC = () => {
   const totalPages = Math.ceil(courses.length / itemsPerPage);
 
   return (
-    <section className="py-10">
-      <h2 className="text-3xl md:text-[48px] font-semibold text-center font-montserrat mb-8">Featured Classes</h2>
-      <p className="text-3xl md:text-[48px] font-semibold text-center font-montserrat mb-8">Start your scuba journey with our comprehensive PADI certified courses</p>
-      <Carousel setApi={setApi} className="w-full container mx-auto">
-        <CarouselContent className="flex items-stretch">
+    <section className="mt-[60px] md:mt-[80px]">
+      <h2 className="text-3xl md:text-[48px] font-semibold text-center font-montserrat">
+        Featured Classes
+      </h2>
+      <p className="font-normal text-center mt-2 mb-[50px]">
+        Start your scuba journey with our comprehensive PADI certified courses
+      </p>
+      <Carousel setApi={setApi} className="w-full  container mx-auto">
+        <CarouselContent className="flex my-5">
           {courses.map((course, index) => (
             <CarouselItem
               key={index}
-              className="md:basis-1/2 h-full lg:basis-1/3"
+              className="md:basis-1/2 h-full  lg:basis-1/3"
             >
               <FeatureCard
                 {...course} // spreads all typed course fields
@@ -228,11 +238,7 @@ const FeaturedClasses: React.FC = () => {
 
       {/* Bottom Controls */}
       <div className="flex items-center justify-center gap-4 mt-6">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => api?.scrollPrev()}
-        >
+        <Button variant="outline" size="icon" onClick={() => api?.scrollPrev()}>
           <ChevronLeft className="w-5 h-5" />
         </Button>
 
@@ -249,11 +255,7 @@ const FeaturedClasses: React.FC = () => {
           ))}
         </div>
 
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => api?.scrollNext()}
-        >
+        <Button variant="outline" size="icon" onClick={() => api?.scrollNext()}>
           <ChevronRight className="w-5 h-5" />
         </Button>
       </div>
