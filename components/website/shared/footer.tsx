@@ -21,32 +21,41 @@ const Footer = () => {
   return (
     <footer className="bg-[#010D13] text-white py-4 lg:py-5">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-12">
           {/* Brand Section */}
-          <div className="lg:col-span-1">
-            <Image
-              src={logo}
-              alt=" logo"
-              width={64}
-              height={64}
-              className="mb-4"
-            />
-            <p className="text-sm text-white max-w-xs">
-              Los Angeles & Ventura Counties Premier Diving Center.
-            </p>
-            <div className="socails flex mt-4 gap-2">
-              <Link href="https://www.facebook.com/" target="_blank">
-                <FaFacebookSquare className="text-4xl  text-white duration-700 hover:text-blue-600" />
-              </Link>
-              <div className="relative group">
-                <Link href="https://www.facebook.com/" target="_blank">
-                  <FaInstagramSquare className="text-4xl duration-700  text-white" />
-                </Link>
-                <div className="absolute hidden  group-hover:block h-[90%] w-[90%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition text-white duration-700 bg-gradient-to-r from-[#fa7e1e] via-[#d62976] to-[#4f5bd5] rounded-xs mix-blend-overlay" />
+          <div className="lg:col-span-1 ">
+            <div className=" flex items-center gap-3">
+              <Image
+                src={logo}
+                alt=" logo"
+                width={64}
+                height={64}
+                className="mb-4"
+              />
+              <div className="flex gap-4 px-3">
+                <p className="font-bold text-base text-white">The Ocen.</p>
+                <p className="font-bold text-base text-white">The Adventure.</p>
+                <p className="font-bold text-base text-white">The Life.</p>
               </div>
-              <Link href="https://www.facebook.com/" target="_blank">
-                <FaTwitter className="text-4xl  text-white duration-700 hover:text-blue-400" />
-              </Link>
+            </div>
+            <div className="mt-6">
+              <p className="text-sm text-white max-w-xs">
+                Los Angeles & Ventura Counties Premier Diving Center.
+              </p>
+              <div className="socails flex mt-4 gap-2">
+                <Link href="https://www.facebook.com/" target="_blank">
+                  <FaFacebookSquare className="text-4xl  text-white duration-700 hover:text-blue-600" />
+                </Link>
+                <div className="relative group">
+                  <Link href="https://www.facebook.com/" target="_blank">
+                    <FaInstagramSquare className="text-4xl duration-700  text-white" />
+                  </Link>
+                  <div className="absolute hidden  group-hover:block h-[90%] w-[90%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition text-white duration-700 bg-gradient-to-r from-[#fa7e1e] via-[#d62976] to-[#4f5bd5] rounded-xs mix-blend-overlay" />
+                </div>
+                {/* <Link href="https://www.facebook.com/" target="_blank">
+                  <FaTwitter className="text-4xl  text-white duration-700 hover:text-blue-400" />
+                </Link> */}
+              </div>
             </div>
           </div>
 
@@ -68,7 +77,7 @@ const Footer = () => {
           </div>
 
           {/* Resources */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h3 className="font-semibold text-lg">Courses</h3>
             <ul className="space-y-2">
               <li>
@@ -128,7 +137,7 @@ const Footer = () => {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
           {/* Contactus */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Contact Us</h3>

@@ -26,24 +26,24 @@ export async function middleware(req: NextRequest) {
   }
 
   // // If user is not authenticated and tries to access protected paths
-  // if (!token && !isPublicPath && !isAuthPath) {
-  //   const loginUrl = new URL("/login", req.url);
-  //   loginUrl.searchParams.set("callbackUrl", req.url);
-  //   return NextResponse.redirect(loginUrl);
-  // }
+  if (!token && !isPublicPath && !isAuthPath) {
+    const loginUrl = new URL("/login", req.url);
+    loginUrl.searchParams.set("callbackUrl", req.url);
+    return NextResponse.redirect(loginUrl);
+  }
 
   // If user is not authenticated and tries to access protected paths
-  if (!token && !isPublicPath && !isAuthPath) {
-    if (pathname.startsWith("/account")) {
-      // Account pages → login
-      const loginUrl = new URL("/login", req.url);
-      loginUrl.searchParams.set("callbackUrl", req.url);
-      return NextResponse.redirect(loginUrl);
-    } else {
-      // Other protected pages → error page
-      return NextResponse.redirect(new URL("/not-found", req.url));
-    }
-  }
+  // if (!token && !isPublicPath && !isAuthPath) {
+  //   if (pathname.startsWith("/account")) {
+  //     // Account pages → login
+  //     const loginUrl = new URL("/login", req.url);
+  //     loginUrl.searchParams.set("callbackUrl", req.url);
+  //     return NextResponse.redirect(loginUrl);
+  //   } else {
+  //     // Other protected pages → error page
+  //     return NextResponse.redirect(new URL("/not-found", req.url));
+  //   }
+  // }
 
   return NextResponse.next();
 }
