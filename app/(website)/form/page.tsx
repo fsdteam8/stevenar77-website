@@ -2,6 +2,8 @@
 
 // import PadiLiabilityForm from '@/components/website/form/PadiLiabilityForm'
 // import EnrichedAirForm from '@/components/website/form/EnrichedTrainning'
+import DiversActivityForm from '@/components/website/form/DiversActivityForm'
+import Equipment from '@/components/website/form/Equipment'
 import PadiLiabilityForm from '@/components/website/form/PadiLiabilityForm'
 // import QuickReview from '@/components/website/form/QuickReview'
 
@@ -13,6 +15,8 @@ const page = () => {
         {/* <PadiLiabilityForm /> */}
         {/* <QuickReview /> */}
         {/* <EnrichedAirForm /> */}
+        {/* <DiversActivityForm /> */}
+        <Equipment />
 
     </div>
   )
