@@ -133,12 +133,12 @@ const CourseDetails = () => {
 
   // Render Single Price Layout (like Image 1)
   const renderSinglePriceLayout = () => (
-    <div className="border-t border-gray-200 pt-8">
+    <div className="border-t border-gray-200 ">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div>
           <div className="flex items-center gap-6">
             {/* Quantity Controls */}
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <Button
                 onClick={() => handleQuantityChange(quantity - 1)}
                 variant="outline"
@@ -160,7 +160,7 @@ const CourseDetails = () => {
               >
                 <Plus className="w-4 h-4" />
               </Button>
-            </div>
+            </div> */}
 
             {/* Price Display */}
             <div className="text-2xl font-bold text-gray-900">
@@ -256,8 +256,8 @@ const CourseDetails = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
-      <section className="pt-20 container mx-auto">
-        <div className="px-4 sm:px-8 lg:px-16 py-10 md:py-14 lg:py-16 space-y-8">
+      <section className=" container mx-auto">
+        <div className="px-4 sm:px-8 lg:px-16 py-4 md:py-14 lg:py-16 space-y-8">
           <div className="">
             {/* Image Section */}
             <div className="rounded-lg overflow-hidden w-350 h-200 shadow-md order-1 md:order-2">
