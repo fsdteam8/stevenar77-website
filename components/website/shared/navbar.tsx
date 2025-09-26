@@ -98,9 +98,10 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Home", path: "/" },
-    { name: "Course", path: "/courses" },
+    { name: "Courses", path: "/courses" },
     { name: "Trips", path: "/trips" },
     { name: "Shop", path: "/shop" },
+    { name: "Our Partners", path: "/our-partners" },
     { name: "About Us", path: "/about-us" },
     { name: "Contact Us", path: "/contact-us" },
   ];
