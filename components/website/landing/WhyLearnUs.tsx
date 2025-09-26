@@ -1,6 +1,6 @@
 import React from "react";
 import WhyLearn from "../shared/WhyLearn";
-import { Users } from "lucide-react";
+import { Award, Pocket, Users } from "lucide-react";
 
 const WhyLearnUs = () => {
   return (
@@ -18,7 +18,7 @@ const WhyLearnUs = () => {
         <WhyLearn
           title="Lifetime Community & Adventure"
           description="Join a passionate community of divers and enjoy exclusive dive trips and events"
-          icon={<Users size={24} color="#3B82F6" />}
+          icon={<Award size={24} color="#3B82F6" />}
           className=" rounded-lg "
           iconContainerClassName="p-2 shadow-xl"
           titleClassName="text-[24px] text-[#27303F]"
@@ -27,7 +27,7 @@ const WhyLearnUs = () => {
         <WhyLearn
           title="Lifetime Community & Adventure"
           description="Join a passionate community of divers and enjoy exclusive dive trips and events"
-          icon={<Users size={24} color="#3B82F6" />}
+          icon={<Pocket size={24} color="#3B82F6" />}
           className=" rounded-lg "
           iconContainerClassName="p-2 shadow-xl"
           titleClassName="text-[24px] text-[#27303F]"
