@@ -584,7 +584,7 @@ export default function PadiQuickReview() {
   return (
     <div className="min-h-screen bg-white ">
       {/* Download Button */}
-      <div className="fixed top-4 right-4 z-10 no-print">
+      <div className="flex justify-center mt-4 top-4 right-4 z-10 no-print">
         <Button
           onClick={handleDownloadPDF}
           disabled={isGenerating}
