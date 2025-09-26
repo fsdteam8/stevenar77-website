@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Star } from "lucide-react";
+import { toast } from "sonner";
 
 // Types
 export interface ReviewData {
@@ -33,12 +34,12 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
   const handleSubmit = async () => {
     if (rating === 0) {
-      alert("Please select a rating");
+      toast.error("Please select a rating");
       return;
     }
 
     if (!description.trim()) {
-      alert("Please enter a description");
+      toast.error("Please enter a description");
       return;
     }
 
