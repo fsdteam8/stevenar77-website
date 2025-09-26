@@ -52,6 +52,8 @@ const UpcomingFeatured = () => {
 
   return (
     <section className="py-10">
+      <div className="container mx-auto">
+
       <h2 className="text-3xl font-bold text-center mb-8">
         Upcoming Classes - Quick View
       </h2>
@@ -169,6 +171,7 @@ const UpcomingFeatured = () => {
         <Button variant="outline" size="icon">
           <ChevronRight className="w-5 h-5" />
         </Button>
+      </div>
       </div>
     </section>
   );

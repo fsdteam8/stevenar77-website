@@ -1,10 +1,10 @@
-// import DiversActivityForm from '@/components/website/form/DiversActivityForm'
+import DiversActivityForm from '@/components/website/form/DiversActivityForm'
 import React from 'react'
 
 const page = () => {
   return (
     <div>
-        {/* <DiversActivityForm /> */}
+        <DiversActivityForm />
     </div>
   )
 }
