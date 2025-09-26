@@ -8,7 +8,7 @@ import {
   CarouselApi,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
-import FeatureCard from "../shared/FeatureCard";
+// import FeatureCard from "../shared/FeatureCard";
 import {
   ChevronLeft,
   ChevronRight,
@@ -35,6 +35,7 @@ import { CourseData } from "@/lib/courseApi";
 //   location: string;
 // }
 import { useRouter } from "next/navigation";
+import FeatureCard from "../shared/FeatureCard";
 
 const FeaturedClasses: React.FC = () => {
   const { data: apiCourses, isLoading, isError, error } = useCourses();
