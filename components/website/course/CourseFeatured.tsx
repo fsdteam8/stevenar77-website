@@ -98,7 +98,7 @@ const CourseFeatured: React.FC = () => {
     <section className="py-10">
       <h2 className="text-3xl font-bold text-center mb-8">Featured Classes</h2>
 
-      <div className="w-full flex flex-wrap justify-between container mx-auto">
+      <div className="w-full flex flex-wrap justify-between items-stretch container mx-auto">
         {courses.map((course) => (
           <div key={course.id} className="md:w-[48%]">
             <FeatureCard
@@ -181,7 +181,7 @@ const CourseFeatured: React.FC = () => {
       </div>
 
       {/* Bottom Controls */}
-      <div className="flex items-center justify-center gap-4 mt-6">
+      {/* <div className="flex items-center justify-center gap-4 mt-6">
         <Button variant="outline" size="icon">
           <ChevronLeft className="w-5 h-5" />
         </Button>
@@ -198,7 +198,7 @@ const CourseFeatured: React.FC = () => {
         <Button variant="outline" size="icon">
           <ChevronRight className="w-5 h-5" />
         </Button>
-      </div>
+      </div> */}
     </section>
   );
 };

@@ -26,55 +26,55 @@ const CourseDetails = () => {
   };
 
   // Dummy data mapping for course sections
-  const courseSections = [
-    {
-      title: "What's Included",
-      items: [
-        "Professional instructor guidelines — classroom, pool, and ocean",
-        "All course materials for learning dive theory",
-        "Barred green website, fire, boots, regulator, BCD, and computer",
-        "Ikeun-i-trip fiery tickets to Costima Island",
-        "Two-night story at The Harmosa Hotel",
-        "Official PKU Open Water Diver certification paperwork",
-      ],
-    },
-    {
-      title: "Where You'll Learn",
-      items: [
-        "Classroom & Pool: At our Ageure Hills dive shop and nearby pool",
-        "Ocean Diving: Coelho Point Dive Park, Catalina Island — 5000th easiest entry with steps, handrails, and clear water",
-      ],
-    },
-    {
-      title: "Who Can Join",
-      items: [
-        "Anyone age 10+ in good health",
-        "Agas 10–14 may earn the Junior Open Water certification",
-        "Completion of a standard medical statement is required",
-      ],
-    },
-    {
-      title: "Your Class Experience",
-      items: [
-        "Weekend One — Classroom & Pool: Learn scales theory in a relaxed classroom, then practice in the pool to build comfort step by step.",
-        "Weekend Two — Catalina Ocean Drive: Make four dives at Centro Point Dive Park with instructor support. Explore fully forests learning with sea flora, fishachecks, and Giant Black Sea Bass.",
-      ],
-    },
-    {
-      title: "When Classes Are Offered",
-      items: [
-        "Once a month (see calendar for dates), year-round (except major holidays)",
-        "Summer Mile quickly — early booking recommended",
-      ],
-    },
-    {
-      title: "What You'll Need",
-      items: [
-        "Personal gear: Mask and shortest (titles during skiss for comfort)",
-        "Everything else is provided — walkup, fire, boots, regulator, BCD, and computer",
-      ],
-    },
-  ];
+  // const courseSections = [
+  //   {
+  //     title: "What's Included",
+  //     items: [
+  //       "Professional instructor guidelines — classroom, pool, and ocean",
+  //       "All course materials for learning dive theory",
+  //       "Barred green website, fire, boots, regulator, BCD, and computer",
+  //       "Ikeun-i-trip fiery tickets to Costima Island",
+  //       "Two-night story at The Harmosa Hotel",
+  //       "Official PKU Open Water Diver certification paperwork",
+  //     ],
+  //   },
+  //   {
+  //     title: "Where You'll Learn",
+  //     items: [
+  //       "Classroom & Pool: At our Ageure Hills dive shop and nearby pool",
+  //       "Ocean Diving: Coelho Point Dive Park, Catalina Island — 5000th easiest entry with steps, handrails, and clear water",
+  //     ],
+  //   },
+  //   {
+  //     title: "Who Can Join",
+  //     items: [
+  //       "Anyone age 10+ in good health",
+  //       "Agas 10–14 may earn the Junior Open Water certification",
+  //       "Completion of a standard medical statement is required",
+  //     ],
+  //   },
+  //   {
+  //     title: "Your Class Experience",
+  //     items: [
+  //       "Weekend One — Classroom & Pool: Learn scales theory in a relaxed classroom, then practice in the pool to build comfort step by step.",
+  //       "Weekend Two — Catalina Ocean Drive: Make four dives at Centro Point Dive Park with instructor support. Explore fully forests learning with sea flora, fishachecks, and Giant Black Sea Bass.",
+  //     ],
+  //   },
+  //   {
+  //     title: "When Classes Are Offered",
+  //     items: [
+  //       "Once a month (see calendar for dates), year-round (except major holidays)",
+  //       "Summer Mile quickly — early booking recommended",
+  //     ],
+  //   },
+  //   {
+  //     title: "What You'll Need",
+  //     items: [
+  //       "Personal gear: Mask and shortest (titles during skiss for comfort)",
+  //       "Everything else is provided — walkup, fire, boots, regulator, BCD, and computer",
+  //     ],
+  //   },
+  // ];
 
   // Loading state
   if (isLoading) {
