@@ -70,7 +70,6 @@
 
 // export default FeatureCard;
 
-
 "use client";
 
 import Image from "next/image";
@@ -102,44 +101,42 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   children,
 }) => {
   return (
-    <section>
-      <div className="container mx-auto h-full">
-        <div className="my-5 w-full h-full overflow-hidden rounded-2xl shadow-lg bg-white flex flex-col">
-          {/* Course Image */}
-          <div className="relative w-full">
-            <Image
-              src={image}
-              alt={title}
-              width={600}
-              height={400}
-              className="object-cover w-full aspect-[5/3]"
-              priority
-            />
-          </div>
+    <section className="flex flex-col h-full my-5">
+      <div className="my-5 w-full h-full overflow-hidden rounded-2xl shadow-lg bg-white flex flex-col">
+        {/* Course Image */}
+        <div className="relative w-full">
+          <Image
+            src={image}
+            alt={title}
+            width={600}
+            height={400}
+            className="object-cover w-full aspect-[5/3]"
+            priority
+          />
+        </div>
 
-          {/* Card body (scroll-limited if too much content) */}
-          <div className="flex-1 px-4 py-3 overflow-hidden">
-            <div className="space-y-3 line-clamp-[8] max-h-96 overflow-hidden">
-              {children}
-            </div>
+        {/* Card body (scroll-limited if too much content) */}
+        <div className="flex-1 px-4 py-3 overflow-hidden">
+          <div className="space-y-3 line-clamp-[8] max-h-96 overflow-hidden">
+            {children}
           </div>
+        </div>
 
-          {/* Actions always pinned at bottom */}
-          <div className="flex gap-3 px-4 pb-4 mt-auto">
-            <Button
-              variant="outline"
-              className="flex-1 text-[16px] py-3 px-[16px] font-medium leading-[150%] text-[#0694A2]"
-              onClick={onSeeMore}
-            >
-              See More
-            </Button>
-            <Button
-              className="flex-1 bg-[#0694A2] py-3 px-[16px] text-white hover:bg-cyan-700"
-              onClick={onBookNow}
-            >
-              Book Now
-            </Button>
-          </div>
+        {/* Actions always pinned at bottom */}
+        <div className="flex gap-3 px-4 pb-4 mt-auto">
+          <Button
+            variant="outline"
+            className="flex-1 text-[16px] py-3 px-[16px] font-medium leading-[150%] text-[#0694A2]"
+            onClick={onSeeMore}
+          >
+            See More
+          </Button>
+          <Button
+            className="flex-1 bg-[#0694A2] py-3 px-[16px] text-white hover:bg-cyan-700"
+            onClick={onBookNow}
+          >
+            Book Now
+          </Button>
         </div>
       </div>
     </section>
