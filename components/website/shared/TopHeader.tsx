@@ -58,9 +58,9 @@ export default function TopHeader() {
               <Link href="https://www.instagram.com/" target="_blank">
                 <Instagram className="w-3 h-3 sm:w-4 sm:h-4" />
               </Link>
-              <Link href="https://x.com/" target="_blank">
+              {/* <Link href="https://x.com/" target="_blank">
                 <Twitter className="w-3 h-3 sm:w-4 sm:h-4" />
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>
