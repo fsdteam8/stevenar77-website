@@ -1,29 +1,40 @@
 import Image from "next/image";
 import React from "react";
 
-export default function Gallery() {
-  const row1 = [
-    { src: "/images/about9.png", span: "lg:col-span-4", height: "h-40 sm:h-52 md:h-64" },
-    { src: "/images/about10.png", span: "lg:col-span-4", height: "h-40 sm:h-52 md:h-64" },
-    { src: "/images/about11.png", span: "lg:col-span-4", height: "h-40 sm:h-52 md:h-64" },
-  ];
+interface GalleryProps {
+  images: { url: string; _id: string }[];
+}
 
-  const row2 = [
-    { src: "/images/about12.png", span: "lg:col-span-3", height: "h-60 sm:h-72 md:h-[500px]" },
-    { src: "/images/about13.png", span: "lg:col-span-3", height: "h-60 sm:h-72 md:h-[500px]" },
-    { src: "/images/about14.png", span: "lg:col-span-6", height: "h-60 sm:h-72 md:h-[500px]" },
-  ];
+export default function Gallery({ images }: GalleryProps) {
+  // Keep the same layout structure
+  const row1 = images.slice(0, 3).map((img) => ({
+    src: img.url,
+    span: "lg:col-span-4",
+    height: "h-40 sm:h-52 md:h-64",
+  }));
 
-  const row3 = [
-    { src: "/images/about15.png", span: "lg:col-span-4", height: "h-40 sm:h-52 md:h-64" },
-    { src: "/images/about16.png", span: "lg:col-span-4", height: "h-40 sm:h-52 md:h-64" },
-    { src: "/images/about17.png", span: "lg:col-span-4", height: "h-40 sm:h-52 md:h-64" },
-  ];
+  const row2 = images.slice(3, 6).map((img, index) => {
+    const span = index === 2 ? "lg:col-span-6" : "lg:col-span-3";
+    return {
+      src: img.url,
+      span,
+      height: "h-60 sm:h-72 md:h-[500px]",
+    };
+  });
 
-  const renderRow = (images: { src: string; span: string; height: string }[]) => (
+  const row3 = images.slice(6, 9).map((img) => ({
+    src: img.url,
+    span: "lg:col-span-4",
+    height: "h-40 sm:h-52 md:h-64",
+  }));
+
+  const renderRow = (row: { src: string; span: string; height: string }[]) => (
     <div className="grid grid-cols-12 gap-4">
-      {images.map((img, index) => (
-        <div key={index} className={`col-span-12 sm:col-span-6 md:col-span-4 ${img.span}`}>
+      {row.map((img, index) => (
+        <div
+          key={index}
+          className={`col-span-12 sm:col-span-6 md:col-span-4 ${img.span}`}
+        >
           <Image
             src={img.src}
             alt={`Gallery Image ${index + 1}`}

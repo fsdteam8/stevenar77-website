@@ -34,9 +34,9 @@ export interface BookingState {
     emergencyContact: string;
     courseName: string;
     // gender: "male" || "female";
-    shoeSize: string;
-    hight: string;
-    weight: string;
+    shoeSize: number;
+    hight: number;
+    weight: number;
     gender:  "male" | "female" | "others";
   };
   medicalHistory: Record<string, boolean>;

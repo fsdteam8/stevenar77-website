@@ -8,17 +8,17 @@ export function Header() {
         <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-xs sm:text-sm">
           <div className="flex items-center space-x-2">
             <Phone className="w-4 h-4" />
-            <span className="hidden sm:inline">90360-6745678</span>
+            <span className="hidden sm:inline">714-728-2300</span>
             <span className="sm:hidden">Call Us</span>
           </div>
           <div className="flex items-center space-x-2">
             <Mail className="w-4 h-4" />
-            <span className="hidden md:inline">info@aquaquestdiving.com</span>
+            <span className="hidden md:inline">scubastevenar@gmail.com</span>
             <span className="md:hidden">Email</span>
           </div>
           <div className="flex items-center space-x-2">
             <MapPin className="w-4 h-4" />
-            <span className="hidden sm:inline">Miami Beach, FL</span>
+            <span className="hidden sm:inline">Los Angeles & Ventura Counties</span>
             <span className="sm:hidden">Location</span>
           </div>
         </div>

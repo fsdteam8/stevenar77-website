@@ -37,19 +37,18 @@ export default function ContactInformation() {
             <div className="space-y-4 pt-1 md:pt-6">
               <div className="flex items-center gap-3">
                 <Mail className="text-primary w-5 h-5" />
-                <span className="text-[#343A40] text-base">support@scubastevenar.com</span>
+                <span className="text-[#343A40] text-base">scubastevenar@gmail.com</span>
               </div>
 
               <div className="flex items-center gap-3">
                 <Phone className="text-primary w-5 h-5" />
-                <span className="text-[#343A40] text-base">+1 (555) 123-4567</span>
+                <span className="text-[#343A40] text-base">714-728-2300</span>
               </div>
 
               <div className="flex items-start gap-3">
                 <MapPin className="text-primary w-5 h-5 mt-0.5" />
                 <div className="text-[#343A40] text-base">
-                  <div>123 Care Street, City, State, ZIP</div>
-                  <div className="text-base text-[#343A40]">Address: 123 Care Street, City, State, ZIP</div>
+                  <div className="text-base text-[#343A40]">Los Angeles & Ventura Counties</div>
                 </div>
               </div>
             </div>

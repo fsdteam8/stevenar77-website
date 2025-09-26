@@ -27,9 +27,9 @@ export const useCreateBooking = () => {
       });
 
       formData.append("gender", payload.gender);
-      formData.append("shoeSize", payload.shoeSize);
-      formData.append("hight", payload.hight); // ⚠️ confirm backend spelling
-      formData.append("weight", payload.weight);
+      formData.append("ShoeSize", payload.shoeSize.toString());
+      formData.append("Height", payload.hight.toString()); // ⚠️ confirm backend spelling
+      formData.append("Weight", payload.weight.toString());
 
       // payload.classDate.forEach(date => {
 
