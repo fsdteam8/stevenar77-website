@@ -19,3 +19,13 @@ export interface Trip {
   updatedAt: string;
   __v: number;
 }
+
+
+// types/trip.ts
+export interface TripApiResponse {
+  data: Trip[];
+  limit: number;
+  page: number;
+  totalPages: number;
+  totalTrips: number;
+}
