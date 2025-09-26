@@ -16,8 +16,8 @@ const steps = [
   { id: 1, title: "Medical History Checklist", component: MedicalHistoryStep },
   { id: 2, title: "Activity Specific Questions", component: ActivityQuestionsStep },
   { id: 3, title: "Liability Release Agreement", component: LiabilityReleaseStep },
-  { id: 4, title: "Medical Certifications & Document", component: DocumentUploadStep },
-  { id: 5, title: "Electronic Signature", component: ElectronicSignatureStep },
+  { id: 4, title: "Electronic Signature", component: ElectronicSignatureStep },
+  { id: 5, title: "Medical Certifications & Document", component: DocumentUploadStep },
   { id: 6, title: "All Information Done", component: null },
 ]
 
