@@ -57,3 +57,16 @@ export const getUserConversation = async (userId: string) => {
     console.error("Error fetching conversations");
   }
 };
+
+
+
+// Get About API
+export const getAbout = async () => {
+  try {
+    const res = await api.get(`/about`);
+    return res.data;
+  } catch (error) {
+    console.error("Failed to fetch about:", error);
+    throw error;
+  }
+};
