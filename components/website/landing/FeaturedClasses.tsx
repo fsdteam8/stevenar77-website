@@ -203,7 +203,7 @@ const FeaturedClasses: React.FC = () => {
                       </p>
 
                       <ul className="space-y-2 text-[#68706A]">
-                        {course.features.slice(0, 2).map((feature, idx) => (
+                        {course.features.slice(0, 5).map((feature, idx) => (
                           <li
                             key={idx}
                             className="flex items-center text-[16px] gap-2"

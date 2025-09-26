@@ -105,7 +105,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                         size={32}
                         className={`transition-colors duration-200 ${
                           star <= (hoveredRating || rating)
-                            ? "fill-gray-400 text-gray-400"
+                            ? "fill-yellow-400 text-yellow-400"
                             : "text-gray-300"
                         }`}
                       />
