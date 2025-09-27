@@ -9,15 +9,14 @@ const WhyLearnUs = () => {
         <h2 className="text-[#252F3F] text-[48px]  leading-[120%] pb-2">
           Why Learn with Us
         </h2>
-        <p className="text-[16px] text-[#6B7280] w-[90%] mx-auto leading-6 font-normal">
-          Experience the difference that makes Scuba Life the premier choice for
-          diving education
+        <p className="text-[16px] text-[#6B7280] text-center w-[90%] mx-auto leading-6 font-normal">
+          Experience the difference that makes Scuba Life the premier choice for diving education
         </p>
       </div>
       <div className="flex flex-wrap justify-between">
         <WhyLearn
-          title="Lifetime Community & Adventure"
-          description="Join a passionate community of divers and enjoy exclusive dive trips and events"
+          title="Professional Instructors"
+          description="Expert-level PADI certified instructors with years of ocean experience and passion for teaching"
           icon={<Award size={24} color="#3B82F6" />}
           className=" rounded-lg "
           iconContainerClassName="p-2 shadow-xl"
@@ -25,8 +24,8 @@ const WhyLearnUs = () => {
           descriptionClassName=""
         />
         <WhyLearn
-          title="Lifetime Community & Adventure"
-          description="Join a passionate community of divers and enjoy exclusive dive trips and events"
+          title="World-Class Dive Locations"
+          description="Access to the most beautiful and diverse underwater ecosystems in South Florida"
           icon={<Pocket size={24} color="#3B82F6" />}
           className=" rounded-lg "
           iconContainerClassName="p-2 shadow-xl"

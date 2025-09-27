@@ -87,6 +87,10 @@ const FeaturedClasses: React.FC = () => {
   const totalItems = courses.length;
   const itemsPerView = 3; // Adjust based on your carousel settings
   const totalDots = Math.max(1, totalItems - itemsPerView + 1);
+  // Navigate to course details
+  const onSeeMore = (id: string) => {
+    router.push(`/courses/${id}`);
+  };
 
   // ✅ Loading & Error state with better error handling
   if (isLoading) {
@@ -197,8 +201,9 @@ const FeaturedClasses: React.FC = () => {
                       <p className="font-medium mb-4 text-[20px] text-[#27303F]">
                         Course Includes:
                       </p>
-                      <ul className="space-y-2 text-[#68706A] line-clamp-5">
-                        {course.features.map((feature, idx) => (
+
+                      <ul className="space-y-2 text-[#68706A]">
+                        {course.features.slice(0, 5).map((feature, idx) => (
                           <li
                             key={idx}
                             className="flex items-center text-[16px] gap-2"
@@ -208,6 +213,16 @@ const FeaturedClasses: React.FC = () => {
                           </li>
                         ))}
                       </ul>
+
+                      {/* "See more" only if features > 3 */}
+                      {course.features.length > 3 && (
+                        <Button
+                           onClick={() => onSeeMore(course.id)} // pass the course ID
+                          className="mt-3 text-cyan-600 bg-transparent hover:bg-gray-200 text-sm font-semibold"
+                        >
+                          See more
+                        </Button>
+                      )}
                     </div>
                   )}
 

@@ -7,42 +7,44 @@ import Link from "next/link";
 const ScubaStevenar = () => {
   return (
     <section className="mt-[60px] md:mt-[80px]">
-      <div className="container mx-auto">
+      <div className="container px-2 lg:px-0 mx-auto">
         <div className="grid md:grid-cols-2 gap-10 items-center">
           {/* Text Section */}
           <div className="order-2 md:order-1">
             {/* Heading */}
-            <h1 className="text-3xl md:text-5xl text-[#27303F] font-semibold font-montserrat mb-3">
-              Steve &quot;Scuba Stevenar&quot;
+            <h1 className="text-3xl md:text-4xl text-[#27303F] font-semibold font-montserrat mb-1">
+              Steve &quot;Scuba SteveNar&quot; Littlefield
             </h1>
 
             {/* Description */}
-            <p className="text-[#6B7280] leading-[150%] font-normal text-[16px] mb-1">
-              <span className="font-semibold  text-[#27303F]">
-                Owner &amp; Lead Instructor
-              </span>{" "}
-              — Owner, Operator &amp; Instructor at Scuba Life. <br />
-              Steve is all about adventure. A trained Firefighter/EMT, former
-              rock band singer, occasional paid comedian, and author of{" "}
-              <span className="italic">Mindshift Mastery</span> (available on
-              Amazon &amp; Audible), he brings energy, humor, and heart to every
-              dive.
-            </p>
+            <div className="leading-6">
+              <p className="text-[#6B7280] leading-relaxed mt-6 font-normal text-[16px] mb-2">
+                <span className="font-semibold  text-[#27303F]">
+                  Owner &amp; Lead Instructor
+                </span>{" "}
+                — Owner, Operator &amp; Instructor at Scuba Life. <br />
+                <br />
+                Steve is all about adventure. A trained Firefighter/EMT, former
+                rock band singer, occasional paid comedian, and author of{" "}
+                <span className="italic">Mindshift Mastery</span> (available on
+                Amazon &amp; Audible), he brings energy, humor, and heart to
+                every dive.
+              </p>
 
-            <p className="text-[#6B7280] leading-[150%] font-normal text-[16px]  mb-3">
-              He&apos;s explored oceans around the world — from the Galapagos to St.
-              Croix, Socorro to the Maldives, La Paz to Cozumel, Thailand,
-              Hawaii, the B.V.I., and Fiji. For Steve, the ocean is magic, and
-              he&apos;s honored to share that wonder while teaching divers to safely
-              explore it.
-            </p>
+              <p className="text-[#6B7280] leading-relaxed mt-6 font-normal text-[16px]  mb-3">
+                He&apos;s explored oceans around the world — from the Galapagos
+                to St. Croix, Socorro to the Maldives, La Paz to Cozumel,
+                Thailand, Hawaii, the B.V.I., and Fiji. For Steve, the ocean is
+                magic, and he&apos;s honored to share that wonder while teaching
+                divers to safely explore it.
+              </p>
 
-            <p className="text-[#6B7280] leading-[150%] font-normal text-[16px]  mb-2">
-              At Scuba Life, Steve doesn&apos;t just teach dives — he builds
-              confidence, sparks curiosity, and welcomes you into a community of
-              ocean explorers.
-            </p>
-
+              <p className="text-[#6B7280] leading-relaxed mt-6 font-normal text-[16px]  mb-2">
+                At Scuba Life, Steve doesn&apos;t just teach dives — he builds
+                confidence, sparks curiosity, and welcomes you into a community
+                of ocean explorers.
+              </p>
+            </div>
             {/* Booking Section */}
             <div className="pt-4">
               <Link href="/about-us">

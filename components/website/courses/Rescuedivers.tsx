@@ -26,55 +26,55 @@ const CourseDetails = () => {
   };
 
   // Dummy data mapping for course sections
-  const courseSections = [
-    {
-      title: "What's Included",
-      items: [
-        "Professional instructor guidelines — classroom, pool, and ocean",
-        "All course materials for learning dive theory",
-        "Barred green website, fire, boots, regulator, BCD, and computer",
-        "Ikeun-i-trip fiery tickets to Costima Island",
-        "Two-night story at The Harmosa Hotel",
-        "Official PKU Open Water Diver certification paperwork",
-      ],
-    },
-    {
-      title: "Where You'll Learn",
-      items: [
-        "Classroom & Pool: At our Ageure Hills dive shop and nearby pool",
-        "Ocean Diving: Coelho Point Dive Park, Catalina Island — 5000th easiest entry with steps, handrails, and clear water",
-      ],
-    },
-    {
-      title: "Who Can Join",
-      items: [
-        "Anyone age 10+ in good health",
-        "Agas 10–14 may earn the Junior Open Water certification",
-        "Completion of a standard medical statement is required",
-      ],
-    },
-    {
-      title: "Your Class Experience",
-      items: [
-        "Weekend One — Classroom & Pool: Learn scales theory in a relaxed classroom, then practice in the pool to build comfort step by step.",
-        "Weekend Two — Catalina Ocean Drive: Make four dives at Centro Point Dive Park with instructor support. Explore fully forests learning with sea flora, fishachecks, and Giant Black Sea Bass.",
-      ],
-    },
-    {
-      title: "When Classes Are Offered",
-      items: [
-        "Once a month (see calendar for dates), year-round (except major holidays)",
-        "Summer Mile quickly — early booking recommended",
-      ],
-    },
-    {
-      title: "What You'll Need",
-      items: [
-        "Personal gear: Mask and shortest (titles during skiss for comfort)",
-        "Everything else is provided — walkup, fire, boots, regulator, BCD, and computer",
-      ],
-    },
-  ];
+  // const courseSections = [
+  //   {
+  //     title: "What's Included",
+  //     items: [
+  //       "Professional instructor guidelines — classroom, pool, and ocean",
+  //       "All course materials for learning dive theory",
+  //       "Barred green website, fire, boots, regulator, BCD, and computer",
+  //       "Ikeun-i-trip fiery tickets to Costima Island",
+  //       "Two-night story at The Harmosa Hotel",
+  //       "Official PKU Open Water Diver certification paperwork",
+  //     ],
+  //   },
+  //   {
+  //     title: "Where You'll Learn",
+  //     items: [
+  //       "Classroom & Pool: At our Ageure Hills dive shop and nearby pool",
+  //       "Ocean Diving: Coelho Point Dive Park, Catalina Island — 5000th easiest entry with steps, handrails, and clear water",
+  //     ],
+  //   },
+  //   {
+  //     title: "Who Can Join",
+  //     items: [
+  //       "Anyone age 10+ in good health",
+  //       "Agas 10–14 may earn the Junior Open Water certification",
+  //       "Completion of a standard medical statement is required",
+  //     ],
+  //   },
+  //   {
+  //     title: "Your Class Experience",
+  //     items: [
+  //       "Weekend One — Classroom & Pool: Learn scales theory in a relaxed classroom, then practice in the pool to build comfort step by step.",
+  //       "Weekend Two — Catalina Ocean Drive: Make four dives at Centro Point Dive Park with instructor support. Explore fully forests learning with sea flora, fishachecks, and Giant Black Sea Bass.",
+  //     ],
+  //   },
+  //   {
+  //     title: "When Classes Are Offered",
+  //     items: [
+  //       "Once a month (see calendar for dates), year-round (except major holidays)",
+  //       "Summer Mile quickly — early booking recommended",
+  //     ],
+  //   },
+  //   {
+  //     title: "What You'll Need",
+  //     items: [
+  //       "Personal gear: Mask and shortest (titles during skiss for comfort)",
+  //       "Everything else is provided — walkup, fire, boots, regulator, BCD, and computer",
+  //     ],
+  //   },
+  // ];
 
   // Loading state
   if (isLoading) {
@@ -133,12 +133,12 @@ const CourseDetails = () => {
 
   // Render Single Price Layout (like Image 1)
   const renderSinglePriceLayout = () => (
-    <div className="border-t border-gray-200 pt-8">
+    <div className="border-t border-gray-200 ">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div>
           <div className="flex items-center gap-6">
             {/* Quantity Controls */}
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <Button
                 onClick={() => handleQuantityChange(quantity - 1)}
                 variant="outline"
@@ -160,7 +160,7 @@ const CourseDetails = () => {
               >
                 <Plus className="w-4 h-4" />
               </Button>
-            </div>
+            </div> */}
 
             {/* Price Display */}
             <div className="text-2xl font-bold text-gray-900">
@@ -256,8 +256,8 @@ const CourseDetails = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
-      <section className="pt-20 container mx-auto">
-        <div className="px-4 sm:px-8 lg:px-16 py-10 md:py-14 lg:py-16 space-y-8">
+      <section className=" container mx-auto">
+        <div className="px-4 sm:px-8 lg:px-16 py-4 md:py-14 lg:py-16 space-y-8">
           <div className="">
             {/* Image Section */}
             <div className="rounded-lg overflow-hidden w-350 h-200 shadow-md order-1 md:order-2">

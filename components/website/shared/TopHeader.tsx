@@ -24,7 +24,7 @@ export default function TopHeader() {
           onClick={() => setIsVisible(false)}
           className="absolute md:right-2 md:top-4 right-4 top-5 sm:right-2 sm:top-5 text-gray-600 flex items-center hover:text-red-500 transition"
         >
-          <X className="cursor-pointer" size={20} />
+          <X className="cursor-pointer hover:text-white" size={20} />
         </button>
 
         <div className="flex flex-col md:flex-row justify-between items-center py-2 md:py-4 gap-2 md:gap-0 text-sm md:text-base">
@@ -36,9 +36,12 @@ export default function TopHeader() {
             </div>
             <div className="flex items-center text-white gap-2 sm:gap-3">
               <Mail className="text-white w-4 h-4 sm:w-5 sm:h-5" />
-              <p className="text-[10px] sm:text-xs md:text-sm">
+              <a
+                href="mailto:scubastevenar@gmail.com"
+                className="hover:underline"
+              >
                 scubastevenar@gmail.com
-              </p>
+              </a>
             </div>
             <div className="flex items-center text-white gap-2 sm:gap-3">
               <MapPin className="text-white w-4 h-4 sm:w-5 sm:h-5" />
