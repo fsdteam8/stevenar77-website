@@ -22,7 +22,9 @@ export default function OurStory({ title, description, images }: OurStoryProps) 
         {/* Text Section */}
         <div>
           <h1 className="text-[#27303F] text-3xl font-bold mb-4">{title}</h1>
-          <p className="text-[#6B7280] text-base leading-relaxed">{description}</p>
+          <p className="text-[#6B7280] text-base leading-relaxed">
+            {description}
+            </p>
         </div>
 
         {/* Image Section */}
