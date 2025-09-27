@@ -56,7 +56,10 @@ export default function MeetTheTeam({ teamMembers }: MeetTheTeamProps) {
               <h5 className="font-medium text-[#27303F] mb-2 text-xl">
                 {member.possition}
               </h5>
-              <p className="mb-4 text-[#374151] text-base">{member.description}</p>
+              <p
+                className="mb-4 text-[#374151] text-base"
+                dangerouslySetInnerHTML={{ __html: member.description }}
+              />
               <div className="text-[#6B7280] mb-3 bg-[#E6E7E6] p-3 rounded-md italic">
                 {member.quote}
               </div>
