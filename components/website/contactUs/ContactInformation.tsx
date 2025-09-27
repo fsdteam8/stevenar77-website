@@ -24,11 +24,11 @@ export default function ContactInformation() {
               <h1 className="text-2xl md:text-4xl font-bold font-playfair text-primary mb-4">
                 Contact Information
               </h1>
-              <p className="text-[#68706A] text-sm md:text-base">
+              {/* <p className="text-[#68706A] text-sm md:text-base">
                 Find all the ways to reach us, including email, phone, and our office
                 address, so you can get the support and answers you need quickly and
                 easily.
-              </p>
+              </p> */}
             </div>
 
             {/* Static Contact Info */}

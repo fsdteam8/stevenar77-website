@@ -79,9 +79,9 @@ export default function ResetPassword() {
         <h2 className="text-3xl md:text-[40px] font-playfair font-bold text-[#0694A2] mb-2">
           Change Password
         </h2>
-        <p className="text-sm md:text-[16px] text-gray-500 mb-6">
-          Connect families with trusted care. Join ALH Hub today.
-        </p>
+        {/* <p className="text-sm md:text-[16px] text-gray-500 mb-6">
+          Connect with Scuba-life today.
+        </p> */}
 
         {/* Form */}
         <Form {...form}>
