@@ -42,16 +42,26 @@ export default function ScubaLife({
           />
         </div>
         <div>
-          <h1 className="text-[#27303F] text-3xl font-bold mb-3">{mission.title}</h1>
-          <p className="text-[#6B7280] text-base leading-relaxed">{mission.description}</p>
+          <h1 className="text-[#27303F] text-3xl font-bold mb-3">
+            {mission.title}
+          </h1>
+          <p
+            className="text-[#6B7280] text-base leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: mission.description }}
+          />
         </div>
       </div>
 
       {/* Vision Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center p-4 md:p-0 my-10 md:mt-24">
         <div>
-          <h1 className="text-[#27303F] text-3xl font-bold mb-3">{vision.title}</h1>
-          <p className="text-[#6B7280] text-base leading-relaxed">{vision.description}</p>
+          <h1 className="text-[#27303F] text-3xl font-bold mb-3">
+            {vision.title}
+          </h1>
+          <p
+            className="text-[#6B7280] text-base leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: vision.description }}
+          />
         </div>
         <div>
           <Image
@@ -66,28 +76,24 @@ export default function ScubaLife({
 
       {/* Core Values */}
       <div className="mt-10 md:mt-20 p-4 md:p-0">
-        <h1 className="text-[#27303F] text-3xl font-bold mb-3">{coreValues.title}</h1>
-        <p className="text-[#6B7280] text-base leading-relaxed">
-          {coreValues.description.split("\n").map((line, idx) => (
-            <span key={idx}>
-              {line}
-              <br />
-            </span>
-          ))}
-        </p>
+        <h1 className="text-[#27303F] text-3xl font-bold mb-3">
+          {coreValues.title}
+        </h1>
+        <p
+          className="text-[#6B7280] text-base leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: coreValues.description }}
+        />
       </div>
 
       {/* Promise Section */}
       <div className="mt-10 md:mt-16 p-4 md:p-0">
-        <h1 className="text-[#27303F] text-3xl font-bold mb-3">{promise.title}</h1>
-        <p className="text-[#6B7280] text-base leading-relaxed">
-          {promise.description.split("\n").map((line, idx) => (
-            <span key={idx}>
-              {line}
-              <br />
-            </span>
-          ))}
-        </p>
+        <h1 className="text-[#27303F] text-3xl font-bold mb-3">
+          {promise.title}
+        </h1>
+        <p
+          className="text-[#6B7280] text-base leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: promise.description }}
+        />
       </div>
     </div>
   );
