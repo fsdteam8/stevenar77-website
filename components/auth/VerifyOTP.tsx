@@ -117,7 +117,7 @@ export default function VerifyOTP() {
         Enter OTP
       </h1>
       <p className="text-gray-500 mb-6">
-        We’ve sent a 6-digit code to your email:{" "}
+        We&apos;ve sent a 6-digit code to your email- If no mail in the Inbox Check Junk/Spam Mail:{" "}
         <span className="font-semibold text-[#131313]">{email}</span>
       </p>
 
