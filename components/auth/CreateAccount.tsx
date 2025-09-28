@@ -29,7 +29,7 @@ const createAccountSchema = z
     email: z.string().email("Please enter a valid email"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string().min(6, "Confirm password is required"),
-    terms: z.boolean().refine((val) => val, "You must accept terms"),
+    terms: z.boolean().refine((val) => val, "You must be user to Book course, Trips and Buy Products"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -89,9 +89,9 @@ export default function CreateAccount() {
         <h2 className="text-3xl md:text-[40px] font-playfair font-bold text-[#0694A2] mb-2">
           Create Your Account
         </h2>
-        <p className="text-gray-500 text-sm md:text-[16px] mb-6">
+        {/* <p className="text-gray-500 text-sm md:text-[16px] mb-6">
           Connect families with trusted care. Join ALH Hub today.
-        </p>
+        </p> */}
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -191,14 +191,15 @@ export default function CreateAccount() {
                     />
                   </FormControl>
                   <FormLabel className="text-sm text-gray-600">
-                    I agree to The Real Life&apos;s{" "}
+                    {/* I agree to The Real Life&apos;s{" "}
                     <a href="/terms" className="text-[#0694A2] underline">
                       Terms & Conditions
                     </a>{" "}
                     and{" "}
                     <a href="/privacy" className="text-[#0694A2] underline">
                       Privacy Policy
-                    </a>
+                    </a> */}
+                    <p>I agree to Register as an User in the Scuba-life website</p>
                   </FormLabel>
                   <FormMessage />
                 </FormItem>

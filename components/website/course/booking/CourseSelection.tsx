@@ -6,6 +6,8 @@ import { useBooking } from "../booking-context";
 export function CourseSelection() {
   const { state } = useBooking();
 
+  console.log( "age is here",state.course.age)
+
   return (
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
@@ -22,10 +24,10 @@ export function CourseSelection() {
 
         <div className="flex-1">
           <h3 className="font-semibold text-[#343a40]">{state.course.name}</h3>
-          <p className="text-sm text-[#6c757d] mb-2">
+          {/* <p className="text-sm text-[#6c757d] mb-2">
             The most popular scuba course in the world! Get your first scuba
             diving certification.
-          </p>
+          </p> */}
           <div className="flex items-center gap-4 text-sm text-[#6c757d]">
             <span className="bg-[#0694a2] text-white px-2 py-1 rounded text-xs">
               BEST DEAL
