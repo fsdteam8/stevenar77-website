@@ -55,11 +55,11 @@ export function TripContent({ trip }: TripContentProps) {
               />
 
               <div className="flex items-center gap-4 text-sm text-[#6c757d]">
-                <span className="bg-[#0694a2] text-white px-2 py-1 rounded text-xs">
+                {/* <span className="bg-[#0694a2] text-white px-2 py-1 rounded text-xs">
                   BEST DEAL
-                </span>
+                </span> */}
                 <span>📍 {trip.location}</span>
-                <span>📅 {new Date(trip.startDate).toLocaleDateString()}</span>
+                {/* <span>📅 {new Date(trip.startDate).toLocaleDateString()}</span> */}
               </div>
             </div>
             <div className="text-right">

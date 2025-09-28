@@ -170,17 +170,17 @@ const Navbar = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end">
-                    <Link href="/account">
-                      <DropdownMenuItem>
+                    <Link href="/account" className="cursor-pointer">
+                      <DropdownMenuItem className="cursor-pointer">
                         <CircleUserRound /> Profile
                       </DropdownMenuItem>
                     </Link>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => setLogoutModalOpen(true)}
-                      className="text-red-500"
+                      className="text-red-500 cursor-pointer"
                     >
-                      <LogOut /> Log out
+                      <LogOut className="mr-2" /> Log out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -189,6 +189,27 @@ const Navbar = () => {
                   <Link href="/login">Sign in</Link>
                 </Button>
               )}
+              <Dialog open={logoutModalOpen} onOpenChange={setLogoutModalOpen}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Log out</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to log out?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button
+                      variant="outline"
+                      onClick={() => setLogoutModalOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button variant="destructive" onClick={handleLogout}>
+                      Log out
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
 
             {/* Mobile Hamburger & Menu */}
