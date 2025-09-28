@@ -68,7 +68,7 @@ export default function Login() {
         setError(getErrorMessage(result.error));
       } else if (result?.ok) {
         // Only redirect on successful authentication
-        router.push("/account");
+        router.push("/");
       } else {
         // Fallback error
         setError("An unexpected error occurred. Please try again.");
@@ -105,7 +105,7 @@ export default function Login() {
         Welcome
       </h2>
       <p className="text-gray-500 mb-6">
-        Access your account to manage tours, leads, and listings
+        Access your account to Book Course,Trips And Buy Products.
       </p>
 
       {/* Error Alert */}

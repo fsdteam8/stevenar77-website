@@ -32,6 +32,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  if (token && token?.role !== "user") {
+    return NextResponse.redirect(new URL("/403", req.url));
+  }
+
   // If user is not authenticated and tries to access protected paths
   // if (!token && !isPublicPath && !isAuthPath) {
   //   if (pathname.startsWith("/account")) {

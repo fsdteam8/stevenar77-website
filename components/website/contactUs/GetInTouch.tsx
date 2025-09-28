@@ -27,7 +27,7 @@ const formSchema = z.object({
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   message: z.string().min(1, "Message is required"),
   agree: z.boolean().refine((val) => val === true, {
-    message: "You must agree to terms",
+    message: "You must agree send Message",
   }),
 });
 
@@ -187,7 +187,7 @@ export default function GetInTouch() {
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>
-                    <span className="text-sm text-gray-600">
+                    {/* <span className="text-sm text-gray-600">
                       You agree to our friendly{" "}
                       <a
                         href="#"
@@ -203,7 +203,8 @@ export default function GetInTouch() {
                         Privacy Policy
                       </a>
                       .
-                    </span>
+                    </span> */}
+                    <p>I agree to send Message</p>
                     <FormMessage />
                   </FormItem>
                 )}

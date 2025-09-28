@@ -196,8 +196,8 @@ const handleProceedToPayment = async () => {
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
-              <span>⏰</span>
-              {/* <span>{state.selectedTime?.label || "Not selected"}</span> */}
+              {/* <span>⏰</span> */}
+              <span>{state.selectedTime?.label || "Not selected"}</span> 
               <span>{selectedTime}am</span>
             </div>
           </div>
@@ -227,14 +227,14 @@ const handleProceedToPayment = async () => {
             </div>
           )}
 
-          <div className="flex justify-between">
+          {/* <div className="flex justify-between">
             <span>Equipment rental</span>
             <span>Included</span>
           </div>
           <div className="flex justify-between">
             <span>Digital certification</span>
             <span>Included</span>
-          </div>
+          </div> */}
         </div>
 
         {/* Total */}
@@ -243,8 +243,8 @@ const handleProceedToPayment = async () => {
             <span>Total</span>
             <span>${totalPrice.toFixed(2)}</span>
           </div>
-          <p className="text-xs text-[#6c757d] mt-1">100% Safe & Secure</p>
-          <p className="text-xs text-[#6c757d]">Free Cancellation up to 24h</p>
+          {/* <p className="text-xs text-[#6c757d] mt-1">100% Safe & Secure</p>
+          <p className="text-xs text-[#6c757d]">Free Cancellation up to 24h</p> */}
         </div>
 
         {/* Validation Error */}
