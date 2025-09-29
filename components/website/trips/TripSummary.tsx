@@ -118,14 +118,14 @@ export function TripSummary({ trip }: TripSummaryProps) {
             </span>
             <span className="font-medium">${state.course.price}</span>
           </div>
-          <div className="flex justify-between">
+          {/* <div className="flex justify-between">
             <span className="text-[#6c757d]">Equipment rental</span>
             <span className="font-medium">Included</span>
           </div>
           <div className="flex justify-between">
             <span className="text-[#6c757d]">Digital certification</span>
             <span className="font-medium">Included</span>
-          </div>
+          </div> */}
         </div>
 
         {/* Total */}
@@ -135,7 +135,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
             <span>${state.course.price * state.participants}</span>
           </div>
           <p className="text-xs text-[#6c757d] mt-1">100% Safe & Secure</p>
-          <p className="text-xs text-[#6c757d]">Free Cancellation up to 24h</p>
+          {/* <p className="text-xs text-[#6c757d]">Free Cancellation up to 24h</p> */}
         </div>
 
         <Button
@@ -160,7 +160,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
         )}
 
         {/* What's Included */}
-        <div className="mt-6">
+        {/* <div className="mt-6">
           <h3 className="font-medium mb-3 text-[#343a40]">
             What&apos;s Included
           </h3>
@@ -182,7 +182,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
               Digital certification
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </Card>
   );
