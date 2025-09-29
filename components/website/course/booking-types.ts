@@ -57,6 +57,7 @@ export interface BookingState {
   };
   documents: File[];
   signature: string;
+  agreed: boolean;
 }
 
 export type BookingAction =
@@ -71,6 +72,7 @@ export type BookingAction =
   | { type: "SET_LIABILITY_AGREEMENT"; payload: Partial<BookingState["liabilityAgreement"]> }
   | { type: "SET_DOCUMENTS"; payload: File[] }
   | { type: "SET_SIGNATURE"; payload: string }
+  | { type: "SET_AGREED"; payload: boolean }
   | { type: "SET_PRICING"; payload: string }
   | { type: "SET_ADDON"; payload: boolean }
   | { type: "SET_PRICE_INDEX"; payload: number };
