@@ -75,11 +75,11 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     const maxCount = Math.max(...reviewStats.breakdown.map((b) => b.count));
     return (count / maxCount) * 100;
   };
-
+  console.log("hello");
   return (
     <div className="container mx-auto">
-      <div className="sm:max-w-7xl max-w-2xl border rounded-md mx-auto p-6 bg-white">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="sm:max-w-7xl max-w-xl border rounded-md mx-auto p-6 bg-white">
+        <div className="grid grid-cols-1  gap-8">
           {/* Left side - Review Form */}
           <div>
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">
@@ -129,7 +129,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               </div>
 
               {/* Status Messages */}
-              {submitStatus && (
+              {/* {submitStatus && (
                 <div
                   className={`p-4 rounded-md ${
                     submitStatus.type === "success"
@@ -139,7 +139,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                 >
                   {submitStatus.message}
                 </div>
-              )}
+              )} */}
 
               <div
                 onClick={handleSubmit}
@@ -155,7 +155,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
           </div>
 
           {/* Right side - Review Statistics */}
-          <div className="lg:pl-8">
+          {/* <div className="lg:pl-8">
             <div className="flex items-center gap-3 mb-2">
               <div className="flex">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -175,7 +175,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               Based on {reviewStats.totalReviews.toLocaleString()} reviews
             </p>
 
-            {/* Rating Breakdown */}
+          
             <div className="space-y-3">
               {reviewStats.breakdown.map((item) => (
                 <div key={item.stars} className="flex items-center gap-3">
@@ -194,7 +194,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
