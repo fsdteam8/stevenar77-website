@@ -622,13 +622,13 @@ export default function PadiLiabilityForm() {
         <button
           onClick={handlePrint}
           disabled={isGeneratingPDF}
-          className={`font-bold py-3 px-6 rounded-lg transition duration-200 w-full ${
+          className={`font-bold py-3 px-6 rounded-lg cursor-pointer transition duration-200 w-full ${
             isGeneratingPDF
               ? "bg-gray-400 cursor-not-allowed text-gray-700"
-              : "bg-blue-600 hover:bg-blue-700 text-white"
+              : "bg-primary hover:bg-teal-700 text-white"
           }`}
         >
-          {isGeneratingPDF ? "Generating PDF..." : "Export as PDF"}
+          {isGeneratingPDF ? "Generating PDF..." : "Download as PDF"}
         </button>
       </div>
     </div>
