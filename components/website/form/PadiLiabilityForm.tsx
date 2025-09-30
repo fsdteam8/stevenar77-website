@@ -31,7 +31,7 @@ export default function PadiLiabilityForm() {
       if (!formRef.current) throw new Error("Form reference not found");
 
       const html2canvas = await loadHTML2Canvas();
-
+console.log(loadHTML2Canvas())
       const tempStyle = document.createElement("style");
       tempStyle.textContent = `
         .print-area * {
@@ -99,7 +99,7 @@ export default function PadiLiabilityForm() {
           .replace(/[^a-zA-Z0-9\s]/g, "")
           .replace(/\s+/g, "_")
           .trim()}_${new Date().toISOString().split("T")[0]}`;
-
+console.log(fileName)
         printWindow.document.write(`
           <!DOCTYPE html>
           <html>

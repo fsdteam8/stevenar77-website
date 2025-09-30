@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useContact } from "@/services/hooks/contact/useContact";
 
@@ -26,14 +26,12 @@ const formSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   message: z.string().min(1, "Message is required"),
-  agree: z.boolean().refine((val) => val === true, {
-    message: "You must agree send Message",
-  }),
+ 
 });
 
 export default function GetInTouch() {
   const contactMutation = useContact();
-  const [loading] = useState(false);
+  const [loading,setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,20 +41,23 @@ export default function GetInTouch() {
       email: "",
       phone: "",
       message: "",
-      agree: false,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
   const {  ...payload } = values; // exclude "agree" before sending
 
+  setLoading(true); 
+
   contactMutation.mutate(payload, {
     onSuccess: (res) => {
       toast.success(res.message || "Message sent successfully!");
       form.reset();
+      setLoading(false); // stop loading
     },
     onError: (err) => {
       toast.error(err.message || "Something went wrong. Please try again.");
+      setLoading(false); // stop loading
     },
   });
 }
@@ -175,40 +176,7 @@ export default function GetInTouch() {
               />
 
               {/* Agree Checkbox */}
-              <FormField
-                control={form.control}
-                name="agree"
-                render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
-                    <FormControl>
-                      <Checkbox
-                        className="cursor-pointer"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    {/* <span className="text-sm text-gray-600">
-                      You agree to our friendly{" "}
-                      <a
-                        href="#"
-                        className="text-[#0694A2] underline cursor-pointer"
-                      >
-                        Terms & Conditions
-                      </a>{" "}
-                      and{" "}
-                      <a
-                        href="#"
-                        className="text-[#0694A2] underline cursor-pointer"
-                      >
-                        Privacy Policy
-                      </a>
-                      .
-                    </span> */}
-                    <p>I agree to send Message</p>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            
 
               {/* Submit */}
               <Button
