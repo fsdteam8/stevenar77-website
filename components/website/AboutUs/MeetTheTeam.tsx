@@ -40,8 +40,8 @@ export default function MeetTheTeam({ teamMembers }: MeetTheTeamProps) {
             {/* Image */}
             <div className="flex-shrink-0 w-full sm:w-[180px] md:w-[220px]">
               <Image
-                src={member.image.url}
-                alt={member.title}
+                src={member?.image?.url}
+                alt={member?.title}
                 width={400}
                 height={300}
                 className="w-full h-[270px] object-cover rounded-md"

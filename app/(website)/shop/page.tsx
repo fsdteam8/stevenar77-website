@@ -1,6 +1,7 @@
 import StillHaveQuestion from "@/components/website/reusable/stillHaveQuestion";
 // import Hero from "@/components/website/shared/Hero";
 import Products from "@/components/website/shop/products";
+import ProductsCombined from "@/components/website/shop/ProductsCombined";
 import React from "react";
 
 const page = () => {
@@ -14,8 +15,8 @@ const page = () => {
       /> */}
       {/* <Products /> */}
 
-      {/* <ProductsCombined /> */}
-       <Products />
+      <ProductsCombined />
+       {/* <Products /> */}
       <StillHaveQuestion />
     </div>
   );

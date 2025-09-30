@@ -131,7 +131,7 @@ const Footer = () => {
         {/* Divider and Copyright */}
         <div className="mt-5 pt-5 border-t border-primary/20">
           <p className="text-center text-sm pb-0 text-white">
-            © 2024 Scuba Life. All rights reserved.
+            © 2025 Scuba Life. All rights reserved.
           </p>
         </div>
       </div>
