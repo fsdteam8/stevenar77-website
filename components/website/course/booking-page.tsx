@@ -85,7 +85,7 @@ export function BookingPage() {
     age: "All Ages", // replace if you have actual age field
     image: course.image?.url,
     duration: course.duration,
-    classDates: course.createdAt,
+    classDates: course.classDates || [], 
   };
 
   return (

@@ -70,6 +70,7 @@ export function createInitialState(initialCourse?: {
     },
     documents: [],
     signature: "",
+    agreed: false,
   };
 }
 
@@ -109,6 +110,8 @@ export function bookingReducer(
       return { ...state, documents: action.payload };
     case "SET_SIGNATURE":
       return { ...state, signature: action.payload };
+    case "SET_AGREED": // ✅ add this
+      return { ...state, agreed: action.payload };
     case "SET_PRICING":
       return { ...state, pricing: action.payload };
     case "SET_ADDON":
