@@ -38,9 +38,9 @@ export default function TopHeader() {
             <div className="flex items-center text-white gap-2 sm:gap-3">
               <PhoneForwarded className="text-white w-4 h-4 sm:w-5 sm:h-5" />
               <p className="text-[10px] sm:text-xs md:text-sm">
-                {data.data[0].PhoneNumber
-                  ? data.data[0].PhoneNumber
-                  : "+09888349393"}
+                {data?.data[0].PhoneNumber
+                  ? data?.data[0].PhoneNumber
+                  : "714-728-2300"}
               </p>
             </div>
             <div className="flex items-center text-white gap-2 sm:gap-3">
