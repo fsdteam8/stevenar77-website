@@ -58,8 +58,6 @@ export const getUserConversation = async (userId: string) => {
   }
 };
 
-
-
 // Get About API
 export const getAbout = async () => {
   try {
@@ -68,5 +66,17 @@ export const getAbout = async () => {
   } catch (error) {
     console.error("Failed to fetch about:", error);
     throw error;
+  }
+};
+
+export const fetchSocial = async () => {
+  try {
+    const res = await api.get("/social");
+    console.log('res',res)
+    return res.data;
+    console.log('1',res.data)
+  } catch (error) {
+    console.log(error)
+    throw new Error("Failed to fetch social data");
   }
 };

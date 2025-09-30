@@ -57,7 +57,7 @@ const ProductDetails = () => {
     <div className="mt-6 py-4">
       <div className="mx-auto container">
         <div className="grid md:grid-cols-2 gap-10 items-center">
-          {/* Image Section */}
+          {/* Image Section *
           <div className="space-y-4 ">
             <div className="rounded-lg aspect-square overflow-hidden shadow-md">
               <Image
