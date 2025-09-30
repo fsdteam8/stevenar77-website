@@ -5,6 +5,7 @@ import axios from "axios";
 // Types matching actual API response
 // ----------------------
 export interface CourseDetail {
+  classDates: never[];
   _id: string;
   title: string;
   image?: { 

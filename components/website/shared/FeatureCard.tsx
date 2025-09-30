@@ -102,7 +102,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 }) => {
   return (
     <section className="flex flex-col h-full my-5">
-      <div className="my-5 w-full h-full overflow-hidden rounded-2xl shadow-lg bg-white flex flex-col">
+      <div onClick={onSeeMore} className="my-5 w-full h-full overflow-hidden rounded-2xl shadow-lg bg-white flex flex-col">
         {/* Course Image */}
         <div className="relative w-full">
           <Image
