@@ -1,9 +1,17 @@
-"use client"
+"use client";
 
-import { Mail, MapPin, Phone } from "lucide-react"
-import Image from "next/image"
+import { Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
+import { useSocial } from "@/services/hooks/social/social";
 
 export default function ContactInformation() {
+  const { data, isLoading, error } = useSocial();
+
+  if (isLoading) return <p>Loading contact information...</p>;
+  if (error) return <p>Error loading contact information</p>;
+
+  const contact = data?.data[0];
+
   return (
     <div className="py-5 md:py-20">
       <div className="mx-auto container">
@@ -31,26 +39,32 @@ export default function ContactInformation() {
               </p> */}
             </div>
 
-            {/* Static Contact Info */}
+            {/* Dynamic Contact Info */}
             <div className="space-y-4 pt-1 md:pt-6">
+              {/* Email */}
               <div className="flex items-center gap-3">
                 <Mail className="text-primary w-5 h-5" />
+                <a
+                  href={`mailto:${contact?.email || "scubastevenar@gmail.com"}`}
+                  className="text-[#343A40] text-base hover:underline"
+                >
+                  {contact?.email || "scubastevenar@gmail.com"}
+                </a>
+              </div>
+
+              {/* Phone */}
+              <div className="flex items-center gap-3">
+                <Phone className="text-primary w-5 h-5" />
                 <span className="text-[#343A40] text-base">
-                  scubastevenar@gmail.com
+                  {contact?.PhoneNumber || "714-728-2300"}
                 </span>
               </div>
 
-              <div className="flex items-center gap-3">
-                <Phone className="text-primary w-5 h-5" />
-                <span className="text-[#343A40] text-base">714-728-2300</span>
-              </div>
-
+              {/* Location */}
               <div className="flex items-start gap-3">
                 <MapPin className="text-primary w-5 h-5 mt-0.5" />
                 <div className="text-[#343A40] text-base">
-                  <div className="text-base text-[#343A40]">
-                    Los Angeles & Ventura Counties
-                  </div>
+                  {contact?.location || "Los Angeles & Ventura Counties"}
                 </div>
               </div>
             </div>
@@ -58,7 +72,7 @@ export default function ContactInformation() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 
