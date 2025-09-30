@@ -253,29 +253,10 @@ const StandardsForm = () => {
 
   return (
     <div className="min-h-screen bg-background py-4 px-4">
-      {/* Action Buttons */}
-      <div className="max-w-4xl mx-auto mb-6 no-print">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button
-            onClick={async () => {
-              // Wait for submission first, then generate PDF
-              await handleSubmitToBackend();
-              await handleExportPDF();
-            }}
-            disabled={isSubmitting || isGeneratingPDF}
-            className={`font-semibold py-3 px-6  rounded-lg transition duration-200 flex-1 text-center ${
-              isSubmitting || isGeneratingPDF
-                ? "bg-muted cursor-not-allowed text-muted-foreground"
-                : "bg-accent hover:bg-accent/90 text-accent-foreground shadow-md hover:shadow-lg"
-            }`}
-          >
-            {isSubmitting ? "Submitting..." : "📤 Submit"}
-          </Button>
-        </div>
-      </div>
+      
 
       {/* Form Content - Professional PADI Design */}
-      <div className="print-area max-w-4xl mx-auto bg-card shadow-xl rounded-lg overflow-hidden">
+      <div className="print-area  mx-auto bg-card shadow-xl rounded-lg overflow-hidden">
         {/* Header with Logo and Title */}
         <div className="flex flex-col lg:flex-row items-start p-6 lg:p-8 gap-6">
           <div className="flex-shrink-0 mx-auto lg:mx-0">
@@ -486,6 +467,29 @@ const StandardsForm = () => {
           <div className="mt-12 pt-4 border-t border-gray-200 text-xs text-gray-600 text-center">
             Product No. 10060 (Rev. 06/15) Version 2.01 © PADI 2015
           </div>
+        </div>
+      </div>
+
+
+
+      {/* Action Buttons */}
+      <div className=" mx-auto mb-6 no-print">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button
+            onClick={async () => {
+              // Wait for submission first, then generate PDF
+              await handleSubmitToBackend();
+              await handleExportPDF();
+            }}
+            disabled={isSubmitting || isGeneratingPDF}
+            className={`font-semibold py-3 px-6  rounded-lg transition duration-200 flex-1 text-center ${
+              isSubmitting || isGeneratingPDF
+                ? "bg-muted cursor-not-allowed text-muted-foreground"
+                : "bg-accent hover:bg-accent/90 text-accent-foreground shadow-md hover:shadow-lg"
+            }`}
+          >
+            {isSubmitting ? "Submitting..." : "📤 Submit"}
+          </Button>
         </div>
       </div>
     </div>

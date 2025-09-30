@@ -9,6 +9,8 @@ import { ActivityQuestionsStep } from "./steps/activity-questions-step";
 import { LiabilityReleaseStep } from "./steps/liability-release-step";
 import { DocumentUploadStep } from "./steps/document-upload-step";
 import { ElectronicSignatureStep } from "./steps/electronic-signature-step";
+import { AllInformationDoneStep } from "./steps/all-information-done-step";
+
 // import { FaArrowRight } from "react-icons/fa"
 
 const steps = [
@@ -30,7 +32,8 @@ const steps = [
     title: "Medical Certifications & Document",
     component: DocumentUploadStep,
   },
-  { id: 6, title: "All Information Done", component: null },
+  { id: 6, title: "All Information Done", component: AllInformationDoneStep },
+
 ];
 
 // Validation functions for each step
