@@ -119,7 +119,7 @@ const Footer = () => {
                 <Phone size={15} />{" "}
                 {data?.data[0].PhoneNumber
                   ? data?.data[0].PhoneNumber
-                  : "+09888349393"}
+                  : "714-728-2300"}
               </li>
               <li className="flex gap-2 items-center">
                 <MapPin size={15} /> {data?.data[0]?.location}
