@@ -6,6 +6,7 @@ import logo from "../../../public/images/white-logo.png";
 import { FaFacebookSquare, FaInstagramSquare } from "react-icons/fa";
 import { Mail, MapPin, Phone } from "lucide-react"; // ✅ import hook
 import { useCourses } from "@/services/hooks/courses/useCourses";
+import { useSocial } from "@/services/hooks/social/social";
 
 const Footer = () => {
   const quickLinks = [
@@ -19,7 +20,10 @@ const Footer = () => {
 
   // ✅ Fetch courses
   const { data: courses, isLoading, error } = useCourses();
+  const { data } = useSocial();
 
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error loading social data</p>;
   return (
     <footer className="bg-[#010D13] text-white py-4 lg:py-5">
       <div className="container mx-auto px-4">
@@ -46,11 +50,11 @@ const Footer = () => {
                 Counties.
               </p>
               <div className="socails flex mt-4 gap-2">
-                <Link href="https://www.facebook.com/" target="_blank">
+                <Link href={`${data?.data[0]?.facebook}`} target="_blank">
                   <FaFacebookSquare className="text-4xl  text-white duration-700 hover:text-blue-600" />
                 </Link>
                 <div className="relative group">
-                  <Link href="https://www.facebook.com/" target="_blank">
+                  <Link href={`${data?.data[0]?.instagram}`} target="_blank">
                     <FaInstagramSquare className="text-4xl duration-700  text-white" />
                   </Link>
                   <div className="absolute hidden  group-hover:block h-[90%] w-[90%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition text-white duration-700 bg-gradient-to-r from-[#fa7e1e] via-[#d62976] to-[#4f5bd5] rounded-xs mix-blend-overlay" />
@@ -108,14 +112,17 @@ const Footer = () => {
                   href="mailto:scubastevenar@gmail.com"
                   className="hover:underline"
                 >
-                  scubastevenar@gmail.com
+                  {data?.data[0]?.email}
                 </a>
               </li>
               <li className="flex gap-2 items-center">
-                <Phone size={15} /> 714-728-2300
+                <Phone size={15} />{" "}
+                {data.data[0].PhoneNumber
+                  ? data.data[0].PhoneNumber
+                  : "+09888349393"}
               </li>
               <li className="flex gap-2 items-center">
-                <MapPin size={15} /> Los Angeles & Ventura Counties
+                <MapPin size={15} /> {data?.data[0]?.location}
               </li>
             </ul>
           </div>
