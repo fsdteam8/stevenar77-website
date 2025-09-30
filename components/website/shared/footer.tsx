@@ -117,8 +117,8 @@ const Footer = () => {
               </li>
               <li className="flex gap-2 items-center">
                 <Phone size={15} />{" "}
-                {data.data[0].PhoneNumber
-                  ? data.data[0].PhoneNumber
+                {data?.data[0].PhoneNumber
+                  ? data?.data[0].PhoneNumber
                   : "+09888349393"}
               </li>
               <li className="flex gap-2 items-center">
