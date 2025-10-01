@@ -628,7 +628,7 @@ console.log(fileName)
               : "bg-primary hover:bg-teal-700 text-white"
           }`}
         >
-          {isGeneratingPDF ? "Generating PDF..." : "Download as PDF"}
+          {isGeneratingPDF ? "Generating PDF..." : "Submit Form "}
         </button>
       </div>
     </div>
