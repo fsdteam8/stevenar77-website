@@ -29,7 +29,7 @@ export default function ScubaLife({
   promise,
 }: ScubaLifeProps) {
   return (
-    <div className="mx-auto container">
+    <div className="mx-auto !text-black container">
       {/* Mission Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center p-4 md:p-0 mt-10 md:mt-20">
         <div>
@@ -80,7 +80,7 @@ export default function ScubaLife({
           {coreValues.title}
         </h1>
         <p
-          className="text-[#6B7280] text-base leading-relaxed"
+          className="text-black text-base leading-relaxed"
           dangerouslySetInnerHTML={{ __html: coreValues.description }}
         />
       </div>
