@@ -7,11 +7,13 @@ import { ProfilePage } from "./pages/profile-page";
 import { CourseHistoryPage } from "./pages/course-history-page";
 import { TripsHistoryPage } from "./pages/trips-history-page";
 import { ShopHistoryPage } from "./pages/shop-history-page";
-import { Header } from "./header";
+// import { Header } from "./header";
 import { Sidebar } from "./sidebar";
 import { ChangePasswordPage } from "./pages/change-password-page";
 import { signOut } from "next-auth/react";
 import OrderHistoryPage from "./pages/order-history-page";
+import TopHeader from "../website/shared/TopHeader";
+import { Header } from "./header";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -49,6 +51,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#f8f9fa]">
       <Header />
+      {/* <TopHeader /> */}
       <div className="flex">
         <Sidebar activeTab={activeTab} onNavigate={handleNavigation} />
         <main className="flex-1 ml-0 md:ml-[408px] p-4 sm:p-6 pt-16 md:pt-6">

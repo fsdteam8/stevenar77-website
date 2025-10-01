@@ -61,7 +61,7 @@ export default function About() {
   const galleryImages = data?.data[0]?.galleryImages || [];
 
   return (
-    <div>
+    <div className="!text-black">
       <OurStory
         title={section1.title}
         description={section1.description}
