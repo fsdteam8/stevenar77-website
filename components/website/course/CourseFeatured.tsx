@@ -128,12 +128,12 @@ const CourseFeatured: React.FC = () => {
                     <Clock className="h-4 w-4" />
                     {course.duration}
                   </span>
-                  {/* <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-2">
                     <Locate className="h-4 w-4" />
                     <span className="text-[12px] text-[#68706A]">
                       {course.location}
                     </span>
-                  </span> */}
+                  </span>
                 </div>
 
                 {/* Description */}
@@ -144,7 +144,7 @@ const CourseFeatured: React.FC = () => {
                 />
 
                 {/* Features */}
-                {course.features.length > 0 && (
+                {/* {course.features.length > 0 && (
                   <div>
                     <p className="font-medium mb-4 mt-[20px] text-[20px] leading-[120%] text-[#27303F]">
                       Course Includes:
@@ -161,7 +161,7 @@ const CourseFeatured: React.FC = () => {
                       ))}
                     </ul>
                   </div>
-                )}
+                )} */}
 
                 {/* Price + Age */}
                 <div className="flex justify-end items-center">

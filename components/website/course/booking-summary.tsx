@@ -197,7 +197,7 @@ const handleProceedToPayment = async () => {
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               {/* <span>⏰</span> */}
-              <span>{state.selectedTime?.label || "Not selected"}</span> 
+              {/* <span>{state.selectedTime?.label || "Not selected"}</span>  */}
               <span>{selectedTime}am</span>
             </div>
           </div>
