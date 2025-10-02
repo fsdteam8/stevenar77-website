@@ -14,7 +14,7 @@ export function LogoutModal({ isOpen, onClose, onConfirm }: LogoutModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[90vw] max-w-md mx-auto p-4 sm:p-6">
+      <DialogContent className="w-[90vw] !max-w-md mx-auto p-4 sm:p-6">
         <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4">
           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#feecee] rounded-full flex items-center justify-center">
             <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-[#e5102e]" />
