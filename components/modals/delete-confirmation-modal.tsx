@@ -27,7 +27,7 @@ export function DeleteConfirmationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[90vw] max-w-md mx-auto p-0 gap-0 bg-white rounded-2xl border-0 shadow-2xl">
+      <DialogContent className="w-[90vw] !max-w-md mx-auto p-0 gap-0 bg-white rounded-2xl border-0 shadow-2xl">
         <div className="flex flex-col items-center text-center p-6 sm:p-8">
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-50 flex items-center justify-center mb-3 sm:mb-4">
             <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-[#e5102e]" />

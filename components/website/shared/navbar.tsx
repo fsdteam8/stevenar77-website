@@ -190,7 +190,7 @@ const Navbar = () => {
                 </Button>
               )}
               <Dialog open={logoutModalOpen} onOpenChange={setLogoutModalOpen}>
-                <DialogContent>
+                <DialogContent className="!max-w-xl">
                   <DialogHeader>
                     <DialogTitle>Log out</DialogTitle>
                     <DialogDescription>

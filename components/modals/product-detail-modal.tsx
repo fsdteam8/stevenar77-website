@@ -154,7 +154,7 @@ export function ProductDetailModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl p-0 overflow-hidden max-h-[90vh] overflow-y-auto">
+      <DialogContent className="!max-w-2xl p-0 overflow-hidden max-h-[90vh] overflow-y-auto">
         {modalContent}
       </DialogContent>
     </Dialog>

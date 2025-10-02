@@ -3,9 +3,18 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import FeatureCard from "../shared/FeatureCard";
-import { ChevronLeft, ChevronRight, Clock, Locate, Star } from "lucide-react";
+import { Clock, Locate, Star } from "lucide-react";
 import { useCourses } from "@/services/hooks/courses/useCourses";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 // ----------------------
 // Types - Updated to match actual API response
@@ -48,7 +57,7 @@ interface Course {
 // ----------------------
 const CourseFeatured: React.FC = () => {
   const { data: apiCourses, isLoading, isError, error } = useCourses(); // Removed explicit type argument
-  const [current] = React.useState(0);
+  // const [current] = React.useState(0);
   const router = useRouter();
 
   // Map API response to FeatureCard format with better error handling
@@ -79,6 +88,21 @@ const CourseFeatured: React.FC = () => {
     );
   }, [apiCourses]);
 
+  const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const { status } = useSession();
+  const isLoggedIn = status === "authenticated";
+
+  const handleBookNow = (courseId: string) => {
+    const redirectPath = `/courses/book/${courseId}`;
+
+    if (!isLoggedIn) {
+      localStorage.setItem("redirectAfterLogin", redirectPath);
+      setShowLoginModal(true);
+    } else {
+      router.push(redirectPath);
+    }
+  };
+
   if (isLoading) return <p className="text-center py-10">Loading courses...</p>;
 
   if (isError)
@@ -104,7 +128,7 @@ const CourseFeatured: React.FC = () => {
             <FeatureCard
               {...course}
               onSeeMore={() => router.push(`/courses/${course.id}`)}
-              onBookNow={() => router.push(`/courses/book/${course.id}`)}
+              onBookNow={() => handleBookNow(course.id)}
             >
               {/* Content */}
               <div className="p-5 space-y-4">
@@ -199,6 +223,32 @@ const CourseFeatured: React.FC = () => {
           <ChevronRight className="w-5 h-5" />
         </Button>
       </div> */}
+
+      <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+        <DialogContent className="!max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Login Required</DialogTitle>
+            <DialogDescription>
+              You need to be logged in to book this course. Please login to
+              continue.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowLoginModal(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                setShowLoginModal(false);
+                router.push("/login");
+              }}
+            >
+              Login Now
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
