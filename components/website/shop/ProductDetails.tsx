@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 import { useState } from "react";
@@ -57,7 +57,7 @@ const ProductDetails = () => {
     <div className="mt-6 py-4">
       <div className="mx-auto container">
         <div className="grid md:grid-cols-2 gap-10 items-center">
-          {/* Image Section *
+          {/* Image Section * */}
           <div className="space-y-4 ">
             <div className="rounded-lg aspect-square overflow-hidden shadow-md">
               <Image
@@ -109,26 +109,26 @@ const ProductDetails = () => {
 
             <div className="border-t border-gray-200 pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
               <div className="flex items-center gap-6">
-                {/* Quantity Controls */}
+                {/* {/* Quantity Controls */}
                 <div className="flex items-center">
-                  <Button
+                  {/* <Button
                     onClick={() => handleQuantityChange(quantity - 1)}
                     className="p-3 border border-gray-300 rounded-md hover:bg-gray-300 bg-transparent disabled:cursor-not-allowed"
                     disabled={quantity <= 1}
                   >
                     <Minus className="w-4 h-4 text-gray-600" />
-                  </Button>
+                  </Button> */}
 
-                  <span className="px-4 py-3 text-lg font-medium text-gray-900 text-center">
+                  <span className="px-4 py-3 text-xl font-medium text-gray-900 text-center">
                     {quantity}
                   </span>
-
+{/* 
                   <Button
                     onClick={() => handleQuantityChange(quantity + 1)}
                     className="p-3 border border-gray-300 bg-teal-600 text-white hover:bg-teal-700 transition-colors rounded-md"
                   >
                     <Plus className="w-4 h-4" />
-                  </Button>
+                  </Button> */}
                 </div>
 
                 {/* Dynamic Price */}
