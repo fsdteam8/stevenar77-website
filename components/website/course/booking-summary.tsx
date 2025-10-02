@@ -198,7 +198,7 @@ const handleProceedToPayment = async () => {
             <div className="flex items-center gap-2">
               {/* <span>⏰</span> */}
               {/* <span>{state.selectedTime?.label || "Not selected"}</span>  */}
-              <span>{selectedTime}am</span>
+              <span className="hidden">{selectedTime}am</span>
             </div>
           </div>
         </div>
@@ -291,7 +291,8 @@ const handleProceedToPayment = async () => {
           <h3 className="font-medium mb-3 text-[#343a40]">
             What&apos;s Included
           </h3>
-          <ul className="space-y-2">
+          <p>{state.course._id}</p>
+          {/* <ul className="space-y-2">
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>
               Theory sessions
@@ -308,7 +309,8 @@ const handleProceedToPayment = async () => {
               <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>
               Digital certification
             </li>
-          </ul>
+          </ul> */}
+          
         </div>
       </div>
     </Card>

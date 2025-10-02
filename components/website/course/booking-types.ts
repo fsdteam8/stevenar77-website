@@ -10,6 +10,7 @@ export interface BookingState {
     age: string;
     image?: string;
     classDates?: string[];
+    // includes?:string[];
   };
   pricing?: string;
   addOn?: boolean;
