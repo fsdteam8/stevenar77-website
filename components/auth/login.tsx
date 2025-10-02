@@ -68,7 +68,10 @@ export default function Login() {
         setError(getErrorMessage(result.error));
       } else if (result?.ok) {
         // Only redirect on successful authentication
-        router.push("/");
+        const redirectPath = localStorage.getItem("redirectAfterLogin") || "/";
+        localStorage.removeItem("redirectAfterLogin");
+
+        router.push(redirectPath);
       } else {
         // Fallback error
         setError("An unexpected error occurred. Please try again.");

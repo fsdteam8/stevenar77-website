@@ -3,27 +3,52 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Plus, Minus } from "lucide-react";
+// import { Plus, Minus } from "lucide-react";
 import { useCourse } from "@/services/hooks/courses/useCourse";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 const CourseDetails = () => {
   const params = useParams();
   const courseId = params?.id as string;
   const { data: course, isLoading, isError, error } = useCourse(courseId);
 
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
   const [selectedPriceIndex, setSelectedPriceIndex] = useState(0);
   const router = useRouter();
 
-  const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity >= 1) setQuantity(newQuantity);
+  // const handleQuantityChange = (newQuantity: number) => {
+  //   if (newQuantity >= 1) setQuantity(newQuantity);
+  // };
+
+  const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const { status } = useSession();
+
+  const isLoggedIn = status === "authenticated";
+
+  const handleBookNow = (courseId: string) => {
+    const redirectPath = `/courses/book/${courseId}`;
+
+    if (!isLoggedIn) {
+      localStorage.setItem("redirectAfterLogin", redirectPath);
+      setShowLoginModal(true);
+    } else {
+      router.push(redirectPath);
+    }
   };
 
-  const handleBookNow = () => {
-    if (!course) return;
-    router.push(`/courses/book/${course._id}`);
-  };
+  // const handleBookNow = () => {
+  //   if (!course) return;
+  //   router.push(`/courses/book/${course._id}`);
+  // };
 
   // Loading state
   if (isLoading) {
@@ -57,8 +82,8 @@ const CourseDetails = () => {
   // Check if single or multiple prices
   const hasSinglePrice =
     !course.price || !Array.isArray(course.price) || course.price.length <= 1;
-  const hasMultiplePrices =
-    course.price && Array.isArray(course.price) && course.price.length > 1;
+  // const hasMultiplePrices =
+  //   course.price && Array.isArray(course.price) && course.price.length > 1;
 
   // Get price display - handle price array
   const getPriceDisplay = () => {
@@ -97,7 +122,7 @@ const CourseDetails = () => {
       {/* Book Now Button */}
       <div className="w-full mt-6">
         <Button
-          onClick={handleBookNow}
+          onClick={() => handleBookNow(courseId)}
           className="w-full sm:w-auto text-center bg-teal-600 hover:bg-teal-700 text-white font-semibold px-20 py-6 rounded-lg transition-colors text-lg"
         >
           Book Now
@@ -169,7 +194,7 @@ const CourseDetails = () => {
       {/* Book Now Button */}
       <div className="w-full">
         <Button
-          onClick={handleBookNow}
+          onClick={()=>handleBookNow(courseId)}
           className="w-full text-center bg-teal-600 hover:bg-teal-700 text-white font-semibold py-4 rounded-lg transition-colors text-lg"
         >
           Book Now
@@ -238,6 +263,35 @@ const CourseDetails = () => {
             </div>
           </div>
         </div>
+
+        <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+          <DialogContent className="!max-w-xl">
+            <DialogHeader>
+              <DialogTitle>Login Required</DialogTitle>
+              <DialogDescription>
+                You need to be logged in to book this course. Please login to
+                continue.
+              </DialogDescription>
+            </DialogHeader>
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setShowLoginModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowLoginModal(false);
+                  router.push("/login");
+                }}
+              >
+                Login Now
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </section>
     </div>
   );

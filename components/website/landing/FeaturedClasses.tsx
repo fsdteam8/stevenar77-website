@@ -8,6 +8,14 @@ import {
   CarouselApi,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 // import FeatureCard from "../shared/FeatureCard";
 import {
   ChevronLeft,
@@ -36,6 +44,7 @@ import { CourseData } from "@/lib/courseApi";
 // }
 import { useRouter } from "next/navigation";
 import FeatureCard from "../shared/FeatureCard";
+import { useSession } from "next-auth/react";
 
 const FeaturedClasses: React.FC = () => {
   const { data: apiCourses, isLoading, isError, error } = useCourses();
@@ -90,6 +99,21 @@ const FeaturedClasses: React.FC = () => {
   // Navigate to course details
   const onSeeMore = (id: string) => {
     router.push(`/courses/${id}`);
+  };
+
+  const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const { status } = useSession();
+  const isLoggedIn = status === "authenticated";
+
+  const handleBookNow = (courseId: string) => {
+    const redirectPath = `/courses/book/${courseId}`;
+
+    if (!isLoggedIn) {
+      localStorage.setItem("redirectAfterLogin", redirectPath);
+      setShowLoginModal(true);
+    } else {
+      router.push(redirectPath);
+    }
   };
 
   // ✅ Loading & Error state with better error handling
@@ -150,7 +174,7 @@ const FeaturedClasses: React.FC = () => {
               <FeatureCard
                 {...course}
                 onSeeMore={() => router.push(`/courses/${course.id}`)}
-                onBookNow={() => router.push(`/courses/book/${course.id}`)}
+                onBookNow={() => handleBookNow(course.id)}
               >
                 <div className="p-5 space-y-4 ">
                   {/* Title + Rating */}
@@ -217,7 +241,7 @@ const FeaturedClasses: React.FC = () => {
                       {/* "See more" only if features > 3 */}
                       {course.features.length > 3 && (
                         <Button
-                           onClick={() => onSeeMore(course.id)} // pass the course ID
+                          onClick={() => onSeeMore(course.id)} // pass the course ID
                           className="mt-3 text-cyan-600 bg-transparent hover:bg-gray-200 text-sm font-semibold"
                         >
                           See more
@@ -278,6 +302,32 @@ const FeaturedClasses: React.FC = () => {
           </Button>
         </div>
       )}
+
+      <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+        <DialogContent className="!max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Login Required</DialogTitle>
+            <DialogDescription>
+              You need to be logged in to book this course. Please login to
+              continue.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowLoginModal(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                setShowLoginModal(false);
+                router.push("/login");
+              }}
+            >
+              Login Now
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
