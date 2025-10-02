@@ -140,19 +140,19 @@ const FeaturedClasses: React.FC = () => {
         Start your scuba journey with our comprehensive PADI certified courses
       </p>
 
-      <Carousel setApi={setApi} className="w-full container mx-auto">
-        <CarouselContent className="flex items-stretch">
+      <Carousel setApi={setApi} className="container  mx-auto">
+        <CarouselContent className="">
           {courses.map((course) => (
             <CarouselItem
               key={course.id}
-              className="md:basis-1/2 lg:basis-1/3 h-full"
+              className="md:basis-1/2 lg:basis-1/3 flex flex-col items-stretch"
             >
               <FeatureCard
                 {...course}
                 onSeeMore={() => router.push(`/courses/${course.id}`)}
                 onBookNow={() => router.push(`/courses/book/${course.id}`)}
               >
-                <div className="p-5 space-y-4">
+                <div className="p-5 space-y-4 ">
                   {/* Title + Rating */}
                   <div className="flex justify-between items-start gap-2">
                     <h2 className="text-xl md:text-[24px] font-medium text-[#27303F] leading-[120%] flex-1">
