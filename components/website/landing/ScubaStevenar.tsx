@@ -12,12 +12,12 @@ const ScubaStevenar = () => {
           {/* Text Section */}
           <div className="order-2 md:order-1">
             {/* Heading */}
-            <h1 className="text-3xl md:text-4xl text-[#27303F] font-semibold font-montserrat mb-1">
+            <h1 className="text-xl md:text-2xl text-[#27303F] font-semibold font-montserrat mb-1">
               Steve &quot;Scuba SteveNar&quot; Littlefield
             </h1>
 
             {/* Description */}
-            <div className="leading-6">
+            <div className="leading-6 px-2 sm:px-0">
               <p className="text-[#6B7280] leading-relaxed mt-6 font-normal text-[16px] mb-2">
                 <span className="font-semibold  text-[#27303F]">
                   Owner &amp; Lead Instructor
@@ -46,7 +46,7 @@ const ScubaStevenar = () => {
               </p>
             </div>
             {/* Booking Section */}
-            <div className="pt-4">
+            <div className="pt-4 sm:text-start text-center">
               <Link href="/about-us">
                 <Button className="inline-block text-center cursor-pointer  text-[#0694A2] text-base  font-medium px-8 border-2 border-[#0694A2] py-2 rounded-lg bg-transparent hover:bg-[#0694A2] hover:text-white transition">
                   See More

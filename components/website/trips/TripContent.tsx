@@ -94,7 +94,7 @@ export function TripContent({ trip }: TripContentProps) {
             <SelectContent>
               {participantOptions.map((num) => (
                 <SelectItem key={num} value={num.toString()}>
-                  {num} person{num > 1 ? "s" : ""}
+                  {num}
                 </SelectItem>
               ))}
             </SelectContent>

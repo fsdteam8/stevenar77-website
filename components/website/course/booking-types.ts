@@ -71,6 +71,7 @@ export type BookingAction =
   | { type: "SET_ACTIVITY_QUESTIONS"; payload: Partial<BookingState["activityQuestions"]> }
   | { type: "SET_LIABILITY_AGREEMENT"; payload: Partial<BookingState["liabilityAgreement"]> }
   | { type: "SET_DOCUMENTS"; payload: File[] }
+  | { type: "ADD_DOCUMENT"; payload: File } 
   | { type: "SET_SIGNATURE"; payload: string }
   | { type: "SET_AGREED"; payload: boolean }
   | { type: "SET_PRICING"; payload: string }

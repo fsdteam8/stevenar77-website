@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useRef } from "react";
+import { jsPDF } from "jspdf";
 
 const loadHTML2Canvas = async () => {
   const { default: html2canvas } = await import("html2canvas");
@@ -17,6 +18,177 @@ export default function PadiLiabilityForm() {
 
   const formRef = useRef<HTMLDivElement>(null);
 
+  //   const handlePrint = async () => {
+  //     if (!participantName || !signature || !date) {
+  //       alert(
+  //         "Please fill in required fields: Participant Name, Signature, Date",
+  //       );
+  //       return;
+  //     }
+
+  //     setIsGeneratingPDF(true);
+
+  //     try {
+  //       if (!formRef.current) throw new Error("Form reference not found");
+
+  //       const html2canvas = await loadHTML2Canvas();
+  // console.log(loadHTML2Canvas())
+  //       const tempStyle = document.createElement("style");
+  //       tempStyle.textContent = `
+  //         .print-area * {
+  //           color: rgb(0, 0, 0) !important;
+  //           background-color: rgb(255, 255, 255) !important;
+  //           border-color: rgb(0, 0, 0) !important;
+  //           box-shadow: none !important;
+  //         }
+  //         .print-area input {
+  //           color: rgb(0, 0, 0) !important;
+  //           background-color: transparent !important;
+  //           border-color: rgb(0, 0, 0) !important;
+  //         }
+  //         .print-area .border-gray-900 {
+  //           border-color: rgb(17, 24, 39) !important;
+  //         }
+  //         .print-area .text-xl, .print-area .font-bold {
+  //           color: rgb(0, 0, 0) !important;
+  //         }
+  //       `;
+  //       document.head.appendChild(tempStyle);
+
+  //       // Wait for styles to apply
+  //       await new Promise((resolve) => setTimeout(resolve, 500));
+
+  //       const canvas = await html2canvas(formRef.current, {
+  //         scale: 2,
+  //         useCORS: true,
+  //         allowTaint: false,
+  //         backgroundColor: "#ffffff",
+  //         logging: false,
+  //         imageTimeout: 10000,
+  //         removeContainer: true,
+  //         ignoreElements: (element) => {
+  //           return element.classList.contains("no-print");
+  //         },
+  //         onclone: (clonedDoc) => {
+  //           // Force all elements to use safe RGB colors
+  //           const allElements = clonedDoc.querySelectorAll("*");
+  //           allElements.forEach((el: Element) => {
+  //             const htmlEl = el as HTMLElement;
+  //             if (htmlEl.style) {
+  //               htmlEl.style.color = "rgb(0, 0, 0)";
+  //               if (htmlEl.tagName !== "INPUT") {
+  //                 htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
+  //               }
+  //               htmlEl.style.borderColor = "rgb(0, 0, 0)";
+  //               // Remove any potentially problematic CSS properties
+  //               htmlEl.style.removeProperty("filter");
+  //               htmlEl.style.removeProperty("backdrop-filter");
+  //               htmlEl.style.removeProperty("box-shadow");
+  //             }
+  //           });
+  //         },
+  //       });
+
+  //       document.head.removeChild(tempStyle);
+
+  //       const imgData = canvas.toDataURL("image/png", 1.0);
+
+  //       // Create a new window with the image for PDF printing
+  //       const printWindow = window.open("", "_blank");
+  //       if (printWindow) {
+  //         const fileName = `PADI_Liability_Form_${participantName
+  //           .replace(/[^a-zA-Z0-9\s]/g, "")
+  //           .replace(/\s+/g, "_")
+  //           .trim()}_${new Date().toISOString().split("T")[0]}`;
+  // console.log(fileName)
+  //         printWindow.document.write(`
+  //           <!DOCTYPE html>
+  //           <html>
+  //             <head>
+  //               <title>${fileName}</title>
+  //               <style>
+  //                 body {
+  //                   margin: 0;
+  //                   padding: 0;
+  //                   display: flex;
+  //                   justify-content: center;
+  //                   align-items: center;
+  //                   min-height: 100vh;
+  //                   background: white;
+  //                 }
+  //                 img {
+  //                   max-width: 100%;
+  //                   height: auto;
+  //                   display: block;
+  //                 }
+  //                 @media print {
+  //                   body { margin: 0; }
+  //                   img {
+  //                     width: 100%;
+  //                     height: auto;
+  //                     page-break-inside: avoid;
+  //                   }
+  //                 }
+  //               </style>
+  //             </head>
+  //             <body>
+  //               <img src="${imgData}" alt="PADI Liability Form" />
+  //             </body>
+  //           </html>
+  //         `);
+  //         printWindow.document.close();
+
+  //         // Wait for image to load then trigger print dialog
+  //         printWindow.onload = () => {
+  //           setTimeout(() => {
+  //             printWindow.print();
+  //           }, 500);
+  //         };
+  //       } else {
+  //         throw new Error(
+  //           "Unable to open print window. Please check your browser's popup settings.",
+  //         );
+  //       }
+  //     } catch (error: unknown) {
+  //       console.error("Error generating PDF:", error);
+  //       const errorMessage =
+  //         error instanceof Error ? error.message : "Unknown error occurred";
+
+  //       if (errorMessage.includes("lab") || errorMessage.includes("color")) {
+  //         alert(
+  //           `PDF generation failed due to color parsing issue. This is a browser compatibility issue.\n\nPlease try:\n1. Using a different browser (Chrome/Firefox)\n2. Refreshing the page and trying again\n3. Using the browser print function as an alternative`,
+  //         );
+  //       } else {
+  //         const userChoice = confirm(
+  //           `PDF generation failed: ${errorMessage}\n\nUse browser print instead?`,
+  //         );
+  //         if (userChoice) {
+  //           const printStyle = document.createElement("style");
+  //           printStyle.textContent = `
+  //             @media print {
+  //               body * { visibility: hidden; }
+  //               .print-area, .print-area * { visibility: visible; }
+  //               .print-area {
+  //                 position: absolute;
+  //                 left: 0;
+  //                 top: 0;
+  //                 width: 100% !important;
+  //                 margin: 0 !important;
+  //                 padding: 20px !important;
+  //               }
+  //               .no-print { display: none !important; }
+  //             }
+  //           `;
+  //           document.head.appendChild(printStyle);
+  //           window.print();
+  //           setTimeout(() => document.head.removeChild(printStyle), 1000);
+  //         }
+  //       }
+  //     } finally {
+  //       setIsGeneratingPDF(false);
+  //     }
+  //   };
+
   const handlePrint = async () => {
     if (!participantName || !signature || !date) {
       alert(
@@ -30,167 +202,257 @@ export default function PadiLiabilityForm() {
     try {
       if (!formRef.current) throw new Error("Form reference not found");
 
+      console.log("➡️ Starting html2canvas...");
       const html2canvas = await loadHTML2Canvas();
-console.log(loadHTML2Canvas())
-      const tempStyle = document.createElement("style");
-      tempStyle.textContent = `
-        .print-area * {
-          color: rgb(0, 0, 0) !important;
-          background-color: rgb(255, 255, 255) !important;
-          border-color: rgb(0, 0, 0) !important;
-          box-shadow: none !important;
-        }
-        .print-area input {
-          color: rgb(0, 0, 0) !important;
-          background-color: transparent !important;
-          border-color: rgb(0, 0, 0) !important;
-        }
-        .print-area .border-gray-900 {
-          border-color: rgb(17, 24, 39) !important;
-        }
-        .print-area .text-xl, .print-area .font-bold {
-          color: rgb(0, 0, 0) !important;
-        }
-      `;
-      document.head.appendChild(tempStyle);
 
-      // Wait for styles to apply
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // const canvas = await html2canvas(formRef.current, { scale: 2 });
+      // console.log("✅ Canvas created");
 
       const canvas = await html2canvas(formRef.current, {
         scale: 2,
         useCORS: true,
-        allowTaint: false,
+        allowTaint: true,
         backgroundColor: "#ffffff",
-        logging: false,
-        imageTimeout: 10000,
-        removeContainer: true,
-        ignoreElements: (element) => {
-          return element.classList.contains("no-print");
-        },
+        logging: true,
+        ignoreElements: (element) =>
+          !!(
+            element.tagName === "IMG" &&
+            element.getAttribute("src")?.startsWith("http")
+          ),
         onclone: (clonedDoc) => {
-          // Force all elements to use safe RGB colors
-          const allElements = clonedDoc.querySelectorAll("*");
-          allElements.forEach((el: Element) => {
+          const allEls = clonedDoc.querySelectorAll("*");
+          allEls.forEach((el) => {
             const htmlEl = el as HTMLElement;
             if (htmlEl.style) {
-              htmlEl.style.color = "rgb(0, 0, 0)";
-              if (htmlEl.tagName !== "INPUT") {
-                htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-              }
-              htmlEl.style.borderColor = "rgb(0, 0, 0)";
-              // Remove any potentially problematic CSS properties
+              if (htmlEl.style.color.includes("lab"))
+                htmlEl.style.color = "rgb(0,0,0)";
+              if (htmlEl.style.backgroundColor.includes("lab"))
+                htmlEl.style.backgroundColor = "rgb(255,255,255)";
               htmlEl.style.removeProperty("filter");
               htmlEl.style.removeProperty("backdrop-filter");
-              htmlEl.style.removeProperty("box-shadow");
             }
           });
         },
       });
 
-      document.head.removeChild(tempStyle);
+      const imgData = canvas.toDataURL("image/png");
 
-      const imgData = canvas.toDataURL("image/png", 1.0);
+      console.log("➡️ Creating jsPDF...");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
 
-      // Create a new window with the image for PDF printing
-      const printWindow = window.open("", "_blank");
-      if (printWindow) {
-        const fileName = `PADI_Liability_Form_${participantName
-          .replace(/[^a-zA-Z0-9\s]/g, "")
-          .replace(/\s+/g, "_")
-          .trim()}_${new Date().toISOString().split("T")[0]}`;
-console.log(fileName)
-        printWindow.document.write(`
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <title>${fileName}</title>
-              <style>
-                body { 
-                  margin: 0; 
-                  padding: 0; 
-                  display: flex; 
-                  justify-content: center; 
-                  align-items: center; 
-                  min-height: 100vh;
-                  background: white;
-                }
-                img { 
-                  max-width: 100%; 
-                  height: auto; 
-                  display: block;
-                }
-                @media print {
-                  body { margin: 0; }
-                  img { 
-                    width: 100%; 
-                    height: auto; 
-                    page-break-inside: avoid;
-                  }
-                }
-              </style>
-            </head>
-            <body>
-              <img src="${imgData}" alt="PADI Liability Form" />
-            </body>
-          </html>
-        `);
-        printWindow.document.close();
+      pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pdfHeight);
 
-        // Wait for image to load then trigger print dialog
-        printWindow.onload = () => {
-          setTimeout(() => {
-            printWindow.print();
-          }, 500);
-        };
-      } else {
-        throw new Error(
-          "Unable to open print window. Please check your browser's popup settings.",
-        );
+      console.log("✅ PDF generated");
+
+      const pdfBlob = pdf.output("blob");
+      console.log("✅ PDF blob created", pdfBlob);
+
+      const fileName = `PADI_Liability_Form_${participantName
+        .replace(/[^a-zA-Z0-9\s]/g, "")
+        .replace(/\s+/g, "_")
+        .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
+
+      const formData = new FormData();
+      formData.append("file", pdfBlob, fileName);
+
+      console.log("➡️ Uploading to backend:", fileName);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed with status ${response.status}`);
       }
-    } catch (error: unknown) {
-      console.error("Error generating PDF:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error occurred";
 
-      if (errorMessage.includes("lab") || errorMessage.includes("color")) {
-        alert(
-          `PDF generation failed due to color parsing issue. This is a browser compatibility issue.\n\nPlease try:\n1. Using a different browser (Chrome/Firefox)\n2. Refreshing the page and trying again\n3. Using the browser print function as an alternative`,
-        );
-      } else {
-        const userChoice = confirm(
-          `PDF generation failed: ${errorMessage}\n\nUse browser print instead?`,
-        );
-        if (userChoice) {
-          const printStyle = document.createElement("style");
-          printStyle.textContent = `
-            @media print {
-              body * { visibility: hidden; }
-              .print-area, .print-area * { visibility: visible; }
-              .print-area { 
-                position: absolute; 
-                left: 0; 
-                top: 0; 
-                width: 100% !important;
-                margin: 0 !important;
-                padding: 20px !important;
-              }
-              .no-print { display: none !important; }
-            }
-          `;
-          document.head.appendChild(printStyle);
-          window.print();
-          setTimeout(() => document.head.removeChild(printStyle), 1000);
-        }
-      }
+      console.log("✅ Upload successful");
+      alert("PDF submitted successfully!");
+    } catch (error) {
+      console.error("❌ Error generating/uploading PDF:", error);
+      alert("Failed to generate or upload PDF. Check console logs.");
     } finally {
       setIsGeneratingPDF(false);
     }
   };
 
+// "use client";
+
+// import Image from "next/image";
+// import { useState, useRef } from "react";
+// import { jsPDF } from "jspdf"; // ✅ Add this
+// import { useBooking } from "../course/booking-context";
+
+// const loadHTML2Canvas = async () => {
+//   const { default: html2canvas } = await import("html2canvas");
+//   return html2canvas;
+// };
+
+// export default function PadiLiabilityForm() {
+//   const { dispatch } = useBooking(); // ✅ Add this
+
+//   const [participantName, setParticipantName] = useState("");
+//   const [signature, setSignature] = useState("");
+//   const [guardianSignature, setGuardianSignature] = useState("");
+//   const [date, setDate] = useState("");
+//   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
+//   const formRef = useRef<HTMLDivElement>(null);
+
+//   // const handlePrint = async () => {
+//   //   if (!participantName || !signature || !date) {
+//   //     alert("Please fill in required fields: Participant Name, Signature, Date");
+//   //     return;
+//   //   }
+
+//   //   setIsGeneratingPDF(true);
+
+//   //   try {
+//   //     if (!formRef.current) throw new Error("Form reference not found");
+
+//   //     const html2canvas = await loadHTML2Canvas();
+
+//   //     const canvas = await html2canvas(formRef.current, {
+//   //       scale: 2,
+//   //       useCORS: true,
+//   //       allowTaint: true,
+//   //       backgroundColor: "#ffffff",
+//   //       logging: false,
+//   //       onclone: (clonedDoc) => {
+//   //         const allEls = clonedDoc.querySelectorAll("*");
+//   //         allEls.forEach((el) => {
+//   //           const htmlEl = el as HTMLElement;
+//   //           if (htmlEl.style) {
+//   //             if (htmlEl.style.color.includes("lab"))
+//   //               htmlEl.style.color = "rgb(0,0,0)";
+//   //             if (htmlEl.style.backgroundColor.includes("lab"))
+//   //               htmlEl.style.backgroundColor = "rgb(255,255,255)";
+//   //             htmlEl.style.removeProperty("filter");
+//   //             htmlEl.style.removeProperty("backdrop-filter");
+//   //           }
+//   //         });
+//   //       },
+//   //     });
+
+//   //     const imgData = canvas.toDataURL("image/png");
+//   //     const pdf = new jsPDF("p", "mm", "a4");
+//   //     const pageWidth = pdf.internal.pageSize.getWidth();
+//   //     const imgProps = pdf.getImageProperties(imgData);
+//   //     const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
+
+//   //     pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pdfHeight);
+
+//   //     // ✅ Convert to File and add to booking
+//   //     const pdfBlob = pdf.output("blob");
+//   //     const fileName = `PADI_Liability_Form_${participantName
+//   //       .replace(/[^a-zA-Z0-9\s]/g, "")
+//   //       .replace(/\s+/g, "_")
+//   //       .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
+
+//   //     const pdfFile = new File([pdfBlob], fileName, {
+//   //       type: "application/pdf"
+//   //     });
+
+//   //     dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+
+//   //     alert("PDF created and added to your booking successfully!");
+
+//   //   } catch (error) {
+//   //     console.error("Error generating PDF:", error);
+//   //     alert("Failed to generate PDF. Please try again.");
+//   //   } finally {
+//   //     setIsGeneratingPDF(false);
+//   //   }
+//   // };
+
+//   const handlePrint = async () => {
+//     if (!participantName || !signature || !date) {
+//       alert(
+//         "Please fill in required fields: Participant Name, Signature, Date",
+//       );
+//       return;
+//     }
+
+//     setIsGeneratingPDF(true);
+
+//     try {
+//       if (!formRef.current) throw new Error("Form reference not found");
+
+//       console.log("Step 1: Loading html2canvas...");
+//       const html2canvas = await loadHTML2Canvas();
+
+//       console.log("Step 2: Generating canvas...");
+//       const canvas = await html2canvas(formRef.current, {
+//         scale: 2,
+//         useCORS: true,
+//         allowTaint: true,
+//         backgroundColor: "#ffffff",
+//         logging: true, // Enable logging to see what's happening
+//         onclone: (clonedDoc) => {
+//           const allEls = clonedDoc.querySelectorAll("*");
+//           allEls.forEach((el) => {
+//             const htmlEl = el as HTMLElement;
+//             if (htmlEl.style) {
+//               if (htmlEl.style.color.includes("lab"))
+//                 htmlEl.style.color = "rgb(0,0,0)";
+//               if (htmlEl.style.backgroundColor.includes("lab"))
+//                 htmlEl.style.backgroundColor = "rgb(255,255,255)";
+//               htmlEl.style.removeProperty("filter");
+//               htmlEl.style.removeProperty("backdrop-filter");
+//             }
+//           });
+//         },
+//       });
+
+//       console.log("Step 3: Converting to image data...");
+//       const imgData = canvas.toDataURL("image/png");
+
+//       console.log("Step 4: Creating PDF...");
+//       const pdf = new jsPDF("p", "mm", "a4");
+//       const pageWidth = pdf.internal.pageSize.getWidth();
+//       const imgProps = pdf.getImageProperties(imgData);
+//       const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
+
+//       console.log("Step 5: Adding image to PDF...");
+//       pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pdfHeight);
+
+//       console.log("Step 6: Converting to blob...");
+//       const pdfBlob = pdf.output("blob");
+
+//       console.log("Step 7: Creating File object...");
+//       const fileName = `PADI_Liability_Form_${participantName
+//         .replace(/[^a-zA-Z0-9\s]/g, "")
+//         .replace(/\s+/g, "_")
+//         .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
+
+//       const pdfFile = new File([pdfBlob], fileName, {
+//         type: "application/pdf",
+//       });
+
+//       console.log("Step 8: Dispatching to context...", pdfFile);
+//       dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+
+//       console.log("✅ Success!");
+//       alert("PDF created and added to your booking successfully!");
+//     } catch (error) {
+//       console.error("❌ Error at step:", error);
+//       console.error("Error details:", {
+//         message: error instanceof Error ? error.message : "Unknown error",
+//         stack: error instanceof Error ? error.stack : undefined,
+//       });
+//       alert(
+//         `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`,
+//       );
+//     } finally {
+//       setIsGeneratingPDF(false);
+//     }
+//   };
+
   return (
     <div className="min-h-screen bg-gray-100 py-6">
-
       {/* Form Content */}
       <div
         ref={formRef}

@@ -108,6 +108,11 @@ export function bookingReducer(
       };
     case "SET_DOCUMENTS":
       return { ...state, documents: action.payload };
+    case "ADD_DOCUMENT":
+      return {
+        ...state,
+        documents: [...state.documents, action.payload],
+      };
     case "SET_SIGNATURE":
       return { ...state, signature: action.payload };
     case "SET_AGREED": // ✅ add this
