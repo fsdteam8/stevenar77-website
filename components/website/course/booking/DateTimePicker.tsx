@@ -8,7 +8,7 @@ import { useBooking } from "../booking-context";
 export function DateTimePicker() {
   const { state, dispatch } = useBooking();
 
-  console.log(state.course.classDates);
+  console.log("datate", state.course.classDates);
 
   const availableTimes = [
     "12:00 PM",
@@ -73,7 +73,15 @@ export function DateTimePicker() {
               const allowedDates = (state.course?.classDates ?? []).map(
                 (d: string) => new Date(d).toDateString(),
               );
-              return !allowedDates.includes(date.toDateString()); // disable everything not in allowedDates
+
+              const now = new Date();
+              const isPastMonth =
+                date.getFullYear() < now.getFullYear() ||
+                (date.getFullYear() === now.getFullYear() &&
+                  date.getMonth() < now.getMonth());
+
+             
+              return isPastMonth || !allowedDates.includes(date.toDateString());
             }}
             classNames={{
               day_selected:

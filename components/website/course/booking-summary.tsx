@@ -11,8 +11,11 @@ import { useState } from "react";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useCreateBooking } from "@/services/hooks/profile/useCreateBooking";
-
-export function BookingSummary() {
+import { CourseDetail } from "@/lib/course";
+interface coursData{
+  courseData:CourseDetail;
+}
+export function BookingSummary(courseData:coursData) {
   const { state } = useBooking();
   const { data: session, status } = useSession();
   const createBookingMutation = useCreateBooking();
@@ -110,48 +113,47 @@ export function BookingSummary() {
     return true;
   };
 
-//   const handleProceedToPayment = async () => {
-//   if (!validateBooking()) return;
+  //   const handleProceedToPayment = async () => {
+  //   if (!validateBooking()) return;
 
-//   try {
-//     const bookingPayload = {
-//       ...mapBookingStateToPayload(state),
-//       selectedTime: state.selectedTime?.iso, // 👈 send ISO string only
-//     };
+  //   try {
+  //     const bookingPayload = {
+  //       ...mapBookingStateToPayload(state),
+  //       selectedTime: state.selectedTime?.iso, // 👈 send ISO string only
+  //     };
 
-//     console.log("Booking payload:", bookingPayload);
-//     await createBookingMutation.mutateAsync(bookingPayload);
-//   } catch (error) {
-//     console.error("Booking failed:", error);
-//     setValidationError("Failed to create booking. Please try again.");
-//   }
-//   console.warn(state.selectedTime,)
-// };
+  //     console.log("Booking payload:", bookingPayload);
+  //     await createBookingMutation.mutateAsync(bookingPayload);
+  //   } catch (error) {
+  //     console.error("Booking failed:", error);
+  //     setValidationError("Failed to create booking. Please try again.");
+  //   }
+  //   console.warn(state.selectedTime,)
+  // };
 
-const selectedTime = '10:00';
+  const selectedTime = "10:00";
 
-const handleProceedToPayment = async () => {
-  if (!validateBooking()) return;
+  const handleProceedToPayment = async () => {
+    if (!validateBooking()) return;
 
-  try {
-    const bookingPayload = {
-      ...mapBookingStateToPayload(state),
-      selectedTime: "10:00", // Fixed time instead of state.selectedTime?.iso
-    };
+    try {
+      const bookingPayload = {
+        ...mapBookingStateToPayload(state),
+        selectedTime: "10:00", // Fixed time instead of state.selectedTime?.iso
+      };
 
-    console.log("Booking payload:", bookingPayload);
-    await createBookingMutation.mutateAsync(bookingPayload);
-  } catch (error) {
-    console.error("Booking failed:", error);
-    setValidationError("Failed to create booking. Please try again.");
-  }
-};
-
+      console.log("Booking payload:", bookingPayload);
+      await createBookingMutation.mutateAsync(bookingPayload);
+    } catch (error) {
+      console.error("Booking failed:", error);
+      setValidationError("Failed to create booking. Please try again.");
+    }
+  };
 
   const handleSignIn = () => {
     signIn();
   };
-
+console.log(courseData.courseData)
   return (
     <Card className="p-6 sticky top-4">
       <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
@@ -163,7 +165,7 @@ const handleProceedToPayment = async () => {
         <div className="flex items-center gap-3">
           <Image
             // src="/scuba-diving-course-thumbnail.jpg"
-            src= {state.course.image || "/scuba-diving-course-thumbnail.jpg"}
+            src={state.course.image || "/scuba-diving-course-thumbnail.jpg"}
             alt="Course thumbnail"
             width={64}
             height={48}
@@ -292,22 +294,12 @@ const handleProceedToPayment = async () => {
             What&apos;s Included
           </h3>
           <ul className="space-y-2">
-            <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>
-              Theory sessions
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>
-              Pool training
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>4 open
-              water dives
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>
-              Digital certification
-            </li>
+            {courseData?.courseData.courseIncludes?.map((item,idx) => (
+              <li className="flex items-center gap-2" key={idx}>
+                <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>
+                {item}
+              </li>
+            ))}
           </ul>
         </div>
       </div>
