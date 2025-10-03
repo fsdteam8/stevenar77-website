@@ -22,9 +22,9 @@ const StillHaveQuestion = ({
           >
             {heading} 
           </h1>
-          <p className=" text-sm  tracking-wide text-[#F8F9FA] md:text-[16px] w-full md:w-[80%] text-center  leading-[150%]">
+          {/* <p className=" text-sm  tracking-wide text-[#F8F9FA] md:text-[16px] w-full md:w-[80%] text-center  leading-[150%]">
             {subHeading}
-          </p>
+          </p> */}
           {showButton && (
             <div className="mt-8">
               <Link href={buttonlink} >

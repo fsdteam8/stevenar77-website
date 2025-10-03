@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { useSession, signOut } from "next-auth/react";
 import { useMyProfile } from "@/services/hooks/user/useMyProfile";
+import logo from "@/public/images/logo.png";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -39,6 +40,8 @@ const Navbar = () => {
   const menuWrapperRef = useRef<HTMLDivElement>(null);
 
   const isLoggedIn = !!session?.user;
+
+  console.log(logo)
 
   // Determine avatar URL and display name
   const displayAvatar = user?.image?.url || "";
@@ -115,7 +118,8 @@ const Navbar = () => {
         <nav className="flex justify-between items-center py-4">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center">
-            <Image src="/images/logo.png" alt="logo" width={64} height={64} />
+            {/* <Image src="/images/logo.png" alt="logo" width={64} height={64} /> */}
+            <Image src={logo} alt="logo"  width={64} height={64} />
           </Link>
 
           {/* Desktop Navigation */}
