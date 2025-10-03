@@ -23,13 +23,13 @@ export function MedicalHistoryStep() {
   const [additionalInfo, setAdditionalInfo] = useState("")
 
   const handleToggle = (condition: string, checked: boolean) => {
-    dispatch({
-      type: "SET_MEDICAL_HISTORY",
-      payload: {
-        ...state.medicalHistory,
-        [condition]: checked,
-      },
-    })
+    // dispatch({
+    //   type: "SET_MEDICAL_HISTORY",
+    //   payload: {
+    //     ...state.medicalHistory,
+    //     [condition]: checked,
+    //   },
+    // })
   }
 
   return (
@@ -49,7 +49,7 @@ export function MedicalHistoryStep() {
             </Label>
             <Switch
               id={condition}
-              checked={state.medicalHistory[condition] || false}
+              // checked={state.medicalHistory[condition] || false}
               onCheckedChange={(checked) => handleToggle(condition, checked)}
               className="data-[state=checked]:bg-[#0694a2]"
             />

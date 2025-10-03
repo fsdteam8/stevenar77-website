@@ -9,10 +9,10 @@ export function LiabilityReleaseStep() {
   const { state, dispatch } = useBooking()
 
   const handleCheckboxChange = (field: string, checked: boolean) => {
-    dispatch({
-      type: "SET_LIABILITY_AGREEMENT",
-      payload: { [field]: checked },
-    })
+    // dispatch({
+    //   type: "SET_LIABILITY_AGREEMENT",
+    //   payload: { [field]: checked },
+    // })
   }
 
   return (
@@ -74,7 +74,7 @@ export function LiabilityReleaseStep() {
           <div className="flex items-start gap-3">
             <Checkbox
               id="release"
-              checked={state.liabilityAgreement.releaseOfLiability}
+              // checked={state.liabilityAgreement.releaseOfLiability}
               onCheckedChange={(checked) => handleCheckboxChange("releaseOfLiability", checked as boolean)}
               className="mt-1"
             />
@@ -86,7 +86,7 @@ export function LiabilityReleaseStep() {
           <div className="flex items-start gap-3">
             <Checkbox
               id="medical"
-              checked={state.liabilityAgreement.medicalFitness}
+              // checked={state.liabilityAgreement.medicalFitness}
               onCheckedChange={(checked) => handleCheckboxChange("medicalFitness", checked as boolean)}
               className="mt-1 data-[state=checked]:bg-[#0694a2] data-[state=checked]:border-[#0694a2]"
             />
@@ -98,7 +98,7 @@ export function LiabilityReleaseStep() {
           <div className="flex items-start gap-3">
             <Checkbox
               id="equipment"
-              checked={state.liabilityAgreement.equipmentTraining}
+              // checked={state.liabilityAgreement.equipmentTraining}
               onCheckedChange={(checked) => handleCheckboxChange("equipmentTraining", checked as boolean)}
               className="mt-1"
             />

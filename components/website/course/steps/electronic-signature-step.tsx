@@ -76,15 +76,15 @@ export function ElectronicSignatureStep() {
           <Label htmlFor="signature" className="text-base font-medium">
             Name
           </Label>
-          <Input
+          {/* <Input
             id="signature"
             placeholder="Full Name Here"
-            value={state.signature}
+            // value={state.signature}
             onChange={(e) =>
-              dispatch({ type: "SET_SIGNATURE", payload: e.target.value })
+              // dispatch({ type: "SET_SIGNATURE", payload: e.target.value })
             }
             className="mt-2 text-lg"
-          />
+          /> */}
           <p className="text-sm text-[#6c757d] mt-2">
             By typing your name above, you are creating a legally binding
             electronic signature.
@@ -93,14 +93,14 @@ export function ElectronicSignatureStep() {
 
         {/* Agreement Checkbox */}
         <div className="flex items-start gap-3">
-          <Checkbox
+          {/* <Checkbox
             id="agreement"
             checked={state.agreed}
             onCheckedChange={(checked) =>
               dispatch({ type: "SET_AGREED", payload: checked as boolean })
             }
             className="mt-1 data-[state=checked]:bg-[#0694a2] data-[state=checked]:border-[#0694a2]"
-          />
+          /> */}
           <Label htmlFor="agreement" className="text-[#68706a] cursor-pointer">
             I agree that my electronic signature is the legal equivalent of my
             handwritten signature.
