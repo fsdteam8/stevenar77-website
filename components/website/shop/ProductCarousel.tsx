@@ -96,6 +96,7 @@ const ProductCarousel = () => {
       >
         <div className="h-[450px] sm:h-[500px] lg:h-[550px] flex flex-col">
           <ShopProductCard
+
             image={product.previewUrl || "/images/default-product.jpg"}
             title={product.title}
             description={
@@ -109,7 +110,9 @@ const ProductCarousel = () => {
             onSeeMore={() => router.push(`/shop/${product._id}`)}
             onBookNow={() =>
               router.push(`/checkout?productId=${product._id}&qty=1`)
+
             }
+            id={product._id}
           />
         </div>
       </CarouselItem>
