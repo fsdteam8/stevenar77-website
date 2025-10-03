@@ -7,4 +7,5 @@ export type ShopProductCard = {
   price: string | number;
   onSeeMore?: () => void;
   onBookNow?: () => void;
+  id: string;
 };

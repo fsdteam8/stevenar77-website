@@ -1,10 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import { ShopProductCard as ShopProductCardType } from "@/types/shopProductCard";
+import { ProductCreateModal } from "@/components/modals/ProductCreateModal";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const ShopProductCard: React.FC<ShopProductCardType> = ({
   image,
@@ -14,8 +26,26 @@ const ShopProductCard: React.FC<ShopProductCardType> = ({
   reviews,
   price,
   onSeeMore,
-  onBookNow,
+
+  id,
 }) => {
+  const router = useRouter();
+  const { status } = useSession();
+  const isLoggedIn = status === "authenticated";
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [showLoginModal, setShowLoginModal] = React.useState(false);
+
+  const handleBookNow = () => {
+    const redirectPath = `/shop/${id}`;
+    //  Then check login
+    if (!isLoggedIn) {
+      localStorage.setItem("redirectAfterLogin", redirectPath);
+      setShowLoginModal(true);
+      return;
+    }
+    setIsCreateOpen(true);
+  };
+
   return (
     <div className="w-full h-full max-w-sm mx-auto rounded-2xl overflow-hidden shadow-md bg-white flex flex-col">
       {/* Image */}
@@ -51,12 +81,42 @@ const ShopProductCard: React.FC<ShopProductCardType> = ({
           </Button>
           <Button
             className="flex-1 bg-[#0694A2] text-base font-medium text-white hover:bg-cyan-700"
-            onClick={onSeeMore}
+            onClick={handleBookNow}
           >
-            Buy Now 
+            Buy Now
           </Button>
         </div>
       </div>
+      <ProductCreateModal
+        isOpen={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+        productId={id}
+      />
+      <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+        <DialogContent className="!max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Login Required</DialogTitle>
+            <DialogDescription>
+              You need to be logged in to book this course. Please login to
+              continue.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowLoginModal(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                setShowLoginModal(false);
+                router.push("/login");
+              }}
+            >
+              Login Now
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

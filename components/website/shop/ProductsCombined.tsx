@@ -23,6 +23,7 @@ const ProductsCombined = () => {
                 key={product._id}
                 image={product.previewUrl || "/images/default-product.jpg"}
                 title={product.title}
+                id={product._id}
                 description={
                   product.shortDescription
                     ? product.shortDescription.replace(/<[^>]*>?/gm, "").slice(0, 100) + "..."
