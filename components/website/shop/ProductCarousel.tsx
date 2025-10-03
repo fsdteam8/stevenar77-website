@@ -12,6 +12,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import ShopProductCard from "../shared/ShopProductCard";
 import { useAllProducts } from "@/services/hooks/product/useAllProducts";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ProductCarousel = () => {
   const [api, setApi] = React.useState<CarouselApi>();
@@ -53,9 +54,14 @@ const ProductCarousel = () => {
   );
 
   if (isLoading) {
-    return <p className="text-center py-10">Loading featured products...</p>;
+    <div className="flex items-center space-x-4 text-center bg-gray-50 py-10">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div>
+        <Skeleton className="h-4 w-[200px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>;
   }
-
   if (isError) {
     return (
       <p className="text-center text-red-500 py-10">

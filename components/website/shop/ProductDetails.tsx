@@ -9,6 +9,7 @@ import { toast } from "sonner"; // or your toast lib
 import { useProductDetails } from "@/services/hooks/product/useProductDetails";
 import { useCreateOrder } from "@/services/hooks/order/useCreateOrder";
 import { ProductCreateModal } from "@/components/modals/ProductCreateModal";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ProductDetails = () => {
   const params = useParams<{ id: string }>();
@@ -24,12 +25,18 @@ const ProductDetails = () => {
 
   const { mutate: createOrder, isPending } = useCreateOrder();
 
-  if (isLoading) return <p className="text-center py-10">Loading product...</p>;
+  if (isLoading) {
+    <div className="flex items-center space-x-4 text-center bg-gray-50 py-10">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div>
+        <Skeleton className="h-4 w-[200px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>;
+  }
   if (error)
     return (
-      <p className="text-center text-red-500 py-10">
-        Failed to load product.
-      </p>
+      <p className="text-center text-red-500 py-10">Failed to load product.</p>
     );
   if (!data?.data)
     return <p className="text-center py-10">No product found.</p>;
@@ -119,10 +126,10 @@ const ProductDetails = () => {
                     <Minus className="w-4 h-4 text-gray-600" />
                   </Button> */}
 
-                  <span className="px-4 py-3 text-xl font-medium text-gray-900 text-center">
+                  {/* <span className="px-4 py-3 text-xl font-medium text-gray-900 text-center">
                     {quantity}
-                  </span>
-{/* 
+                  </span> */}
+                  {/* 
                   <Button
                     onClick={() => handleQuantityChange(quantity + 1)}
                     className="p-3 border border-gray-300 bg-teal-600 text-white hover:bg-teal-700 transition-colors rounded-md"
@@ -143,7 +150,7 @@ const ProductDetails = () => {
               disabled={isPending}
               className="mt-4 sm:mt-0 min-w-full sm:w-auto flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white font-semibold px-20 py-4 rounded-lg transition-colors text-lg"
             >
-              {isPending ? "Loading..." : "Book Now"}
+              {isPending ? "Loading..." : "Buy Now"}
             </Button>
           </div>
         </div>
