@@ -9,13 +9,13 @@ import {
   DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
-import StandardsForm from "../../form/StandardsForm";
-import PadiLiabilityForm from "../../form/PadiLiabilityForm";
-import DiversActivityForm from "../../form/DiversActivityForm";
 import PadiQuickReview from "../../QuickReview/QuickReview";
 import { toast } from "sonner";
 import { DiverMedicalForm } from "@/components/forms/diver-medical-form";
 import EnrichedAirForm from "../../form/EnrichedTrainning";
+import StandardsForm from "../../form/StandardsForm";
+import PadiLiabilityForm from "../../form/PadiLiabilityForm";
+import DiversActivityForm from "../../form/DiversActivityForm";
 import PadiForm from "../../form/Equipment";
 import ResqueDiverQuickReview from "../../form/ResqueDiverQuickReview";
 import QuickReview from "../../form/QuickReview";

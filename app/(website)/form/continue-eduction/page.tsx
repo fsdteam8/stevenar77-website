@@ -1,11 +1,16 @@
+import { BookingProvider } from '@/components/website/course/booking-context'
 import PadiLiabilityForm from '@/components/website/form/PadiLiabilityForm'
-// import StandardsForm from '@/components/website/form/StandardsForm'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 const page = () => {
   return (
     <div>
+      
+      <BookingProvider>
+      <Suspense>
         <PadiLiabilityForm />
+      </Suspense>
+    </BookingProvider>
         {/* <StandardsForm /> */}
     </div>
   )
