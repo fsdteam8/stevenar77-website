@@ -19,7 +19,7 @@ export default function PadiLiabilityForm() {
 
   const formRef = useRef<HTMLDivElement>(null);
 
-  const {dispatch} = useBooking();
+  const { dispatch } = useBooking();
 
   //   const handlePrint = async () => {
   //     if (!participantName || !signature || !date) {
@@ -192,104 +192,106 @@ export default function PadiLiabilityForm() {
   //     }
   //   };
 
-const handlePrint = async () => {
-  if (!participantName || !signature || !date) {
-    alert("Please fill in required fields: Participant Name, Signature, Date");
-    return;
-  }
+  const handlePrint = async () => {
+    if (!participantName || !signature || !date) {
+      alert(
+        "Please fill in required fields: Participant Name, Signature, Date",
+      );
+      return;
+    }
 
-  setIsGeneratingPDF(true);
+    setIsGeneratingPDF(true);
 
-  try {
-    if (!formRef.current) throw new Error("Form reference not found");
+    try {
+      if (!formRef.current) throw new Error("Form reference not found");
 
-    console.log("➡️ Loading html2canvas...");
-    const html2canvas = await loadHTML2Canvas();
+      console.log("Generating PDF...");
+      const html2canvas = await loadHTML2Canvas();
 
-    console.log("➡️ Generating canvas with color fix...");
-    const canvas = await html2canvas(formRef.current, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: "#ffffff",
-      logging: false, // Turn off logging to reduce noise
-      ignoreElements: (element) => {
-        // Skip images that might cause CORS issues
-        return !!(
-          element.tagName === "IMG" &&
-          element.getAttribute("src")?.startsWith("http")
-        );
-      },
-      onclone: (clonedDoc) => {
-        // Force all elements to safe RGB colors BEFORE html2canvas processes them
-        const allEls = clonedDoc.querySelectorAll("*");
-        allEls.forEach((el) => {
-          const htmlEl = el as HTMLElement;
-          if (htmlEl.style) {
-            // Check and replace any lab() color formats
-            const props = ['color', 'backgroundColor', 'borderColor'];
-            props.forEach(prop => {
-              const value = htmlEl.style.getPropertyValue(prop);
-              if (value && value.includes('lab')) {
-                htmlEl.style.setProperty(prop, 'rgb(0, 0, 0)', 'important');
+      const canvas = await html2canvas(formRef.current, {
+        scale: 1, // Reduced from 2 to keep file size down
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        logging: false,
+        ignoreElements: (element) => {
+          return !!(
+            element.tagName === "IMG" &&
+            element.getAttribute("src")?.startsWith("http")
+          );
+        },
+        onclone: (clonedDoc) => {
+          const allEls = clonedDoc.querySelectorAll("*");
+          allEls.forEach((el) => {
+            const htmlEl = el as HTMLElement;
+            if (htmlEl.style) {
+              const props = ["color", "backgroundColor", "borderColor"];
+              props.forEach((prop) => {
+                const value = htmlEl.style.getPropertyValue(prop);
+                if (value && value.includes("lab")) {
+                  htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
+                }
+              });
+
+              if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
+                htmlEl.style.color = "rgb(0, 0, 0)";
               }
-            });
-            
-            // Set safe defaults
-            if (!htmlEl.style.color || htmlEl.style.color.includes('lab')) {
-              htmlEl.style.color = "rgb(0, 0, 0)";
+              if (
+                htmlEl.tagName !== "INPUT" &&
+                (!htmlEl.style.backgroundColor ||
+                  htmlEl.style.backgroundColor.includes("lab"))
+              ) {
+                htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
+              }
+              if (
+                !htmlEl.style.borderColor ||
+                htmlEl.style.borderColor.includes("lab")
+              ) {
+                htmlEl.style.borderColor = "rgb(0, 0, 0)";
+              }
+
+              htmlEl.style.removeProperty("filter");
+              htmlEl.style.removeProperty("backdrop-filter");
+              htmlEl.style.removeProperty("box-shadow");
             }
-            if (htmlEl.tagName !== "INPUT" && (!htmlEl.style.backgroundColor || htmlEl.style.backgroundColor.includes('lab'))) {
-              htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-            }
-            if (!htmlEl.style.borderColor || htmlEl.style.borderColor.includes('lab')) {
-              htmlEl.style.borderColor = "rgb(0, 0, 0)";
-            }
-            
-            // Remove problematic CSS properties
-            htmlEl.style.removeProperty("filter");
-            htmlEl.style.removeProperty("backdrop-filter");
-            htmlEl.style.removeProperty("box-shadow");
-          }
-        });
-      },
-    });
+          });
+        },
+      });
 
-    console.log("➡️ Converting to image...");
-    const imgData = canvas.toDataURL("image/png");
+      const imgData = canvas.toDataURL("image/jpeg", 0.75); // JPEG at 75% quality
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
 
-    console.log("➡️ Creating PDF...");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
+      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);
 
-    pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pdfHeight);
+      const pdfBlob = pdf.output("blob");
+      const fileSizeMB = pdfBlob.size / 1024 / 1024;
 
-    console.log("➡️ Converting to File...");
-    const pdfBlob = pdf.output("blob");
-    const fileName = `PADI_Liability_Form_${participantName
-      .replace(/[^a-zA-Z0-9\s]/g, "")
-      .replace(/\s+/g, "_")
-      .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
-    
-    const pdfFile = new File([pdfBlob], fileName, { 
-      type: "application/pdf" 
-    });
+      console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
 
-    console.log("➡️ Adding to booking documents...");
-    dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      const fileName = `PADI_Liability_Form_${participantName
+        .replace(/[^a-zA-Z0-9\s]/g, "")
+        .replace(/\s+/g, "_")
+        .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
 
-    console.log("✅ PDF created successfully!");
-    alert("PDF created and added to your booking successfully!");
-    
-  } catch (error) {
-    console.error("❌ Error generating PDF:", error);
-    alert(`Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`);
-  } finally {
-    setIsGeneratingPDF(false);
-  }
-};
+      const pdfFile = new File([pdfBlob], fileName, {
+        type: "application/pdf",
+      });
+
+      dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+
+      alert("PDF created and added to your booking successfully!");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert(
+        `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 py-6">

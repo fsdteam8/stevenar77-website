@@ -24,6 +24,8 @@ export interface BookingState {
   selectedPricing?: string;
   selectedPriceIndex?: number;
   personalInfo: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [x: string]: any;
     name: string;
     email: string;
     phone: string;

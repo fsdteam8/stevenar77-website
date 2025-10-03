@@ -15,24 +15,24 @@ import { AllInformationDoneStep } from "./steps/all-information-done-step";
 
 const steps = [
   { id: 0, title: "Personal Information", component: PersonalInformationStep },
-  { id: 1, title: "Medical History Checklist", component: MedicalHistoryStep },
+  // { id: 1, title: "Medical History Checklist", component: MedicalHistoryStep },
+  // {
+  //   id: 2,
+  //   title: "Activity Specific Questions",
+  //   component: ActivityQuestionsStep,
+  // },
+  // {
+  //   id: 3,
+  //   title: "Liability Release Agreement",
+  //   component: LiabilityReleaseStep,
+  // },
+  // { id: 4, title: "Electronic Signature", component: ElectronicSignatureStep },
   {
-    id: 2,
-    title: "Activity Specific Questions",
-    component: ActivityQuestionsStep,
-  },
-  {
-    id: 3,
-    title: "Liability Release Agreement",
-    component: LiabilityReleaseStep,
-  },
-  { id: 4, title: "Electronic Signature", component: ElectronicSignatureStep },
-  {
-    id: 5,
+    id: 1,
     title: "Medical Certifications & Document",
     component: DocumentUploadStep,
   },
-  { id: 6, title: "All Information Done", component: AllInformationDoneStep },
+  { id: 2, title: "All Information Done", component: AllInformationDoneStep },
 
 ];
 
@@ -54,43 +54,43 @@ const validateStep = (stepIndex: number, state: BookingState) => {
         // Note: gender, shoesize, height, weight need to be added to types and connected to state
       );
 
-    case 1: // Medical History Step
-      // This step is considered valid if user has interacted with it
-      // Since all conditions can be false (user has no medical conditions)
-      // We just need to ensure the medicalHistory object exists
-      return state.medicalHistory !== undefined;
+    // case 1: // Medical History Step
+    //   // This step is considered valid if user has interacted with it
+    //   // Since all conditions can be false (user has no medical conditions)
+    //   // We just need to ensure the medicalHistory object exists
+    //   return state.medicalHistory !== undefined;
 
-    case 2: // Activity Questions Step
-      const { activityQuestions } = state;
-      return !!(
-        activityQuestions.swimmingLevel?.trim() &&
-        activityQuestions.divingExperience?.trim() &&
-        activityQuestions.lastPhysicalExam?.trim() &&
-        activityQuestions.fitnessLevel?.trim() &&
-        activityQuestions.physicalApproval === true &&
-        activityQuestions.canSwim200m === true &&
-        typeof activityQuestions.claustrophobia === "boolean" &&
-        typeof activityQuestions.panicAttacks === "boolean"
-      );
+    // case 2: // Activity Questions Step
+    //   const { activityQuestions } = state;
+    //   return !!(
+    //     activityQuestions.swimmingLevel?.trim() &&
+    //     activityQuestions.divingExperience?.trim() &&
+    //     activityQuestions.lastPhysicalExam?.trim() &&
+    //     activityQuestions.fitnessLevel?.trim() &&
+    //     activityQuestions.physicalApproval === true &&
+    //     activityQuestions.canSwim200m === true &&
+    //     typeof activityQuestions.claustrophobia === "boolean" &&
+    //     typeof activityQuestions.panicAttacks === "boolean"
+    //   );
 
-    case 3: // Liability Release Step
-      const { liabilityAgreement } = state;
-      return !!(
-        liabilityAgreement.releaseOfLiability === true &&
-        liabilityAgreement.medicalFitness === true &&
-        liabilityAgreement.equipmentTraining === true
-      );
+    // case 3: // Liability Release Step
+    //   const { liabilityAgreement } = state;
+    //   return !!(
+    //     liabilityAgreement.releaseOfLiability === true &&
+    //     liabilityAgreement.medicalFitness === true &&
+    //     liabilityAgreement.equipmentTraining === true
+    //   );
 
-    case 4: // Electronic Signature Step
-      return !!(state.signature?.trim() && state.agreed === true);
-    case 5: // Document Upload Step
+    // case 4: // Electronic Signature Step
+    //   return !!(state.signature?.trim() && state.agreed === true);
+    case 1: // Document Upload Step
       // This step might be optional depending on requirements
       // If documents are required, uncomment the next line:
       // return state.documents.length > 0;
 
       // If documents are optional:
       return true;
-    case 6: //All information done
+    case 2: //All information done
       return true;
 
     default:

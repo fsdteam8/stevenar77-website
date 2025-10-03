@@ -54,27 +54,27 @@ export function BookingSummary() {
     }
 
     // Check if all liability agreement checkboxes are checked
-    const { releaseOfLiability, medicalFitness, equipmentTraining } =
-      state.liabilityAgreement;
-    if (!releaseOfLiability || !medicalFitness || !equipmentTraining) {
-      setValidationError(
-        "Please accept all liability agreement terms before proceeding.",
-      );
-      return false;
-    }
+    // const { releaseOfLiability, medicalFitness, equipmentTraining } =
+    //   state.liabilityAgreement;
+    // if (!releaseOfLiability || !medicalFitness || !equipmentTraining) {
+    //   setValidationError(
+    //     "Please accept all liability agreement terms before proceeding.",
+    //   );
+    //   return false;
+    // }
 
     // Check if electronic signature is provided
-    if (!state.signature.trim()) {
-      setValidationError(
-        "Please provide your electronic signature before proceeding.",
-      );
-      return false;
-    }
+    // if (!state.signature.trim()) {
+    //   setValidationError(
+    //     "Please provide your electronic signature before proceeding.",
+    //   );
+    //   return false;
+    // }
 
     // Check required personal information
     if (!state.personalInfo.name.trim() || !state.personalInfo.email.trim()) {
       setValidationError(
-        "Please fill in all required personal information (Name and Email).",
+        "Please Fill-Up The Full Form",
       );
       return false;
     }
@@ -86,26 +86,26 @@ export function BookingSummary() {
     }
 
     // Check if required activity questions are answered
-    if (!state.activityQuestions.swimmingLevel) {
-      setValidationError(
-        "Please answer all activity questions (Swimming level is required).",
-      );
-      return false;
-    }
+    // if (!state.activityQuestions.swimmingLevel) {
+    //   setValidationError(
+    //     "Please answer all activity questions (Swimming level is required).",
+    //   );
+    //   return false;
+    // }
 
-    if (!state.activityQuestions.divingExperience) {
-      setValidationError(
-        "Please answer all activity questions (Diving experience is required).",
-      );
-      return false;
-    }
+    // if (!state.activityQuestions.divingExperience) {
+    //   setValidationError(
+    //     "Please answer all activity questions (Diving experience is required).",
+    //   );
+    //   return false;
+    // }
 
-    if (!state.activityQuestions.fitnessLevel) {
-      setValidationError(
-        "Please answer all activity questions (Fitness level is required).",
-      );
-      return false;
-    }
+    // if (!state.activityQuestions.fitnessLevel) {
+    //   setValidationError(
+    //     "Please answer all activity questions (Fitness level is required).",
+    //   );
+    //   return false;
+    // }
 
     return true;
   };
