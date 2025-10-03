@@ -9,17 +9,17 @@ export function ActivityQuestionsStep() {
   const { state, dispatch } = useBooking()
 
   const handleChange = (field: string, value: string | boolean) => {
-    dispatch({
-      type: "SET_ACTIVITY_QUESTIONS",
-      payload: { [field]: value },
-    })
+    // dispatch({
+    //   type: "SET_ACTIVITY_QUESTIONS",
+    //   payload: { [field]: value },
+    // })
   }
 
   const handleCheckboxChange = (field: string, checked: boolean) => {
-    dispatch({
-      type: "SET_ACTIVITY_QUESTIONS",
-      payload: { [field]: checked },
-    })
+    // dispatch({
+    //   type: "SET_ACTIVITY_QUESTIONS",
+    //   payload: { [field]: checked },
+    // })
   }
 
   return (
@@ -37,7 +37,7 @@ export function ActivityQuestionsStep() {
                     type="radio"
                     name="swimming"
                     value={level}
-                    checked={state.activityQuestions.swimmingLevel === level}
+                    // checked={state.activityQuestions.swimmingLevel === level}
                     onChange={(e) => handleChange("swimmingLevel", e.target.value)}
                     className="w-4 h-4 text-[#0694a2]"
                   />
@@ -56,7 +56,7 @@ export function ActivityQuestionsStep() {
                     type="radio"
                     name="diving"
                     value={level}
-                    checked={state.activityQuestions.divingExperience === level}
+                    // checked={state.activityQuestions.divingExperience === level}
                     onChange={(e) => handleChange("divingExperience", e.target.value)}
                     className="w-4 h-4 text-[#0694a2]"
                   />
@@ -72,7 +72,7 @@ export function ActivityQuestionsStep() {
           <Input
             id="physical-exam"
             placeholder="mm/dd/yyyy"
-            value={state.activityQuestions.lastPhysicalExam}
+            // value={state.activityQuestions.lastPhysicalExam}
             onChange={(e) => handleChange("lastPhysicalExam", e.target.value)}
             className="mt-2"
           />
@@ -87,7 +87,7 @@ export function ActivityQuestionsStep() {
                   type="radio"
                   name="fitness"
                   value={level}
-                  checked={state.activityQuestions.fitnessLevel === level}
+                  // checked={state.activityQuestions.fitnessLevel === level}
                   onChange={(e) => handleChange("fitnessLevel", e.target.value)}
                   className="w-4 h-4 text-[#0694a2]"
                 />
@@ -103,7 +103,7 @@ export function ActivityQuestionsStep() {
               I have physical approval for scuba diving activities
             </Label>
             <Switch
-              checked={state.activityQuestions.physicalApproval}
+              // checked={state.activityQuestions.physicalApproval}
               onCheckedChange={(checked) => handleCheckboxChange("physicalApproval", checked)}
               className="data-[state=checked]:bg-[#0694a2]"
             />
@@ -114,7 +114,7 @@ export function ActivityQuestionsStep() {
               I am comfortable in water and can swim at least 200 meters
             </Label>
             <Switch
-              checked={state.activityQuestions.canSwim200m}
+              // checked={state.activityQuestions.canSwim200m}
               onCheckedChange={(checked) => handleCheckboxChange("canSwim200m", checked)}
               className="data-[state=checked]:bg-[#0694a2]"
             />
@@ -123,7 +123,7 @@ export function ActivityQuestionsStep() {
           <div className="flex items-center justify-between p-4 border rounded-lg">
             <Label className="text-[#68706a] cursor-pointer flex-1">I suffer from claustrophobia</Label>
             <Switch
-              checked={state.activityQuestions.claustrophobia}
+              // checked={state.activityQuestions.claustrophobia}
               onCheckedChange={(checked) => handleCheckboxChange("claustrophobia", checked)}
               className="data-[state=checked]:bg-[#0694a2]"
             />
@@ -134,7 +134,7 @@ export function ActivityQuestionsStep() {
               I have a history of panic attacks or anxiety disorders
             </Label>
             <Switch
-              checked={state.activityQuestions.panicAttacks}
+              // checked={state.activityQuestions.panicAttacks}
               onCheckedChange={(checked) => handleCheckboxChange("panicAttacks", checked)}
               className="data-[state=checked]:bg-[#0694a2]"
             />
