@@ -65,7 +65,7 @@ export function BookingPage() {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               <BookingContent courseData={course}/>
-              <MultiStepForm />
+              <MultiStepForm  />
             </div>
             <div className="lg:col-span-1">
               <BookingSummary courseData={course}  />

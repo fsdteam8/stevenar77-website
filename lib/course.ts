@@ -4,6 +4,11 @@ import axios from "axios";
 // ----------------------
 // Types matching actual API response
 // ----------------------
+interface addonce {
+  title: string;
+  price: number;
+  _id:string | undefined;
+}
 export interface CourseDetail {
   classDates: never[];
   _id: string;
@@ -23,6 +28,7 @@ export interface CourseDetail {
   updatedAt: string;
   maxAge?: number;
   minAge?: number;
+  addOnce: addonce[];
 }
 
 export interface CourseResponse {

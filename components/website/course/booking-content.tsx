@@ -12,7 +12,7 @@ export function BookingContent(courseData: coursData) {
   return (
     <div className="space-y-6">
       <CourseSelection courseData={courseData} />
-      <PricingSelection />
+      <PricingSelection courseData={courseData} />
       {/* <ParticipantsSelect /> */}
       <DateTimePicker />
     </div>

@@ -1,5 +1,4 @@
-// context/booking/booking-reducer.ts
-import { BookingState, BookingAction } from "./booking-types";
+import type { BookingState, BookingAction } from "./booking-types";
 
 export function createInitialState(initialCourse?: {
   id: string;
@@ -25,11 +24,11 @@ export function createInitialState(initialCourse?: {
       price: initialCourse?.price ?? 450,
       duration: "3-4 days",
       age: initialCourse?.age || "10+",
-      image: initialCourse?.image, // keep image if passed
+      image: initialCourse?.image,
       classDates: initialCourse?.classDates,
     },
     pricing: undefined,
-    addOn: false,
+    addOns: [],
     participants: 1,
     selectedDate: null,
     selectedTime: { label: "", iso: null },
@@ -46,7 +45,7 @@ export function createInitialState(initialCourse?: {
       state: "",
       postalCode: "",
       emergencyContact: "",
-      courseName: initialCourse?.name || "", // pre-fill courseName if available
+      courseName: initialCourse?.name || "",
       shoeSize: 10,
       hight: 5,
       weight: 20,
@@ -115,12 +114,29 @@ export function bookingReducer(
       };
     case "SET_SIGNATURE":
       return { ...state, signature: action.payload };
-    case "SET_AGREED": // ✅ add this
+    case "SET_AGREED":
       return { ...state, agreed: action.payload };
     case "SET_PRICING":
       return { ...state, pricing: action.payload };
-    case "SET_ADDON":
-      return { ...state, addOn: action.payload };
+    case "TOGGLE_ADDON":
+      const existingIndex = state.addOns.findIndex(
+        (addon) => addon.id === action.payload.id,
+      );
+      if (existingIndex >= 0) {
+        // Remove addon if already selected
+        return {
+          ...state,
+          addOns: state.addOns.filter(
+            (addon) => addon.id !== action.payload.id,
+          ),
+        };
+      } else {
+        // Add addon if not selected
+        return {
+          ...state,
+          addOns: [...state.addOns, action.payload],
+        };
+      }
     case "SET_PRICE_INDEX":
       return { ...state, selectedPriceIndex: action.payload };
     default:
