@@ -24,7 +24,7 @@ export function PricingSelection({ courseData }: CourseProps) {
     <Card className="p-6">
       <CardHeader className="pb-4">
         <h2 className="text-2xl font-semibold text-[#343a40]">
-          Choose Your Pricing + Add-On
+          Choose Your Add-On
         </h2>
       </CardHeader>
 

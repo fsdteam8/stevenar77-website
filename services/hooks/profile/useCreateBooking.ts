@@ -12,19 +12,31 @@ export const useCreateBooking = () => {
       // Add text fields
       formData.append("classId", payload.classId);
       formData.append("participant", payload.participant.toString());
-      formData.append("canSwim", payload.canSwim);
-      formData.append("divingExperience", payload.divingExperience);
-      formData.append(
-        "lastPhysicalExamination",
-        payload.lastPhysicalExamination,
-      );
-      formData.append("fitnessLevel", payload.fitnessLevel);
+      // formData.append("canSwim", payload.canSwim);
+      // formData.append("divingExperience", payload.divingExperience);
+      // formData.append(
+      //   "lastPhysicalExamination",
+      //   payload.lastPhysicalExamination,
+      // );
+      // formData.append("fitnessLevel", payload.fitnessLevel);
       formData.append("price", payload.price.toString());
       // formData.append('classDate', Array(payload.classDate).toString());
       // Add arrays
       payload.classDate.forEach((date) => {
         formData.append("classDate[]", date);
       });
+
+
+
+      // ===== Personal Info (new) =====
+      formData.append("Username", payload.Username); // ⚡ capitalized as backend requires
+      formData.append("email", payload.email);
+      if (payload.phoneNumber) formData.append("phoneNumber", payload.phoneNumber);
+      if (payload.emergencyName) formData.append("emergencyName", payload.emergencyName);
+      if (payload.emergencyPhoneNumber) {
+        formData.append("emergencyPhoneNumber", payload.emergencyPhoneNumber);
+      }
+
 
       formData.append("gender", payload.gender);
       formData.append("shoeSize", payload.shoeSize.toString());
@@ -38,13 +50,13 @@ export const useCreateBooking = () => {
       // });
       // console.log("this is thed classdate",payload.classDate);
 
-      payload.medicalHistory.forEach((condition) => {
-        formData.append("medicalHistory", condition);
-      });
+      // payload.medicalHistory.forEach((condition) => {
+      //   formData.append("medicalHistory", condition);
+      // });
 
-      payload.activityLevelSpecificQuestions.forEach((question) => {
-        formData.append("activityLevelSpecificQuestions", question);
-      });
+      // payload.activityLevelSpecificQuestions.forEach((question) => {
+      //   formData.append("activityLevelSpecificQuestions", question);
+      // });
 
       // Add files
       payload.medicalDocuments.forEach((file) => {
