@@ -79,10 +79,10 @@ export function TripSummary({ trip }: TripSummaryProps) {
 
           <div>
             <h3 className="font-medium text-[#343a40]">{state.course.name}</h3>
-            <p className="text-sm text-[#6c757d]">
+            {/* <p className="text-sm text-[#6c757d]">
               Duration: {state.course.duration}
-            </p>
-            <p className="text-sm text-[#6c757d]">Age: {state.course.age}</p>
+            </p> */}
+            {/* <p className="text-sm text-[#6c757d]">Age: {state.course.age}</p> */}
           </div>
         </div>
 
@@ -134,7 +134,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
             <span>Total</span>
             <span>${state.course.price * state.participants}</span>
           </div>
-          <p className="text-xs text-[#6c757d] mt-1">100% Safe & Secure</p>
+          {/* <p className="text-xs text-[#6c757d] mt-1">100% Safe & Secure</p> */}
           {/* <p className="text-xs text-[#6c757d]">Free Cancellation up to 24h</p> */}
         </div>
 
