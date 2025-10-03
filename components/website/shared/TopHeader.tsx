@@ -12,12 +12,21 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useSocial } from "@/services/hooks/social/social";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function TopHeader() {
   const { data, isLoading, error } = useSocial();
   const [isVisible, setIsVisible] = useState(true);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <div className="container mx-auto space-y-6">
+        <div className=" flex gap-2">
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-8 w-20 mb-6" />
+        </div>
+      </div>
+    );
   if (error) return <p>Error loading social data</p>;
 
   if (!isVisible) return null;
