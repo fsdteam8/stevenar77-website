@@ -22,6 +22,7 @@ import {
   ChevronRight,
   Clock,
   Star,
+  Target,
   UserRound,
 } from "lucide-react";
 import { useCourses } from "@/services/hooks/courses/useCourses";
@@ -210,6 +211,10 @@ const FeaturedClasses: React.FC = () => {
                     <span className="flex items-center text-[16px] text-[#68706A] gap-2">
                       <Clock className="h-4 w-4" />
                       {course.duration}
+                    </span>
+                    <span className="flex items-center text-[16px] text-[#68706A] gap-2">
+                      <Target className="h-4 w-4" />
+                      {course.location}
                     </span>
                     <span className="flex items-center font-normal gap-2">
                       <UserRound className="h-4 w-4" />
