@@ -13,9 +13,9 @@ export function AllInformationDoneStep() {
       <p className="text-gray-600 mb-6">
         Thank you for providing all the necessary details.To confirm Your booking  now .
       </p>
-      <div className="bg-primary rounded-full text-white p-4">
+      {/* <div className="bg-primary rounded-full text-white p-4">
         <p className="text-xl flex gap-4">Go For <span> Proceed to Payment </span></p> 
-      </div>
+      </div> */}
 
       <div className="flex gap-4">
         

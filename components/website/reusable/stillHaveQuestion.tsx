@@ -4,7 +4,7 @@ import Link from "next/link";
 const StillHaveQuestion = ({
   imageSrc = "/images/underwaterimage.jpg", // Default background image
   heading = "Still Have Questions", // Default heading
-  subHeading = "Our team is here to provide personalized guidance and support reach out anytime.", // Default subheading
+  // subHeading = "Our team is here to provide personalized guidance and support reach out anytime.", // Default subheading
   buttonText = "Contact Us", // Default button text
   showButton = true, // Flag to conditionally render the button
   buttonlink = "/contact-us"

@@ -2,11 +2,17 @@
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import { useBooking } from "../booking-context";
-
-export function CourseSelection() {
+import { CourseDetail } from "@/lib/course";
+interface coursData{
+  courseData:CourseDetail;
+}
+interface courseprops{
+  courseData:coursData;
+}
+export function CourseSelection(courseData:courseprops) {
   const { state } = useBooking();
 
-  console.log( "age is here",state.course.age)
+  console.log("age is here", courseData.courseData.courseData.duration);
 
   return (
     <Card className="p-6">
@@ -32,8 +38,11 @@ export function CourseSelection() {
             <span className="bg-[#0694a2] text-white px-2 py-1 rounded text-xs">
               BEST DEAL
             </span>
-            <span>⏱️ {state.course.duration}</span>
-            <span>👥 Age {state.course.age}</span>
+            <span>⏱️ {courseData?.courseData?.courseData?.duration} Days</span>
+            <span className="flex items-center gap-1">
+              👥 Age:{courseData?.courseData?.courseData?.minAge}{" "}
+              -{courseData?.courseData?.courseData?.maxAge}
+            </span>
           </div>
         </div>
         <div className="text-right">
