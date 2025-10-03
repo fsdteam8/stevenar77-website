@@ -21,7 +21,7 @@ export function TripContent({ trip }: TripContentProps) {
 
   // Generate participant options based on trip's maximum capacity
   const participantOptions = Array.from(
-    { length: Math.min(trip.maximumCapacity, 10) },
+    { length: Math.min(trip.maximumCapacity, trip.maximumCapacity) },
     (_, i) => i + 1,
   );
 
@@ -58,7 +58,7 @@ export function TripContent({ trip }: TripContentProps) {
                 {/* <span className="bg-[#0694a2] text-white px-2 py-1 rounded text-xs">
                   BEST DEAL
                 </span> */}
-                <span>📍 {trip.location}</span>
+                {/* <span>📍 {trip.location}</span> */}
                 {/* <span>📅 {new Date(trip.startDate).toLocaleDateString()}</span> */}
               </div>
             </div>
