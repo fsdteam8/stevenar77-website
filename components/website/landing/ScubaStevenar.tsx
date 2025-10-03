@@ -48,7 +48,7 @@ const ScubaStevenar = () => {
             {/* Booking Section */}
             <div className="mt-5 sm:text-start text-center">
               <Link href="/about-us">
-                <Button className="text-center cursor-pointer  text-[#0694A2] text-base  font-medium px-8 border-1 border-[#0694A2]  rounded-lg bg-transparent hover:bg-[#0694A2] hover:text-white transition">
+                <Button className="text-center cursor-pointer  text-[#0694A2] text-base  font-medium px-8 py-5 border-1 border-[#0694A2]  rounded-xl bg-transparent hover:bg-[#0694A2] hover:text-white transition">
                   See More
                 </Button>
               </Link>

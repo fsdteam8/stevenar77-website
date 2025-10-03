@@ -49,9 +49,9 @@ const ProductDetails = () => {
   const safeImageIndex = Math.min(selectedImageIndex, images.length - 1);
   const imageSrc = images[safeImageIndex].url;
 
-  const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity >= 1) setQuantity(newQuantity);
-  };
+  // const handleQuantityChange = (newQuantity: number) => {
+  //   if (newQuantity >= 1) setQuantity(newQuantity);
+  // };
 
   const handleThumbnailClick = (index: number) => setSelectedImageIndex(index);
 

@@ -66,6 +66,7 @@ const Products = () => {
                 image={
                   product.images?.[0]?.url || "/images/default-product.jpg"
                 }
+                id={product._id}
                 title={product.title}
                 description={
                   product.shortDescription
