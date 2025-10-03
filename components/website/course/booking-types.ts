@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface BookingState {
   currentStep: number;
   course: {
@@ -8,6 +9,7 @@ export interface BookingState {
     age: string;
     image?: string;
     classDates?: string[];
+    // includes?:string[];
   };
   pricing: string | undefined;
   addOns: Array<{
@@ -22,6 +24,8 @@ export interface BookingState {
   selectedPricing: string | undefined;
   selectedPriceIndex: number;
   personalInfo: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [x: string]: any;
     name: string;
     email: string;
     phone: string;
@@ -77,8 +81,9 @@ export type BookingAction =
       type: "SET_LIABILITY_AGREEMENT";
       payload: Partial<BookingState["liabilityAgreement"]>;
     }
-  | { type: "SET_DOCUMENTS"; payload: any[] }
-  | { type: "ADD_DOCUMENT"; payload: any }
+  | { type: "SET_DOCUMENTS"; payload: File }
+  | { type: "ADD_DOCUMENT"; payload: File }
+  | { type: "OTHER_ACTION"; payload: any }
   | { type: "SET_SIGNATURE"; payload: string }
   | { type: "SET_AGREED"; payload: boolean }
   | { type: "SET_PRICING"; payload: string | undefined }

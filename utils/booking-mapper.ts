@@ -47,7 +47,7 @@ export const mapBookingStateToPayload = (
     "5-day": 399,
   };
   const pricingPrice = state.pricing ? pricingPrices[state.pricing] || 0 : 0;
-  const addOnPrice = state.addOn ? 999 : 0;
+  const addOnPrice = state.addOns ? 999 : 0;
   const participants = state.participants || 1;
   const totalPrice = (coursePrice + pricingPrice) * participants + addOnPrice;
 
@@ -57,7 +57,7 @@ export const mapBookingStateToPayload = (
     if (state.selectedTime?.iso) {
       classDates.push(state.selectedTime.iso);
     } else {
-      classDates.push(state.selectedDate.toISOString());
+      classDates.push(state.selectedDate.toString());
     }
   }
 

@@ -22,7 +22,7 @@ export function DateTimePicker() {
   ];
 
   const handleDateSelect = (date: Date | undefined) => {
-    if (date) dispatch({ type: "SET_DATE", payload: date });
+    if (date) dispatch({ type: "SET_DATE", payload: date.toISOString() });
   };
 
   const handleTimeSelect = (timeLabel: string) => {
@@ -54,7 +54,7 @@ export function DateTimePicker() {
         <div>
           {/* <Calendar
             mode="single"
-            selected={state.selectedDate || undefined}
+            selected={state.selectedDate ? new Date(state.selectedDate) : undefined}
             onSelect={handleDateSelect}
             className="rounded-md border w-full"
             classNames={{
@@ -66,7 +66,7 @@ export function DateTimePicker() {
 
           <Calendar
             mode="single"
-            selected={state.selectedDate || undefined}
+            selected={state.selectedDate ? new Date(state.selectedDate) : undefined}
             onSelect={handleDateSelect}
             className="rounded-md border w-full"
             disabled={(date) => {

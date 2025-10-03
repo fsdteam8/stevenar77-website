@@ -2,9 +2,10 @@
 
 // import PadiLiabilityForm from '@/components/website/form/PadiLiabilityForm'
 // import EnrichedAirForm from '@/components/website/form/EnrichedTrainning'
-import DiversActivityForm from '@/components/website/form/DiversActivityForm'
+'use client'
+import { BookingProvider } from '@/components/website/course/booking-context'
 import Equipment from '@/components/website/form/Equipment'
-import PadiLiabilityForm from '@/components/website/form/PadiLiabilityForm'
+
 // import QuickReview from '@/components/website/form/QuickReview'
 
 import React from 'react'
@@ -16,7 +17,11 @@ const page = () => {
         {/* <QuickReview /> */}
         {/* <EnrichedAirForm /> */}
         {/* <DiversActivityForm /> */}
+
+        <BookingProvider>
+
         <Equipment />
+        </BookingProvider>
 
     </div>
   )
