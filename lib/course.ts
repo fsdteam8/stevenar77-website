@@ -4,13 +4,18 @@ import axios from "axios";
 // ----------------------
 // Types matching actual API response
 // ----------------------
+interface addonce {
+  title: string;
+  price: number;
+  _id:string | undefined;
+}
 export interface CourseDetail {
   classDates: never[];
   _id: string;
   title: string;
-  image?: { 
-    public_id: string; 
-    url: string 
+  image?: {
+    public_id: string;
+    url: string;
   }; // Single image object, not array
   description: string; // This is the main description
   price: number[]; // Array of prices
@@ -21,6 +26,9 @@ export interface CourseDetail {
   totalParticipates: number;
   createdAt: string;
   updatedAt: string;
+  maxAge?: number;
+  minAge?: number;
+  addOnce: addonce[];
 }
 
 export interface CourseResponse {
@@ -35,12 +43,12 @@ export interface CourseResponse {
 // ----------------------
 export async function fetchCourseById(id: string): Promise<CourseDetail> {
   const response = await axios.get<CourseResponse>(
-    `${process.env.NEXT_PUBLIC_API_URL}/class/${id}`
+    `${process.env.NEXT_PUBLIC_API_URL}/class/${id}`,
   );
-  
+
   if (!response.data.success) {
     throw new Error(response.data.message || "Failed to fetch course");
   }
-  
+
   return response.data.data;
 }

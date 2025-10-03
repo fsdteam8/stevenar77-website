@@ -1,28 +1,28 @@
-// context/booking/booking-types.ts
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface BookingState {
   currentStep: number;
   course: {
     _id: string;
     name: string;
-    price: number | number[];
+    price: number;
     duration: string;
     age: string;
     image?: string;
     classDates?: string[];
     // includes?:string[];
   };
-  pricing?: string;
-  addOn?: boolean;
+  pricing: string | undefined;
+  addOns: Array<{
+    id: string;
+    title: string;
+    price: number;
+  }>;
   participants: number;
-  selectedDate: Date | null;
-  selectedTime: {
-    label: string;
-    iso: string | null;
-  } | null;
+  selectedDate: string | null;
+  selectedTime: { label: string; iso: string | null };
   addOnSelected: boolean;
-  selectedPricing?: string;
-  selectedPriceIndex?: number;
+  selectedPricing: string | undefined;
+  selectedPriceIndex: number;
   personalInfo: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [x: string]: any;
@@ -36,13 +36,12 @@ export interface BookingState {
     postalCode: string;
     emergencyContact: string;
     courseName: string;
-    // gender: "male" || "female";
     shoeSize: number;
     hight: number;
     weight: number;
-    gender:  "male" | "female" | "others";
+    gender: string;
   };
-  medicalHistory: Record<string, boolean>;
+  medicalHistory: Record<string, any>;
   activityQuestions: {
     swimmingLevel: string;
     divingExperience: string;
@@ -58,7 +57,7 @@ export interface BookingState {
     medicalFitness: boolean;
     equipmentTraining: boolean;
   };
-  documents: File[];
+  documents: any[];
   signature: string;
   agreed: boolean;
 }
@@ -67,16 +66,29 @@ export type BookingAction =
   | { type: "SET_STEP"; payload: number }
   | { type: "SET_COURSE"; payload: BookingState["course"] }
   | { type: "SET_PARTICIPANTS"; payload: number }
-  | { type: "SET_DATE"; payload: Date }
+  | { type: "SET_DATE"; payload: string | null }
   | { type: "SET_TIME"; payload: BookingState["selectedTime"] }
-  | { type: "SET_PERSONAL_INFO"; payload: Partial<BookingState["personalInfo"]> }
-  | { type: "SET_MEDICAL_HISTORY"; payload: Record<string, boolean> }
-  | { type: "SET_ACTIVITY_QUESTIONS"; payload: Partial<BookingState["activityQuestions"]> }
-  | { type: "SET_LIABILITY_AGREEMENT"; payload: Partial<BookingState["liabilityAgreement"]> }
-  | { type: "SET_DOCUMENTS"; payload: File[] }
-  | { type: "ADD_DOCUMENT"; payload: File } 
+  | {
+      type: "SET_PERSONAL_INFO";
+      payload: Partial<BookingState["personalInfo"]>;
+    }
+  | { type: "SET_MEDICAL_HISTORY"; payload: Record<string, any> }
+  | {
+      type: "SET_ACTIVITY_QUESTIONS";
+      payload: Partial<BookingState["activityQuestions"]>;
+    }
+  | {
+      type: "SET_LIABILITY_AGREEMENT";
+      payload: Partial<BookingState["liabilityAgreement"]>;
+    }
+  | { type: "SET_DOCUMENTS"; payload: File }
+  | { type: "ADD_DOCUMENT"; payload: File }
+  | { type: "OTHER_ACTION"; payload: any }
   | { type: "SET_SIGNATURE"; payload: string }
   | { type: "SET_AGREED"; payload: boolean }
-  | { type: "SET_PRICING"; payload: string }
-  | { type: "SET_ADDON"; payload: boolean }
+  | { type: "SET_PRICING"; payload: string | undefined }
+  | {
+      type: "TOGGLE_ADDON";
+      payload: { id: string; title: string; price: number };
+    }
   | { type: "SET_PRICE_INDEX"; payload: number };
