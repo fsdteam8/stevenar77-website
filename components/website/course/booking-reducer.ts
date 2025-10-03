@@ -36,40 +36,41 @@ export function createInitialState(initialCourse?: {
     selectedPricing: undefined,
     selectedPriceIndex: 0,
     personalInfo: {
-      name: "",
+      username: "",
       email: "",
-      phone: "",
+      phoneNumber: "",
       dateOfBirth: "",
       address: "",
       city: "",
       state: "",
       postalCode: "",
-      emergencyContact: "",
+      emergencyName: "",
+      emergencyPhoneNumber: "",
       courseName: initialCourse?.name || "",
-      shoeSize: 10,
-      hight: 5,
-      weight: 20,
+      shoeSize:  0,
+      hight: 0,
+      weight: 0,
       gender: "male",
     },
-    medicalHistory: {},
-    activityQuestions: {
-      swimmingLevel: "",
-      divingExperience: "",
-      lastPhysicalExam: "",
-      fitnessLevel: "",
-      physicalApproval: false,
-      canSwim200m: false,
-      claustrophobia: false,
-      panicAttacks: false,
-    },
-    liabilityAgreement: {
-      releaseOfLiability: false,
-      medicalFitness: false,
-      equipmentTraining: false,
-    },
+    // medicalHistory: {},
+    // activityQuestions: {
+    //   swimmingLevel: "",
+    //   divingExperience: "",
+    //   lastPhysicalExam: "",
+    //   fitnessLevel: "",
+    //   physicalApproval: false,
+    //   canSwim200m: false,
+    //   claustrophobia: false,
+    //   panicAttacks: false,
+    // },
+    // liabilityAgreement: {
+    //   releaseOfLiability: false,
+    //   medicalFitness: false,
+    //   equipmentTraining: false,
+    // },
     documents: [],
-    signature: "",
-    agreed: false,
+    // signature: "",
+    // agreed: false,
   };
 }
 
@@ -106,7 +107,12 @@ export function bookingReducer(
     //     liabilityAgreement: { ...state.liabilityAgreement, ...action.payload },
     //   };
     case "SET_DOCUMENTS":
-      return { ...state, documents: Array.isArray(action.payload) ? action.payload : [action.payload] };
+      return {
+        ...state,
+        documents: Array.isArray(action.payload)
+          ? action.payload
+          : [action.payload],
+      };
     case "ADD_DOCUMENT":
       return {
         ...state,

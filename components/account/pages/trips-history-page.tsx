@@ -43,6 +43,7 @@ export function TripsHistoryPage() {
       </div>
     );
 
+
   // Not logged in
   if (!userId)
     return <p className="text-center py-10 text-red-500">Please log in to see your trips.</p>;
@@ -71,20 +72,20 @@ export function TripsHistoryPage() {
     <div className="container mx-auto px-2 sm:px-0">
       <div className="space-y-3 sm:space-y-4">
         {displayedTrips.map((tripItem) => {
-          const trip = tripItem.trip;
+          const trip = tripItem?.trip;
           return (
             <CourseCard
-              key={trip._id}
-              id={trip._id}
-              title={trip.title}
-              description={trip.description}
-              date={new Date(trip.startDate).toDateString()}
-              time={new Date(trip.startDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-              location={trip.location}
-              participants={tripItem.participants.length}
-              price={tripItem.totalPrice} // all trips are paid
+              key={trip?._id}
+              id={trip?._id}
+              title={trip?.title}
+              description={trip?.description}
+              date={new Date(trip?.startDate).toDateString()}
+              time={new Date(trip?.startDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              location={trip?.location}
+              participants={tripItem?.participants.length}
+              price={tripItem?.totalPrice} // all trips are paid
               status="complete"           
-              imageUrl={trip.images[0]?.url || "/placeholder.jpg"}
+              imageUrl={trip?.images[0]?.url || "/placeholder.jpg"}
             />
           );
         })}

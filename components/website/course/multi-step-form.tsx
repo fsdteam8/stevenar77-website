@@ -33,7 +33,6 @@ const steps = [
     component: DocumentUploadStep,
   },
   { id: 2, title: "All Information Done", component: AllInformationDoneStep },
-
 ];
 
 // Validation functions for each step
@@ -49,7 +48,8 @@ const validateStep = (stepIndex: number, state: BookingState) => {
           personalInfo.dateOfBirth?.trim() &&
           personalInfo.address?.trim() &&
           personalInfo.postalCode?.trim() &&
-          personalInfo.emergencyContact?.trim()
+          personalInfo.emergencyName?.trim() &&
+          personalInfo.emergencyPhoneNumber?.trim()
         )
         // Note: gender, shoesize, height, weight need to be added to types and connected to state
       );

@@ -180,10 +180,10 @@ export function BookingSummary(courseData: coursData) {
         {/* Date & Time */}
         <div className="space-y-2 text-sm text-[#6c757d]">
           <div className="flex items-center gap-2">
-            <span>📅</span>
+            {/* <span>📅</span> */}
             <span>{formatDate(state?.selectedDate ? new Date(state.selectedDate) : null)}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className=" hidden items-center gap-2">
             <span>{selectedTime}am</span>
           </div>
         </div>
