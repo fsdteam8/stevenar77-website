@@ -44,7 +44,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
         </div>
 
         {/* Card body (scroll-limited if too much content) */}
-        <div onClick={onSeeMore} className="flex-1 px-4 py-3 cursor-pointer overflow-hidden">
+        <div onClick={onSeeMore} className=" px-4 py-3 cursor-pointer overflow-hidden">
           <div className="space-y-3 line-clamp-[8] max-h-96 overflow-hidden">
             {children}
           </div>

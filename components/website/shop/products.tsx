@@ -3,7 +3,11 @@
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import ShopProductCard from "../shared/ShopProductCard";
-import { useAdminProducts, AdminProduct } from "@/services/hooks/product/useAdminProducts";
+import {
+  useAdminProducts,
+  AdminProduct,
+} from "@/services/hooks/product/useAdminProducts";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,12 +18,27 @@ const Products = () => {
   const filteredProducts = useMemo(
     () =>
       products.filter((p: AdminProduct) =>
-        p.title.toLowerCase().includes(searchTerm.toLowerCase())
+        p.title.toLowerCase().includes(searchTerm.toLowerCase()),
       ),
-    [products, searchTerm]
+    [products, searchTerm],
   );
 
-  if (isLoading) return <p className="text-center mt-10">Loading...</p>;
+  if (isLoading)
+    return (
+      <div className="container mx-auto space-y-6">
+        <Skeleton className="h-8 w-64 mb-6" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="space-y-3">
+              <Skeleton className="h-48 w-full rounded-lg" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-6 w-20" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   if (isError)
     return (
       <p className="text-center mt-10 text-red-500">
@@ -29,7 +48,7 @@ const Products = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 lg:p-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="container mx-auto">
         {/* Optional Search */}
         {/* <input
           type="text"
@@ -44,14 +63,16 @@ const Products = () => {
             filteredProducts.map((product: AdminProduct) => (
               <ShopProductCard
                 key={product._id}
-                image={product.images?.[0]?.url || "/images/default-product.jpg"}
+                image={
+                  product.images?.[0]?.url || "/images/default-product.jpg"
+                }
                 title={product.title}
                 description={
                   product.shortDescription
                     ? product.shortDescription.slice(0, 100) + "..."
                     : product.longDescription
-                    ? product.longDescription.slice(0, 100) + "..."
-                    : ""
+                      ? product.longDescription.slice(0, 100) + "..."
+                      : ""
                 }
                 rating={product.averageRating || 0}
                 reviews={product.totalReviews || 0}
@@ -72,7 +93,6 @@ const Products = () => {
 };
 
 export default Products;
-
 
 // "use client";
 

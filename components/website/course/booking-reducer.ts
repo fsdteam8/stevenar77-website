@@ -94,18 +94,18 @@ export function bookingReducer(
         ...state,
         personalInfo: { ...state.personalInfo, ...action.payload },
       };
-    case "SET_MEDICAL_HISTORY":
-      return { ...state, medicalHistory: action.payload };
-    case "SET_ACTIVITY_QUESTIONS":
-      return {
-        ...state,
-        activityQuestions: { ...state.activityQuestions, ...action.payload },
-      };
-    case "SET_LIABILITY_AGREEMENT":
-      return {
-        ...state,
-        liabilityAgreement: { ...state.liabilityAgreement, ...action.payload },
-      };
+    // case "SET_MEDICAL_HISTORY":
+    //   return { ...state, medicalHistory: action.payload };
+    // case "SET_ACTIVITY_QUESTIONS":
+    //   return {
+    //     ...state,
+    //     activityQuestions: { ...state.activityQuestions, ...action.payload },
+    //   };
+    // case "SET_LIABILITY_AGREEMENT":
+    //   return {
+    //     ...state,
+    //     liabilityAgreement: { ...state.liabilityAgreement, ...action.payload },
+    //   };
     case "SET_DOCUMENTS":
       return { ...state, documents: action.payload };
     case "ADD_DOCUMENT":
@@ -113,10 +113,10 @@ export function bookingReducer(
         ...state,
         documents: [...state.documents, action.payload],
       };
-    case "SET_SIGNATURE":
-      return { ...state, signature: action.payload };
-    case "SET_AGREED": // ✅ add this
-      return { ...state, agreed: action.payload };
+    // case "SET_SIGNATURE":
+    //   return { ...state, signature: action.payload };
+    // case "SET_AGREED": // ✅ add this
+    //   return { ...state, agreed: action.payload };
     case "SET_PRICING":
       return { ...state, pricing: action.payload };
     case "SET_ADDON":

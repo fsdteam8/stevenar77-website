@@ -54,27 +54,27 @@ export function BookingSummary() {
     }
 
     // Check if all liability agreement checkboxes are checked
-    const { releaseOfLiability, medicalFitness, equipmentTraining } =
-      state.liabilityAgreement;
-    if (!releaseOfLiability || !medicalFitness || !equipmentTraining) {
-      setValidationError(
-        "Please accept all liability agreement terms before proceeding.",
-      );
-      return false;
-    }
+    // const { releaseOfLiability, medicalFitness, equipmentTraining } =
+    //   state.liabilityAgreement;
+    // if (!releaseOfLiability || !medicalFitness || !equipmentTraining) {
+    //   setValidationError(
+    //     "Please accept all liability agreement terms before proceeding.",
+    //   );
+    //   return false;
+    // }
 
     // Check if electronic signature is provided
-    if (!state.signature.trim()) {
-      setValidationError(
-        "Please provide your electronic signature before proceeding.",
-      );
-      return false;
-    }
+    // if (!state.signature.trim()) {
+    //   setValidationError(
+    //     "Please provide your electronic signature before proceeding.",
+    //   );
+    //   return false;
+    // }
 
     // Check required personal information
     if (!state.personalInfo.name.trim() || !state.personalInfo.email.trim()) {
       setValidationError(
-        "Please fill in all required personal information (Name and Email).",
+        "Please Fill-Up The Full Form",
       );
       return false;
     }
@@ -86,26 +86,26 @@ export function BookingSummary() {
     }
 
     // Check if required activity questions are answered
-    if (!state.activityQuestions.swimmingLevel) {
-      setValidationError(
-        "Please answer all activity questions (Swimming level is required).",
-      );
-      return false;
-    }
+    // if (!state.activityQuestions.swimmingLevel) {
+    //   setValidationError(
+    //     "Please answer all activity questions (Swimming level is required).",
+    //   );
+    //   return false;
+    // }
 
-    if (!state.activityQuestions.divingExperience) {
-      setValidationError(
-        "Please answer all activity questions (Diving experience is required).",
-      );
-      return false;
-    }
+    // if (!state.activityQuestions.divingExperience) {
+    //   setValidationError(
+    //     "Please answer all activity questions (Diving experience is required).",
+    //   );
+    //   return false;
+    // }
 
-    if (!state.activityQuestions.fitnessLevel) {
-      setValidationError(
-        "Please answer all activity questions (Fitness level is required).",
-      );
-      return false;
-    }
+    // if (!state.activityQuestions.fitnessLevel) {
+    //   setValidationError(
+    //     "Please answer all activity questions (Fitness level is required).",
+    //   );
+    //   return false;
+    // }
 
     return true;
   };
@@ -198,7 +198,7 @@ const handleProceedToPayment = async () => {
             <div className="flex items-center gap-2">
               {/* <span>⏰</span> */}
               {/* <span>{state.selectedTime?.label || "Not selected"}</span>  */}
-              <span>{selectedTime}am</span>
+              <span className="hidden">{selectedTime}am</span>
             </div>
           </div>
         </div>
@@ -291,7 +291,8 @@ const handleProceedToPayment = async () => {
           <h3 className="font-medium mb-3 text-[#343a40]">
             What&apos;s Included
           </h3>
-          <ul className="space-y-2">
+          <p>{state.course._id}</p>
+          {/* <ul className="space-y-2">
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>
               Theory sessions
@@ -308,7 +309,8 @@ const handleProceedToPayment = async () => {
               <span className="w-2 h-2 bg-[#0694a2] rounded-full"></span>
               Digital certification
             </li>
-          </ul>
+          </ul> */}
+          
         </div>
       </div>
     </Card>
