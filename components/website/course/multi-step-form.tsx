@@ -35,6 +35,7 @@ const steps = [
   { id: 2, title: "All Information Done", component: AllInformationDoneStep },
 ];
 
+console.log()
 // Validation functions for each step
 const validateStep = (stepIndex: number, state: BookingState) => {
   switch (stepIndex) {

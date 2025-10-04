@@ -76,6 +76,8 @@ export function PersonalInformationStep() {
     "weight",
   ];
 
+  console.log("hey o ",state.course.formTitle)
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const validateField = (field: PersonalInfoKeys, rawValue: any): string => {
     const value = String(rawValue ?? "").trim();
@@ -227,6 +229,8 @@ export function PersonalInformationStep() {
 
   useEffect(() => {
     const newErrors: Record<string, string> = {};
+
+    console.log("FORM TITLE:", state.course.formTitle );
 
     requiredFields.forEach((field) => {
       const value = state.personalInfo[field] || "";
