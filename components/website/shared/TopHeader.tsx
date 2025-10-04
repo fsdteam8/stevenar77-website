@@ -20,10 +20,20 @@ export default function TopHeader() {
 
   if (isLoading)
     return (
-      <div className="container mx-auto space-y-6">
-        <div className=" flex gap-2">
-          <Skeleton className="h-8 w-8 rounded-full" />
-          <Skeleton className="h-8 w-20 mb-6" />
+      <div className="bg-white border-b">
+        <div className="container mx-auto flex items-center justify-between py-4 px-4">
+          {/* Left section (logo or brand) */}
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 w-8 rounded-full" />
+            <Skeleton className="h-6 w-24" />
+          </div>
+
+          {/* Right section (nav or profile icons) */}
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-6 w-6 rounded-full" />
+            <Skeleton className="h-6 w-6 rounded-full" />
+            <Skeleton className="h-8 w-20 rounded-md" />
+          </div>
         </div>
       </div>
     );

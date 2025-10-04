@@ -15,6 +15,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // ----------------------
 // Types - Updated to match actual API response
@@ -103,7 +104,36 @@ const CourseFeatured: React.FC = () => {
     }
   };
 
-  if (isLoading) return <p className="text-center py-10">Loading courses...</p>;
+  if (isLoading)
+    return (
+      <div className="bg-white py-10">
+        <h2 className="text-center text-2xl font-semibold mb-8">
+          Featured Courses
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
+          {[...Array(6)].map((_, i) => (
+            <div
+              key={i}
+              className="border rounded-2xl p-4 shadow-sm flex flex-col gap-3"
+            >
+              {/* Course thumbnail */}
+              <Skeleton className="w-full h-40 rounded-xl" />
+
+              {/* Title */}
+              <Skeleton className="h-5 w-3/4" />
+
+              {/* Description lines */}
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
+
+              {/* Button */}
+              <Skeleton className="h-8 w-24 rounded-md mt-2" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
 
   if (isError)
     return (

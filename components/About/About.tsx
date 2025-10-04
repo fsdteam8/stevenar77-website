@@ -9,19 +9,32 @@ import Gallery from "../website/AboutUs/Gallery";
 import StillHaveQuestion from "../website/reusable/stillHaveQuestion";
 import { useAbout } from "@/lib/useAbout";
 import { Loader2 } from "lucide-react";
+import { Skeleton } from "../ui/skeleton";
 
 export default function About() {
   const { data, isLoading, error } = useAbout();
 
   if (isLoading)
     return (
-      <div className="flex flex-col items-center justify-center h-64">
-        <p className="text-gray-700 text-lg font-medium mb-4">Thinking...</p>
-        <div className="flex items-center space-x-2">
-          <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-          <span className="w-3 h-3 bg-blue-500 rounded-full animate-bounce delay-0"></span>
-          <span className="w-3 h-3 bg-blue-500 rounded-full animate-bounce delay-200"></span>
-          <span className="w-3 h-3 bg-blue-500 rounded-full animate-bounce delay-400"></span>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] bg-white space-y-6">
+        {/* Circle for profile/avatar */}
+        {/* <Skeleton className="w-20 h-20 rounded-full" /> */}
+
+        {/* Title or heading */}
+        <Skeleton className="h-6 w-48" />
+
+        {/* Paragraph lines */}
+        <div className="flex flex-col items-center space-y-2">
+          <Skeleton className="h-4 w-72" />
+          <Skeleton className="h-4 w-64" />
+          <Skeleton className="h-4 w-56" />
+        </div>
+
+        {/* Buttons or tag section */}
+        <div className="flex gap-3 pt-4">
+          <Skeleton className="h-8 w-20 rounded-md" />
+          <Skeleton className="h-8 w-20 rounded-md" />
+          <Skeleton className="h-8 w-20 rounded-md" />
         </div>
       </div>
     );
