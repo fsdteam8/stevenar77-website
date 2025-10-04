@@ -2,6 +2,7 @@
 import { getSession } from "next-auth/react";
 
 export interface UserProfile {
+  street: string;
   _id: string;
   firstName: string;
   lastName: string;
@@ -35,12 +36,14 @@ export const getMyProfile = async (): Promise<UserProfile> => {
   return data.data;
 };
 
+
 // PUT update profile
 export interface UpdateProfilePayload {
   firstName?: string;
   lastName?: string;
   email?: string;
-  streetAddress?: string;
+  streetAddress: string;
+  street:string;
   location?: string;
   postalCode?: string;
   phoneNumber?: string;
@@ -71,10 +74,10 @@ export const uploadAvatar = async (file: File): Promise<UserProfile> => {
   if (!session?.accessToken) throw new Error("User is not authenticated");
 
   const formData = new FormData();
-  formData.append("avatar", file);
+  formData.append("image", file);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/upload-avatar`, {
-    method: "POST",
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/update-profile`, {
+    method: "PUT",
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
     },
