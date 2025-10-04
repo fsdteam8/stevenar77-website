@@ -7,6 +7,7 @@ import { FaFacebookSquare, FaInstagramSquare } from "react-icons/fa";
 import { Mail, MapPin, Phone } from "lucide-react"; // ✅ import hook
 import { useCourses } from "@/services/hooks/courses/useCourses";
 import { useSocial } from "@/services/hooks/social/social";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Footer = () => {
   const quickLinks = [
@@ -22,7 +23,18 @@ const Footer = () => {
   const { data: courses, isLoading, error } = useCourses();
   const { data } = useSocial();
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <footer className="bg-white border-t p-6 flex flex-col items-center gap-3">
+        <Skeleton className="h-6 w-40" />
+        <div className="flex gap-4">
+          <Skeleton className="h-4 w-16" />
+          <Skeleton className="h-4 w-16" />
+          <Skeleton className="h-4 w-16" />
+        </div>
+        <Skeleton className="h-4 w-32" />
+      </footer>
+    );
   if (error) return <p>Error loading social data</p>;
   return (
     <footer className="bg-[#010D13] text-white py-4 lg:py-5">
