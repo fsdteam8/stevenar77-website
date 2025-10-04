@@ -97,7 +97,7 @@ export function DocumentUploadStep() {
         It is Required To Admit into the Course.
       </p>
 
-      <div className="flex gap-4 mb-6 flex-wrap">
+      {/* <div className="flex gap-4 mb-6 flex-wrap">
         <Button
           onClick={() => setOpenModal("modal1")}
           className="bg-blue-500 hover:bg-blue-600 text-white"
@@ -160,6 +160,37 @@ export function DocumentUploadStep() {
         >
           Enriched Air -Quick Review
         </Button>
+      </div> */}
+
+      <div className="flex gap-4 mb-6 flex-wrap">
+        {[
+          { id: "modal1", label: "Standards Form", color: "blue" },
+          { id: "modal2", label: "Continuing Education", color: "green" },
+          { id: "modal3", label: "Divers Activity", color: "green" },
+          { id: "modal4", label: "Quick Review-Open Waters", color: "green" },
+          { id: "modal5", label: "Divers Medical", color: "green" },
+          { id: "modal6", label: "Enriched Training", color: "green" },
+          { id: "modal7", label: "Equipment Rental", color: "green" },
+          { id: "modal8", label: "Resque Diver-Quick Review", color: "green" },
+          { id: "modal9", label: "Enriched Air -Quick Review", color: "green" },
+        ]
+          // Filter buttons based on formTitle
+          .filter((btn) =>
+            state.course.formTitle?.some((ft) =>
+              btn.label.toLowerCase().includes(ft.toLowerCase()),
+            ),
+          )
+          .map((btn) => (
+            <Button
+              key={btn.id}
+              
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              onClick={() => setOpenModal(btn.id as any)}
+              className={`bg-${btn.color}-500 hover:bg-${btn.color}-600 text-white`}
+            >
+              {btn.label}
+            </Button>
+          ))}
       </div>
 
       {/* Render all dialogs from modalConfigs */}
@@ -198,6 +229,48 @@ export function DocumentUploadStep() {
           </DialogContent>
         </Dialog>
       ))}
+
+      {/* {modalConfigs
+        .filter(({ title }) =>
+          state.course.formTitle?.some((ft) =>
+            title.toLowerCase().includes(ft.toLowerCase()),
+          ),
+        )
+        .map(({ id, title, content, showSubmit }) => (
+          <Dialog
+            key={id}
+            open={openModal === id}
+            onOpenChange={(open) => !open && closeModal()}
+          >
+            <DialogContent className="max-w-7xl">
+              <DialogTitle>{title}</DialogTitle>
+
+              <div className="max-h-[80vh] max-w-7xl w-full overflow-y-auto pr-2">
+                {content}
+              </div> */}
+
+      {/* <DialogFooter className="flex gap-2">
+          <Button
+            onClick={closeModal}
+            className="bg-red-500 hover:bg-red-600 text-white"
+          >
+            Close
+          </Button>
+          {showSubmit && (
+            <Button
+              onClick={() => {
+                toast.success("Form submitted successfully! ✅");
+                closeModal();
+              }}
+              className="bg-green-500 hover:bg-green-600 text-white"
+            >
+              Submit
+            </Button>
+          )}
+        </DialogFooter> */}
+      {/* </DialogContent>
+          </Dialog>
+        ))} */}
     </div>
   );
 }

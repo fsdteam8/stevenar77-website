@@ -29,6 +29,7 @@ export interface CourseDetail {
   maxAge?: number;
   minAge?: number;
   addOnce: addonce[];
+  formTitle?: string[]; // ✅ add this
 }
 
 export interface CourseResponse {

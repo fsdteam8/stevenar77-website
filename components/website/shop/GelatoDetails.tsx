@@ -8,21 +8,37 @@ import { useState } from "react";
 import { useCreateOrder } from "@/services/hooks/order/useCreateOrder";
 import { ProductCreateModal } from "@/components/modals/ProductCreateModal";
 import { useGelatoSingleProducts } from "@/services/hooks/product/useGelatoProducts";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const GelatoDetails = () => {
   const params = useParams<{ id: string }>();
   const productId = params.id;
   const router = useRouter();
 
-  const { data: product, isLoading, error } = useGelatoSingleProducts(productId);
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useGelatoSingleProducts(productId);
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const { mutate: createOrder, isPending } = useCreateOrder();
 
-  if (isLoading) return <p className="text-center py-10">Loading product...</p>;
-  if (error) return <p className="text-center text-red-500 py-10">Failed to load product.</p>;
+  if (isLoading) {
+    <div className="flex items-center space-x-4 text-center bg-gray-50 py-10">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div>
+        <Skeleton className="h-4 w-[200px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>;
+  }
+  if (error)
+    return (
+      <p className="text-center text-red-500 py-10">Failed to load product.</p>
+    );
   if (!product) return <p className="text-center py-10">No product found.</p>;
 
   // ✅ Fallback images
@@ -82,41 +98,51 @@ const GelatoDetails = () => {
 
           {/* Text Section */}
           <div className="order-2 space-y-8 lg:space-y-20 md:order-1">
-            <h1 className="text-4xl text-[#27303F] font-semibold mb-6">{product.title}</h1>
+            <h1 className="text-4xl text-[#27303F] font-semibold mb-6">
+              {product.title}
+            </h1>
             <p className="flex gap-2 py-2">
               <Star className="text-yellow-400" /> 0 (0 reviews)
             </p>
             <p className="text-gray-700 leading-relaxed text-lg mb-8">
-              {product.description?.replace(/<[^>]+>/g, "") || "No description available."}
+              {product.description?.replace(/<[^>]+>/g, "") ||
+                "No description available."}
             </p>
 
             <div className="border-t border-gray-200 pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
               <div className="flex items-center gap-6">
                 {/* Quantity Controls */}
                 <div className="flex items-center">
-                  <Button
+                  {/* <Button
                     onClick={() => handleQuantityChange(quantity - 1)}
                     className="p-3 border border-gray-300 rounded-md hover:bg-gray-300 bg-transparent disabled:cursor-not-allowed"
                     disabled={quantity <= 1}
                   >
                     <Minus className="w-4 h-4 text-gray-600" />
-                  </Button>
+                  </Button> */}
 
-                  <span className="px-4 py-3 text-lg font-medium text-gray-900 text-center">
+                  {/* <span className="px-4 py-3 text-lg font-medium text-gray-900 text-center">
                     {quantity}
-                  </span>
+                  </span> */}
 
-                  <Button
+                  {/* <Button
                     onClick={() => handleQuantityChange(quantity + 1)}
                     className="p-3 border border-gray-300 bg-teal-600 text-white hover:bg-teal-700 transition-colors rounded-md"
                   >
                     <Plus className="w-4 h-4" />
-                  </Button>
+                  </Button> */}
                 </div>
 
                 {/* Dynamic Price */}
                 <div className="text-2xl font-bold flex items-center text-gray-900">
-                  ${(0 * quantity).toLocaleString()} {/* placeholder until API has price */}
+                  <div className="pt-2">
+                    <Image
+                      src={`/images/gelato.svg`}
+                      alt="gelato"
+                      width={70}
+                      height={70}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

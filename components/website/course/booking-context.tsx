@@ -14,6 +14,8 @@ interface BookingProviderProps {
     price: number
     age: string
     image?: string
+    formTitle?:string[]
+
   }
 }
 

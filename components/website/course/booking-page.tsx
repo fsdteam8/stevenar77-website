@@ -47,6 +47,7 @@ export function BookingPage() {
     image: course.image?.url,
     duration: course.duration,
     classDates: course.classDates || [], 
+    formTitle: course.formTitle || [], // ✅ include this
   };
 
   return (
