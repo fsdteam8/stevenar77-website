@@ -10,6 +10,7 @@ export interface BookingState {
     image?: string;
     classDates?: string[];
     // includes?:string[];
+    formTitle?:string[];
   };
   pricing: string | undefined;
   addOns: Array<{

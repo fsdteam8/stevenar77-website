@@ -7,6 +7,7 @@ export function createInitialState(initialCourse?: {
   age: string;
   image?: string;
   classDates?: string[];
+  formTitle?:string[];
 }): BookingState {
   let courseId = initialCourse?.id || "";
 
@@ -22,10 +23,11 @@ export function createInitialState(initialCourse?: {
       _id: courseId,
       name: initialCourse?.name || "Open Water Diver",
       price: initialCourse?.price ?? 450,
-      duration: "3-4 days",
+      duration: "3-4 dives",
       age: initialCourse?.age || "10+",
       image: initialCourse?.image,
       classDates: initialCourse?.classDates,
+      formTitle: initialCourse?.formTitle || [], // ✅ FIX: include formTitle
     },
     pricing: undefined,
     addOns: [],

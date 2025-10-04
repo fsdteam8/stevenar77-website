@@ -16,7 +16,7 @@ const WhyLearnUs = () => {
       <div className="flex flex-wrap justify-between">
         <WhyLearn
           title="Professional Instructors"
-          description="Expert-level PADI certified instructors with years of ocean experience and passion for teaching"
+          description="Expert-level PADI-certified instructors with years of ocean experience and a passion for teaching."
           icon={<Award size={24} color="#3B82F6" />}
           className=" rounded-lg "
           iconContainerClassName="p-2 shadow-xl"
@@ -25,7 +25,7 @@ const WhyLearnUs = () => {
         />
         <WhyLearn
           title="World-Class Dive Locations"
-          description="Access to the most beautiful and diverse underwater ecosystems in South Florida"
+          description="Access to some of the most beautiful and diverse underwater ecosystems in Southern California."
           icon={<Pocket size={24} color="#3B82F6" />}
           className=" rounded-lg "
           iconContainerClassName="p-2 shadow-xl"
@@ -34,7 +34,7 @@ const WhyLearnUs = () => {
         />
         <WhyLearn
           title="Lifetime Community & Adventure"
-          description="Join a passionate community of divers and enjoy exclusive dive trips and events"
+          description="Join a passionate community of divers and enjoy exclusive dive trips and events."
           icon={<Users size={24} color="#3B82F6" />}
           className="rounded-lg "
           iconContainerClassName="p-2 shadow-xl"
