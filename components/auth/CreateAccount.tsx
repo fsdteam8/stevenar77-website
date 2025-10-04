@@ -20,6 +20,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "../hooks/useAuth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // ✅ Zod validation schema
 const createAccountSchema = z
@@ -85,6 +86,16 @@ export default function CreateAccount() {
 
   return (
     <div className="flex items-center justify-center bg-white py-10 px-4">
+      <div className="">
+        {" "}
+        {/* Go To Website Button */}
+        <Link
+          href="/"
+          className="absolute top-5 right-5 text-primary hover:text-white px-4 py-2 rounded hover:bg-[#057a85] bg-transparent  text-sm font-medium"
+        >
+          Go To Website
+        </Link>
+      </div>
       <div className="w-full max-w-lg">
         <h2 className="text-3xl md:text-[40px] font-playfair font-bold text-[#0694A2] mb-2">
           Create Your Account

@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 // ✅ Enhanced Zod validation schema
 const loginSchema = z.object({
@@ -104,6 +105,17 @@ export default function Login() {
 
   return (
     <div className="w-full max-w-lg">
+      <div className="">
+        {" "}
+        {/* Go To Website Button */}
+        <Link
+          href="/"
+          className="absolute top-5 right-5 text-primary hover:text-white px-4 py-2 rounded hover:bg-[#057a85] bg-transparent  text-sm font-medium"
+        >
+          Go To Website
+        </Link>
+      </div>
+
       <h2 className="text-3xl md:text-[40px] font-bold leading-[150%] font-playfair text-[#0694A2] mb-2">
         Welcome
       </h2>
