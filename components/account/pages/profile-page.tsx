@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useProfile } from "@/services/hooks/profile/useProfile";
 import { useUpdateProfile } from "@/services/hooks/profile/useUpdateProfile";
 import { useUploadAvatar } from "@/services/hooks/profile/useUploadAvatar";
+import { toast } from "sonner";
 
 interface FormData {
   firstName: string;
@@ -38,7 +39,7 @@ export const ProfilePage = () => {
     phone: "",
     dateOfBirth: "",
   });
-
+  console.log('userdata',user)
   // Populate form data when user loads
   useEffect(() => {
     if (user) {
@@ -46,7 +47,7 @@ export const ProfilePage = () => {
         firstName: user.firstName ?? "",
         lastName: user.lastName ?? "",
         email: user.email ?? "",
-        streetAddress: user.streetAddress ?? user.location ?? "",
+        streetAddress: user.street ?? user.street ?? "",
         location: user.location ?? "",
         postalCode: user.postalCode ?? "",
         phone: user.phone ?? "",
@@ -72,9 +73,14 @@ export const ProfilePage = () => {
 
   const handleSave = async () => {
     try {
-      await updateMutation.mutateAsync(formData);
+      await updateMutation.mutateAsync({
+        ...formData,
+        street: formData.streetAddress, // Map streetAddress to street
+      });
+       toast.success('your profile update successfuly')
       setIsEditing(false);
     } catch (err) {
+      toast.error(`Failed to update profile:${err}`)
       console.error("Failed to update profile:", err);
     }
   };

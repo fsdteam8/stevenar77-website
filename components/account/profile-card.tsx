@@ -1,11 +1,9 @@
 "use client";
 
-import type React from "react";
-
+import { useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Edit, Camera } from "lucide-react";
-import { useRef } from "react";
 
 interface ProfileCardProps {
   name: string;
@@ -31,6 +29,7 @@ export function ProfileCard({
   isEditing = false,
 }: ProfileCardProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const handleImageUpload = () => {
     fileInputRef.current?.click();
@@ -38,9 +37,15 @@ export function ProfileCard({
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && onImageUpload) {
-      onImageUpload(file);
-    }
+    if (!file) return;
+
+    // Local preview
+    const reader = new FileReader();
+    reader.onloadend = () => setPreviewUrl(reader.result as string);
+    reader.readAsDataURL(file);
+
+    // Pass to parent for server upload
+    if (onImageUpload) onImageUpload(file);
   };
 
   return (
@@ -49,7 +54,7 @@ export function ProfileCard({
         {showEditButton && (
           <Button
             size="sm"
-            className="absolute z-10 top-25 sm:top-35 right-35 sm:right-50 bg-primary  hover:bg-teal-500 text-white border-white/30"
+            className="absolute z-10 top-25 sm:top-35 right-35 sm:right-50 bg-primary hover:bg-teal-500 text-white border-white/30"
             onClick={onEdit}
           >
             <Edit className="w-4 h-4" />
@@ -63,7 +68,10 @@ export function ProfileCard({
               className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-white mb-4 cursor-pointer"
               onClick={isEditing ? handleImageUpload : undefined}
             >
-              <AvatarImage src={avatarUrl || "/placeholder.svg"} alt={name} />
+              <AvatarImage
+                src={previewUrl || avatarUrl || "/placeholder.svg"}
+                alt={name}
+              />
               <AvatarFallback className="text-lg sm:text-xl font-semibold bg-[#68706a] text-white">
                 {name
                   .split(" ")
