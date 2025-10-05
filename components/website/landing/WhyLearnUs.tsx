@@ -16,7 +16,7 @@ const WhyLearnUs = () => {
       <div className="flex flex-wrap justify-between">
         <WhyLearn
           title="Professional Instructors"
-          description="Expert-level PADI-certified instructors with years of ocean experience and a passion for teaching."
+          description="Expert-level PADI certified instructors with years of ocean experience and a passion for teaching."
           icon={<Award size={24} color="#3B82F6" />}
           className=" rounded-lg "
           iconContainerClassName="p-2 shadow-xl"
