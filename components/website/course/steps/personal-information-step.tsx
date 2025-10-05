@@ -41,6 +41,7 @@ type PersonalInfoKeys =
 export function PersonalInformationStep() {
   const { state, dispatch } = useBooking();
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(() => {
     if (state.personalInfo.dateOfBirth) {
       const [month, day, year] = state.personalInfo.dateOfBirth
@@ -76,7 +77,7 @@ export function PersonalInformationStep() {
     "weight",
   ];
 
-  console.log("hey o ",state.course.formTitle)
+  console.log("hey o ", state.course.formTitle);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const validateField = (field: PersonalInfoKeys, rawValue: any): string => {
@@ -230,7 +231,7 @@ export function PersonalInformationStep() {
   useEffect(() => {
     const newErrors: Record<string, string> = {};
 
-    console.log("FORM TITLE:", state.course.formTitle );
+    console.log("FORM TITLE:", state.course.formTitle);
 
     requiredFields.forEach((field) => {
       const value = state.personalInfo[field] || "";
@@ -280,12 +281,39 @@ export function PersonalInformationStep() {
     }
   };
 
+  // const hasError = (field: PersonalInfoKeys): boolean => {
+  //   return !!errors[field];
+  // };
+
+  // const getErrorMessage = (field: PersonalInfoKeys): string => {
+  //   return errors[field] || "";
+  // };
+    const validateAll = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    requiredFields.forEach((field) => {
+      const value = state.personalInfo[field];
+      const error = validateField(field, value);
+      if (error) newErrors[field] = error;
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  const handleNext = () => {
+    setIsSubmitted(true); // 👈 show errors
+    const isValid = validateAll();
+    if (isValid) {
+      console.log("✅ All fields valid, go next step");
+      // dispatch({ type: "NEXT_STEP" })  // if you want to move to next step
+    } else {
+      console.log("❌ Some fields invalid");
+    }
+  };
   const hasError = (field: PersonalInfoKeys): boolean => {
-    return !!errors[field];
+    return isSubmitted && !!errors[field]; // 👈 Only after clicking Next
   };
 
   const getErrorMessage = (field: PersonalInfoKeys): string => {
-    return errors[field] || "";
+    return isSubmitted ? errors[field] || "" : "";
   };
 
   return (
@@ -714,6 +742,7 @@ export function PersonalInformationStep() {
           )}
         </div>
       </div>
+      
     </div>
   );
 }
