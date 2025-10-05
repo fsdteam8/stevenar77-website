@@ -18,7 +18,7 @@ import {
 
 export default function TripsDetails() {
   const params = useParams();
-  const idParam = params?.id; // string | string[]
+  const idParam = params?.id; 
   const id = Array.isArray(idParam) ? idParam[0] : idParam;
 
   const { data: trip, isLoading, isError, error } = useTrip(id!);
