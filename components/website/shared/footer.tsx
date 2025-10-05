@@ -58,7 +58,7 @@ const Footer = () => {
             </div>
             <div className="mt-6">
               <p className="text-sm  text-center mx-auto lg:mx-0 lg:text-start text-white max-w-xs">
-                The Premier Choice for Diving Eduction in Los Angeles & Ventura
+                The Premier Choice for Diving Education in Los Angeles & Ventura
                 Counties.
               </p>
               <div className="socails flex mt-4 gap-2">
