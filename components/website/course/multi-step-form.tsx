@@ -46,12 +46,12 @@ const validateStepWithErrors = (stepIndex: number, state: BookingState): { isVal
       if (!personalInfo.postalCode?.trim()) {
         errors.push("Postal code is required")
       }
-      if (!personalInfo.emergencyName?.trim()) {
-        errors.push("Emergency contact name is required")
-      }
-      if (!personalInfo.emergencyPhoneNumber?.trim()) {
-        errors.push("Emergency contact phone is required")
-      }
+      // if (!personalInfo.emergencyName?.trim()) {
+      //   errors.push("Emergency contact name is required")
+      // }
+      // if (!personalInfo.emergencyPhoneNumber?.trim()) {
+      //   errors.push("Emergency contact phone is required")
+      // }
       if (!personalInfo.gender?.trim()) {
         errors.push("Gender is required")
       }
