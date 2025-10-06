@@ -3,17 +3,17 @@ import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import { useBooking } from "../booking-context";
 import { CourseDetail } from "@/lib/course";
-interface coursData{
-  courseData:CourseDetail;
+interface coursData {
+  courseData: CourseDetail;
 }
-interface courseprops{
-  courseData:coursData;
+interface courseprops {
+  courseData: coursData;
 }
-export function CourseSelection(courseData:courseprops) {
+export function CourseSelection(courseData: courseprops) {
   const { state } = useBooking();
 
   console.log("age is here", courseData.courseData.courseData.duration);
-
+  const data = courseData?.courseData?.courseData;
   return (
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
@@ -40,8 +40,8 @@ export function CourseSelection(courseData:courseprops) {
             </span>
             <span>⏱️ {courseData?.courseData?.courseData?.duration} Days</span>
             <span className="flex items-center gap-1">
-              👥 Age:{courseData?.courseData?.courseData?.minAge}{" "}
-              -{courseData?.courseData?.courseData?.maxAge}
+              👥 Age: {data?.minAge ?? "N/A"} 
+              {data?.maxAge && data.maxAge > 0 ? - data.maxAge : ""}
             </span>
           </div>
         </div>
