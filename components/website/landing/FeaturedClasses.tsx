@@ -198,13 +198,13 @@ const FeaturedClasses: React.FC = () => {
                     dangerouslySetInnerHTML={{ __html: course.description }}
                   />
 
-                  <Button
+                  {/* <Button
                     onClick={() => router.push(`/courses/${course.id}`)}
                     className="text-cyan-600 bg-transparent hover:bg-gray-50 hover:underline text-sm font-semibold"
                     aria-label={`See more about ${course.title}`}
                   >
-                    See more
-                  </Button>
+                    See more 
+                  </Button> */}
 
                   {/* Duration + Students */}
                   <div className="flex justify-between items-center text-sm text-gray-500">

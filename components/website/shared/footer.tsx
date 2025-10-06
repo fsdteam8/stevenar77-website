@@ -23,6 +23,8 @@ const Footer = () => {
   const { data: courses, isLoading, error } = useCourses();
   const { data } = useSocial();
 
+  // console.log(data)
+
   if (isLoading)
     return (
       <footer className="bg-white border-t p-6 flex flex-col items-center gap-3">
@@ -67,9 +69,9 @@ const Footer = () => {
                 </Link>
                 <div className="relative group">
                   <Link href={`${data?.data[0]?.instagram}`} target="_blank">
-                    <FaInstagramSquare className="text-4xl duration-700  text-white" />
+                    <FaInstagramSquare className="text-4xl duration-700  text-white hover:text-red-200" />
                   </Link>
-                  <div className="absolute hidden  group-hover:block h-[90%] w-[90%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition text-white duration-700 bg-gradient-to-r from-[#fa7e1e] via-[#d62976] to-[#4f5bd5] rounded-xs mix-blend-overlay" />
+                  {/* <div className="absolute hidden  group-hover:block h-[90%] w-[90%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition text-white duration-700 bg-gradient-to-r from-[#fa7e1e] via-[#d62976] to-[#4f5bd5] rounded-xs mix-blend-overlay" /> */}
                 </div>
               </div>
             </div>

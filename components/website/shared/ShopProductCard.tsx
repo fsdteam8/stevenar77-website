@@ -57,7 +57,10 @@ const ShopProductCard: React.FC<ShopProductCardType> = ({
         {/* Content */}
         <div className="flex flex-col  flex-1 p-4">
           <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-          <p className="text-sm text-gray-500 mt-1">{description}</p>
+          <p
+            className="text-sm text-gray-500 mt-1"
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
 
           {/* Rating */}
           <div className="flex items-center gap-1 mt-2 text-sm text-gray-600">
@@ -97,8 +100,7 @@ const ShopProductCard: React.FC<ShopProductCardType> = ({
           <DialogHeader>
             <DialogTitle>Login Required</DialogTitle>
             <DialogDescription>
-              You need to be logged in to book this course. Please login to
-              continue.
+              You need to be logged. Please login to continue.
             </DialogDescription>
           </DialogHeader>
 
