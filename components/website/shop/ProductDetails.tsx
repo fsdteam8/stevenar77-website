@@ -110,9 +110,12 @@ const ProductDetails = () => {
               <Star className="text-yellow-400" /> {product.averageRating || 0}{" "}
               ({product.totalReviews || 0} reviews)
             </p>
-            <p className="text-gray-700 leading-relaxed text-lg mb-8">
-              {product.longDescription || "No description available."}
-            </p>
+            <p
+              className="text-gray-700 leading-relaxed text-lg mb-8"
+              dangerouslySetInnerHTML={{
+                __html: product.longDescription || "No description available.",
+              }}
+            />
 
             <div className="border-t border-gray-200 pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
               <div className="flex items-center gap-6">
