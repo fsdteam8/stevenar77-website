@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { Upload, X } from "lucide-react";
@@ -14,7 +15,7 @@ interface ProductCreateProps {
 interface CreateOrderPayload {
   productId: string;
   quantity: number;
-  variantName: string; // add this
+  variantName: string;  
   image?: File;
 }
 
