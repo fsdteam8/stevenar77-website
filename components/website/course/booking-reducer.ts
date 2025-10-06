@@ -55,7 +55,7 @@ export function createInitialState(initialCourse?: {
       gender: "male",
       name: "",
       phone: "",
-      height: ""
+      hight: ""
     },
     // medicalHistory: {},
     // activityQuestions: {

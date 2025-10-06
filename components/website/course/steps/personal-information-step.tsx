@@ -35,7 +35,7 @@ type PersonalInfoKeys =
   // | "emergencyPhoneNumber"
   | "gender"
   | "shoeSize"
-  | "height"
+  | "hight"
   | "weight";
 
 export function PersonalInformationStep() {
@@ -74,7 +74,7 @@ export function PersonalInformationStep() {
     // "emergencyPhoneNumber",
     "gender",
     "shoeSize",
-    "height",
+    "hight",
     "weight",
   ];
 
@@ -184,7 +184,7 @@ export function PersonalInformationStep() {
         }
         break;
 
-      case "height":
+      case "hight":
         const heightMatch = value.match(/^(\d+)'(\d+)"$/);
         if (!heightMatch) {
           return "Please enter both feet and inches";
@@ -678,7 +678,7 @@ export function PersonalInformationStep() {
         </div>
 
         <div className="space-y-2">
-          <Label className={hasError("height") ? "text-red-600" : ""}>
+          <Label className={hasError("hight") ? "text-red-600" : ""}>
             Height <span className="text-red-500">*</span>
           </Label>
           <div className="flex gap-2">
@@ -693,13 +693,13 @@ export function PersonalInformationStep() {
                 onChange={(e) => handleHeightChange("feet", e.target.value)}
                 onBlur={() => markFieldAsTouched("height")}
                 className={
-                  hasError("height")
+                  hasError("hight")
                     ? "border-red-500 focus-visible:ring-red-500"
                     : ""
                 }
-                aria-invalid={hasError("height")}
+                aria-invalid={hasError("hight")}
                 aria-describedby={
-                  hasError("height") ? "height-error" : undefined
+                  hasError("hight") ? "height-error" : undefined
                 }
                 aria-label="Height in feet"
               />
@@ -715,21 +715,21 @@ export function PersonalInformationStep() {
                 onChange={(e) => handleHeightChange("inches", e.target.value)}
                 onBlur={() => markFieldAsTouched("height")}
                 className={
-                  hasError("height")
+                  hasError("hight")
                     ? "border-red-500 focus-visible:ring-red-500"
                     : ""
                 }
-                aria-invalid={hasError("height")}
+                aria-invalid={hasError("hight")}
                 aria-describedby={
-                  hasError("height") ? "height-error" : undefined
+                  hasError("hight") ? "height-error" : undefined
                 }
                 aria-label="Height in inches"
               />
             </div>
           </div>
-          {hasError("height") && (
+          {hasError("hight") && (
             <p id="height-error" className="text-sm text-red-600">
-              {getErrorMessage("height")}
+              {getErrorMessage("hight")}
             </p>
           )}
         </div>
