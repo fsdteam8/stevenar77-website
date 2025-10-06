@@ -41,7 +41,7 @@ const Navbar = () => {
 
   const isLoggedIn = !!session?.user;
 
-  console.log(logo)
+  // console.log(logo)
 
   // Determine avatar URL and display name
   const displayAvatar = user?.image?.url || "";

@@ -72,9 +72,9 @@ export const getAbout = async () => {
 export const fetchSocial = async () => {
   try {
     const res = await api.get("/social");
-    console.log('res',res)
+    // console.log('res',res)
     return res.data;
-    console.log('1',res.data)
+    // console.log('1',res.data)
   } catch (error) {
     console.log(error)
     throw new Error("Failed to fetch social data");

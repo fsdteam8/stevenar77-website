@@ -31,8 +31,8 @@ type PersonalInfoKeys =
   | "city"
   | "state"
   | "postalCode"
-  | "emergencyName"
-  | "emergencyPhoneNumber"
+  // | "emergencyName"
+  // | "emergencyPhoneNumber"
   | "gender"
   | "shoeSize"
   | "hight"
@@ -69,8 +69,8 @@ export function PersonalInformationStep() {
     "dateOfBirth",
     "address",
     "postalCode",
-    "emergencyName",
-    "emergencyPhoneNumber",
+    // "emergencyName",
+    // "emergencyPhoneNumber",
     "gender",
     "shoeSize",
     "hight",
@@ -114,24 +114,24 @@ export function PersonalInformationStep() {
         }
         break;
 
-      case "emergencyPhoneNumber":
-        const emergencyDigits = value.replace(/\D/g, "");
-        if (emergencyDigits.length < 10) {
-          return "Emergency phone must be at least 10 digits";
-        }
-        if (emergencyDigits.length > 15) {
-          return "Emergency phone is too long";
-        }
-        break;
+      // case "emergencyPhoneNumber":
+      //   const emergencyDigits = value.replace(/\D/g, "");
+      //   if (emergencyDigits.length < 10) {
+      //     return "Emergency phone must be at least 10 digits";
+      //   }
+      //   if (emergencyDigits.length > 15) {
+      //     return "Emergency phone is too long";
+      //   }
+      //   break;
 
-      case "emergencyName":
-        if (value.length < 2) {
-          return "Emergency contact name must be at least 2 characters";
-        }
-        if (!/^[a-zA-Z\s'-]+$/.test(value)) {
-          return "Emergency name can only contain letters, spaces, hyphens, and apostrophes";
-        }
-        break;
+      // case "emergencyName":
+      //   if (value.length < 2) {
+      //     return "Emergency contact name must be at least 2 characters";
+      //   }
+      //   if (!/^[a-zA-Z\s'-]+$/.test(value)) {
+      //     return "Emergency name can only contain letters, spaces, hyphens, and apostrophes";
+      //   }
+      //   break;
 
       case "dateOfBirth":
         const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
@@ -535,7 +535,7 @@ export function PersonalInformationStep() {
         </div>
 
         {/* Emergency Contact Name */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label
             htmlFor="emergencyName"
             className={hasError("emergencyName") ? "text-red-600" : ""}
@@ -562,10 +562,10 @@ export function PersonalInformationStep() {
               {getErrorMessage("emergencyName")}
             </p>
           )}
-        </div>
+        </div> */}
 
         {/* Emergency Contact Phone */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label
             htmlFor="emergencyPhoneNumber"
             className={hasError("emergencyPhoneNumber") ? "text-red-600" : ""}
@@ -596,7 +596,7 @@ export function PersonalInformationStep() {
               {getErrorMessage("emergencyPhoneNumber")}
             </p>
           )}
-        </div>
+        </div> */}
 
         <div className="space-y-2">
           <Label
