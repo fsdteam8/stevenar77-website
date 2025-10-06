@@ -190,9 +190,9 @@ return {
   emergencyPhoneNumber: state.personalInfo.emergencyPhoneNumber,
 
   gender: state.personalInfo.gender,
-  shoeSize: state.personalInfo.shoeSize,
+  shoeSize: Number(state.personalInfo.shoeSize),
   hight: state.personalInfo.hight,
-  weight: state.personalInfo.weight,
+  weight: Number(state.personalInfo.weight),
 
   // Add missing properties required by BookingPayload type
   medicalHistory: [], // empty for now
