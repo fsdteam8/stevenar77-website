@@ -31,6 +31,8 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
   const { mutate: createOrder, isPending } = useCreateOrder();
   const { data, isLoading, error } = useProductDetails(productId);
 
+  console.log(data)
+
   // Auto-select first variant
   useEffect(() => {
     if (data?.data?.variants?.length) {
@@ -100,7 +102,7 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
   if (error) return <p>Error loading product.</p>;
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
+    <div className=" !max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
       <div className="space-y-6">
         {/* Variant Selection & Quantity */}
         <div>
@@ -109,14 +111,13 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
           </p>
           <div className="flex items-center gap-4">
             {/* Variant Dropdown */}
-            {/* // Variant Dropdown */}
             <select
               value={selectedVariant}
               onChange={(e) => setSelectedVariant(e.target.value)}
             >
               {data?.data?.variants?.map((v: any, i: number) => (
-                <option key={i} value={v.name}>
-                  {v.name}
+                <option key={i} value={v.title} >
+                  {v.title}
                 </option>
               ))}
             </select>
