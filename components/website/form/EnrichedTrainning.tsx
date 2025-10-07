@@ -701,14 +701,17 @@
 
 // export default EnrichedAirForm;
 
-
 "use client";
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
-import { useBooking } from "../course/booking-context";  // ✅ Add this
+import { useBooking } from "../course/booking-context"; //  Add this
+import { quickreview } from "@/lib/quickreview";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 const loadHTML2Canvas = async () => {
   const { default: html2canvas } = await import("html2canvas");
@@ -716,8 +719,8 @@ const loadHTML2Canvas = async () => {
 };
 
 const EnrichedAirForm = () => {
-  const { dispatch } = useBooking();  // ✅ Add this
-  
+  const { dispatch } = useBooking(); //  Add this
+
   const [participantName, setParticipantName] = useState("");
   const [participantSignature, setParticipantSignature] = useState("");
   const [participantDate, setParticipantDate] = useState("");
@@ -728,11 +731,41 @@ const EnrichedAirForm = () => {
   const [policyNumber, setPolicyNumber] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  const formRef = useRef<HTMLDivElement>(null);  // ✅ Add this
+  const formRef = useRef<HTMLDivElement>(null); //  Add this
+  const { data: session } = useSession();
+  const id = session?.user?.id || "";
+  const token = session?.accessToken || "";
+
+  const handelmutaion = useMutation({
+    mutationFn: async ({
+      id,
+      documents,
+      token,
+    }: {
+      id: string;
+      documents: File;
+      token: string;
+    }) => quickreview(id, token, documents),
+    onSuccess: (data) => {
+      console.log("Upload successful:", data);
+      toast.success("PDF uploaded successfully!");
+    },
+    onError: (error) => {
+      console.error("Upload failed:", error);
+      toast.error("Failed to upload PDF.");
+    },
+  });
 
   const handleExportPDF = async () => {
-    if (!participantName || !participantSignature || !participantDate || !storeResort) {
-      alert("Please fill in required fields: Participant Name, Store/Resort, Signature, and Date");
+    if (
+      !participantName ||
+      !participantSignature ||
+      !participantDate ||
+      !storeResort
+    ) {
+      alert(
+        "Please fill in required fields: Participant Name, Store/Resort, Signature, and Date",
+      );
       return;
     }
 
@@ -745,38 +778,50 @@ const EnrichedAirForm = () => {
       const html2canvas = await loadHTML2Canvas();
 
       const canvas = await html2canvas(formRef.current, {
-        scale: 1,  // ✅ Reduced from 2
+        scale: 1, // ✅ Reduced from 2
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
         ignoreElements: (element) => {
-          return element.classList.contains("no-print") ||
-                 !!(element.tagName === "IMG" && element.getAttribute("src")?.startsWith("http"));
+          return (
+            element.classList.contains("no-print") ||
+            !!(
+              element.tagName === "IMG" &&
+              element.getAttribute("src")?.startsWith("http")
+            )
+          );
         },
         onclone: (clonedDoc) => {
           const allEls = clonedDoc.querySelectorAll("*");
           allEls.forEach((el) => {
             const htmlEl = el as HTMLElement;
             if (htmlEl.style) {
-              const props = ['color', 'backgroundColor', 'borderColor'];
-              props.forEach(prop => {
+              const props = ["color", "backgroundColor", "borderColor"];
+              props.forEach((prop) => {
                 const value = htmlEl.style.getPropertyValue(prop);
-                if (value && value.includes('lab')) {
-                  htmlEl.style.setProperty(prop, 'rgb(0, 0, 0)', 'important');
+                if (value && value.includes("lab")) {
+                  htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
                 }
               });
-              
-              if (!htmlEl.style.color || htmlEl.style.color.includes('lab')) {
+
+              if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
                 htmlEl.style.color = "rgb(0, 0, 0)";
               }
-              if (htmlEl.tagName !== "INPUT" && (!htmlEl.style.backgroundColor || htmlEl.style.backgroundColor.includes('lab'))) {
+              if (
+                htmlEl.tagName !== "INPUT" &&
+                (!htmlEl.style.backgroundColor ||
+                  htmlEl.style.backgroundColor.includes("lab"))
+              ) {
                 htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
               }
-              if (!htmlEl.style.borderColor || htmlEl.style.borderColor.includes('lab')) {
+              if (
+                !htmlEl.style.borderColor ||
+                htmlEl.style.borderColor.includes("lab")
+              ) {
                 htmlEl.style.borderColor = "rgb(0, 0, 0)";
               }
-              
+
               htmlEl.style.removeProperty("filter");
               htmlEl.style.removeProperty("backdrop-filter");
               htmlEl.style.removeProperty("box-shadow");
@@ -785,13 +830,13 @@ const EnrichedAirForm = () => {
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.75);  // ✅ JPEG at 75%
+      const imgData = canvas.toDataURL("image/jpeg", 0.75); // ✅ JPEG at 75%
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
       const imgProps = pdf.getImageProperties(imgData);
       const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
 
-      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);  // ✅ JPEG format
+      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight); // ✅ JPEG format
 
       const pdfBlob = pdf.output("blob");
       const fileSizeMB = pdfBlob.size / 1024 / 1024;
@@ -803,18 +848,23 @@ const EnrichedAirForm = () => {
         .replace(/\s+/g, "_")
         .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
 
-      const pdfFile = new File([pdfBlob], fileName, { 
-        type: "application/pdf" 
+      const pdfFile = new File([pdfBlob], fileName, {
+        type: "application/pdf",
       });
 
-      // ✅ Add to booking context
-      dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      //  Add to booking context
+      handelmutaion.mutate({
+        id: id,
+        token: token,
+        documents: pdfFile,
+      });
 
-      alert("PDF created and added to your booking successfully!");
+      // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
 
+      toast.success("PDF created and added to your booking successfully!");
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
-      alert("PDF generation failed. Please try again.");
+      toast.error("PDF generation failed. Please try again.");
     } finally {
       setIsGeneratingPDF(false);
     }
@@ -823,8 +873,8 @@ const EnrichedAirForm = () => {
   return (
     <div className="min-h-screen bg-background py-4 px-4">
       {/* Form Content */}
-      <div 
-        ref={formRef}  // ✅ Add ref
+      <div
+        ref={formRef} // ✅ Add ref
         className="print-area max-w-4xl mx-auto bg-card shadow-xl rounded-lg overflow-hidden"
       >
         {/* Header with Logo and Title */}

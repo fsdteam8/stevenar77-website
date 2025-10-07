@@ -158,7 +158,7 @@
 
 //         pdf.setFontSize(10)
 //         pdf.setFont("helvetica", "normal")
-        
+
 //         // Question text
 //         const questionLines = pdf.splitTextToSize(
 //           `${question.id}. ${question.text}`,
@@ -177,7 +177,7 @@
 //           // For multiple choice questions - use checkmarks like web form
 //           question.options.forEach((option) => {
 //             const isSelected = answers[question.id] === option
-            
+
 //             // Checkbox with checkmark for selected items
 //             pdf.setFont("helvetica", "normal")
 //             // Draw checkbox
@@ -187,17 +187,17 @@
 //               pdf.line(margin + 6, yPosition - 1, margin + 7, yPosition)
 //               pdf.line(margin + 7, yPosition, margin + 9, yPosition - 2)
 //             }
-            
+
 //             // Option text - make selected option bold
 //             if (isSelected) {
 //               pdf.setFont("helvetica", "bold")
 //             } else {
 //               pdf.setFont("helvetica", "normal")
 //             }
-            
+
 //             pdf.text(option, margin + 15, yPosition)
 //             yPosition += 4.5
-            
+
 //             // Reset font to normal for next option
 //             pdf.setFont("helvetica", "normal")
 //           })
@@ -226,7 +226,7 @@
 //       pdf.text("Signature", margin, yPosition)
 //       pdf.text(signature, margin + 20, yPosition) // Add the actual signature
 //       pdf.line(margin + 20, yPosition + 1, margin + 80, yPosition + 1)
-      
+
 //       pdf.text("Date", margin + 100, yPosition)
 //       pdf.text(date, margin + 115, yPosition) // Add the actual date
 //       pdf.line(margin + 115, yPosition + 1, margin + 170, yPosition + 1)
@@ -267,7 +267,7 @@
 //             {isGeneratingPDF ? "Generating PDF..." : "📄 Export PDF"}
 //           </Button>
 //         </div>
-   
+
 //         {/* Form Content */}
 //         <div className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
 //           {/* Logo and Title Section - Matching the reference image */}
@@ -275,11 +275,11 @@
 //             <div className="flex items-center justify-center space-x-4 mb-3">
 //               {/* PADI Logo */}
 //               <div className="w-[100px] h-[100px] bg-white rounded-full flex items-center justify-center">
-//                 <Image 
-//                   src="/images/standard.png" 
-//                   alt="PADI Logo" 
+//                 <Image
+//                   src="/images/standard.png"
+//                   alt="PADI Logo"
 //                   className="w-10 h-10 object-contain"
-//                   width={100}  
+//                   width={100}
 //                   height={100}
 //                 />
 //               </div>
@@ -412,36 +412,38 @@
 
 // export default QuickReview
 
+"use client";
 
-
-"use client"
-
-import { Button } from "@/components/ui/button"
-import Image from "next/image"
-import { useState, useRef } from "react"
-import { useBooking } from "../course/booking-context"
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { useState, useRef } from "react";
+import { useBooking } from "../course/booking-context";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { quickreview } from "@/lib/quickreview";
+import { useSession } from "next-auth/react";
 
 const loadJsPDF = async () => {
-  const { default: jsPDF } = await import("jspdf")
-  return jsPDF
-}
+  const { default: jsPDF } = await import("jspdf");
+  return jsPDF;
+};
 
 const loadHTML2Canvas = async () => {
-  const { default: html2canvas } = await import("html2canvas")
-  return html2canvas
-}
+  const { default: html2canvas } = await import("html2canvas");
+  return html2canvas;
+};
 
 const QuickReview = () => {
-  const { dispatch } = useBooking()
-  
-  const [studentName, setStudentName] = useState("")
-  const [signature, setSignature] = useState("")
-  const [date, setDate] = useState("")
-  const [answers, setAnswers] = useState<{ [key: number]: string }>({})
-  const [oxygenLimit, setOxygenLimit] = useState("")
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
+  const { dispatch } = useBooking();
 
-  const formRef = useRef<HTMLDivElement>(null)
+  const [studentName, setStudentName] = useState("");
+  const [signature, setSignature] = useState("");
+  const [date, setDate] = useState("");
+  const [answers, setAnswers] = useState<{ [key: number]: string }>({});
+  const [oxygenLimit, setOxygenLimit] = useState("");
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
+  const formRef = useRef<HTMLDivElement>(null);
 
   const questions = [
     {
@@ -512,7 +514,12 @@ const QuickReview = () => {
     {
       id: 9,
       text: "Warning signs and symptoms of a CNS convulsion, if they occur, may include",
-      options: ["a. visual disturbances.", "b. limb and joint pain.", "c. heart burn.", "d. All of the above."],
+      options: [
+        "a. visual disturbances.",
+        "b. limb and joint pain.",
+        "c. heart burn.",
+        "d. All of the above.",
+      ],
     },
     {
       id: 10,
@@ -524,11 +531,11 @@ const QuickReview = () => {
         "d. transporting the cylinder to the dive site.",
       ],
     },
-  ]
+  ];
 
   const handleAnswerChange = (questionId: number, answer: string) => {
-    setAnswers((prev) => ({ ...prev, [questionId]: answer }))
-  }
+    setAnswers((prev) => ({ ...prev, [questionId]: answer }));
+  };
 
   // const handleExportPDF = async () => {
   //   if (!studentName || !signature || !date) {
@@ -566,7 +573,7 @@ const QuickReview = () => {
   //                 htmlEl.style.setProperty(prop, 'rgb(0, 0, 0)', 'important')
   //               }
   //             })
-              
+
   //             if (!htmlEl.style.color || htmlEl.style.color.includes('lab')) {
   //               htmlEl.style.color = "rgb(0, 0, 0)"
   //             }
@@ -576,7 +583,7 @@ const QuickReview = () => {
   //             if (!htmlEl.style.borderColor || htmlEl.style.borderColor.includes('lab')) {
   //               htmlEl.style.borderColor = "rgb(0, 0, 0)"
   //             }
-              
+
   //             htmlEl.style.removeProperty("filter")
   //             htmlEl.style.removeProperty("backdrop-filter")
   //             htmlEl.style.removeProperty("box-shadow")
@@ -604,8 +611,8 @@ const QuickReview = () => {
   //       .replace(/\s+/g, "_")
   //       .trim()}_${new Date().toISOString().split("T")[0]}.pdf`
 
-  //     const pdfFile = new File([pdfBlob], fileName, { 
-  //       type: "application/pdf" 
+  //     const pdfFile = new File([pdfBlob], fileName, {
+  //       type: "application/pdf"
   //     })
 
   //     dispatch({ type: "ADD_DOCUMENT", payload: pdfFile })
@@ -619,101 +626,142 @@ const QuickReview = () => {
   //     setIsGeneratingPDF(false)
   //   }
   // }
+  const { data: session } = useSession();
+  const id = session?.user?.id || '';
+  const token = session?.accessToken || '';
+
+  const handelmutaion = useMutation({
+    mutationFn: async ({
+      id,
+      documents,
+      token,
+    }: {
+      id: string;
+      documents: File;
+      token: string;
+    }) => quickreview(id, token, documents),
+    onSuccess: (data) => {
+      console.log("Upload successful:", data);
+      toast.success("PDF uploaded successfully!");
+    },
+    onError: (error) => {
+      console.error("Upload failed:", error);
+      toast.error("Failed to upload PDF.");
+    },
+  });
 
   const handleExportPDF = async () => {
-  if (!studentName || !signature || !date) {
-    alert("Please fill in required fields: Name, Signature, and Date");
-    return;
-  }
+    if (!studentName || !signature || !date) {
+      alert("Please fill in required fields: Name, Signature, and Date");
+      return;
+    }
 
-  setIsGeneratingPDF(true);
+    setIsGeneratingPDF(true);
 
-  try {
-    if (!formRef.current) throw new Error("Form reference not found");
+    try {
+      if (!formRef.current) throw new Error("Form reference not found");
 
-    console.log("Generating PDF...");
-    const html2canvas = await loadHTML2Canvas();
+      console.log("Generating PDF...");
+      const html2canvas = await loadHTML2Canvas();
 
-    const canvas = await html2canvas(formRef.current, {
-      scale: 1,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: "#ffffff",
-      logging: false,
-      ignoreElements: (element) => {
-        return element.classList.contains("no-print") ||
-               !!(element.tagName === "IMG" && element.getAttribute("src")?.startsWith("http"));
-      },
-      onclone: (clonedDoc) => {
-        const allEls = clonedDoc.querySelectorAll("*");
-        allEls.forEach((el) => {
-          const htmlEl = el as HTMLElement;
-          if (htmlEl.style) {
-            const props = ['color', 'backgroundColor', 'borderColor'];
-            props.forEach(prop => {
-              const value = htmlEl.style.getPropertyValue(prop);
-              if (value && value.includes('lab')) {
-                htmlEl.style.setProperty(prop, 'rgb(0, 0, 0)', 'important');
+      const canvas = await html2canvas(formRef.current, {
+        scale: 1,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        logging: false,
+        ignoreElements: (element) => {
+          return (
+            element.classList.contains("no-print") ||
+            !!(
+              element.tagName === "IMG" &&
+              element.getAttribute("src")?.startsWith("http")
+            )
+          );
+        },
+        onclone: (clonedDoc) => {
+          const allEls = clonedDoc.querySelectorAll("*");
+          allEls.forEach((el) => {
+            const htmlEl = el as HTMLElement;
+            if (htmlEl.style) {
+              const props = ["color", "backgroundColor", "borderColor"];
+              props.forEach((prop) => {
+                const value = htmlEl.style.getPropertyValue(prop);
+                if (value && value.includes("lab")) {
+                  htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
+                }
+              });
+
+              if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
+                htmlEl.style.color = "rgb(0, 0, 0)";
               }
-            });
-            
-            if (!htmlEl.style.color || htmlEl.style.color.includes('lab')) {
-              htmlEl.style.color = "rgb(0, 0, 0)";
+              if (
+                htmlEl.tagName !== "INPUT" &&
+                (!htmlEl.style.backgroundColor ||
+                  htmlEl.style.backgroundColor.includes("lab"))
+              ) {
+                htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
+              }
+              if (
+                !htmlEl.style.borderColor ||
+                htmlEl.style.borderColor.includes("lab")
+              ) {
+                htmlEl.style.borderColor = "rgb(0, 0, 0)";
+              }
+
+              htmlEl.style.removeProperty("filter");
+              htmlEl.style.removeProperty("backdrop-filter");
+              htmlEl.style.removeProperty("box-shadow");
             }
-            if (htmlEl.tagName !== "INPUT" && (!htmlEl.style.backgroundColor || htmlEl.style.backgroundColor.includes('lab'))) {
-              htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-            }
-            if (!htmlEl.style.borderColor || htmlEl.style.borderColor.includes('lab')) {
-              htmlEl.style.borderColor = "rgb(0, 0, 0)";
-            }
-            
-            htmlEl.style.removeProperty("filter");
-            htmlEl.style.removeProperty("backdrop-filter");
-            htmlEl.style.removeProperty("box-shadow");
-          }
-        });
-      },
-    });
+          });
+        },
+      });
 
-    const imgData = canvas.toDataURL("image/jpeg", 0.75);
-    const jsPDF = await loadJsPDF();
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
+      const imgData = canvas.toDataURL("image/jpeg", 0.75);
+      const jsPDF = await loadJsPDF();
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
 
-    pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);
+      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);
 
-    const pdfBlob = pdf.output("blob");
-    const fileSizeMB = pdfBlob.size / 1024 / 1024;
+      const pdfBlob = pdf.output("blob");
+      const fileSizeMB = pdfBlob.size / 1024 / 1024;
 
-    console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
+      console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
 
-    const fileName = `PADI_Quick_Review_${studentName
-      .replace(/[^a-zA-Z0-9\s]/g, "")
-      .replace(/\s+/g, "_")
-      .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
+      const fileName = `PADI_Quick_Review_${studentName
+        .replace(/[^a-zA-Z0-9\s]/g, "")
+        .replace(/\s+/g, "_")
+        .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
 
-    const pdfFile = new File([pdfBlob], fileName, { 
-      type: "application/pdf" 
-    });
+      const pdfFile = new File([pdfBlob], fileName, {
+        type: "application/pdf",
+      });
+      console.log("pdf file ", pdfFile);
 
-    // ✅ THIS IS THE UPLOAD LOGIC
-    dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      // api mutation
+      handelmutaion.mutate({
+        id: id,
+        token: token,
+        documents: pdfFile,
+      });
 
-    alert("PDF created and added to your booking successfully!");
+      // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
 
-  } catch (error: unknown) {
-    console.error("Error generating PDF:", error);
-    alert("PDF generation failed. Please try again.");
-  } finally {
-    setIsGeneratingPDF(false);
-  }
-};
+      toast.success("PDF created and added to your booking successfully!");
+    } catch (error: unknown) {
+      console.error("Error generating PDF:", error);
+      toast.error("PDF generation failed. Please try again.");
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background py-4 px-4">
-      <div 
+      <div
         ref={formRef}
         className="print-area max-w-4xl mx-auto bg-card shadow-xl rounded-lg overflow-hidden"
       >
@@ -723,17 +771,19 @@ const QuickReview = () => {
           <div className="bg-white py-6 px-6 text-center">
             <div className="flex items-center justify-center space-x-4 mb-3">
               <div className="w-[100px] h-[100px] bg-white rounded-full flex items-center justify-center">
-                <Image 
-                  src="/images/standard.png" 
-                  alt="PADI Logo" 
+                <Image
+                  src="/images/standard.png"
+                  alt="PADI Logo"
                   className="w-10 h-10 object-contain"
-                  width={100}  
+                  width={100}
                   height={100}
                   crossOrigin="anonymous"
                 />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">PADI Enriched Air Diver Course</h1>
+                <h1 className="text-2xl font-bold">
+                  PADI Enriched Air Diver Course
+                </h1>
                 <h2 className="text-xl font-semibold">Quick Review</h2>
               </div>
             </div>
@@ -761,9 +811,13 @@ const QuickReview = () => {
             {/* Questions */}
             <div className="space-y-8">
               {questions.map((question) => (
-                <div key={question.id} className="border-b border-gray-200 pb-6 last:border-b-0">
+                <div
+                  key={question.id}
+                  className="border-b border-gray-200 pb-6 last:border-b-0"
+                >
                   <p className="text-sm font-medium mb-4 leading-relaxed">
-                    <span className="font-bold">{question.id}.</span> {question.text}
+                    <span className="font-bold">{question.id}.</span>{" "}
+                    {question.text}
                   </p>
 
                   {question.isInput ? (
@@ -772,7 +826,9 @@ const QuickReview = () => {
                         <input
                           type="text"
                           value={question.id === 2 ? oxygenLimit : ""}
-                          onChange={(e) => question.id === 2 && setOxygenLimit(e.target.value)}
+                          onChange={(e) =>
+                            question.id === 2 && setOxygenLimit(e.target.value)
+                          }
                           placeholder="______"
                           className="border-0 bg-transparent px-2 py-1 w-full text-sm focus:outline-none text-center font-bold"
                         />
@@ -782,21 +838,28 @@ const QuickReview = () => {
                   ) : (
                     <div className="ml-6 space-y-2">
                       {question.options?.map((option) => (
-                        <label key={option} className="flex items-start gap-3 cursor-pointer group">
+                        <label
+                          key={option}
+                          className="flex items-start gap-3 cursor-pointer group"
+                        >
                           <div className="flex items-center justify-center w-4 h-4 border border-gray-400 rounded-sm mt-0.5">
                             <input
                               type="radio"
                               name={`question-${question.id}`}
                               value={option}
                               checked={answers[question.id] === option}
-                              onChange={(e) => handleAnswerChange(question.id, e.target.value)}
+                              onChange={(e) =>
+                                handleAnswerChange(question.id, e.target.value)
+                              }
                               className="opacity-0 absolute"
                             />
                             {answers[question.id] === option && (
                               <div className="w-2 h-2 bg-blue-600 rounded-sm"></div>
                             )}
                           </div>
-                          <span className={`text-sm ${answers[question.id] === option ? 'font-bold text-blue-700' : 'text-gray-700'}`}>
+                          <span
+                            className={`text-sm ${answers[question.id] === option ? "font-bold text-blue-700" : "text-gray-700"}`}
+                          >
                             {option}
                           </span>
                         </label>
@@ -809,16 +872,21 @@ const QuickReview = () => {
 
             {/* Student Statement */}
             <div className="mt-10 p-6 bg-gray-100 rounded-lg border border-gray-300">
-              <p className="text-sm font-bold mb-4 text-gray-800">Student Statement:</p>
+              <p className="text-sm font-bold mb-4 text-gray-800">
+                Student Statement:
+              </p>
               <p className="text-sm italic mb-6 text-gray-700 leading-relaxed">
-                &quot;Any questions I answered incorrectly I&apos;ve had explained to me and I understand what I missed.&quot;
+                &quot;Any questions I answered incorrectly I&apos;ve had
+                explained to me and I understand what I missed.&quot;
               </p>
 
               {/* Signature and Date */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-bold whitespace-nowrap">Signature:</span>
+                    <span className="text-sm font-bold whitespace-nowrap">
+                      Signature:
+                    </span>
                     <div className="flex-1 border-b-2 border-gray-400">
                       <input
                         type="text"
@@ -833,7 +901,9 @@ const QuickReview = () => {
                 </div>
                 <div>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-bold whitespace-nowrap">Date:</span>
+                    <span className="text-sm font-bold whitespace-nowrap">
+                      Date:
+                    </span>
                     <div className="flex-1 border-b-2 border-gray-400">
                       <input
                         type="date"
@@ -849,9 +919,7 @@ const QuickReview = () => {
 
             {/* Footer */}
             <div className="mt-8 pt-6 border-t border-gray-300 text-center">
-              <p className="text-xs text-gray-500">
-                435DT (5/09) Version 1.0
-              </p>
+              <p className="text-xs text-gray-500">435DT (5/09) Version 1.0</p>
             </div>
           </div>
         </div>
@@ -872,7 +940,7 @@ const QuickReview = () => {
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default QuickReview
+export default QuickReview;
