@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { type BookingState, useBooking } from "./booking-context"
-import { PersonalInformationStep } from "./steps/personal-information-step"
-import { DocumentUploadStep } from "./steps/document-upload-step"
-import { AllInformationDoneStep } from "./steps/all-information-done-step"
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { type BookingState, useBooking } from "./booking-context";
+import { PersonalInformationStep } from "./steps/personal-information-step";
+import { DocumentUploadStep } from "./steps/document-upload-step";
+import { AllInformationDoneStep } from "./steps/all-information-done-step";
 
 const steps = [
   { id: 0, title: "Personal Information", component: PersonalInformationStep },
@@ -16,35 +16,44 @@ const steps = [
     component: DocumentUploadStep,
   },
   { id: 2, title: "All Information Done", component: AllInformationDoneStep },
-]
+];
 
 // Detailed validation with error messages for each step
-const validateStepWithErrors = (stepIndex: number, state: BookingState): { isValid: boolean; errors: string[] } => {
-  const errors: string[] = []
+const validateStepWithErrors = (
+  stepIndex: number,
+  state: BookingState,
+): { isValid: boolean; errors: string[] } => {
+  const errors: string[] = [];
 
   switch (stepIndex) {
     case 0: // Personal Information Step
-      const { personalInfo } = state
+      const { personalInfo } = state;
 
       if (!personalInfo.name?.trim()) {
-        errors.push("Name is required")
+        errors.push("Name is required");
       }
       if (!personalInfo.email?.trim()) {
-        errors.push("Email is required")
+        errors.push("Email is required");
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personalInfo.email)) {
-        errors.push("Please enter a valid email address")
+        errors.push("Please enter a valid email address");
       }
       if (!personalInfo.phone?.trim()) {
-        errors.push("Phone number is required")
+        errors.push("Phone number is required");
       }
       if (!personalInfo.dateOfBirth?.trim()) {
-        errors.push("Date of birth is required")
+        errors.push("Date of birth is required");
       }
       if (!personalInfo.address?.trim()) {
-        errors.push("Address is required")
+        errors.push("Address is required");
+      }
+      if (!personalInfo.city?.trim()) {
+        errors.push("City is required");
+      }
+      if (!personalInfo.state?.trim()) {
+        errors.push("State is required");
       }
       if (!personalInfo.postalCode?.trim()) {
-        errors.push("Postal code is required")
+        errors.push("Postal code is required");
       }
       // if (!personalInfo.emergencyName?.trim()) {
       //   errors.push("Emergency contact name is required")
@@ -53,92 +62,95 @@ const validateStepWithErrors = (stepIndex: number, state: BookingState): { isVal
       //   errors.push("Emergency contact phone is required")
       // }
       if (!personalInfo.gender?.trim()) {
-        errors.push("Gender is required")
+        errors.push("Gender is required");
       }
-      if (!personalInfo.shoeSize || String(personalInfo.shoeSize).trim() === "") {
-        errors.push("Shoe size is required")
+      if (
+        !personalInfo.shoeSize ||
+        String(personalInfo.shoeSize).trim() === ""
+      ) {
+        errors.push("Shoe size is required");
       }
       if (!personalInfo.height || String(personalInfo.height).trim() === "") {
-        errors.push("Height is required")
+        errors.push("Height is required");
       }
       if (!personalInfo.weight || String(personalInfo.weight).trim() === "") {
-        errors.push("Weight is required")
+        errors.push("Weight is required");
       }
-      break
+      break;
 
     case 1: // Document Upload Step
       // Documents are optional, so this step is always valid
-      break
+      break;
 
     case 2: // All information done
-      break
+      break;
 
     default:
-      errors.push("Invalid step")
+      errors.push("Invalid step");
   }
 
   return {
     isValid: errors.length === 0,
     errors,
-  }
-}
+  };
+};
 
 // Simple validation function for button state
 const validateStep = (stepIndex: number, state: BookingState): boolean => {
-  return validateStepWithErrors(stepIndex, state).isValid
-}
+  return validateStepWithErrors(stepIndex, state).isValid;
+};
 
 export function MultiStepForm() {
-  const { state, dispatch } = useBooking()
-  const [validationErrors, setValidationErrors] = useState<string[]>([])
-  const [showValidation, setShowValidation] = useState(false)
+  const { state, dispatch } = useBooking();
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [showValidation, setShowValidation] = useState(false);
 
-  const currentStepData = steps[state.currentStep]
-  const CurrentStepComponent = currentStepData?.component
+  const currentStepData = steps[state.currentStep];
+  const CurrentStepComponent = currentStepData?.component;
 
   // Check if current step is valid
-  const isCurrentStepValid = validateStep(state.currentStep, state)
+  const isCurrentStepValid = validateStep(state.currentStep, state);
 
   const handleNext = () => {
     // Trigger validation display in child component
-    window.dispatchEvent(new Event("trigger-validation"))
+    window.dispatchEvent(new Event("trigger-validation"));
 
     // Small delay to allow child component to update
     setTimeout(() => {
       // Validate current step and get errors
-      const validation = validateStepWithErrors(state.currentStep, state)
+      const validation = validateStepWithErrors(state.currentStep, state);
 
       if (!validation.isValid) {
-        setValidationErrors(validation.errors)
-        setShowValidation(true)
+        setValidationErrors(validation.errors);
+        setShowValidation(true);
         // Scroll to top to show error message
-        window.scrollTo({ top: 0, behavior: "smooth" })
-        return // ⬅️ THIS BLOCKS PROGRESSION
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return; // ⬅️ THIS BLOCKS PROGRESSION
       }
 
       // This code only runs if validation passes
-      setValidationErrors([])
-      setShowValidation(false)
+      setValidationErrors([]);
+      setShowValidation(false);
 
       if (isLastStep && validation.isValid) {
-        console.log("Form completed!", state)
+        console.log("Form completed!", state);
       } else if (state.currentStep < steps.length - 1 && validation.isValid) {
-        dispatch({ type: "SET_STEP", payload: state.currentStep + 1 }) // Only advances if valid
+        dispatch({ type: "SET_STEP", payload: state.currentStep + 1 }); // Only advances if valid
       }
-    }, 50)
-  }
+    }, 50);
+  };
 
   const handleBack = () => {
     if (state.currentStep > 0) {
-      setValidationErrors([])
-      setShowValidation(false)
+      setValidationErrors([]);
+      setShowValidation(false);
       // Reset validation trigger in child component
-      window.dispatchEvent(new Event("reset-validation"))
-      dispatch({ type: "SET_STEP", payload: state.currentStep - 1 })
+      window.dispatchEvent(new Event("reset-validation"));
+      dispatch({ type: "SET_STEP", payload: state.currentStep - 1 });
     }
-  }
+  };
 
-  const isLastStep = state.currentStep === steps.length - 1
+  const isLastStep = state.currentStep === steps.length - 1;
 
   return (
     <Card className="p-6 mt-6">
@@ -161,7 +173,9 @@ export function MultiStepForm() {
               </svg>
             </div>
             <div className="ml-3 flex-1">
-              <h3 className="text-sm font-medium text-red-800">Please complete all required fields</h3>
+              <h3 className="text-sm font-medium text-red-800">
+                Please complete all required fields
+              </h3>
               <div className="mt-2 text-sm text-red-700">
                 <ul className="list-disc list-inside space-y-1">
                   {validationErrors.map((error, index) => (
@@ -180,13 +194,17 @@ export function MultiStepForm() {
           <div key={step.id} className="flex items-center">
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                index <= state.currentStep ? "bg-[#0694a2] text-white" : "bg-[#c0c3c1] text-[#68706a]"
+                index <= state.currentStep
+                  ? "bg-[#0694a2] text-white"
+                  : "bg-[#c0c3c1] text-[#68706a]"
               }`}
             >
               {index + 1}
             </div>
             {index < steps.length - 1 && (
-              <div className={`w-12 h-0.5 mx-2 ${index < state.currentStep ? "bg-[#0694a2]" : "bg-[#c0c3c1]"}`} />
+              <div
+                className={`w-12 h-0.5 mx-2 ${index < state.currentStep ? "bg-[#0694a2]" : "bg-[#c0c3c1]"}`}
+              />
             )}
           </div>
         ))}
@@ -218,5 +236,5 @@ export function MultiStepForm() {
         )}
       </div>
     </Card>
-  )
+  );
 }
