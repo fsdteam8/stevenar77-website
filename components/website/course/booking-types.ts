@@ -39,7 +39,7 @@ export interface BookingState {
     emergencyPhoneNumber: string;
     courseName: string;
     shoeSize: string;
-    hight: string; // Fixed typo from 'hight' to 'height'
+    hight: string; 
     weight: string;
     gender: string;
   };

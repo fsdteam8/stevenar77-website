@@ -581,12 +581,14 @@
 
 // export default ResqueDiverQuickReview;
 
-
-
 "use client";
 import Image from "next/image";
 import React, { useState, useRef } from "react";
 import { useBooking } from "../course/booking-context";
+import { useMutation } from "@tanstack/react-query";
+import { quickreview } from "@/lib/quickreview";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 const loadJsPDF = async () => {
   const { default: jsPDF } = await import("jspdf");
@@ -600,7 +602,7 @@ const loadHTML2Canvas = async () => {
 
 const ResqueDiverQuickReview = () => {
   const { dispatch } = useBooking();
-  
+
   const [participantName, setParticipantName] = useState("");
   const [guardianSignature, setGuardianSignature] = useState("");
   const [date, setDate] = useState("");
@@ -608,7 +610,29 @@ const ResqueDiverQuickReview = () => {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const formRef = useRef<HTMLDivElement>(null);
+  const { data: session } = useSession();
+  const id = session?.user?.id || "";
+  const token = session?.accessToken || "";
 
+  const handelmutaion = useMutation({
+    mutationFn: async ({
+      id,
+      documents,
+      token,
+    }: {
+      id: string;
+      documents: File;
+      token: string;
+    }) => quickreview(id, token, documents),
+    onSuccess: (data) => {
+      console.log("Upload successful:", data);
+      toast.success("PDF uploaded successfully!");
+    },
+    onError: (error) => {
+      console.error("Upload failed:", error);
+      toast.error("Failed to upload PDF.");
+    },
+  });
   const questions = [
     {
       id: 1,
@@ -831,32 +855,44 @@ const ResqueDiverQuickReview = () => {
         backgroundColor: "#ffffff",
         logging: false,
         ignoreElements: (element) => {
-          return element.classList.contains("no-print") ||
-                 !!(element.tagName === "IMG" && element.getAttribute("src")?.startsWith("http"));
+          return (
+            element.classList.contains("no-print") ||
+            !!(
+              element.tagName === "IMG" &&
+              element.getAttribute("src")?.startsWith("http")
+            )
+          );
         },
         onclone: (clonedDoc) => {
           const allEls = clonedDoc.querySelectorAll("*");
           allEls.forEach((el) => {
             const htmlEl = el as HTMLElement;
             if (htmlEl.style) {
-              const props = ['color', 'backgroundColor', 'borderColor'];
-              props.forEach(prop => {
+              const props = ["color", "backgroundColor", "borderColor"];
+              props.forEach((prop) => {
                 const value = htmlEl.style.getPropertyValue(prop);
-                if (value && value.includes('lab')) {
-                  htmlEl.style.setProperty(prop, 'rgb(0, 0, 0)', 'important');
+                if (value && value.includes("lab")) {
+                  htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
                 }
               });
-              
-              if (!htmlEl.style.color || htmlEl.style.color.includes('lab')) {
+
+              if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
                 htmlEl.style.color = "rgb(0, 0, 0)";
               }
-              if (htmlEl.tagName !== "INPUT" && (!htmlEl.style.backgroundColor || htmlEl.style.backgroundColor.includes('lab'))) {
+              if (
+                htmlEl.tagName !== "INPUT" &&
+                (!htmlEl.style.backgroundColor ||
+                  htmlEl.style.backgroundColor.includes("lab"))
+              ) {
                 htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
               }
-              if (!htmlEl.style.borderColor || htmlEl.style.borderColor.includes('lab')) {
+              if (
+                !htmlEl.style.borderColor ||
+                htmlEl.style.borderColor.includes("lab")
+              ) {
                 htmlEl.style.borderColor = "rgb(0, 0, 0)";
               }
-              
+
               htmlEl.style.removeProperty("filter");
               htmlEl.style.removeProperty("backdrop-filter");
               htmlEl.style.removeProperty("box-shadow");
@@ -884,15 +920,20 @@ const ResqueDiverQuickReview = () => {
         .replace(/\s+/g, "_")
         .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
 
-      const pdfFile = new File([pdfBlob], fileName, { 
-        type: "application/pdf" 
+      const pdfFile = new File([pdfBlob], fileName, {
+        type: "application/pdf",
       });
 
       // Upload to booking context
-      dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      handelmutaion.mutate({
+        id: id,
+        token: token,
+        documents: pdfFile,
+      });
+
+      // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
 
       alert("PDF created and added to your booking successfully!");
-
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
       alert("PDF generation failed. Please try again.");
@@ -906,7 +947,7 @@ const ResqueDiverQuickReview = () => {
       <div className="min-h-screen bg-gray-100 py-6">
         {/* Export Button */}
         <div className="max-w-6xl mx-auto mb-4 no-print">
-          <button
+          {/* <button
             onClick={handleExportPDF}
             disabled={isGeneratingPDF}
             className={`font-bold py-3 px-6 rounded-lg transition duration-200 w-full ${
@@ -916,11 +957,11 @@ const ResqueDiverQuickReview = () => {
             }`}
           >
             {isGeneratingPDF ? "Generating PDF..." : "Submit Form"}
-          </button>
+          </button> */}
         </div>
 
         {/* Form Content */}
-        <div 
+        <div
           ref={formRef}
           className="print-area max-w-6xl mx-auto bg-white p-10 text-sm leading-relaxed font-serif shadow-lg"
         >
@@ -1000,8 +1041,9 @@ const ResqueDiverQuickReview = () => {
 
           <div className="mt-8 border-2 p-6">
             <p className="text-base p-3 mt-4 mb-4">
-              <span className="font-bold">eLearner Statement</span>: Any questions I answered incorrectly I&apos;ve
-              had explained to me and I understand what I missed.
+              <span className="font-bold">eLearner Statement</span>: Any
+              questions I answered incorrectly I&apos;ve had explained to me and
+              I understand what I missed.
             </p>
             <div className="flex gap-10">
               <div className="flex-5 w-full">
@@ -1032,7 +1074,7 @@ const ResqueDiverQuickReview = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="max-w-6xl mx-auto mb-4 mt-4 no-print">
           <button
             onClick={handleExportPDF}
