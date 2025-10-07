@@ -1,151 +1,192 @@
-"use client";
+"use client"
 
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { BookingState, useBooking } from "./booking-context";
-import { PersonalInformationStep } from "./steps/personal-information-step";
-import { MedicalHistoryStep } from "./steps/medical-history-step";
-import { ActivityQuestionsStep } from "./steps/activity-questions-step";
-import { LiabilityReleaseStep } from "./steps/liability-release-step";
-import { DocumentUploadStep } from "./steps/document-upload-step";
-import { ElectronicSignatureStep } from "./steps/electronic-signature-step";
-import { AllInformationDoneStep } from "./steps/all-information-done-step";
-
-// import { FaArrowRight } from "react-icons/fa"
+import { useState } from "react"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { type BookingState, useBooking } from "./booking-context"
+import { PersonalInformationStep } from "./steps/personal-information-step"
+import { DocumentUploadStep } from "./steps/document-upload-step"
+import { AllInformationDoneStep } from "./steps/all-information-done-step"
 
 const steps = [
   { id: 0, title: "Personal Information", component: PersonalInformationStep },
-  // { id: 1, title: "Medical History Checklist", component: MedicalHistoryStep },
-  // {
-  //   id: 2,
-  //   title: "Activity Specific Questions",
-  //   component: ActivityQuestionsStep,
-  // },
-  // {
-  //   id: 3,
-  //   title: "Liability Release Agreement",
-  //   component: LiabilityReleaseStep,
-  // },
-  // { id: 4, title: "Electronic Signature", component: ElectronicSignatureStep },
   {
     id: 1,
     title: "Medical Certifications & Document",
     component: DocumentUploadStep,
   },
   { id: 2, title: "All Information Done", component: AllInformationDoneStep },
-];
+]
 
-console.log()
-// Validation functions for each step
-const validateStep = (stepIndex: number, state: BookingState) => {
+// Detailed validation with error messages for each step
+const validateStepWithErrors = (stepIndex: number, state: BookingState): { isValid: boolean; errors: string[] } => {
+  const errors: string[] = []
+
   switch (stepIndex) {
     case 0: // Personal Information Step
-      const { personalInfo } = state;
-      return !!(
-        (
-          personalInfo.name?.trim() &&
-          personalInfo.email?.trim() &&
-          personalInfo.phone?.trim() &&
-          personalInfo.dateOfBirth?.trim() &&
-          personalInfo.address?.trim() &&
-          personalInfo.postalCode?.trim() &&
-          personalInfo.emergencyName?.trim() &&
-          personalInfo.emergencyPhoneNumber?.trim()
-        )
-        // Note: gender, shoesize, height, weight need to be added to types and connected to state
-      );
+      const { personalInfo } = state
 
-    // case 1: // Medical History Step
-    //   // This step is considered valid if user has interacted with it
-    //   // Since all conditions can be false (user has no medical conditions)
-    //   // We just need to ensure the medicalHistory object exists
-    //   return state.medicalHistory !== undefined;
+      if (!personalInfo.name?.trim()) {
+        errors.push("Name is required")
+      }
+      if (!personalInfo.email?.trim()) {
+        errors.push("Email is required")
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personalInfo.email)) {
+        errors.push("Please enter a valid email address")
+      }
+      if (!personalInfo.phone?.trim()) {
+        errors.push("Phone number is required")
+      }
+      if (!personalInfo.dateOfBirth?.trim()) {
+        errors.push("Date of birth is required")
+      }
+      if (!personalInfo.address?.trim()) {
+        errors.push("Address is required")
+      }
+      if (!personalInfo.postalCode?.trim()) {
+        errors.push("Postal code is required")
+      }
+      // if (!personalInfo.emergencyName?.trim()) {
+      //   errors.push("Emergency contact name is required")
+      // }
+      // if (!personalInfo.emergencyPhoneNumber?.trim()) {
+      //   errors.push("Emergency contact phone is required")
+      // }
+      if (!personalInfo.gender?.trim()) {
+        errors.push("Gender is required")
+      }
+      if (!personalInfo.shoeSize || String(personalInfo.shoeSize).trim() === "") {
+        errors.push("Shoe size is required")
+      }
+      if (!personalInfo.height || String(personalInfo.height).trim() === "") {
+        errors.push("Height is required")
+      }
+      if (!personalInfo.weight || String(personalInfo.weight).trim() === "") {
+        errors.push("Weight is required")
+      }
+      break
 
-    // case 2: // Activity Questions Step
-    //   const { activityQuestions } = state;
-    //   return !!(
-    //     activityQuestions.swimmingLevel?.trim() &&
-    //     activityQuestions.divingExperience?.trim() &&
-    //     activityQuestions.lastPhysicalExam?.trim() &&
-    //     activityQuestions.fitnessLevel?.trim() &&
-    //     activityQuestions.physicalApproval === true &&
-    //     activityQuestions.canSwim200m === true &&
-    //     typeof activityQuestions.claustrophobia === "boolean" &&
-    //     typeof activityQuestions.panicAttacks === "boolean"
-    //   );
-
-    // case 3: // Liability Release Step
-    //   const { liabilityAgreement } = state;
-    //   return !!(
-    //     liabilityAgreement.releaseOfLiability === true &&
-    //     liabilityAgreement.medicalFitness === true &&
-    //     liabilityAgreement.equipmentTraining === true
-    //   );
-
-    // case 4: // Electronic Signature Step
-    //   return !!(state.signature?.trim() && state.agreed === true);
     case 1: // Document Upload Step
-      // This step might be optional depending on requirements
-      // If documents are required, uncomment the next line:
-      // return state.documents.length > 0;
+      // Documents are optional, so this step is always valid
+      break
 
-      // If documents are optional:
-      return true;
-    case 2: //All information done
-      return true;
+    case 2: // All information done
+      break
 
     default:
-      return false;
+      errors.push("Invalid step")
   }
-};
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+  }
+}
+
+// Simple validation function for button state
+const validateStep = (stepIndex: number, state: BookingState): boolean => {
+  return validateStepWithErrors(stepIndex, state).isValid
+}
 
 export function MultiStepForm() {
-  const { state, dispatch } = useBooking();
+  const { state, dispatch } = useBooking()
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
+  const [showValidation, setShowValidation] = useState(false)
 
-  const currentStepData = steps[state.currentStep];
-  const CurrentStepComponent = currentStepData?.component;
+  const currentStepData = steps[state.currentStep]
+  const CurrentStepComponent = currentStepData?.component
 
   // Check if current step is valid
-  const isCurrentStepValid = validateStep(state.currentStep, state);
+  const isCurrentStepValid = validateStep(state.currentStep, state)
 
   const handleNext = () => {
-    if (isLastStep && isCurrentStepValid) {
-      // Handle form completion/submission here
-      console.log("Form completed!", state);
-      // You might want to dispatch a completion action or call an API
-      // dispatch({ type: "COMPLETE_BOOKING" });
-    } else if (state.currentStep < steps.length - 1 && isCurrentStepValid) {
-      dispatch({ type: "SET_STEP", payload: state.currentStep + 1 });
-    }
-  };
+    // Trigger validation display in child component
+    window.dispatchEvent(new Event("trigger-validation"))
+
+    // Small delay to allow child component to update
+    setTimeout(() => {
+      // Validate current step and get errors
+      const validation = validateStepWithErrors(state.currentStep, state)
+
+      if (!validation.isValid) {
+        setValidationErrors(validation.errors)
+        setShowValidation(true)
+        // Scroll to top to show error message
+        window.scrollTo({ top: 0, behavior: "smooth" })
+        return // ⬅️ THIS BLOCKS PROGRESSION
+      }
+
+      // This code only runs if validation passes
+      setValidationErrors([])
+      setShowValidation(false)
+
+      if (isLastStep && validation.isValid) {
+        console.log("Form completed!", state)
+      } else if (state.currentStep < steps.length - 1 && validation.isValid) {
+        dispatch({ type: "SET_STEP", payload: state.currentStep + 1 }) // Only advances if valid
+      }
+    }, 50)
+  }
 
   const handleBack = () => {
     if (state.currentStep > 0) {
-      dispatch({ type: "SET_STEP", payload: state.currentStep - 1 });
+      setValidationErrors([])
+      setShowValidation(false)
+      // Reset validation trigger in child component
+      window.dispatchEvent(new Event("reset-validation"))
+      dispatch({ type: "SET_STEP", payload: state.currentStep - 1 })
     }
-  };
+  }
 
-  const isLastStep = state.currentStep === steps.length - 1;
+  const isLastStep = state.currentStep === steps.length - 1
 
   return (
     <Card className="p-6 mt-6">
+      {/* Validation Error Alert */}
+      {showValidation && validationErrors.length > 0 && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <svg
+                className="h-5 w-5 text-red-400"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div className="ml-3 flex-1">
+              <h3 className="text-sm font-medium text-red-800">Please complete all required fields</h3>
+              <div className="mt-2 text-sm text-red-700">
+                <ul className="list-disc list-inside space-y-1">
+                  {validationErrors.map((error, index) => (
+                    <li key={index}>{error}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Progress Indicator */}
       <div className="flex items-center justify-center mb-8">
         {steps.map((step, index) => (
           <div key={step.id} className="flex items-center">
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                index <= state.currentStep
-                  ? "bg-[#0694a2] text-white"
-                  : "bg-[#c0c3c1] text-[#68706a]"
+                index <= state.currentStep ? "bg-[#0694a2] text-white" : "bg-[#c0c3c1] text-[#68706a]"
               }`}
             >
               {index + 1}
             </div>
             {index < steps.length - 1 && (
-              <div
-                className={`w-12 h-0.5 mx-2 ${index < state.currentStep ? "bg-[#0694a2]" : "bg-[#c0c3c1]"}`}
-              />
+              <div className={`w-12 h-0.5 mx-2 ${index < state.currentStep ? "bg-[#0694a2]" : "bg-[#c0c3c1]"}`} />
             )}
           </div>
         ))}
@@ -154,26 +195,7 @@ export function MultiStepForm() {
       {/* Step Content */}
       {CurrentStepComponent && <CurrentStepComponent />}
 
-      {/* Step Content */}
-
       {/* Navigation Buttons */}
-      {/* <div className="flex justify-between mt-8">
-        <Button
-          variant="outline"
-          onClick={handleBack}
-          disabled={state.currentStep === 0}
-          className="px-8 py-2 border-[#0694a2] text-[#0694a2] hover:bg-[#0694a2] hover:text-white bg-transparent"
-        >
-          Back
-        </Button>
-        <Button
-          onClick={handleNext}
-          disabled={!isCurrentStepValid}
-          className="px-8 py-2 bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isLastStep ? "Complete" : "Next"}
-        </Button>
-      </div> */}
       <div className="flex justify-between mt-8">
         <Button
           variant="outline"
@@ -184,8 +206,8 @@ export function MultiStepForm() {
           Back
         </Button>
 
-        {/* Hide the Complete button on the 7th step (index 6) */}
-        {state.currentStep !== 6 && (
+        {/* Hide the Complete button on the last step (index 2) */}
+        {state.currentStep !== 2 && (
           <Button
             onClick={handleNext}
             disabled={!isCurrentStepValid}
@@ -196,5 +218,5 @@ export function MultiStepForm() {
         )}
       </div>
     </Card>
-  );
+  )
 }

@@ -41,7 +41,8 @@ type PersonalInfoKeys =
 export function PersonalInformationStep() {
   const { state, dispatch } = useBooking();
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+
   const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(() => {
     if (state.personalInfo.dateOfBirth) {
       const [month, day, year] = state.personalInfo.dateOfBirth
@@ -76,8 +77,6 @@ export function PersonalInformationStep() {
     "hight",
     "weight",
   ];
-
-  console.log("hey o ", state.course.formTitle);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const validateField = (field: PersonalInfoKeys, rawValue: any): string => {
@@ -141,7 +140,6 @@ export function PersonalInformationStep() {
 
         const [month, day, year] = value.split("/").map(Number);
         const date = new Date(year, month - 1, day);
-        const today = new Date();
 
         if (
           date.getFullYear() !== year ||
@@ -231,8 +229,6 @@ export function PersonalInformationStep() {
   useEffect(() => {
     const newErrors: Record<string, string> = {};
 
-    console.log("FORM TITLE:", state.course.formTitle);
-
     requiredFields.forEach((field) => {
       const value = state.personalInfo[field] || "";
       const error = validateField(field, value);
@@ -244,31 +240,50 @@ export function PersonalInformationStep() {
     setErrors(newErrors);
   }, [state.personalInfo]);
 
+  const markFieldAsTouched = (field: string) => {
+    setTouchedFields((prev) => new Set(prev).add(field));
+  };
+
   const handleChange = (field: PersonalInfoKeys, value: string) => {
+    markFieldAsTouched(field);
     dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
   };
 
   const handleHeightChange = (type: "feet" | "inches", value: string) => {
     const numValue = value.replace(/\D/g, "");
+    markFieldAsTouched("height");
 
     if (type === "feet") {
       setHeightFeet(numValue);
       if (numValue && heightInches) {
-        handleChange("hight", `${numValue}'${heightInches}"`);
+        dispatch({
+          type: "SET_PERSONAL_INFO",
+          payload: { height: `${numValue}'${heightInches}"` },
+        });
       } else if (numValue) {
-        handleChange("hight", `${numValue}'0"`);
+        dispatch({
+          type: "SET_PERSONAL_INFO",
+          payload: { height: `${numValue}'0"` },
+        });
       }
     } else {
       setHeightInches(numValue);
       if (heightFeet && numValue) {
-        handleChange("hight", `${heightFeet}'${numValue}"`);
+        dispatch({
+          type: "SET_PERSONAL_INFO",
+          payload: { height: `${heightFeet}'${numValue}"` },
+        });
       } else if (heightFeet) {
-        handleChange("hight", `${heightFeet}'0"`);
+        dispatch({
+          type: "SET_PERSONAL_INFO",
+          payload: { height: `${heightFeet}'0"` },
+        });
       }
     }
   };
 
   const handleDateChange = (date: Date | undefined) => {
+    markFieldAsTouched("dateOfBirth");
     setDateOfBirth(date);
     if (date) {
       const formattedDate = format(date, "MM/dd/yyyy");
@@ -281,40 +296,33 @@ export function PersonalInformationStep() {
     }
   };
 
-  // const hasError = (field: PersonalInfoKeys): boolean => {
-  //   return !!errors[field];
-  // };
-
-  // const getErrorMessage = (field: PersonalInfoKeys): string => {
-  //   return errors[field] || "";
-  // };
-    const validateAll = (): boolean => {
-    const newErrors: Record<string, string> = {};
-    requiredFields.forEach((field) => {
-      const value = state.personalInfo[field];
-      const error = validateField(field, value);
-      if (error) newErrors[field] = error;
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-  const handleNext = () => {
-    setIsSubmitted(true); // 👈 show errors
-    const isValid = validateAll();
-    if (isValid) {
-      console.log("✅ All fields valid, go next step");
-      // dispatch({ type: "NEXT_STEP" })  // if you want to move to next step
-    } else {
-      console.log("❌ Some fields invalid");
-    }
-  };
   const hasError = (field: PersonalInfoKeys): boolean => {
-    return isSubmitted && !!errors[field]; // 👈 Only after clicking Next
+    return touchedFields.has(field) && !!errors[field];
   };
 
   const getErrorMessage = (field: PersonalInfoKeys): string => {
-    return isSubmitted ? errors[field] || "" : "";
+    return touchedFields.has(field) ? errors[field] || "" : "";
   };
+
+  useEffect(() => {
+    const handleValidationTrigger = () => {
+      // Mark all required fields as touched to show all errors
+      setTouchedFields(new Set(requiredFields));
+    };
+
+    const handleResetValidation = () => {
+      // Reset touched fields when navigating back
+      setTouchedFields(new Set());
+    };
+
+    window.addEventListener("trigger-validation", handleValidationTrigger);
+    window.addEventListener("reset-validation", handleResetValidation);
+
+    return () => {
+      window.removeEventListener("trigger-validation", handleValidationTrigger);
+      window.removeEventListener("reset-validation", handleResetValidation);
+    };
+  }, []);
 
   return (
     <div>
@@ -335,6 +343,7 @@ export function PersonalInformationStep() {
             placeholder="Full Name Here"
             value={state.personalInfo.name}
             onChange={(e) => handleChange("name", e.target.value)}
+            onBlur={() => markFieldAsTouched("name")}
             className={
               hasError("name")
                 ? "border-red-500 focus-visible:ring-red-500"
@@ -363,6 +372,7 @@ export function PersonalInformationStep() {
             placeholder="example@example.com"
             value={state.personalInfo.email}
             onChange={(e) => handleChange("email", e.target.value)}
+            onBlur={() => markFieldAsTouched("email")}
             className={
               hasError("email")
                 ? "border-red-500 focus-visible:ring-red-500"
@@ -390,6 +400,7 @@ export function PersonalInformationStep() {
             placeholder="+1234567890"
             value={state.personalInfo.phone}
             onChange={(e) => handleChange("phone", e.target.value)}
+            onBlur={() => markFieldAsTouched("phone")}
             className={
               hasError("phone")
                 ? "border-red-500 focus-visible:ring-red-500"
@@ -470,6 +481,7 @@ export function PersonalInformationStep() {
             placeholder="Street Address"
             value={state.personalInfo.address}
             onChange={(e) => handleChange("address", e.target.value)}
+            onBlur={() => markFieldAsTouched("address")}
             className={
               hasError("address")
                 ? "border-red-500 focus-visible:ring-red-500"
@@ -517,6 +529,7 @@ export function PersonalInformationStep() {
             placeholder="Postal Code"
             value={state.personalInfo.postalCode}
             onChange={(e) => handleChange("postalCode", e.target.value)}
+            onBlur={() => markFieldAsTouched("postalCode")}
             className={
               hasError("postalCode")
                 ? "border-red-500 focus-visible:ring-red-500"
@@ -534,7 +547,6 @@ export function PersonalInformationStep() {
           )}
         </div>
 
-        {/* Emergency Contact Name */}
         {/* <div className="space-y-2">
           <Label
             htmlFor="emergencyName"
@@ -547,6 +559,7 @@ export function PersonalInformationStep() {
             placeholder="Full Name"
             value={state.personalInfo.emergencyName}
             onChange={(e) => handleChange("emergencyName", e.target.value)}
+            onBlur={() => markFieldAsTouched("emergencyName")}
             className={
               hasError("emergencyName")
                 ? "border-red-500 focus-visible:ring-red-500"
@@ -564,7 +577,6 @@ export function PersonalInformationStep() {
           )}
         </div> */}
 
-        {/* Emergency Contact Phone */}
         {/* <div className="space-y-2">
           <Label
             htmlFor="emergencyPhoneNumber"
@@ -579,6 +591,7 @@ export function PersonalInformationStep() {
             onChange={(e) =>
               handleChange("emergencyPhoneNumber", e.target.value)
             }
+            onBlur={() => markFieldAsTouched("emergencyPhoneNumber")}
             className={
               hasError("emergencyPhoneNumber")
                 ? "border-red-500 focus-visible:ring-red-500"
@@ -607,7 +620,10 @@ export function PersonalInformationStep() {
           </Label>
           <Select
             value={state.personalInfo.gender || ""}
-            onValueChange={(value) => handleChange("gender", value)}
+            onValueChange={(value) => {
+              markFieldAsTouched("gender");
+              handleChange("gender", value);
+            }}
           >
             <SelectTrigger
               className={
@@ -643,6 +659,7 @@ export function PersonalInformationStep() {
             placeholder="e.g., 8.5"
             value={state.personalInfo.shoeSize || ""}
             onChange={(e) => handleChange("shoeSize", e.target.value)}
+            onBlur={() => markFieldAsTouched("shoeSize")}
             className={
               hasError("shoeSize")
                 ? "border-red-500 focus-visible:ring-red-500"
@@ -674,6 +691,7 @@ export function PersonalInformationStep() {
                 max="8"
                 value={heightFeet}
                 onChange={(e) => handleHeightChange("feet", e.target.value)}
+                onBlur={() => markFieldAsTouched("height")}
                 className={
                   hasError("hight")
                     ? "border-red-500 focus-visible:ring-red-500"
@@ -695,6 +713,7 @@ export function PersonalInformationStep() {
                 max="11"
                 value={heightInches}
                 onChange={(e) => handleHeightChange("inches", e.target.value)}
+                onBlur={() => markFieldAsTouched("height")}
                 className={
                   hasError("hight")
                     ? "border-red-500 focus-visible:ring-red-500"
@@ -724,9 +743,10 @@ export function PersonalInformationStep() {
           </Label>
           <Input
             id="weight"
-            placeholder="e.g., 50lbs or 70kg"
+            placeholder="e.g., 50lbs or 70lbs"
             value={state.personalInfo.weight || ""}
             onChange={(e) => handleChange("weight", e.target.value)}
+            onBlur={() => markFieldAsTouched("weight")}
             className={
               hasError("weight")
                 ? "border-red-500 focus-visible:ring-red-500"
@@ -742,7 +762,6 @@ export function PersonalInformationStep() {
           )}
         </div>
       </div>
-      
     </div>
   );
 }

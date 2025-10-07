@@ -49,10 +49,13 @@ export function createInitialState(initialCourse?: {
       emergencyName: "",
       emergencyPhoneNumber: "",
       courseName: initialCourse?.name || "",
-      shoeSize:  0,
-      hight: 0,
-      weight: 0,
+      shoeSize: '',
+      high: 0,
+      weight: '',
       gender: "male",
+      name: "",
+      phone: "",
+      hight: ""
     },
     // medicalHistory: {},
     // activityQuestions: {

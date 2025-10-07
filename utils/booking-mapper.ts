@@ -94,6 +94,7 @@
 
 import { BookingState } from "@/components/website/course/booking-context";
 import { BookingPayload } from "@/types/course";
+import { number } from "zod";
 
 export const mapBookingStateToPayload = (
   state: BookingState,
@@ -190,9 +191,9 @@ return {
   emergencyPhoneNumber: state.personalInfo.emergencyPhoneNumber,
 
   gender: state.personalInfo.gender,
-  shoeSize: state.personalInfo.shoeSize,
-  hight: state.personalInfo.hight,
-  weight: state.personalInfo.weight,
+  shoeSize: Number(state.personalInfo.shoeSize),
+  hight: Number(state.personalInfo.hight),
+  weight: Number(state.personalInfo.weight),
 
   // Add missing properties required by BookingPayload type
   medicalHistory: [], // empty for now
