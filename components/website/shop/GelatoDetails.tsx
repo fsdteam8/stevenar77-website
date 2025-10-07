@@ -9,6 +9,7 @@ import { useCreateOrder } from "@/services/hooks/order/useCreateOrder";
 import { ProductCreateModal } from "@/components/modals/ProductCreateModal";
 import { useGelatoSingleProducts } from "@/services/hooks/product/useGelatoProducts";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 const GelatoDetails = () => {
   const params = useParams<{ id: string }>();
@@ -146,7 +147,8 @@ const GelatoDetails = () => {
                 </div>
               </div>
             </div>
-
+            <Link href={`https://stevenar.com/collections/all`}>
+            
             <Button
               onClick={handleBookNow}
               disabled={isPending}
@@ -154,6 +156,8 @@ const GelatoDetails = () => {
             >
               {isPending ? "Loading..." : "Draft Now"}
             </Button>
+            
+            </Link>
           </div>
         </div>
       </div>

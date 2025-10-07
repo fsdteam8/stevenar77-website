@@ -5,6 +5,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import { GelatoShopProductCardType } from "@/services/hooks/product/useGelatoProducts";
+import Link from "next/link";
 
 const GelatoShopProductCard: React.FC<GelatoShopProductCardType> = ({
   image,
@@ -55,12 +56,15 @@ const GelatoShopProductCard: React.FC<GelatoShopProductCardType> = ({
           >
             See Details
           </Button>
+          <Link href={`https://stevenar.com/collections/all`}>
+          
           <Button
             className="flex-1 bg-[#0694A2] text-base font-medium text-white hover:bg-cyan-700"
             onClick={onSeeMore}
           >
             Draft Now
           </Button>
+          </Link>
         </div>
       </div>
     </div>
