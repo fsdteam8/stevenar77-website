@@ -77,14 +77,14 @@ export function CourseCard({
             <h3 className="text-lg font-semibold text-[#364039] mb-2 sm:mb-0">
               {title}
             </h3>
-            <Badge
+            {/* <Badge
               className={cn(
                 "self-start sm:ml-2 px-3 py-1 text-xs font-medium rounded-full",
                 status === "complete" ? "status-complete" : "status-pending"
               )}
             >
               {status === "complete" ? "Complete" : "Pending"}
-            </Badge>
+            </Badge> */}
           </div>
 
           <p className="text-[#68706a] text-sm mb-3 line-clamp-2">
@@ -114,7 +114,7 @@ export function CourseCard({
 
           <div className="flex justify-between items-center">
             <span className="text-xl font-bold text-[#364039]">${price}</span>
-            <div className="flex space-x-2">
+            {/* <div className="flex space-x-2">
               <Button
                 size="sm"
                 variant="ghost"
@@ -133,7 +133,7 @@ export function CourseCard({
                   <Trash2 className="w-4 h-4" />
                 </Button>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

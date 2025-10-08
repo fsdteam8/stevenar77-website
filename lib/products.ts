@@ -18,7 +18,7 @@ export interface Product {
   images: { public_id: string; url: string }[];
   totalReviews: number;
   averageRating: number;
-  variants?: { _id: string; name: string; price: number }[];
+  variants?: { _id: string; title: string; price: number }[];
   // etc.
 }
 
@@ -27,6 +27,7 @@ export interface ProductResponse {
   message: string;
   statusCode: number;
   data: Product;
+  // title: string;
 }
 
 export async function getProductById(productId: string): Promise<ProductResponse> {

@@ -160,11 +160,13 @@ const ProductDetails = () => {
       </div>
 
       {/* Create Modal */}
-      <ProductCreateModal
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-        productId={product._id}
-      />
+      {product && (
+        <ProductCreateModal
+          isOpen={isCreateOpen}
+          onClose={() => setIsCreateOpen(false)}
+          productId={product._id}
+        />
+      )}
     </div>
   );
 };

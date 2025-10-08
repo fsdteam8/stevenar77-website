@@ -3,17 +3,28 @@
 import { Button } from "@/components/ui/button";
 import { useState, useRef } from "react";
 
+// const loadJsPDF = async () => {
+//   const { default: jsPDF } = await import("jspdf");
+//   return jsPDF;
+// };
 const loadJsPDF = async () => {
   const { default: jsPDF } = await import("jspdf");
   return jsPDF;
 };
+
 
 const loadHTML2Canvas = async () => {
   const { default: html2canvas } = await import("html2canvas");
   return html2canvas;
 };
 
-export default function PadiQuickReview() {
+interface PadiQuickReviewProps {
+  onSubmitSuccess?: () => void;
+}
+
+
+// export default function PadiQuickReview() {
+export default function PadiQuickReview({ onSubmitSuccess }: PadiQuickReviewProps){
   const [formData, setFormData] = useState({
     name: "",
     date: "",
@@ -340,6 +351,7 @@ export default function PadiQuickReview() {
 
       const fileName = `PADI_Quick_Review_${formData.name.replace(/[^a-zA-Z0-9]/g, "_").trim()}.pdf`;
       pdf.save(fileName);
+      onSubmitSuccess?.(); // ✅ close modal or mark complete
     } catch (error: unknown) {
       console.error("PDF download failed:", error);
       alert("PDF download failed. Please try again.");
