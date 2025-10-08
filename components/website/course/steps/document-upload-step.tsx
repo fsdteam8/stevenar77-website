@@ -83,23 +83,23 @@ export function DocumentUploadStep() {
     },
     {
       id: "modal6",
-      title: "Divers Medical Form",
+      title: "EnrichedAir Form",
       content: <EnrichedAirForm onSubmitSuccess={() => handleFormSubmit("modal6")}/>,
     },
     {
       id: "modal7",
-      title: "Form",
-      content: <PadiForm  />,
+      title: "Eqiupment Rental Form",
+      content: <PadiForm onSubmitSuccess={() => handleFormSubmit("modal7")} />,
     },
     {
       id: "modal8",
       title: "Resque Diver Quick Review Form",
-      content: <ResqueDiverQuickReview />,
+      content: <ResqueDiverQuickReview onSubmitSuccess={() => handleFormSubmit("modal8")}/>,
     },
     {
       id: "modal9",
       title: "Enriched Air Quick Review Form",
-      content: <QuickReview />,
+      content: <QuickReview onSubmitSuccess={() => handleFormSubmit("modal9")}/>,
     },
   ];
 
