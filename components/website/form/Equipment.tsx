@@ -28,9 +28,10 @@ interface FormData {
   localPhone: string;
   localPhoneArea?: string;
   state: string;
-  
   signature: string;
-  
+  participantDate: string; // ✅ Add if you want to track
+  guardianSignature: string; // ✅ Add if you want to track
+  guardianDate: string; // ✅ Add if you want to track
 }
 
 interface FormErrors {
@@ -98,6 +99,9 @@ export default function PadiForm({
     localPhone: "",
     state: "",
     signature: "",
+    participantDate: "", // ✅ Add if you want to track
+    guardianSignature: "", // ✅ Add if you want to track
+    guardianDate: "", // ✅ Add if you want to track
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -243,7 +247,7 @@ export default function PadiForm({
 
       dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
 
-      alert("PDF created and added to your booking successfully!");
+      // alert("PDF created and added to your booking successfully!");
       if (onSubmitSuccess) onSubmitSuccess();
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
@@ -253,26 +257,26 @@ export default function PadiForm({
     }
   };
 
-  const formatCreditCard = (value: string): string => {
-    const cleaned = value.replace(/\D/g, "");
-    const chunks = cleaned.match(/.{1,4}/g);
-    return chunks ? chunks.join(" ").substring(0, 19) : "";
-  };
+  // const formatCreditCard = (value: string): string => {
+  //   const cleaned = value.replace(/\D/g, "");
+  //   const chunks = cleaned.match(/.{1,4}/g);
+  //   return chunks ? chunks.join(" ").substring(0, 19) : "";
+  // };
 
-  const handleCreditCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatCreditCard(e.target.value);
-    setFormData((prev) => ({
-      ...prev,
-      creditCardNumber: formatted,
-    }));
-  };
+  // const handleCreditCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const formatted = formatCreditCard(e.target.value);
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     creditCardNumber: formatted,
+  //   }));
+  // };
 
-  const handleSignatureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      signature: e.target.value,
-    }));
-  };
+  // const handleSignatureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     signature: e.target.value,
+  //   }));
+  // };
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -466,8 +470,13 @@ export default function PadiForm({
                 </div>
 
                 <div>
-                  <span className="font-semibold">Signature*</span>{" "}
-                  _______________________________
+                  <span className="font-semibold">Signature*</span>
+                  <input
+                    type="text"
+                    className="w-full border-0 border-b border-black bg-transparent outline-none"
+                    style={{ minHeight: "25px", fontFamily: "cursive" }}
+                    // ❌ NO name="signature" and NO onChange handler!
+                  />{" "}
                 </div>
 
                 <p className="text-[10px] italic mt-1">
@@ -487,272 +496,12 @@ export default function PadiForm({
               </div>
             </div>
 
-            {/* <div className="grid grid-cols-2 gap-x-8 gap-y-2 mb-4 text-xs">
-              <div className="flex items-center">
-                <span className="mr-2">Name</span>
-                <FormInput
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  width="100%"
-                  error={errors.name}
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Phone Home (</span>
-                <input
-                  type="text"
-                  name="phoneHomeArea"
-                  value={formData.phoneHome}
-                  onChange={handleInputChange}
-                  className="w-8 border-0 border-b border-black bg-transparent outline-none text-center"
-                  maxLength={3}
-                  placeholder="000"
-                />
-                <span>)</span>
-                <input
-                  type="text"
-                  name="phoneHome"
-                  value={formData.phoneHome}
-                  onChange={handleInputChange}
-                  className="flex-1 ml-1 border-0 border-b border-black bg-transparent outline-none"
-                  placeholder="000-0000"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Address</span>
-                <FormInput
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  width="100%"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Phone Work (</span>
-                <input
-                  type="text"
-                  name="phoneWorkArea"
-                  value={formData.phoneWork}
-                  onChange={handleInputChange}
-                  className="w-8 border-0 border-b border-black bg-transparent outline-none text-center"
-                  maxLength={3}
-                  placeholder="000"
-                />
-                <span>)</span>
-                <input
-                  type="text"
-                  name="phoneWork"
-                  value={formData.phoneWork}
-                  onChange={handleInputChange}
-                  className="flex-1 ml-1 border-0 border-b border-black bg-transparent outline-none"
-                  placeholder="000-0000"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <input
-                  type="text"
-                  className="flex-1 border-0 border-b border-black bg-transparent outline-none"
-                  placeholder="Address Line 2"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Email Address</span>
-                <FormInput
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  width="100%"
-                  type="email"
-                  error={errors.email}
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Local Address</span>
-                <FormInput
-                  name="localAddress"
-                  value={formData.localAddress}
-                  onChange={handleInputChange}
-                  width="100%"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Local Phone (</span>
-                <input
-                  type="text"
-                  name="localPhoneArea"
-                  value={formData.localPhone}
-                  onChange={handleInputChange}
-                  className="w-8 border-0 border-b border-black bg-transparent outline-none text-center"
-                  maxLength={3}
-                  placeholder="000"
-                />
-                <span>)</span>
-                <input
-                  type="text"
-                  name="localPhone"
-                  value={formData.localPhone}
-                  onChange={handleInputChange}
-                  className="flex-1 ml-1 border-0 border-b border-black bg-transparent outline-none"
-                  placeholder="000-0000"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Date Rented</span>
-                <FormInput
-                  name="dateRented"
-                  value={formData.dateRented}
-                  onChange={handleInputChange}
-                  width="80px"
-                  type="date"
-                  error={errors.dateRented}
-                />
-                <span className="mx-2">Date Due</span>
-                <FormInput
-                  name="dateDue"
-                  value={formData.dateDue}
-                  onChange={handleInputChange}
-                  width="80px"
-                  type="date"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Certification Level</span>
-                <FormInput
-                  name="certificationLevel"
-                  value={formData.certificationLevel}
-                  onChange={handleInputChange}
-                  width="100px"
-                  error={errors.certificationLevel}
-                />
-                <span className="mx-2">Date</span>
-                <FormInput
-                  name="certificationDate"
-                  value={formData.certificationDate}
-                  onChange={handleInputChange}
-                  width="70px"
-                  type="date"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Date Returned</span>
-                <FormInput
-                  name="dateReturned"
-                  value={formData.dateReturned}
-                  onChange={handleInputChange}
-                  width="80px"
-                  type="date"
-                />
-                <span className="mx-2">Received By</span>
-                <FormInput
-                  name="receivedBy"
-                  value={formData.receivedBy}
-                  onChange={handleInputChange}
-                  width="80px"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Certification #</span>
-                <FormInput
-                  name="certificationNo"
-                  value={formData.certificationNo}
-                  onChange={handleInputChange}
-                  width="100px"
-                />
-                <span className="mx-2">Agency</span>
-                <FormInput
-                  name="agency"
-                  value={formData.agency}
-                  onChange={handleInputChange}
-                  width="70px"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">D/L No.</span>
-                <FormInput
-                  name="dlNo"
-                  value={formData.dlNo}
-                  onChange={handleInputChange}
-                  width="130px"
-                />
-                <span className="mx-2">State</span>
-                <FormInput
-                  name="state"
-                  value={formData.state}
-                  onChange={handleInputChange}
-                  width="40px"
-                  maxLength={2}
-                  placeholder="CA"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Equipment prepared by</span>
-                <FormInput
-                  name="equipmentPreparedBy"
-                  value={formData.equipmentPreparedBy}
-                  onChange={handleInputChange}
-                  width="100%"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Credit Card Number</span>
-                <FormInput
-                  name="creditCardNumber"
-                  value={formData.creditCardNumber}
-                  onChange={handleCreditCardChange}
-                  width="130px"
-                  mask={true}
-                  error={errors.creditCardNumber}
-                  placeholder="0000 0000 0000 0000"
-                />
-                <span className="mx-2">Exp. Date</span>
-                <FormInput
-                  name="expDate"
-                  value={formData.expDate}
-                  onChange={handleInputChange}
-                  width="70px"
-                  placeholder="MM/YY"
-                />
-              </div>
-
-              <div className="text-xs">(Dive Center/Resort Employee)</div>
-
-              <div className="flex items-center">
-                <span className="mr-2">Signature*</span>
-                <input
-                  type="text"
-                  name="signature"
-                  value={formData.signature}
-                  onChange={handleSignatureChange}
-                  className="flex-1 border-0 border-b border-black bg-transparent outline-none"
-                  style={{ minHeight: "20px", fontFamily: "cursive" }}
-                />
-                {errors.signature && (
-                  <span className="text-red-500 text-xs ml-2">
-                    {errors.signature}
-                  </span>
-                )}
-              </div>
-            </div> */}
-
-            <div className="text-xs mb-4">
+            {/* <div className="text-xs mb-4">
               *I authorize the Dive Center/Resort to charge my credit card the
               daily rate if equipment is not returned by due date
-            </div>
+            </div> */}
+            <br />
+            <br />
 
             {/* Equipment Table */}
             <table className="w-full border-collapse border border-black text-xs mb-4">
@@ -833,34 +582,66 @@ export default function PadiForm({
               </tbody>
             </table>
 
-            {/* Totals Section */}
-            <div className="flex justify-between items-center mb-4 text-xs">
-              <div className="flex space-x-4">
-                <div>
-                  <div className="font-bold">TOTAL DAYS</div>
-                  <input className="w-16 border-0 border-b border-black bg-transparent outline-none" />
-                </div>
-                <div>
-                  <div className="font-bold">TOTAL PER DAY</div>
-                  <input className="w-20 border-0 border-b border-black bg-transparent outline-none" />
-                </div>
-                <div>
-                  <div className="font-bold">TOTAL DUE</div>
-                  <input className="w-20 border-0 border-b border-black bg-transparent outline-none" />
-                </div>
-              </div>
-              <div>
-                <div className="font-bold mb-1">RETURN DEPOSIT</div>
-                <div className="flex space-x-4">
-                  <div>
-                    <div className="text-center">CREDIT CARD</div>
-                    <input className="w-20 border-0 border-b border-black bg-transparent outline-none" />
-                  </div>
-                  <div>
-                    <div className="text-center">CASH</div>
-                    <input className="w-20 border-0 border-b border-black bg-transparent outline-none" />
-                  </div>
-                </div>
+            {/* Totals Section - Display Only */}
+            <div className="border border-black text-xs mb-2">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="text-left">
+                    <th className="border border-black p-1 font-bold bg-[#f5f7ff]">
+                      TOTAL DAYS
+                    </th>
+                    <th className="border border-black p-1 font-bold bg-[#f5f7ff]">
+                      TOTAL PER DAY
+                    </th>
+                    <th className="border border-black p-1 font-bold bg-[#f5f7ff]">
+                      TOTAL DUE
+                    </th>
+                    <th
+                      className="border border-black p-1 font-bold bg-[#f5f7ff]"
+                      colSpan={2}
+                    >
+                      RETURN DEPOSIT
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    {/* TOTAL DAYS */}
+                    <td className="border border-black p-1 bg-[#f5f7ff] h-6"></td>
+
+                    {/* TOTAL PER DAY */}
+                    <td className="border border-black p-1 bg-[#f5f7ff] h-6"></td>
+
+                    {/* TOTAL DUE */}
+                    <td className="border border-black p-1 bg-[#f5f7ff] h-6"></td>
+
+                    {/* RETURN DEPOSIT - Amount Box */}
+                    <td className="border border-black p-1 bg-[#f5f7ff] h-6"></td>
+
+                    {/* RETURN DEPOSIT - Options */}
+                    <td className="border border-black p-1 align-top">
+                      <div className="flex flex-col space-y-1">
+                        <label className="flex items-center space-x-1">
+                          <input type="checkbox" disabled className="h-3 w-3" />
+                          <span className="text-[10px]">CREDIT CARD</span>
+                        </label>
+                        <label className="flex items-center space-x-1">
+                          <input type="checkbox" disabled className="h-3 w-3" />
+                          <span className="text-[10px]">CASH</span>
+                        </label>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {/* Equipment Prepared By */}
+              <div className="mt-2 flex items-center text-[10px]">
+                <span className="mr-1">Equipment prepared by</span>
+                <div className="flex-1 border-b border-black bg-[#f5f7ff] h-4"></div>
+                <span className="ml-1 text-[8px]">
+                  (Dive Center/Resort Employee)
+                </span>
               </div>
             </div>
 
@@ -1067,6 +848,9 @@ export default function PadiForm({
                 <div className="mb-4">
                   <input
                     type="text"
+                    name="signature" // ✅ Added
+                    value={formData.signature} // ✅ Added
+                    onChange={handleInputChange} // ✅ Added
                     className="w-full border-0 border-b border-black bg-transparent outline-none"
                     style={{ minHeight: "25px", fontFamily: "cursive" }}
                   />
@@ -1074,7 +858,10 @@ export default function PadiForm({
                 </div>
                 <div>
                   <input
-                    type="text"
+                    type="date" // ✅ Changed from "text" to "date"
+                    name="participantDate" // ✅ Added
+                    value={formData.participantDate} // ✅ Added
+                    onChange={handleInputChange} // ✅ Added
                     className="w-full border-0 border-b border-black bg-transparent outline-none"
                   />
                   <div className="mt-1">Date (day/month/year)</div>
@@ -1084,6 +871,9 @@ export default function PadiForm({
                 <div className="mb-4">
                   <input
                     type="text"
+                    name="guardianSignature" // ✅ Added
+                    value={formData.guardianSignature} // ✅ Added
+                    onChange={handleInputChange} // ✅ Added
                     className="w-full border-0 border-b border-black bg-transparent outline-none"
                     style={{ minHeight: "25px", fontFamily: "cursive" }}
                   />
@@ -1093,7 +883,10 @@ export default function PadiForm({
                 </div>
                 <div>
                   <input
-                    type="text"
+                    type="date" // ✅ Changed from "text" to "date"
+                    name="guardianDate" // ✅ Added
+                    value={formData.guardianDate} // ✅ Added
+                    onChange={handleInputChange} // ✅ Added
                     className="w-full border-0 border-b border-black bg-transparent outline-none"
                   />
                   <div className="mt-1">Date (day/month/year)</div>

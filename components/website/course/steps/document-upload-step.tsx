@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import PadiQuickReview from "../../QuickReview/QuickReview";
 import { toast } from "sonner";
-import { DiverMedicalForm } from "@/components/forms/diver-medical-form";
+// import { DiverMedicalForm } from "@/components/forms/diver-medical-form";
 import EnrichedAirForm from "../../form/EnrichedTrainning";
 import StandardsForm from "../../form/StandardsForm";
 import PadiLiabilityForm from "../../form/PadiLiabilityForm";
@@ -19,6 +19,7 @@ import DiversActivityForm from "../../form/DiversActivityForm";
 import PadiForm from "../../form/Equipment";
 import ResqueDiverQuickReview from "../../form/ResqueDiverQuickReview";
 import QuickReview from "../../form/QuickReview";
+import DiverMedicalForm from "@/components/forms/diver-medical-form";
 
 export function DocumentUploadStep() {
   const { state, dispatch } = useBooking();
@@ -79,7 +80,7 @@ export function DocumentUploadStep() {
     {
       id: "modal5",
       title: "Divers Medical Form",
-      content: <DiverMedicalForm />,
+      content: <DiverMedicalForm onSubmitSuccess={() => handleFormSubmit("modal5")}/>,
     },
     {
       id: "modal6",

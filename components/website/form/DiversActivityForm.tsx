@@ -120,7 +120,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({ onSubmitSuccess
       // ✅ Add to booking context
       dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
 
-      alert("PDF created and added to your booking successfully!");
+      // alert("PDF created and added to your booking successfully!");
       onSubmitSuccess?.();
 
     } catch (error: unknown) {
