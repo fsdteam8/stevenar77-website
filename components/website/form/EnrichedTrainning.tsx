@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
-import { useBooking } from "../course/booking-context"; // ✅ Add this
+import { useBooking } from "../course/booking-context"; //  Add this
+import { quickreview } from "@/lib/quickreview";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 const loadHTML2Canvas = async () => {
   const { default: html2canvas } = await import("html2canvas");
@@ -130,14 +134,18 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
         type: "application/pdf",
       });
 
-      // ✅ Add to booking context
-      dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      //  Add to booking context
+      // handelmutaion.mutate({
+      //   id: id,
+      //   token: token,
+      //   documents: pdfFile,
+      // });
 
       alert("PDF created and added to your booking successfully!");
       onSubmitSuccess?.();
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
-      alert("PDF generation failed. Please try again.");
+      toast.error("PDF generation failed. Please try again.");
     } finally {
       setIsGeneratingPDF(false);
     }
