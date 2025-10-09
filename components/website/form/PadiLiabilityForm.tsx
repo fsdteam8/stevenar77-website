@@ -4,13 +4,20 @@ import Image from "next/image";
 import { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
 import { useBooking } from "../course/booking-context";
+// import {logo} from "@/public/images/pdf-logo.png"
+
+interface PadiLiabilityFormProps{
+  onSubmitSuccess?: () => void; // optional callback
+
+}
 
 const loadHTML2Canvas = async () => {
   const { default: html2canvas } = await import("html2canvas");
   return html2canvas;
 };
 
-export default function PadiLiabilityForm() {
+// export default function PadiLiabilityForm() {
+const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }) => {
   const [participantName, setParticipantName] = useState("");
   const [signature, setSignature] = useState("");
   const [guardianSignature, setGuardianSignature] = useState("");
@@ -21,177 +28,6 @@ export default function PadiLiabilityForm() {
 
   const { dispatch } = useBooking();
 
-  //   const handlePrint = async () => {
-  //     if (!participantName || !signature || !date) {
-  //       alert(
-  //         "Please fill in required fields: Participant Name, Signature, Date",
-  //       );
-  //       return;
-  //     }
-
-  //     setIsGeneratingPDF(true);
-
-  //     try {
-  //       if (!formRef.current) throw new Error("Form reference not found");
-
-  //       const html2canvas = await loadHTML2Canvas();
-  // console.log(loadHTML2Canvas())
-  //       const tempStyle = document.createElement("style");
-  //       tempStyle.textContent = `
-  //         .print-area * {
-  //           color: rgb(0, 0, 0) !important;
-  //           background-color: rgb(255, 255, 255) !important;
-  //           border-color: rgb(0, 0, 0) !important;
-  //           box-shadow: none !important;
-  //         }
-  //         .print-area input {
-  //           color: rgb(0, 0, 0) !important;
-  //           background-color: transparent !important;
-  //           border-color: rgb(0, 0, 0) !important;
-  //         }
-  //         .print-area .border-gray-900 {
-  //           border-color: rgb(17, 24, 39) !important;
-  //         }
-  //         .print-area .text-xl, .print-area .font-bold {
-  //           color: rgb(0, 0, 0) !important;
-  //         }
-  //       `;
-  //       document.head.appendChild(tempStyle);
-
-  //       // Wait for styles to apply
-  //       await new Promise((resolve) => setTimeout(resolve, 500));
-
-  //       const canvas = await html2canvas(formRef.current, {
-  //         scale: 2,
-  //         useCORS: true,
-  //         allowTaint: false,
-  //         backgroundColor: "#ffffff",
-  //         logging: false,
-  //         imageTimeout: 10000,
-  //         removeContainer: true,
-  //         ignoreElements: (element) => {
-  //           return element.classList.contains("no-print");
-  //         },
-  //         onclone: (clonedDoc) => {
-  //           // Force all elements to use safe RGB colors
-  //           const allElements = clonedDoc.querySelectorAll("*");
-  //           allElements.forEach((el: Element) => {
-  //             const htmlEl = el as HTMLElement;
-  //             if (htmlEl.style) {
-  //               htmlEl.style.color = "rgb(0, 0, 0)";
-  //               if (htmlEl.tagName !== "INPUT") {
-  //                 htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-  //               }
-  //               htmlEl.style.borderColor = "rgb(0, 0, 0)";
-  //               // Remove any potentially problematic CSS properties
-  //               htmlEl.style.removeProperty("filter");
-  //               htmlEl.style.removeProperty("backdrop-filter");
-  //               htmlEl.style.removeProperty("box-shadow");
-  //             }
-  //           });
-  //         },
-  //       });
-
-  //       document.head.removeChild(tempStyle);
-
-  //       const imgData = canvas.toDataURL("image/png", 1.0);
-
-  //       // Create a new window with the image for PDF printing
-  //       const printWindow = window.open("", "_blank");
-  //       if (printWindow) {
-  //         const fileName = `PADI_Liability_Form_${participantName
-  //           .replace(/[^a-zA-Z0-9\s]/g, "")
-  //           .replace(/\s+/g, "_")
-  //           .trim()}_${new Date().toISOString().split("T")[0]}`;
-  // console.log(fileName)
-  //         printWindow.document.write(`
-  //           <!DOCTYPE html>
-  //           <html>
-  //             <head>
-  //               <title>${fileName}</title>
-  //               <style>
-  //                 body {
-  //                   margin: 0;
-  //                   padding: 0;
-  //                   display: flex;
-  //                   justify-content: center;
-  //                   align-items: center;
-  //                   min-height: 100vh;
-  //                   background: white;
-  //                 }
-  //                 img {
-  //                   max-width: 100%;
-  //                   height: auto;
-  //                   display: block;
-  //                 }
-  //                 @media print {
-  //                   body { margin: 0; }
-  //                   img {
-  //                     width: 100%;
-  //                     height: auto;
-  //                     page-break-inside: avoid;
-  //                   }
-  //                 }
-  //               </style>
-  //             </head>
-  //             <body>
-  //               <img src="${imgData}" alt="PADI Liability Form" />
-  //             </body>
-  //           </html>
-  //         `);
-  //         printWindow.document.close();
-
-  //         // Wait for image to load then trigger print dialog
-  //         printWindow.onload = () => {
-  //           setTimeout(() => {
-  //             printWindow.print();
-  //           }, 500);
-  //         };
-  //       } else {
-  //         throw new Error(
-  //           "Unable to open print window. Please check your browser's popup settings.",
-  //         );
-  //       }
-  //     } catch (error: unknown) {
-  //       console.error("Error generating PDF:", error);
-  //       const errorMessage =
-  //         error instanceof Error ? error.message : "Unknown error occurred";
-
-  //       if (errorMessage.includes("lab") || errorMessage.includes("color")) {
-  //         alert(
-  //           `PDF generation failed due to color parsing issue. This is a browser compatibility issue.\n\nPlease try:\n1. Using a different browser (Chrome/Firefox)\n2. Refreshing the page and trying again\n3. Using the browser print function as an alternative`,
-  //         );
-  //       } else {
-  //         const userChoice = confirm(
-  //           `PDF generation failed: ${errorMessage}\n\nUse browser print instead?`,
-  //         );
-  //         if (userChoice) {
-  //           const printStyle = document.createElement("style");
-  //           printStyle.textContent = `
-  //             @media print {
-  //               body * { visibility: hidden; }
-  //               .print-area, .print-area * { visibility: visible; }
-  //               .print-area {
-  //                 position: absolute;
-  //                 left: 0;
-  //                 top: 0;
-  //                 width: 100% !important;
-  //                 margin: 0 !important;
-  //                 padding: 20px !important;
-  //               }
-  //               .no-print { display: none !important; }
-  //             }
-  //           `;
-  //           document.head.appendChild(printStyle);
-  //           window.print();
-  //           setTimeout(() => document.head.removeChild(printStyle), 1000);
-  //         }
-  //       }
-  //     } finally {
-  //       setIsGeneratingPDF(false);
-  //     }
-  //   };
-
   const handlePrint = async () => {
     if (!participantName || !signature || !date) {
       alert(
@@ -201,6 +37,8 @@ export default function PadiLiabilityForm() {
     }
 
     setIsGeneratingPDF(true);
+
+
 
     try {
       if (!formRef.current) throw new Error("Form reference not found");
@@ -282,7 +120,9 @@ export default function PadiLiabilityForm() {
 
       dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
 
-      alert("PDF created and added to your booking successfully!");
+      // alert("PDF created and added to your booking successfully!");
+    onSubmitSuccess?.(); // ✅ add this right after successful dispatch
+
     } catch (error) {
       console.error("Error generating PDF:", error);
       alert(
@@ -305,10 +145,12 @@ export default function PadiLiabilityForm() {
           <div className="flex items-center pb-4">
             <div className="mr-6 flex-shrink-0">
               <Image
-                src={"/images/pdf-logo.jpg"}
+                src={"/images/pdf-logo.png"}
+                // src={logo}
                 alt="Padi logo"
                 width={200}
                 height={200}
+                priority
                 crossOrigin="anonymous"
               />
             </div>
@@ -737,4 +579,6 @@ export default function PadiLiabilityForm() {
       </div>
     </div>
   );
-}
+};
+
+export default PadiLiabilityForm;

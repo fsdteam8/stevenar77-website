@@ -69,6 +69,8 @@ export function PersonalInformationStep() {
     "phone",
     "dateOfBirth",
     "address",
+    "city",
+    "state",
     "postalCode",
     // "emergencyName",
     // "emergencyPhoneNumber",
@@ -165,6 +167,24 @@ export function PersonalInformationStep() {
       case "address":
         if (value.length < 5) {
           return "Please enter a complete address";
+        }
+        break;
+
+      case "city":
+        if (value.length < 2) {
+          return "Please enter a valid city name";
+        }
+        if (!/^[a-zA-Z\s'-]+$/.test(value)) {
+          return "City name can only contain letters and spaces";
+        }
+        break;
+
+      case "state":
+        if (value.length < 2) {
+          return "Please enter a valid state name";
+        }
+        if (!/^[a-zA-Z\s'-]+$/.test(value)) {
+          return "State name can only contain letters and spaces";
         }
         break;
 
@@ -498,23 +518,59 @@ export function PersonalInformationStep() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="city">City</Label>
+          <Label
+            htmlFor="city"
+            className={hasError("city") ? "text-red-600" : ""}
+          >
+            City <span className="text-red-500">*</span>
+          </Label>
           <Input
             id="city"
             placeholder="City"
             value={state.personalInfo.city}
             onChange={(e) => handleChange("city", e.target.value)}
+            onBlur={() => markFieldAsTouched("city")}
+            className={
+              hasError("city")
+                ? "border-red-500 focus-visible:ring-red-500"
+                : ""
+            }
+            aria-invalid={hasError("city")}
+            aria-describedby={hasError("city") ? "city-error" : undefined}
           />
+          {hasError("city") && (
+            <p id="city-error" className="text-sm text-red-600">
+              {getErrorMessage("city")}
+            </p>
+          )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="state">State</Label>
+          <Label
+            htmlFor="state"
+            className={hasError("state") ? "text-red-600" : ""}
+          >
+            State <span className="text-red-500">*</span>
+          </Label>
           <Input
             id="state"
             placeholder="State"
             value={state.personalInfo.state}
             onChange={(e) => handleChange("state", e.target.value)}
+            onBlur={() => markFieldAsTouched("state")}
+            className={
+              hasError("state")
+                ? "border-red-500 focus-visible:ring-red-500"
+                : ""
+            }
+            aria-invalid={hasError("state")}
+            aria-describedby={hasError("state") ? "state-error" : undefined}
           />
+          {hasError("state") && (
+            <p id="state-error" className="text-sm text-red-600">
+              {getErrorMessage("state")}
+            </p>
+          )}
         </div>
 
         <div className="space-y-2">

@@ -1,6 +1,8 @@
 "use client";
 
-import { DiverMedicalForm } from "./diver-medical-form";
+import DiverMedicalForm from "./diver-medical-form";
+
+// import { DiverMedicalForm } from "./diver-medical-form";
 
 export default function Home() {
   return (
