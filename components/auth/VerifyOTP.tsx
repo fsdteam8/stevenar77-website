@@ -104,8 +104,8 @@ export default function VerifyOTP() {
       } else {
         router.push(`/reset-password?token=${token}`);
       }
-    } catch   {
-      toast.error("Something went wrong");
+    } catch (error)  {
+      toast.error(`${error}`);
     } finally {
       setLoading(false);
     }
