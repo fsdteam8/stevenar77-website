@@ -120,7 +120,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }
 
       dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
 
-      alert("PDF created and added to your booking successfully!");
+      // alert("PDF created and added to your booking successfully!");
     onSubmitSuccess?.(); // ✅ add this right after successful dispatch
 
     } catch (error) {
