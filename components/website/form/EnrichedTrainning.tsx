@@ -141,7 +141,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
       //   documents: pdfFile,
       // });
 
-      alert("PDF created and added to your booking successfully!");
+      // alert("PDF created and added to your booking successfully!");
       onSubmitSuccess?.();
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);

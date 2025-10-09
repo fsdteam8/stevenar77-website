@@ -4,6 +4,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { generatePDF } from "@/lib/forms/medical-form-pdf-generator";
 import Image from "next/image";
+// import { useBooking } from "@/context/booking-context";
+import { useMutation } from "@tanstack/react-query";
+import { diverMedicalForm } from "@/lib/diverMedicalForm";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+import { useBooking } from "../website/course/booking-context";
 
 interface FormData {
   participantName: string;
@@ -66,7 +72,47 @@ interface FormData {
   evaluationResult: "approved" | "not-approved" | "";
 }
 
-export function DiverMedicalForm() {
+interface DiverMedicalFormProps {
+  onSubmitSuccess?: () => void;
+}
+
+// export function DiverMedicalForm() {
+const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
+  onSubmitSuccess,
+}) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: session } = useSession();
+  const { dispatch } = useBooking(); // 🔥 Add this
+  const id = session?.user?.id || "";
+  const token = session?.accessToken || "";
+
+  const uploadMutation = useMutation({
+    mutationFn: async ({
+      id,
+      documents,
+      token,
+    }: {
+      id: string;
+      documents: File;
+      token: string;
+    }) => {
+      console.log("🚀 Mutation executing with:", {
+        id,
+        tokenExists: !!token,
+        fileName: documents.name,
+        fileSize: documents.size,
+      });
+
+      return diverMedicalForm(id, token, documents);
+    },
+    onSuccess: (data) => {
+      console.log("✅ Mutation onSuccess:", data);
+    },
+    onError: (error) => {
+      console.error("❌ Mutation onError:", error);
+    },
+  });
+
   const [formData, setFormData] = useState<FormData>({
     participantName: "",
     birthdate: "",
@@ -133,14 +179,79 @@ export function DiverMedicalForm() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  // const handleExportPDF = async () => {
+  //   try {
+  //     await generatePDF(formData);
+  //   } catch (error) {
+  //     console.error("Error generating PDF:", error);
+  //   }
+  // };
+
   const handleExportPDF = async () => {
     try {
-      await generatePDF(formData);
+      setIsSubmitting(true);
+
+      // Validate session data
+      if (!id) {
+        toast.error("User ID not found. Please log in again.");
+        return;
+      }
+
+      if (!token) {
+        toast.error("Authentication token not found. Please log in again.");
+        return;
+      }
+
+      console.log("📄 Generating PDF...");
+
+      // Generate PDF
+      const pdfFile = await generatePDF(formData);
+
+      console.log("✅ PDF Generated:", {
+        name: pdfFile.name,
+        size: `${(pdfFile.size / 1024).toFixed(2)} KB`,
+        type: pdfFile.type,
+      });
+
+      // Upload PDF and WAIT for completion
+      if (pdfFile instanceof File) {
+        console.log("📤 Starting upload with ID:", id);
+
+        await uploadMutation.mutateAsync({ id, token, documents: pdfFile });
+
+        console.log("✅ Upload completed successfully!");
+
+        // 🔥 Add document to booking context
+        dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+        console.log("📋 Document added to booking context");
+
+        // Only call success after upload completes
+        // toast.success("Diver Medical Form uploaded successfully!");
+        if (onSubmitSuccess) {
+          console.log("🎯 [DiverMedicalForm] About to call onSubmitSuccess");
+          onSubmitSuccess();
+          console.log(
+            "✅ [DiverMedicalForm] onSubmitSuccess called successfully",
+          );
+        } else {
+          console.error("❌ [DiverMedicalForm] onSubmitSuccess is undefined!");
+        }
+      } else {
+        throw new Error("Generated file is not a valid File object");
+      }
     } catch (error) {
-      console.error("Error generating PDF:", error);
+      console.error("❌ [DiverMedicalForm] Error in handleExportPDF:", error);
+
+      if (error instanceof Error) {
+        toast.error(`Failed: ${error.message}`);
+      } else {
+        toast.error("Failed to submit diver medical form");
+      }
+    } finally {
+      console.log("🏁 [DiverMedicalForm] Setting isSubmitting to false");
+      setIsSubmitting(false);
     }
   };
-
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 3;
 
@@ -1009,14 +1120,18 @@ export function DiverMedicalForm() {
               Next
             </Button>
           </div>
+
           <Button
             onClick={handleExportPDF}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
           >
-            Export PDF
+            {/* Export PDF */}
+            Submit Form
           </Button>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default DiverMedicalForm;

@@ -80,7 +80,9 @@ interface FormData {
   evaluationResult: "approved" | "not-approved" | "";
 }
 
-export async function generatePDF(formData: FormData) {
+// export async function generatePDF(formData: FormData) {
+export async function generatePDF(formData: FormData): Promise<File> {
+
   const pdf = new jsPDF("p", "mm", "a4");
   const pageWidth = 210;
   const pageHeight = 297;
@@ -862,5 +864,14 @@ export async function generatePDF(formData: FormData) {
   pdf.text("© DMSC 2020", pageWidth - margin, yPos, { align: "right" });
 
   // Save the PDF
-  pdf.save("diver-medical-questionnaire.pdf");
+  // pdf.save("diver-medical-questionnaire.pdf");
+  // Generate PDF Blob instead of auto-downloading
+  const pdfBlob = pdf.output("blob");
+
+  // Convert Blob to File for uploading
+  const pdfFile = new File([pdfBlob], "diver-medical-questionnaire.pdf", {
+    type: "application/pdf",
+  });
+
+  return pdfFile;
 }

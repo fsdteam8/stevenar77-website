@@ -129,7 +129,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
 
       onSubmitSuccess?.();
 
-      alert("PDF created and added to your booking successfully!");
+      // alert("PDF created and added to your booking successfully!");
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
       alert(
