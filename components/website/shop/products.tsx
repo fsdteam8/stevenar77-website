@@ -10,7 +10,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 const Products = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm] = useState("");
   const router = useRouter();
 
   const { data: products = [], isLoading, isError, error } = useAdminProducts(); // admin only

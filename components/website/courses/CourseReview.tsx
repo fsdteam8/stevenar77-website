@@ -3,7 +3,7 @@
 import React from "react";
 import ReviewForm from "@/components/website/reusable/ReviewForm";
 import { useSubmitReview } from "@/services/hooks/review/useSubmitReview";
-import { useReviewsByCourse } from "@/services/hooks/review/useReviews";
+// import { useReviewsByCourse } from "@/services/hooks/review/useReviews";
 import {
   Dialog,
   DialogContent,
@@ -23,7 +23,7 @@ interface CourseReviewProps {
 
 const CourseReview: React.FC<CourseReviewProps> = ({ userId, classId }) => {
   const { mutate, isPending, isError, isSuccess, error } = useSubmitReview();
-  const { data, isLoading } = useReviewsByCourse(classId);
+  // const { data, isLoading } = useReviewsByCourse(classId);
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const router = useRouter();
   const { status } = useSession();

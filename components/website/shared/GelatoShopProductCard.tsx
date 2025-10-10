@@ -15,7 +15,7 @@ const GelatoShopProductCard: React.FC<GelatoShopProductCardType> = ({
   reviews,
   price,
   onSeeMore,
-  onBookNow,
+
 }) => {
   return (
     <div className="w-full h-full max-w-sm mx-auto rounded-2xl overflow-hidden shadow-md bg-white flex flex-col">

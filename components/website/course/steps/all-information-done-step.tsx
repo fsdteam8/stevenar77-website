@@ -1,7 +1,7 @@
 // Add this as a new component for step 6
 "use client";
 
-import { ArrowRight, CheckCircle } from "lucide-react";
+import {  CheckCircle } from "lucide-react";
 
 export function AllInformationDoneStep() {
   return (

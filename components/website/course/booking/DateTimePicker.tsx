@@ -2,7 +2,7 @@
 "use client";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { useBooking } from "../booking-context";
 
 export function DateTimePicker() {
@@ -10,39 +10,39 @@ export function DateTimePicker() {
 
   console.log("datate", state.course.classDates);
 
-  const availableTimes = [
-    "12:00 PM",
-    "11:00 AM",
-    "10:00 AM",
-    "09:00 AM",
-    "07:00 AM",
-    "06:00 AM",
-    "08:00 PM",
-    "05:00 PM",
-  ];
+  // const availableTimes = [
+  //   "12:00 PM",
+  //   "11:00 AM",
+  //   "10:00 AM",
+  //   "09:00 AM",
+  //   "07:00 AM",
+  //   "06:00 AM",
+  //   "08:00 PM",
+  //   "05:00 PM",
+  // ];
 
   const handleDateSelect = (date: Date | undefined) => {
     if (date) dispatch({ type: "SET_DATE", payload: date.toISOString() });
   };
 
-  const handleTimeSelect = (timeLabel: string) => {
-    if (!state.selectedDate) return;
+  // const handleTimeSelect = (timeLabel: string) => {
+  //   if (!state.selectedDate) return;
 
-    const [hoursMinutes, modifier] = timeLabel.split(" ");
-    const [rawHours, minutes] = hoursMinutes.split(":").map(Number);
+  //   const [hoursMinutes, modifier] = timeLabel.split(" ");
+  //   const [rawHours, minutes] = hoursMinutes.split(":").map(Number);
 
-    let hours = rawHours;
-    if (modifier === "PM" && hours < 12) hours += 12;
-    if (modifier === "AM" && hours === 12) hours = 0;
+  //   let hours = rawHours;
+  //   if (modifier === "PM" && hours < 12) hours += 12;
+  //   if (modifier === "AM" && hours === 12) hours = 0;
 
-    const selectedDateTime = new Date(state.selectedDate);
-    selectedDateTime.setHours(hours, minutes, 0, 0);
+  //   const selectedDateTime = new Date(state.selectedDate);
+  //   selectedDateTime.setHours(hours, minutes, 0, 0);
 
-    dispatch({
-      type: "SET_TIME",
-      payload: { label: timeLabel, iso: selectedDateTime.toISOString() },
-    });
-  };
+  //   dispatch({
+  //     type: "SET_TIME",
+  //     payload: { label: timeLabel, iso: selectedDateTime.toISOString() },
+  //   });
+  // };
 
   return (
     <Card className="p-6">

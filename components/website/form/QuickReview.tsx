@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState, useRef } from "react";
-import { useBooking } from "../course/booking-context";
+// import { useBooking } from "../course/booking-context";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { quickreview } from "@/lib/quickreview";
@@ -26,7 +26,7 @@ interface QuickReviewProps {
 
 // const QuickReview = () => {
 const QuickReview: React.FC<QuickReviewProps> = () => {
-  const { dispatch } = useBooking();
+  // const { dispatch } = useBooking();
 
   const [studentName, setStudentName] = useState("");
   const [signature, setSignature] = useState("");

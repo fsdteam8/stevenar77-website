@@ -4,7 +4,13 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { useBooking } from "../booking-context";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  // DialogFooter,
+  DialogTitle,
+} from "@/components/ui/dialog";
+// import PadiQuickReview from "../../QuickReview/QuickReview";
 import { toast } from "sonner";
 import StandardsForm from "../../form/StandardsForm";
 import PadiLiabilityForm from "../../form/PadiLiabilityForm";

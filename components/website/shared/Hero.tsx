@@ -23,9 +23,9 @@ const Hero: React.FC<HeroProps> = ({
   backgroundImage,
   showButtons = false,
   primaryButtonText,
-  secondaryButtonText,
+  // secondaryButtonText,
   onPrimaryClick,
-  onSecondaryClick,
+  // onSecondaryClick,
   size = "full",
 }) => {
   return (
