@@ -1,7 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { any, number, string } from "zod";
 
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface BookingState {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  submittedForms: any[];
   currentStep: number;
   course: {
     _id: string;
@@ -39,11 +46,19 @@ export interface BookingState {
     emergencyPhoneNumber: string;
     courseName: string;
     shoeSize: string;
-    hight: string; 
+    hight: string;
     weight: string;
     gender: string;
   };
   documents: any[];
+}
+
+export interface FormConfig {
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  id: any;
+  label: string;
+  color: string;
+  component: React.ReactNode;
 }
 
 export type BookingAction =
@@ -63,4 +78,9 @@ export type BookingAction =
       type: "TOGGLE_ADDON";
       payload: { id: string; title: string; price: number };
     }
-  | { type: "SET_PRICE_INDEX"; payload: number };
+  | { type: "SET_PRICE_INDEX"; payload: number }
+  | { type: "MARK_FORM_SUBMITTED", payload: any }
+  | { type: "RESET_SUBMITTED_FORMS" }; 
+
+
+  

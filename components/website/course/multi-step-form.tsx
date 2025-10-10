@@ -7,6 +7,13 @@ import { type BookingState, useBooking } from "./booking-context";
 import { PersonalInformationStep } from "./steps/personal-information-step";
 import { DocumentUploadStep } from "./steps/document-upload-step";
 import { AllInformationDoneStep } from "./steps/all-information-done-step";
+import { bookingReducer, createInitialState } from "./booking-reducer"
+
+type FormConfig = {
+  id: string;
+  label: string;
+};
+
 
 const steps = [
   { id: 0, title: "Personal Information", component: PersonalInformationStep },
@@ -79,11 +86,40 @@ const validateStepWithErrors = (
       break;
 
     case 1: // Document Upload Step
-      // Documents are optional, so this step is always valid
+      // Check if all visible forms for current course are completed
+      const formConfigs: FormConfig[] = [
+        { id: "modal1", label: "Standards Form" },
+        { id: "modal2", label: "Continuing Education" },
+        { id: "modal3", label: "Divers Activity" },
+        { id: "modal4", label: "Quick Review-Open Waters" },
+        { id: "modal5", label: "Divers Medical" },
+        { id: "modal6", label: "Enriched Training" },
+        { id: "modal7", label: "Equipment Rental" },
+        { id: "modal8", label: "Rescue Diver Quick Review" },
+        { id: "modal9", label: "Enriched Air Quick Review" },
+      ];
+
+      // Filter forms relevant to current course
+      const visibleForms = formConfigs.filter((f) =>
+        state.course.formTitle?.some((title) =>
+          f.label.toLowerCase().includes(title.toLowerCase()),
+        ),
+      );
+
+        // ✅ Check if all visible forms are completed
+  const incompleteForms = visibleForms.every((f) => state.submittedForms.includes(f.id));
+
+      // Find missing forms
+      // const incompleteForms = visibleForms.filter(
+      //   (f) => !state.submittedForms?.includes(f.id),
+      // );
+
+      if (!incompleteForms) {
+        errors.push("Please complete all required forms before continuing.");
+      }
       break;
 
-    case 2: // All information done
-      break;
+   
 
     default:
       errors.push("Invalid step");
@@ -99,6 +135,8 @@ const validateStepWithErrors = (
 const validateStep = (stepIndex: number, state: BookingState): boolean => {
   return validateStepWithErrors(stepIndex, state).isValid;
 };
+
+
 
 export function MultiStepForm() {
   const { state, dispatch } = useBooking();

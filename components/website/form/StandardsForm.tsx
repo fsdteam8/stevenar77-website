@@ -361,14 +361,14 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="mx-auto mb-6 no-print mt-6">
+      <div className="mx-auto max-w-4xl mb-6 no-print mt-6">
         <Button
           onClick={handleExportPDF}
           disabled={isGeneratingPDF}
-          className={`font-semibold py-3 px-6 rounded-lg transition duration-200 w-full ${
+          className={`font-semibold bg-primary py-3 px-6 rounded-lg transition duration-200 w-full ${
             isGeneratingPDF
               ? "bg-muted cursor-not-allowed text-muted-foreground"
-              : "bg-accent hover:bg-accent/90 text-accent-foreground shadow-md hover:shadow-lg"
+              : "bg-primary hover:bg-emerald/90 text-accent-foreground shadow-md  "
           }`}
         >
           {isGeneratingPDF ? "Generating PDF..." : "Submit Form"}
