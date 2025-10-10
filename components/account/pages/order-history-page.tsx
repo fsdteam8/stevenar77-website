@@ -10,7 +10,7 @@ const mapStatus = (status: string): "complete" | "pending" =>
 
 const OrderHistoryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [, setSelectedProductId] = useState<string | null>(null);
 
   const { data: ordersData, isLoading, isError } = useMyOrders();
 

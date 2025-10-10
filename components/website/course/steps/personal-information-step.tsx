@@ -227,7 +227,7 @@ export function PersonalInformationStep() {
           /^(\d+\.?\d*)\s?(lbs?|kgs?|kg|pounds?|kilograms?)?$/i,
         );
         if (!weightMatch) {
-          return "Please enter a valid weight (e.g., 50lbs or 70kg)";
+          return "Please enter a valid weight (e.g., 50lbs or 70lbs)";
         }
 
         const weightValue = Number.parseFloat(weightMatch[1]);

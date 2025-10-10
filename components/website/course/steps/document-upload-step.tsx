@@ -6,7 +6,7 @@ import { useBooking } from "../booking-context";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
+  // DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
 import PadiQuickReview from "../../QuickReview/QuickReview";
@@ -22,7 +22,7 @@ import QuickReview from "../../form/QuickReview";
 import DiverMedicalForm from "@/components/forms/diver-medical-form";
 
 export function DocumentUploadStep() {
-  const { state, dispatch } = useBooking();
+  const { state } = useBooking();
   const [submittedForms, setSubmittedForms] = React.useState<string[]>([]);
 
   const [openModal, setOpenModal] = React.useState<
@@ -58,34 +58,45 @@ export function DocumentUploadStep() {
       content: (
         // <StandardsForm onSubmitSuccess={() => handleFormSubmit("modal1")} />
         <StandardsForm onSubmitSuccess={() => handleFormSubmit("modal1")} />
-
       ),
     },
     {
       id: "modal2",
       title: "Continue Education Form",
-      content: <PadiLiabilityForm onSubmitSuccess={() => handleFormSubmit("modal2")} />,
+      content: (
+        <PadiLiabilityForm onSubmitSuccess={() => handleFormSubmit("modal2")} />
+      ),
       showSubmit: true,
     },
     {
       id: "modal3",
       title: "Divers Activity Form",
-      content: <DiversActivityForm onSubmitSuccess={() => handleFormSubmit("modal3")}/>,
+      content: (
+        <DiversActivityForm
+          onSubmitSuccess={() => handleFormSubmit("modal3")}
+        />
+      ),
     },
     {
       id: "modal4",
       title: "Quick Review Form",
-      content: <PadiQuickReview onSubmitSuccess={() => handleFormSubmit("modal4")}/>,
+      content: (
+        <PadiQuickReview onSubmitSuccess={() => handleFormSubmit("modal4")} />
+      ),
     },
     {
       id: "modal5",
       title: "Divers Medical Form",
-      content: <DiverMedicalForm onSubmitSuccess={() => handleFormSubmit("modal5")}/>,
+      content: (
+        <DiverMedicalForm onSubmitSuccess={() => handleFormSubmit("modal5")} />
+      ),
     },
     {
       id: "modal6",
       title: "EnrichedAir Form",
-      content: <EnrichedAirForm onSubmitSuccess={() => handleFormSubmit("modal6")}/>,
+      content: (
+        <EnrichedAirForm onSubmitSuccess={() => handleFormSubmit("modal6")} />
+      ),
     },
     {
       id: "modal7",
@@ -95,12 +106,18 @@ export function DocumentUploadStep() {
     {
       id: "modal8",
       title: "Resque Diver Quick Review Form",
-      content: <ResqueDiverQuickReview onSubmitSuccess={() => handleFormSubmit("modal8")}/>,
+      content: (
+        <ResqueDiverQuickReview
+          onSubmitSuccess={() => handleFormSubmit("modal8")}
+        />
+      ),
     },
     {
       id: "modal9",
       title: "Enriched Air Quick Review Form",
-      content: <QuickReview onSubmitSuccess={() => handleFormSubmit("modal9")}/>,
+      content: (
+        <QuickReview onSubmitSuccess={() => handleFormSubmit("modal9")} />
+      ),
     },
   ];
 
@@ -221,7 +238,7 @@ export function DocumentUploadStep() {
       </div>
 
       {/* Render all dialogs from modalConfigs */}
-      {modalConfigs.map(({ id, title, content, showSubmit }) => (
+      {modalConfigs.map(({ id, title, content }) => (
         <Dialog
           key={id}
           open={openModal === id}

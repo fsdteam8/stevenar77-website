@@ -6,13 +6,13 @@ import { LogoutModal } from "@/components/modals/logout-modal";
 import { ProfilePage } from "./pages/profile-page";
 import { CourseHistoryPage } from "./pages/course-history-page";
 import { TripsHistoryPage } from "./pages/trips-history-page";
-import { ShopHistoryPage } from "./pages/shop-history-page";
+// import { ShopHistoryPage } from "./pages/shop-history-page";
 // import { Header } from "./header";
 import { Sidebar } from "./sidebar";
 import { ChangePasswordPage } from "./pages/change-password-page";
 import { signOut } from "next-auth/react";
 import OrderHistoryPage from "./pages/order-history-page";
-import TopHeader from "../website/shared/TopHeader";
+// import TopHeader from "../website/shared/TopHeader";
 import { Header } from "./header";
 
 export default function DashboardPage() {

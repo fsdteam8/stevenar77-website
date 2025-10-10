@@ -3,9 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import Image from "next/image";
-import { useRouter, useParams } from "next/navigation";
+import {  useParams } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner"; // or your toast lib
+// import { toast } from "sonner"; // or your toast lib
 import { useProductDetails } from "@/services/hooks/product/useProductDetails";
 import { useCreateOrder } from "@/services/hooks/order/useCreateOrder";
 import { ProductCreateModal } from "@/components/modals/ProductCreateModal";
@@ -14,16 +14,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 const ProductDetails = () => {
   const params = useParams<{ id: string }>();
   const productId = params.id;
-  const router = useRouter();
+  // const router = useRouter();
 
   // Fetch product details
   const { data, isLoading, error } = useProductDetails(productId);
 
-  const [quantity, setQuantity] = useState(1);
+  const [quantity,] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const { mutate: createOrder, isPending } = useCreateOrder();
+  const { isPending } = useCreateOrder();
 
   if (isLoading) {
     <div className="flex items-center space-x-4 text-center bg-gray-50 py-10">

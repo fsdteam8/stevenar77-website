@@ -6,12 +6,12 @@ import ProductDetails from '@/components/website/shop/ProductDetails';
 // import ProductReviewDes from '@/components/website/shop/ProductReviewDes';
 import React from 'react';
 
-interface PageProps {
-  params: { id: string }; // dynamic segment e.g. /shop/product/[id]
-}
+// interface PageProps {
+//   params: { id: string }; // dynamic segment e.g. /shop/product/[id]
+// }
 
-export default function Page({ params }: PageProps) {
-  const productId = params.id;
+export default function Page() {
+  // const productId = params.id;
 
   // TODO: Replace with real userId from auth (e.g. NextAuth session)
   

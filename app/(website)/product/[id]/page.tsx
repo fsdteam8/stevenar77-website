@@ -4,19 +4,19 @@
 import Hero from "@/components/website/shared/Hero";
 import ProductCarousel from "@/components/website/shop/ProductCarousel";
 import ProductDetails from "@/components/website/shop/ProductDetails";
-import ProductReview from "@/components/website/shop/ProductReview";
-import ProductReviewDes from "@/components/website/shop/ProductReviewDes";
+// import ProductReview from "@/components/website/shop/ProductReview";
+// import ProductReviewDes from "@/components/website/shop/ProductReviewDes";
 import React from "react";
 
-interface PageProps {
-  params: { id: string }; // dynamic segment e.g. /product/[id]
-}
+// interface PageProps {
+//   params: { id: string }; // dynamic segment e.g. /product/[id]
+// }
 
-export default function Page({ params }: PageProps) {
-  const productId = params.id;
+export default function Page() {
+  // const productId = params.id;
 
   // TODO: Replace with real userId from auth (e.g. NextAuth session)
-  const userId = "68bf6996f02adb6fb1fef5a0";
+  // const userId = "68bf6996f02adb6fb1fef5a0";
 
   return (
     <div className="bg-[#FFFEFD]">
