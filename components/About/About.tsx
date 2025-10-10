@@ -8,7 +8,7 @@ import WhyLearnUs from "../website/landing/WhyLearnUs";
 import Gallery from "../website/AboutUs/Gallery";
 import StillHaveQuestion from "../website/reusable/stillHaveQuestion";
 import { useAbout } from "@/lib/useAbout";
-import { Loader2 } from "lucide-react";
+// import { Loader2 } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 
 export default function About() {

@@ -207,7 +207,7 @@ const FeaturedClasses: React.FC = () => {
                   </Button> */}
 
                   {/* Duration + Students */}
-                  <div className="flex justify-between items-center text-sm text-gray-500">
+                  <div className="flex flex-wrap gap-2 justify-between items-center text-sm text-gray-500">
                     <span className="flex items-center text-[16px] text-[#68706A] gap-2">
                       <Clock className="h-4 w-4" />
                       {course.duration}

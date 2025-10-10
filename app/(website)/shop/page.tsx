@@ -2,7 +2,7 @@ import StillHaveQuestion from "@/components/website/reusable/stillHaveQuestion";
 import GilatoProduct from "@/components/website/shop/GilatoProduct";
 // import Hero from "@/components/website/shared/Hero";
 import Products from "@/components/website/shop/products";
-import ProductsCombined from "@/components/website/shop/ProductsCombined";
+// import ProductsCombined from "@/components/website/shop/ProductsCombined";
 import React from "react";
 
 const page = () => {

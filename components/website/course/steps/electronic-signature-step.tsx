@@ -56,13 +56,13 @@
 
 "use client"
 
-import { Input } from "@/components/ui/input"
+// import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { useBooking } from "../booking-context"
+// import { Checkbox } from "@/components/ui/checkbox"
+// import { useBooking } from "../booking-context"
 
 export function ElectronicSignatureStep() {
-  const { state, dispatch } = useBooking()
+  // const { state, dispatch } = useBooking()
 
   return (
     <div>

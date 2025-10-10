@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ProductDetailModal } from "@/components/modals/product-detail-modal";
-import { ProductCreateModal } from "@/components/modals/ProductCreateModal";
+// import { ProductCreateModal } from "@/components/modals/ProductCreateModal";
 import { Pagination } from "../pagination";
 import { CourseCard } from "../course-card";
 import { useMyOrders } from "@/services/hooks/orders/useMyOrders";
@@ -14,7 +14,7 @@ const mapStatus = (status: string): "complete" | "pending" =>
 export function ShopHistoryPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
-  const [isCreateOpen, setIsCreateOpen] = useState(false); // 👈 modal state
+  // const [isCreateOpen, setIsCreateOpen] = useState(false); 
 
   const { data: ordersData, isLoading, isError } = useMyOrders();
 
@@ -62,7 +62,7 @@ export function ShopHistoryPage() {
         <div>
           <Button
             className="mb-4 bg-primary hover:bg-teal-700 text-white"
-            onClick={() => setIsCreateOpen(true)} // 👈 open modal
+            // onClick={() => setIsCreateOpen(true)} // 👈 open modal
           >
             Add Product
           </Button>

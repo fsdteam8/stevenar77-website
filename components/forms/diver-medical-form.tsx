@@ -80,7 +80,7 @@ interface DiverMedicalFormProps {
 const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
   onSubmitSuccess,
 }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [, setIsSubmitting] = useState(false);
   const { data: session } = useSession();
   const { dispatch } = useBooking(); // 🔥 Add this
   const id = session?.user?.id || "";

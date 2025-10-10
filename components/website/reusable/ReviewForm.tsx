@@ -59,22 +59,22 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     }
   }, [submitStatus]);
 
-  const reviewStats = {
-    totalReviews: 2529,
-    averageRating: 4.9,
-    breakdown: [
-      { stars: 5, count: 1500 },
-      { stars: 4, count: 100 },
-      { stars: 3, count: 50 },
-      { stars: 2, count: 0 },
-      { stars: 1, count: 0 },
-    ],
-  };
+  // const reviewStats = {
+  //   totalReviews: 2529,
+  //   averageRating: 4.9,
+  //   breakdown: [
+  //     { stars: 5, count: 1500 },
+  //     { stars: 4, count: 100 },
+  //     { stars: 3, count: 50 },
+  //     { stars: 2, count: 0 },
+  //     { stars: 1, count: 0 },
+  //   ],
+  // };
 
-  const getBarWidth = (count: number): number => {
-    const maxCount = Math.max(...reviewStats.breakdown.map((b) => b.count));
-    return (count / maxCount) * 100;
-  };
+  // const getBarWidth = (count: number): number => {
+  //   const maxCount = Math.max(...reviewStats.breakdown.map((b) => b.count));
+  //   return (count / maxCount) * 100;
+  // };
   console.log("hello");
   return (
     <div className="container mx-auto">

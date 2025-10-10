@@ -60,7 +60,6 @@
 //   }
 // }, [data]);
 
-
 //   const selectedVariantData = data?.data?.variants?.find(
 //     (v) => v.title === selectedVariant,
 //   );
@@ -189,7 +188,6 @@
 //   }
 // };
 
-
 //   if (isLoading) return <p>Loading...</p>;
 //   if (error) return <p>Error loading product.</p>;
 
@@ -225,7 +223,7 @@
 //               ))}
 //             </select>
 //           </div>
-          
+
 //           <input
 //             type="number"
 //             min={1}
@@ -307,11 +305,10 @@
 
 // export default ProductCreate;
 
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useCreateOrder } from "@/services/hooks/order/useCreateOrder";
 import { useProductDetails } from "@/services/hooks/product/useProductDetails";
@@ -332,19 +329,21 @@ interface ProductVariant {
   image?: { url: string };
 }
 
-const ProductCreate: React.FC<ProductCreateProps> = ({ productId, onClose }) => {
+const ProductCreate: React.FC<ProductCreateProps> = ({
+  productId,
+  onClose,
+}) => {
   const [selectedVariant, setSelectedVariant] = useState<string>("");
   const [quantity, setQuantity] = useState<number | "">("");
-  const [images, setImages] = useState<File[]>([]);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [, setImages] = useState<File[]>([]);
+  // const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { mutate: createOrder, isPending } = useCreateOrder();
   const { data, isLoading, error } = useProductDetails(productId);
 
   // Get selected variant data
-  const selectedVariantData: ProductVariant | undefined = data?.data?.variants?.find(
-    (v) => v.title === selectedVariant
-  );
+  const selectedVariantData: ProductVariant | undefined =
+    data?.data?.variants?.find((v) => v.title === selectedVariant);
 
   // Convert URL to File
   const urlToFile = async (url: string, filename: string): Promise<File> => {
@@ -362,28 +361,28 @@ const ProductCreate: React.FC<ProductCreateProps> = ({ productId, onClose }) => 
 
       if (firstVariant.image?.url) {
         urlToFile(firstVariant.image.url, "variant-image").then((file) =>
-          setImages([file])
+          setImages([file]),
         );
       }
     }
   }, [data]);
 
-  const handleFiles = (files: FileList) => {
-    const validFiles = Array.from(files).filter((file) => {
-      const validTypes = ["image/jpeg", "image/png", "image/jpg"];
-      const maxSize = 10 * 1024 * 1024; // 10MB
-      return validTypes.includes(file.type) && file.size <= maxSize;
-    });
-    setImages(validFiles);
-  };
+  // const handleFiles = (files: FileList) => {
+  //   const validFiles = Array.from(files).filter((file) => {
+  //     const validTypes = ["image/jpeg", "image/png", "image/jpg"];
+  //     const maxSize = 10 * 1024 * 1024; // 10MB
+  //     return validTypes.includes(file.type) && file.size <= maxSize;
+  //   });
+  //   setImages(validFiles);
+  // };
 
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) handleFiles(e.target.files);
-  };
+  // const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files) handleFiles(e.target.files);
+  // };
 
-  const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
-  };
+  // const removeImage = (index: number) => {
+  //   setImages((prev) => prev.filter((_, i) => i !== index));
+  // };
 
   const handleCancel = () => {
     setSelectedVariant(data?.data?.variants?.[0]?.title || "");
@@ -415,7 +414,9 @@ const ProductCreate: React.FC<ProductCreateProps> = ({ productId, onClose }) => 
       if (!response.ok) throw new Error("Failed to fetch image");
 
       const blob = await response.blob();
-      const file = new File([blob], `${selectedVariant}.jpg`, { type: blob.type });
+      const file = new File([blob], `${selectedVariant}.jpg`, {
+        type: blob.type,
+      });
 
       createOrder(
         {
@@ -432,7 +433,7 @@ const ProductCreate: React.FC<ProductCreateProps> = ({ productId, onClose }) => 
             if (sessionUrl) window.location.href = sessionUrl;
           },
           onError: () => toast.error("Failed to place order. Try again."),
-        }
+        },
       );
     } catch (err) {
       console.error(err);
@@ -448,7 +449,9 @@ const ProductCreate: React.FC<ProductCreateProps> = ({ productId, onClose }) => 
       {/* Variant + Quantity */}
       <div className="mb-6">
         <div className="flex gap-2 items-center mb-2">
-          <p className="text-sm font-medium text-gray-700">Select Color & Quantity</p>
+          <p className="text-sm font-medium text-gray-700">
+            Select Color & Quantity
+          </p>
           {selectedVariantData?.quantity !== undefined && (
             <span className="text-sm text-gray-500">
               In stock: <strong>{selectedVariantData.quantity}</strong>
@@ -485,7 +488,9 @@ const ProductCreate: React.FC<ProductCreateProps> = ({ productId, onClose }) => 
 
       {/* Image Preview */}
       <div className="mb-6">
-        <p className="text-sm font-medium text-gray-700 mb-2">Selected Product&apos;s Picture</p>
+        <p className="text-sm font-medium text-gray-700 mb-2">
+          Selected Product&apos;s Picture
+        </p>
         <div className="border-2 border-dashed rounded-lg p-6 text-center">
           {selectedVariantData?.image?.url && (
             <Image
