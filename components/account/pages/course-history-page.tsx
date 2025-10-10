@@ -101,8 +101,10 @@ export function CourseHistoryPage() {
     );
   if (mappedBookings.length === 0)
     return (
-      <div className="text-center py-20">
-        <p className="text-lg font-medium">You have no paid bookings yet.</p>
+      <div className="container mx-auto px-2 sm:px-0">
+        <div className="p-6 bg-white rounded-lg shadow text-center">
+          <p className="text-gray-600 text-lg">You haven&apos;t Paid For any Course yet.</p>
+        </div>
       </div>
     );
 
