@@ -152,13 +152,11 @@ export function bookingReducer(
     case "SET_PRICE_INDEX":
       return { ...state, selectedPriceIndex: action.payload };
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
     case "MARK_FORM_SUBMITTED":
       const formId = action.payload;
       if (state.submittedForms.includes(formId)) return state; // already submitted
         return { ...state, submittedForms: [...state.submittedForms, formId] };
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
     case "RESET_SUBMITTED_FORMS":
       return { ...state, submittedForms: [] };
 
