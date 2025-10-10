@@ -96,7 +96,7 @@ export function DocumentUploadStep() {
             key={btn.id}
             onClick={() => setOpenModal(btn.id)}  // This opens the modal for the respective form
             disabled={submittedForms.includes(btn.id)}  // Disable if form is already submitted
-            className={`bg-${btn.color}-500 hover:bg-${btn.color}-600 text-white disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={`bg-teal-500 hover:bg-teal-600 text-white disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {btn.label}
           </Button>
