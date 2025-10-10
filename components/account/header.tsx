@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { useSocial } from "@/services/hooks/social/social";
@@ -9,13 +9,12 @@ import {
   Facebook,
   Instagram,
   Twitter,
-  X,
 } from "lucide-react";
 import Link from "next/link";
 
 export function Header() {
   const { data, isLoading, error } = useSocial();
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible] = useState(true);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading social data</p>;
@@ -69,7 +68,9 @@ export function Header() {
 
         {/* Right Section */}
         <div className="flex items-center space-x-2 sm:space-x-4 mt-2 sm:mt-0">
-          <span className="text-xs sm:text-sm hidden sm:inline">Follow Us:</span>
+          <span className="text-xs sm:text-sm hidden sm:inline">
+            Follow Us:
+          </span>
           <div className="flex space-x-2">
             {data?.data[0]?.facebook && (
               <Link href={data?.data[0]?.facebook} target="_blank">

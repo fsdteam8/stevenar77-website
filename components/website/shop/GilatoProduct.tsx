@@ -7,7 +7,7 @@ import {
 } from "@/services/hooks/product/useGelatoProducts";
 
 import { useRouter } from "next/navigation";
-import ShopProductCard from "../shared/ShopProductCard";
+// import ShopProductCard from "../shared/ShopProductCard";
 import GelatoShopProductCard from "../shared/GelatoShopProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -48,6 +48,7 @@ const GilatoProduct = () => {
                     ? product.description
                         .replace(/<[^>]+>/g, "")
                         .slice(0, 100) + "..."
+                        
                     : ""
                 }
                 rating={0} // API doesn't provide rating yet

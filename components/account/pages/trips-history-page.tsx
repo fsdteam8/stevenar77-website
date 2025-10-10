@@ -11,7 +11,7 @@ export function TripsHistoryPage() {
   const { data: session, status } = useSession();
   const userId = session?.user?.id; // get logged-in user ID from session
 
-  const { data: trips = [], isLoading, isError, error } = usePaidTrips(userId || "");
+  const { data: trips = [], isLoading, isError } = usePaidTrips(userId || "");
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -85,7 +85,7 @@ export function TripsHistoryPage() {
               participants={tripItem?.participants.length}
               price={tripItem?.totalPrice} // all trips are paid
               status="complete"           
-              imageUrl={trip?.images[0]?.url || "/placeholder.jpg"}
+              imageUrl={trip?.images[0]?.url || "/asset/noimage.jpg"}
             />
           );
         })}

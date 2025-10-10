@@ -1,8 +1,8 @@
 "use client";
 
-import { Calendar, Clock, MapPin, Users, Eye, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Calendar, Clock, MapPin, Users } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
@@ -34,13 +34,11 @@ interface CourseCardProps {
   status: "complete" | "pending";
   imageUrl: string;
   isHighlighted?: boolean;
-  onView?: (id: string) => void;      // made optional
-  onDelete?: (id: string) => void;    // optional
+  onView?: (id: string) => void; // made optional
+  onDelete?: (id: string) => void; // optional
 }
 
-
 export function CourseCard({
-  id,
   title,
   description,
   date,
@@ -48,17 +46,16 @@ export function CourseCard({
   location,
   participants,
   price,
-  status,
+
   imageUrl,
   isHighlighted = false,
-  onView,
-  onDelete,
 }: CourseCardProps) {
+  console.log(imageUrl);
   return (
     <div
       className={cn(
         "bg-white rounded-lg p-4 shadow-sm transition-all",
-        isHighlighted && "ring-2 ring-[#0694a2] ring-opacity-50"
+        isHighlighted && "ring-2 ring-[#0694a2] ring-opacity-50",
       )}
     >
       <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
@@ -66,7 +63,7 @@ export function CourseCard({
           <Image
             width={100}
             height={100}
-            src={imageUrl || "/images/imagewater.jpg"}
+            src={imageUrl || "/images/imagedata.jpg"}
             alt={title}
             className="w-full h-full object-cover"
           />

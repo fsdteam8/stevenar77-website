@@ -1,8 +1,8 @@
 // lib/shop.ts
 import { GelatoProduct } from "@/services/hooks/product/useGelatoProducts";
 import axios from "axios";
-import { addWeeks } from "date-fns";
-import { FaBaby } from "react-icons/fa";
+// import { addWeeks } from "date-fns";
+// import { FaBaby } from "react-icons/fa";
 
 export interface Product {
   _id: string;
