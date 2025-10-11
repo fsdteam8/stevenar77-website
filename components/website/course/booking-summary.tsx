@@ -278,7 +278,7 @@ export function BookingSummary({ courseData }: BookingSummaryProps) {
   // 🧩 Derived Data & Computations
   // -------------------------------------------------------
   const isAuthenticated = status === "authenticated";
-  const isOnFinalStep = state.currentStep === 2; // ✅ Adjust based on total steps in your flow
+  const isOnFinalStep = state.currentStep === 1; // ✅ Adjust based on total steps in your flow
   const selectedTime = "10:00";
 
   // Format class date
@@ -470,7 +470,8 @@ export function BookingSummary({ courseData }: BookingSummaryProps) {
           onClick={handleProceedToPayment}
           disabled={
             createBookingMutation.isPending ||
-            !isAuthenticated ||
+            !isAuthenticated 
+            ||
             !isOnFinalStep
           }
         >
