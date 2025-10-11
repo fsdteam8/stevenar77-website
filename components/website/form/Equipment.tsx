@@ -132,166 +132,246 @@ export default function PadiForm({
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.signature.trim())
       newErrors.signature = "Signature is required";
-    // if (!formData.dateRented.trim())
-    //   newErrors.dateRented = "Date rented is required";
-    // if (!formData.certificationLevel.trim())
-    //   newErrors.certificationLevel = "Certification level is required";
+
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Invalid email format";
     }
 
-    // if (
-    //   formData.creditCardNumber &&
-    //   !/^\d{12,19}$/.test(formData.creditCardNumber.replace(/\s/g, ""))
-    // ) {
-    //   newErrors.creditCardNumber = "Invalid credit card number";
-    // }
-
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleDownloadPdf = async () => {
-    if (!validateForm()) {
-      alert("Please fill in all required fields correctly");
-      return;
-    }
+  // const handleDownloadPdf = async () => {
+  //   if (!validateForm()) {
+  //     alert("Please fill in all required fields correctly");
+  //     return;
+  //   }
 
-    if (!printRef.current) {
-      alert("Cannot generate PDF - form not loaded");
-      return;
-    }
+  //   if (!printRef.current) {
+  //     alert("Cannot generate PDF - form not loaded");
+  //     return;
+  //   }
 
-    setIsGeneratingPDF(true);
+  //   setIsGeneratingPDF(true);
 
-    try {
-      console.log("Generating PDF...");
-      const html2canvas = await loadHTML2Canvas();
+  //   try {
+  //     console.log("Generating PDF...");
+  //     const html2canvas = await loadHTML2Canvas();
 
-      const canvas = await html2canvas(printRef.current, {
-        scale: 1,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#ffffff",
-        logging: false,
-        ignoreElements: (element) => {
-          return (
-            element.classList.contains("no-print") ||
-            !!(
-              element.tagName === "IMG" &&
-              element.getAttribute("src")?.startsWith("http")
-            )
-          );
-        },
-        onclone: (clonedDoc) => {
-          const allEls = clonedDoc.querySelectorAll("*");
-          allEls.forEach((el) => {
-            const htmlEl = el as HTMLElement;
-            if (htmlEl.style) {
-              const props = ["color", "backgroundColor", "borderColor"];
-              props.forEach((prop) => {
-                const value = htmlEl.style.getPropertyValue(prop);
-                if (value && value.includes("lab")) {
-                  htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
-                }
-              });
+  //     const canvas = await html2canvas(printRef.current, {
+  //       scale: 1,
+  //       useCORS: true,
+  //       allowTaint: true,
+  //       backgroundColor: "#ffffff",
+  //       logging: false,
+  //       ignoreElements: (element) => {
+  //         return (
+  //           element.classList.contains("no-print") ||
+  //           !!(
+  //             element.tagName === "IMG" &&
+  //             element.getAttribute("src")?.startsWith("http")
+  //           )
+  //         );
+  //       },
+  //       onclone: (clonedDoc) => {
+  //         const allEls = clonedDoc.querySelectorAll("*");
+  //         allEls.forEach((el) => {
+  //           const htmlEl = el as HTMLElement;
+  //           if (htmlEl.style) {
+  //             const props = ["color", "backgroundColor", "borderColor"];
+  //             props.forEach((prop) => {
+  //               const value = htmlEl.style.getPropertyValue(prop);
+  //               if (value && value.includes("lab")) {
+  //                 htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
+  //               }
+  //             });
 
-              if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
-                htmlEl.style.color = "rgb(0, 0, 0)";
+  //             if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
+  //               htmlEl.style.color = "rgb(0, 0, 0)";
+  //             }
+  //             if (
+  //               htmlEl.tagName !== "INPUT" &&
+  //               (!htmlEl.style.backgroundColor ||
+  //                 htmlEl.style.backgroundColor.includes("lab"))
+  //             ) {
+  //               htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
+  //             }
+  //             if (
+  //               !htmlEl.style.borderColor ||
+  //               htmlEl.style.borderColor.includes("lab")
+  //             ) {
+  //               htmlEl.style.borderColor = "rgb(0, 0, 0)";
+  //             }
+
+  //             htmlEl.style.removeProperty("filter");
+  //             htmlEl.style.removeProperty("backdrop-filter");
+  //             htmlEl.style.removeProperty("box-shadow");
+  //           }
+  //         });
+  //       },
+  //     });
+
+  //     const imgData = canvas.toDataURL("image/jpeg", 0.75);
+  //     const jsPDF = await loadJsPDF();
+  //     const pdf = new jsPDF("p", "mm", "a4");
+  //     const pageWidth = pdf.internal.pageSize.getWidth();
+  //     const imgProps = pdf.getImageProperties(imgData);
+  //     const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
+
+  //     pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);
+
+  //     const pdfBlob = pdf.output("blob");
+  //     const fileSizeMB = pdfBlob.size / 1024 / 1024;
+
+  //     console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
+
+  //     const fileName = `PADI_Equipment_Rental_${formData.name
+  //       .replace(/[^a-zA-Z0-9\s]/g, "")
+  //       .replace(/\s+/g, "_")
+  //       .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
+
+  //     const pdfFile = new File([pdfBlob], fileName, {
+  //       type: "application/pdf",
+  //     });
+
+  //     dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+
+  //     // alert("PDF created and added to your booking successfully!");
+  //     if (onSubmitSuccess) onSubmitSuccess();
+  //   } catch (error: unknown) {
+  //     console.error("Error generating PDF:", error);
+  //     alert("PDF generation failed. Please try again.");
+  //   } finally {
+  //     setIsGeneratingPDF(false);
+  //   }
+  // };
+const handleDownloadPdf = async () => {
+  if (!validateForm()) {
+    alert("Please fill in all required fields correctly");
+    return;
+  }
+
+  if (!printRef.current) {
+    alert("Cannot generate PDF - form not loaded");
+    return;
+  }
+
+  setIsGeneratingPDF(true);
+
+  try {
+    console.log("🧾 Generating PDF...");
+
+    const html2canvas = await loadHTML2Canvas();
+    const jsPDF = await loadJsPDF();
+
+    const canvas = await html2canvas(printRef.current, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: "#ffffff",
+      logging: false,
+      ignoreElements: (element) => {
+        return (
+          element.classList.contains("no-print") ||
+          !!(
+            element.tagName === "IMG" &&
+            element.getAttribute("src")?.startsWith("http")
+          )
+        );
+      },
+      onclone: (clonedDoc) => {
+        const allEls = clonedDoc.querySelectorAll("*");
+        allEls.forEach((el) => {
+          const htmlEl = el as HTMLElement;
+          if (htmlEl.style) {
+            const props = ["color", "backgroundColor", "borderColor"];
+            props.forEach((prop) => {
+              const value = htmlEl.style.getPropertyValue(prop);
+              if (value && value.includes("lab")) {
+                htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
               }
-              if (
-                htmlEl.tagName !== "INPUT" &&
-                (!htmlEl.style.backgroundColor ||
-                  htmlEl.style.backgroundColor.includes("lab"))
-              ) {
-                htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-              }
-              if (
-                !htmlEl.style.borderColor ||
-                htmlEl.style.borderColor.includes("lab")
-              ) {
-                htmlEl.style.borderColor = "rgb(0, 0, 0)";
-              }
+            });
 
-              htmlEl.style.removeProperty("filter");
-              htmlEl.style.removeProperty("backdrop-filter");
-              htmlEl.style.removeProperty("box-shadow");
+            if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
+              htmlEl.style.color = "rgb(0, 0, 0)";
             }
-          });
-        },
-      });
+            if (
+              htmlEl.tagName !== "INPUT" &&
+              (!htmlEl.style.backgroundColor ||
+                htmlEl.style.backgroundColor.includes("lab"))
+            ) {
+              htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
+            }
+            if (
+              !htmlEl.style.borderColor ||
+              htmlEl.style.borderColor.includes("lab")
+            ) {
+              htmlEl.style.borderColor = "rgb(0, 0, 0)";
+            }
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.75);
-      const jsPDF = await loadJsPDF();
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
+            htmlEl.style.removeProperty("filter");
+            htmlEl.style.removeProperty("backdrop-filter");
+            htmlEl.style.removeProperty("box-shadow");
+          }
+        });
+      },
+    });
 
-      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);
+    const imgData = canvas.toDataURL("image/jpeg", 0.75);
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
 
-      const pdfBlob = pdf.output("blob");
-      const fileSizeMB = pdfBlob.size / 1024 / 1024;
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
+    console.log("🖼️ Image dimensions:", { imgWidth, imgHeight, pageHeight });
 
-      const fileName = `PADI_Equipment_Rental_${formData.name
-        .replace(/[^a-zA-Z0-9\s]/g, "")
-        .replace(/\s+/g, "_")
-        .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
+    let heightLeft = imgHeight;
+    let position = 0;
 
-      const pdfFile = new File([pdfBlob], fileName, {
-        type: "application/pdf",
-      });
+    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
 
-      dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
-
-      // alert("PDF created and added to your booking successfully!");
-      if (onSubmitSuccess) onSubmitSuccess();
-    } catch (error: unknown) {
-      console.error("Error generating PDF:", error);
-      alert("PDF generation failed. Please try again.");
-    } finally {
-      setIsGeneratingPDF(false);
+    // ✅ Add extra pages for remaining content
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
     }
-  };
 
-  // const formatCreditCard = (value: string): string => {
-  //   const cleaned = value.replace(/\D/g, "");
-  //   const chunks = cleaned.match(/.{1,4}/g);
-  //   return chunks ? chunks.join(" ").substring(0, 19) : "";
-  // };
+    const pdfBlob = pdf.output("blob");
+    const fileSizeMB = pdfBlob.size / 1024 / 1024;
+    console.log(`✅ PDF generated successfully: ${fileSizeMB.toFixed(2)} MB`);
 
-  // const handleCreditCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const formatted = formatCreditCard(e.target.value);
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     creditCardNumber: formatted,
-  //   }));
-  // };
+    const fileName = `PADI_Equipment_Rental_${formData.name
+      .replace(/[^a-zA-Z0-9\s]/g, "")
+      .replace(/\s+/g, "_")
+      .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
 
-  // const handleSignatureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     signature: e.target.value,
-  //   }));
-  // };
+    const pdfFile = new File([pdfBlob], fileName, {
+      type: "application/pdf",
+    });
+
+    dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+    if (onSubmitSuccess) onSubmitSuccess();
+  } catch (error) {
+    console.error("❌ PDF generation error:", error);
+    alert("PDF generation failed. Please try again. Check console for details.");
+  } finally {
+    setIsGeneratingPDF(false);
+  }
+};
+
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-4xl mx-auto space-y-4">
-        <Button
-          onClick={handleDownloadPdf}
-          disabled={isGeneratingPDF}
-          className={`w-full mb-4 no-print ${
-            isGeneratingPDF
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700"
-          }`}
-        >
-          {isGeneratingPDF ? "Generating PDF..." : "Submit Form"}
-        </Button>
+        
 
         <div
           ref={printRef}
@@ -647,7 +727,7 @@ export default function PadiForm({
 
             <div className="text-right text-xs">- page 1 of 2 -</div>
           </div>
-
+<div className="py-48"></div>
           {/* Page 2 */}
           <div className="mt-12">
             <div className="text-center mb-4">
@@ -897,7 +977,19 @@ export default function PadiForm({
             <div className="text-right text-xs mt-4">- page 2 of 2 -</div>
           </div>
         </div>
+        <Button
+          onClick={handleDownloadPdf}
+          disabled={isGeneratingPDF}
+          className={`w-full mb-4 no-print ${
+            isGeneratingPDF
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
+        >
+          {isGeneratingPDF ? "Generating PDF..." : "Submit Form"}
+        </Button>
       </div>
+
 
       {/* Print Styles */}
       <style jsx>{`
