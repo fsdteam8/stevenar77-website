@@ -219,9 +219,9 @@ const CourseFeatured: React.FC = () => {
 
                 {/* Price + Age */}
                 <div className="flex justify-end items-center">
-                  <p className="text-xl md:text-[24px] leading-[120%] font-medium text-gray-900">
+                  {/* <p className="text-xl md:text-[24px] leading-[120%] font-medium text-gray-900">
                     {course.price}
-                  </p>
+                  </p> */}
                   {course.ageRestriction && (
                     <span className="text-xs text-[#0694A2] font-normal ml-2">
                       Age {course.ageRestriction}
