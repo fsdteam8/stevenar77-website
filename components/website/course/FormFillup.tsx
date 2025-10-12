@@ -1,5 +1,5 @@
 "use client";
-
+import React from 'react'
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,13 +15,11 @@ type FormConfig = {
 };
 
 const steps = [
-  { id: 0, title: "Personal Information", component: PersonalInformationStep },
-  { id: 1, title: "All Information Done", component: AllInformationDoneStep },
-  // {
-  //   id: 2,
-  //   title: "Medical Certifications & Document",
-  //   component: DocumentUploadStep,
-  // },
+  {
+    id: 0,
+    title: "Medical Certifications & Document",
+    component: DocumentUploadStep,
+  },
 ];
 
 // Detailed validation with error messages for each step
@@ -32,60 +30,41 @@ const validateStepWithErrors = (
   const errors: string[] = [];
 
   switch (stepIndex) {
-    case 0: // Personal Information Step
-      const { personalInfo } = state;
 
-      if (!personalInfo.name?.trim()) {
-        errors.push("Name is required");
-      }
-      if (!personalInfo.email?.trim()) {
-        errors.push("Email is required");
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personalInfo.email)) {
-        errors.push("Please enter a valid email address");
-      }
-      if (!personalInfo.phone?.trim()) {
-        errors.push("Phone number is required");
-      }
-      if (!personalInfo.dateOfBirth?.trim()) {
-        errors.push("Date of birth is required");
-      }
-      if (!personalInfo.address?.trim()) {
-        errors.push("Address is required");
-      }
-      if (!personalInfo.city?.trim()) {
-        errors.push("City is required");
-      }
-      if (!personalInfo.state?.trim()) {
-        errors.push("State is required");
-      }
-      if (!personalInfo.postalCode?.trim()) {
-        errors.push("Postal code is required");
-      }
-      // if (!personalInfo.emergencyName?.trim()) {
-      //   errors.push("Emergency contact name is required")
-      // }
-      // if (!personalInfo.emergencyPhoneNumber?.trim()) {
-      //   errors.push("Emergency contact phone is required")
-      // }
-      if (!personalInfo.gender?.trim()) {
-        errors.push("Gender is required");
-      }
-      if (
-        !personalInfo.shoeSize ||
-        String(personalInfo.shoeSize).trim() === ""
-      ) {
-        errors.push("Shoe size is required");
-      }
-      if (!personalInfo.height || String(personalInfo.height).trim() === "") {
-        errors.push("Height is required");
-      }
-      if (!personalInfo.weight || String(personalInfo.weight).trim() === "") {
-        errors.push("Weight is required");
-      }
-      break;
+    case 0: // Document Upload Step
+      // Check if all visible forms for current course are completed
+      const formConfigs: FormConfig[] = [
+        { id: "modal1", label: "Standards Form" },
+        { id: "modal2", label: "Continuing Education" },
+        { id: "modal3", label: "Divers Activity" },
+        { id: "modal4", label: "Quick Review-Open Waters" },
+        { id: "modal5", label: "Divers Medical" },
+        { id: "modal6", label: "Enriched Training" },
+        { id: "modal7", label: "Equipment Rental" },
+        { id: "modal8", label: "Rescue Diver Quick Review" },
+        { id: "modal9", label: "Enriched Air Quick Review" },
+      ];
 
-    case 1: // All Information Done Step
-      // No specific fields to validate here
+      // Filter forms relevant to current course
+      const visibleForms = formConfigs.filter((f) =>
+        state.course.formTitle?.some((title) =>
+          f.label.toLowerCase().includes(title.toLowerCase()),
+        ),
+      );
+
+      // ✅ Check if all visible forms are completed
+      const incompleteForms = visibleForms.every((f) =>
+        state.submittedForms.includes(f.id),
+      );
+
+      // Find missing forms
+      // const incompleteForms = visibleForms.filter(
+      //   (f) => !state.submittedForms?.includes(f.id),
+      // );
+
+      if (!incompleteForms) {
+        errors.push("Please complete all required forms before continuing.");
+      }
       break;
 
     default:
@@ -103,7 +82,7 @@ const validateStep = (stepIndex: number, state: BookingState): boolean => {
   return validateStepWithErrors(stepIndex, state).isValid;
 };
 
-export function MultiStepForm() {
+export function FormFillup() {
   const { state, dispatch } = useBooking();
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showValidation, setShowValidation] = useState(false);
@@ -177,7 +156,7 @@ export function MultiStepForm() {
             </div>
             <div className="ml-3 flex-1">
               <h3 className="text-sm font-medium text-red-800">
-                Please complete all required fields
+                Please Click complete all required fields
               </h3>
               <div className="mt-2 text-sm text-red-700">
                 <ul className="list-disc list-inside space-y-1">
@@ -196,19 +175,17 @@ export function MultiStepForm() {
         {steps.map((step, index) => (
           <div key={step.id} className="flex items-center">
             <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+              className={ ` p-5 rounded-md flex items-center justify-center text-sm font-medium ${
                 index <= state.currentStep
                   ? "bg-[#0694a2] text-white"
                   : "bg-[#c0c3c1] text-[#68706a]"
               }`}
             >
-              {index + 1}
+              <p className='text-xl font-bold'>
+                Fill-Up The Forms, It is Required To Get Access To The Course.
+              </p>
             </div>
-            {index < steps.length - 1 && (
-              <div
-                className={`w-12 h-0.5 mx-2 ${index < state.currentStep ? "bg-[#0694a2]" : "bg-[#c0c3c1]"}`}
-              />
-            )}
+            
           </div>
         ))}
       </div>
@@ -228,7 +205,7 @@ export function MultiStepForm() {
         </Button>
 
         {/* Hide the Complete button on the last step (index 2) */}
-        {state.currentStep !== 1 && (
+        {state.currentStep !== 2 && (
           <Button
             onClick={handleNext}
             disabled={!isCurrentStepValid}

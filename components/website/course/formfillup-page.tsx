@@ -2,12 +2,15 @@
 import React from "react";
 import { BookingContent } from "./booking-content";
 // import { BookingSummary } from "./booking-summary";
-// import { MultiStepForm } from "./multi-step-form";
+import { MultiStepForm } from "./multi-step-form";
 import { BookingProvider } from "./booking-context";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchCourseById, CourseDetail } from "@/lib/course";
 import { FillupSummary } from "./fillupSummery";
+import { FormContent } from "./FormContent";
+import { DocumentUploadStep } from "./steps/document-upload-step";
+import { FormFillup } from "./FormFillup";
 
 const FormFillUpPage = () => {
   const params = useParams<{ id: string }>();
@@ -66,8 +69,9 @@ const FormFillUpPage = () => {
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <BookingContent courseData={course} />
-              {/* <MultiStepForm /> */}
+              <FormContent courseData={course} />
+              {/* <DocumentUploadStep /> */}
+              <FormFillup />
             </div>
             <div className="lg:col-span-1">
               <FillupSummary courseData={course} />
