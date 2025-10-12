@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -19,7 +20,7 @@ interface BookingSummaryProps {
   courseData: CourseDetail;
 }
 
-export function BookingSummary({ courseData }: BookingSummaryProps) {
+export function FillupSummary({ courseData }: BookingSummaryProps) {
   const { state } = useBooking();
   const { data: session, status } = useSession();
   const createBookingMutation = useCreateBooking();
@@ -136,9 +137,9 @@ export function BookingSummary({ courseData }: BookingSummaryProps) {
             <h3 className="font-medium text-[#343a40]">
               {state.course.name || "Unknown Course"}
             </h3>
-            {state.course.age && (
+            {/* {state.course.age && (
               <p className="text-sm text-[#6c757d]">Age: {state.course.age}</p>
-            )}
+            )} */}
           </div>
         </div>
 
@@ -192,7 +193,7 @@ export function BookingSummary({ courseData }: BookingSummaryProps) {
         {/* Total Price */}
         <div className="border-t pt-4">
           <div className="flex justify-between text-lg font-semibold text-[#343a40]">
-            <span>Total</span>
+            <span>Total Paid</span>
             <span>${totalPrice.toFixed(2)}</span>
           </div>
         </div>
@@ -217,7 +218,7 @@ export function BookingSummary({ courseData }: BookingSummaryProps) {
         )}
 
         {/* Proceed Button */}
-        <Button
+        {/* <Button
           className="w-full bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={handleProceedToPayment}
           disabled={
@@ -239,7 +240,7 @@ export function BookingSummary({ courseData }: BookingSummaryProps) {
           ) : (
             "Proceed to Payment"
           )}
-        </Button>
+        </Button> */}
 
         {/* What's Included */}
         {courseData?.courseIncludes?.length ? (
