@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-// import { Plus, Minus } from "lucide-react";
+import { Calendar, MapPin, Waves } from "lucide-react";
 import { useCourse } from "@/services/hooks/courses/useCourse";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
@@ -16,18 +16,42 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
+interface ScheduleDate {
+  date: string;
+  location: string;
+  type: string;
+}
+
+interface Schedule {
+  dates: ScheduleDate[];
+}
+
+interface CoursePrice {
+  amount?: number;
+}
+
+// In your types/course.ts or wherever CourseDetail is defined
+export interface CourseDetail {
+  _id: string;
+  title: string;
+  description: string;
+  image?: {
+    url: string;
+  };
+  price: number[] | CoursePrice[];
+  courseIncludes?: string[];
+  schedule?: Schedule[];
+}
+
 const CourseDetails = () => {
   const params = useParams();
   const courseId = params?.id as string;
   const { data: course, isLoading, isError, error } = useCourse(courseId);
 
-  // const [quantity, setQuantity] = useState(1);
+  console.log("this is courses data", course);
+
   const [selectedPriceIndex, setSelectedPriceIndex] = useState(0);
   const router = useRouter();
-
-  // const handleQuantityChange = (newQuantity: number) => {
-  //   if (newQuantity >= 1) setQuantity(newQuantity);
-  // };
 
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const { status } = useSession();
@@ -44,11 +68,6 @@ const CourseDetails = () => {
       router.push(redirectPath);
     }
   };
-
-  // const handleBookNow = () => {
-  //   if (!course) return;
-  //   router.push(`/courses/book/${course._id}`);
-  // };
 
   // Loading state
   if (isLoading) {
@@ -82,8 +101,6 @@ const CourseDetails = () => {
   // Check if single or multiple prices
   const hasSinglePrice =
     !course.price || !Array.isArray(course.price) || course.price.length <= 1;
-  // const hasMultiplePrices =
-  //   course.price && Array.isArray(course.price) && course.price.length > 1;
 
   // Get price display - handle price array
   const getPriceDisplay = () => {
@@ -105,9 +122,126 @@ const CourseDetails = () => {
     return `$${minPrice.toLocaleString()} - $${maxPrice.toLocaleString()}`;
   };
 
+  // Format date helper
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  // Get type icon and color
+  const getTypeDetails = (type: string) => {
+    const normalizedType = type.toLowerCase();
+    switch (normalizedType) {
+      case "pool":
+        return {
+          icon: Waves,
+          color: "bg-blue-100 text-blue-700 border-blue-200",
+        };
+      case "ocean":
+        return {
+          icon: Waves,
+          color: "bg-cyan-100 text-cyan-700 border-cyan-200",
+        };
+      default:
+        return {
+          icon: Waves,
+          color: "bg-teal-100 text-teal-700 border-teal-200",
+        };
+    }
+  };
+
+  // Render Schedule Component
+  const renderSchedule = () => {
+    if (
+      !course.schedule ||
+      course.schedule.length === 0 ||
+      !course.schedule[0]?.dates
+    ) {
+    }
+
+    return (
+      <div className="mt-8 pt-8 border-t border-gray-200">
+        <div className="flex items-center gap-2 mb-6">
+          <Calendar className="w-5 h-5 text-teal-600" />
+          <h3 className="text-xl font-semibold text-[#27303F]">
+            Available Schedules
+          </h3>
+        </div>
+
+        <div className="space-y-3">
+          {course.schedule?.[0]?.dates?.map(
+            (scheduleItem: ScheduleDate, index: number) => {
+              const typeDetails = getTypeDetails(scheduleItem.type);
+              const TypeIcon = typeDetails.icon;
+              return (
+                <div
+                  key={index}
+                  className="group relative bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-5 hover:shadow-lg hover:border-teal-300 transition-all duration-300 cursor-pointer"
+                >
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                  <div className="relative space-y-3">
+                    {/* Date */}
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center group-hover:bg-teal-200 transition-colors">
+                          <Calendar className="w-5 h-5 text-teal-600" />
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                          Date
+                        </p>
+                        <p className="text-base font-semibold text-gray-900">
+                          {formatDate(scheduleItem.date)}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Location */}
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center group-hover:bg-orange-200 transition-colors">
+                          <MapPin className="w-5 h-5 text-orange-600" />
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                          Location
+                        </p>
+                        <p className="text-base font-medium text-gray-900">
+                          {scheduleItem.location}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Type Badge */}
+                    <div className="flex items-center gap-3 pt-2">
+                      <div
+                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border ${typeDetails.color} transition-all`}
+                      >
+                        <TypeIcon className="w-4 h-4" />
+                        <span className="capitalize">{scheduleItem.type}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            },
+          )}
+        </div>
+      </div>
+    );
+  };
+
   // Render Single Price Layout (like Image 1)
   const renderSinglePriceLayout = () => (
-    <div className="border-t border-gray-200 ">
+    <div className="border-t border-gray-200">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div>
           <div className="flex items-center gap-6">
@@ -123,11 +257,14 @@ const CourseDetails = () => {
       <div className="w-full mt-6">
         <Button
           onClick={() => handleBookNow(courseId)}
-          className="w-full sm:w-auto text-center bg-teal-600 hover:bg-teal-700 text-white font-semibold px-20 py-6 rounded-lg transition-colors text-lg"
+          className="w-full sm:w-auto text-center bg-teal-600 hover:bg-teal-700 text-white font-semibold px-20 py-6 rounded-lg transition-colors text-lg shadow-lg hover:shadow-xl"
         >
           Book Now
         </Button>
       </div>
+
+      {/* Schedule Section */}
+      {renderSchedule()}
     </div>
   );
 
@@ -138,40 +275,42 @@ const CourseDetails = () => {
       <div className="mb-8">
         <h3 className="text-xl font-semibold text-[#27303F] mb-6">Pricing</h3>
         <div className="space-y-4">
-          {course.price.map((price, index) => (
-            <div
-              key={index}
-              className={`p-4 rounded-lg border cursor-pointer transition-all ${
-                selectedPriceIndex === index
-                  ? "border-teal-600 bg-teal-50"
-                  : "border-gray-200 hover:border-gray-300"
-              }`}
-              onClick={() => setSelectedPriceIndex(index)}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-semibold text-gray-900">
-                    {/* You can customize these labels based on your data structure */}
-                    {index === 0 && "5 Days Program"}
-                    {index === 1 && "3 Days Upgrade"}
-                    {index === 2 && "Weekend Special"}
-                    {index > 2 && `Option ${index + 1}`}
+          {course.price.map((price: number | CoursePrice, index: number) => {
+            const priceValue =
+              typeof price === "number" ? price : price.amount || 0;
+            return (
+              <div
+                key={index}
+                className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                  selectedPriceIndex === index
+                    ? "border-teal-600 bg-teal-50"
+                    : "border-gray-200 hover:border-gray-300"
+                }`}
+                onClick={() => setSelectedPriceIndex(index)}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-semibold text-gray-900">
+                      {index === 0 && "5 Days Program"}
+                      {index === 1 && "3 Days Upgrade"}
+                      {index === 2 && "Weekend Special"}
+                      {index > 2 && `Option ${index + 1}`}
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">
+                      {index === 0 &&
+                        "Full certification, the gold-guide comfort step by step"}
+                      {index === 1 &&
+                        "If you already have a 2 dive/tour (bring a p. Third buoyancy or termos)"}
+                      {index === 2 && "Weekend intensive program"}
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-600 mt-1">
-                    {/* Add descriptions if available in your data */}
-                    {index === 0 &&
-                      "Full certification, the gold-guide comfort step by step"}
-                    {index === 1 &&
-                      "If you already have a 2 dive/tour (bring a p. Third buoyancy or termos)"}
-                    {index === 2 && "Weekend intensive program"}
+                  <div className="text-xl font-bold text-gray-900">
+                    ${priceValue.toLocaleString()}
                   </div>
-                </div>
-                <div className="text-xl font-bold text-gray-900">
-                  ${price.toLocaleString()}
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -194,12 +333,15 @@ const CourseDetails = () => {
       {/* Book Now Button */}
       <div className="w-full">
         <Button
-          onClick={()=>handleBookNow(courseId)}
-          className="w-full text-center bg-teal-600 hover:bg-teal-700 text-white font-semibold py-4 rounded-lg transition-colors text-lg"
+          onClick={() => handleBookNow(courseId)}
+          className="w-full text-center bg-teal-600 hover:bg-teal-700 text-white font-semibold py-4 rounded-lg transition-colors text-lg shadow-lg hover:shadow-xl"
         >
           Book Now
         </Button>
       </div>
+
+      {/* Schedule Section */}
+      {renderSchedule()}
     </div>
   );
 
@@ -240,14 +382,16 @@ const CourseDetails = () => {
                           Course Includes:
                         </h3>
                         <ul className="space-y-4">
-                          {course.courseIncludes.map((item, idx) => (
-                            <li key={idx} className="flex items-start">
-                              <div className="w-2 h-2 bg-teal-600 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                              <span className="text-gray-700 text-lg">
-                                {item}
-                              </span>
-                            </li>
-                          ))}
+                          {course.courseIncludes.map(
+                            (item: string, idx: number) => (
+                              <li key={idx} className="flex items-start">
+                                <div className="w-2 h-2 bg-teal-600 rounded-full mt-2 mr-4 flex-shrink-0"></div>
+                                <span className="text-gray-700 text-lg">
+                                  {item}
+                                </span>
+                              </li>
+                            ),
+                          )}
                         </ul>
                       </div>
                     )}

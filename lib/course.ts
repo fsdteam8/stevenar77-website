@@ -2,13 +2,27 @@
 import axios from "axios";
 
 // ----------------------
-// Types matching actual API response
+// Subtypes
 // ----------------------
-interface addonce {
+export interface AddOnce {
   title: string;
   price: number;
-  _id:string | undefined;
+  _id?: string;
 }
+
+export interface ScheduleDate {
+  date: string;
+  location: string;
+  type: string;
+}
+
+export interface Schedule {
+  dates: ScheduleDate[];
+}
+
+// ----------------------
+// Main CourseDetail type
+// ----------------------
 export interface CourseDetail {
   classDates: never[];
   _id: string;
@@ -17,9 +31,9 @@ export interface CourseDetail {
     public_id: string;
     url: string;
   }; // Single image object, not array
-  description: string; // This is the main description
+  description: string; // The main description
   price: number[]; // Array of prices
-  courseIncludes: string[]; // This is the features array
+  courseIncludes: string[]; // Features array
   duration: string;
   totalReviews: number;
   avgRating: number;
@@ -28,10 +42,14 @@ export interface CourseDetail {
   updatedAt: string;
   maxAge?: number;
   minAge?: number;
-  addOnce: addonce[];
-  formTitle?: string[]; // ✅ add this
+  addOnce: AddOnce[];
+  formTitle?: string[];
+  schedule?: Schedule[]; // ✅ Added to fix TypeScript error
 }
 
+// ----------------------
+// API Response type
+// ----------------------
 export interface CourseResponse {
   success: boolean;
   message: string;
@@ -44,7 +62,7 @@ export interface CourseResponse {
 // ----------------------
 export async function fetchCourseById(id: string): Promise<CourseDetail> {
   const response = await axios.get<CourseResponse>(
-    `${process.env.NEXT_PUBLIC_API_URL}/class/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/class/${id}`
   );
 
   if (!response.data.success) {
