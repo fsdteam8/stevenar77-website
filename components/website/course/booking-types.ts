@@ -4,6 +4,15 @@
 
 import { any, number, string } from "zod";
 
+export interface sets {
+  date: string;
+  location: string;
+  type: string;
+  isActive: boolean;
+}
+export interface Schedules {
+  set : sets[];
+}
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface BookingState {
@@ -17,7 +26,8 @@ export interface BookingState {
     duration: string;
     age: string;
     image?: string;
-    classDates?: string[];
+    // classDates?: string[];
+    Schedules?: Schedules[];
     formTitle?: string[];
   };
   pricing: string | undefined;
@@ -79,8 +89,5 @@ export type BookingAction =
       payload: { id: string; title: string; price: number };
     }
   | { type: "SET_PRICE_INDEX"; payload: number }
-  | { type: "MARK_FORM_SUBMITTED", payload: any }
-  | { type: "RESET_SUBMITTED_FORMS" }; 
-
-
-  
+  | { type: "MARK_FORM_SUBMITTED"; payload: any }
+  | { type: "RESET_SUBMITTED_FORMS" };
