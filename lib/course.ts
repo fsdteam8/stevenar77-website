@@ -16,10 +16,9 @@ export interface ScheduleDate {
   type: string;
 }
 
-export interface Schedule {
-  dates: ScheduleDate[];
+export interface ScheduleSet {
+  sets: ScheduleDate[];
 }
-
 // ----------------------
 // Main CourseDetail type
 // ----------------------
@@ -44,7 +43,7 @@ export interface CourseDetail {
   minAge?: number;
   addOnce: AddOnce[];
   formTitle?: string[];
-  schedule?: Schedule[]; // ✅ Added to fix TypeScript error
+  schedule?: ScheduleSet[];  
 }
 
 // ----------------------
@@ -62,7 +61,7 @@ export interface CourseResponse {
 // ----------------------
 export async function fetchCourseById(id: string): Promise<CourseDetail> {
   const response = await axios.get<CourseResponse>(
-    `${process.env.NEXT_PUBLIC_API_URL}/class/${id}`
+    `${process.env.NEXT_PUBLIC_API_URL}/class/${id}`,
   );
 
   if (!response.data.success) {
