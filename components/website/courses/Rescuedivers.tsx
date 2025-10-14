@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Calendar, MapPin, Waves } from "lucide-react";
+import { Calendar, MapPin, Waves, ChevronDown } from "lucide-react";
 import { useCourse } from "@/services/hooks/courses/useCourse";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
@@ -16,31 +16,30 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-interface ScheduleDate {
+export interface ScheduleDate {
   date: string;
   location: string;
   type: string;
+  isActive?: boolean;
 }
 
-interface Schedule {
-  dates: ScheduleDate[];
+export interface ScheduleSet {
+  sets: ScheduleDate[];
 }
+ 
 
 interface CoursePrice {
   amount?: number;
 }
 
-// In your types/course.ts or wherever CourseDetail is defined
 export interface CourseDetail {
   _id: string;
   title: string;
   description: string;
-  image?: {
-    url: string;
-  };
+  image?: { url: string };
   price: number[] | CoursePrice[];
   courseIncludes?: string[];
-  schedule?: Schedule[];
+  schedule?: ScheduleSet[]; 
 }
 
 const CourseDetails = () => {
@@ -51,11 +50,10 @@ const CourseDetails = () => {
   console.log("this is courses data", course);
 
   const [selectedPriceIndex, setSelectedPriceIndex] = useState(0);
+  const [openSet, setOpenSet] = useState<number | null>(0); // Collapsible schedule state
   const router = useRouter();
-
-  const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const { status } = useSession();
-
   const isLoggedIn = status === "authenticated";
 
   const handleBookNow = (courseId: string) => {
@@ -98,11 +96,9 @@ const CourseDetails = () => {
     );
   }
 
-  // Check if single or multiple prices
   const hasSinglePrice =
     !course.price || !Array.isArray(course.price) || course.price.length <= 1;
 
-  // Get price display - handle price array
   const getPriceDisplay = () => {
     if (
       !course.price ||
@@ -116,13 +112,11 @@ const CourseDetails = () => {
       return `$${course.price[0].toLocaleString()}`;
     }
 
-    // Multiple prices - show range
     const minPrice = Math.min(...course.price);
     const maxPrice = Math.max(...course.price);
     return `$${minPrice.toLocaleString()} - $${maxPrice.toLocaleString()}`;
   };
 
-  // Format date helper
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -133,127 +127,138 @@ const CourseDetails = () => {
     });
   };
 
-  // Get type icon and color
   const getTypeDetails = (type: string) => {
     const normalizedType = type.toLowerCase();
     switch (normalizedType) {
       case "pool":
-        return {
-          icon: Waves,
-          color: "bg-blue-100 text-blue-700 border-blue-200",
-        };
+        return { icon: Waves, color: "bg-blue-100 text-blue-700 border-blue-200" };
       case "ocean":
-        return {
-          icon: Waves,
-          color: "bg-cyan-100 text-cyan-700 border-cyan-200",
-        };
+        return { icon: Waves, color: "bg-cyan-100 text-cyan-700 border-cyan-200" };
       default:
-        return {
-          icon: Waves,
-          color: "bg-teal-100 text-teal-700 border-teal-200",
-        };
+        return { icon: Waves, color: "bg-teal-100 text-teal-700 border-teal-200" };
     }
   };
 
-  // Render Schedule Component
+  const toggleSet = (index: number) => {
+    setOpenSet(openSet === index ? null : index);
+  };
+
   const renderSchedule = () => {
-    if (
-      !course.schedule ||
-      course.schedule.length === 0 ||
-      !course.schedule[0]?.dates
-    ) {
-    }
+    if (!course.schedule || course.schedule.length === 0) return null;
 
     return (
       <div className="mt-8 pt-8 border-t border-gray-200">
         <div className="flex items-center gap-2 mb-6">
           <Calendar className="w-5 h-5 text-teal-600" />
-          <h3 className="text-xl font-semibold text-[#27303F]">
-            Available Schedules
-          </h3>
+          <h3 className="text-xl font-semibold text-[#27303F]">Available Schedules</h3>
         </div>
 
-        <div className="space-y-3">
-          {course.schedule?.[0]?.dates?.map(
-            (scheduleItem: ScheduleDate, index: number) => {
-              const typeDetails = getTypeDetails(scheduleItem.type);
-              const TypeIcon = typeDetails.icon;
-              return (
-                <div
-                  key={index}
-                  className="group relative bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-5 hover:shadow-lg hover:border-teal-300 transition-all duration-300 cursor-pointer"
+        <div className="space-y-4">
+          {course?.schedule?.map((scheduleSet: ScheduleSet, setIndex: number) => {
+            if (!scheduleSet.sets || scheduleSet.sets.length === 0) return null;
+            const isOpen = openSet === setIndex;
+
+            return (
+              <div
+                key={setIndex}
+                className="bg-white border-2 border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300"
+              >
+                {/* Header */}
+                <button
+                  onClick={() => toggleSet(setIndex)}
+                  className="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 rounded-t-2xl transition-colors"
                 >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="flex items-center gap-3">
+                    <h4 className="text-lg font-bold text-gray-900">
+                      Date Schedule {setIndex + 1}
+                    </h4>
+                    <span className="px-3 py-1 bg-teal-100 text-teal-700 text-sm font-semibold rounded-full">
+                      {scheduleSet.sets.length}{" "}
+                      {scheduleSet.sets.length === 1 ? "Session" : "Sessions"}
+                    </span>
+                  </div>
+                  <ChevronDown
+                    className={`w-5 h-5 text-gray-600 transition-transform duration-300 cursor-pointer ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-                  <div className="relative space-y-3">
-                    {/* Date */}
-                    <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 mt-1">
-                        <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center group-hover:bg-teal-200 transition-colors">
-                          <Calendar className="w-5 h-5 text-teal-600" />
+                {/* Collapsible Content */}
+                <div
+                  className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                    isOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <div className="p-6 pt-0 space-y-3">
+                    {scheduleSet.sets.map((scheduleItem: ScheduleDate, itemIndex: number) => {
+                      const typeDetails = getTypeDetails(scheduleItem.type);
+                      const TypeIcon = typeDetails.icon;
+
+                      return (
+                        <div
+                          key={itemIndex}
+                          className="group relative bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-teal-300 transition-all duration-300"
+                        >
+                          <div className="absolute top-0 right-0 w-24 h-24 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {/* Date */}
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center group-hover:bg-teal-200 transition-colors">
+                                <Calendar className="w-5 h-5 text-teal-600" />
+                              </div>
+                              <div>
+                                <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-1">Date</p>
+                                <p className="text-[13px] font-semibold text-gray-900">{formatDate(scheduleItem.date)}</p>
+                              </div>
+                            </div>
+
+                            {/* Location */}
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center group-hover:bg-orange-200 transition-colors">
+                                <MapPin className="w-5 h-5 text-orange-600" />
+                              </div>
+                              <div>
+                                <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-1">Location</p>
+                                <p className="text-[13px] font-medium text-gray-900">{scheduleItem.location}</p>
+                              </div>
+                            </div>
+
+                            {/* Type */}
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                                <TypeIcon className="w-5 h-5 text-blue-600" />
+                              </div>
+                              <div>
+                                <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wide mb-1">Type</p>
+                                <div
+                                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold border ${typeDetails.color} bg-white shadow-sm`}
+                                >
+                                  <span className="capitalize text-[13px]">{scheduleItem.type}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                          Date
-                        </p>
-                        <p className="text-base font-semibold text-gray-900">
-                          {formatDate(scheduleItem.date)}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Location */}
-                    <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 mt-1">
-                        <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center group-hover:bg-orange-200 transition-colors">
-                          <MapPin className="w-5 h-5 text-orange-600" />
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                          Location
-                        </p>
-                        <p className="text-base font-medium text-gray-900">
-                          {scheduleItem.location}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Type Badge */}
-                    <div className="flex items-center gap-3 pt-2">
-                      <div
-                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border ${typeDetails.color} transition-all`}
-                      >
-                        <TypeIcon className="w-4 h-4" />
-                        <span className="capitalize">{scheduleItem.type}</span>
-                      </div>
-                    </div>
+                      );
+                    })}
                   </div>
                 </div>
-              );
-            },
-          )}
+              </div>
+            );
+          })}
         </div>
       </div>
     );
   };
 
-  // Render Single Price Layout (like Image 1)
+  // Single Price Layout
   const renderSinglePriceLayout = () => (
     <div className="border-t border-gray-200">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-6">
-            {/* Price Display */}
-            <div className="text-2xl font-bold text-gray-900">
-              {getPriceDisplay()}
-            </div>
-          </div>
-        </div>
+        <div className="text-2xl font-bold text-gray-900">{getPriceDisplay()}</div>
       </div>
-
-      {/* Book Now Button */}
       <div className="w-full mt-6">
         <Button
           onClick={() => handleBookNow(courseId)}
@@ -262,29 +267,23 @@ const CourseDetails = () => {
           Book Now
         </Button>
       </div>
-
-      {/* Schedule Section */}
       {renderSchedule()}
     </div>
   );
 
-  // Render Multiple Price Layout (like Image 2)
+  // Multiple Price Layout
   const renderMultiplePriceLayout = () => (
     <div className="border-t border-gray-200 pt-8">
-      {/* Pricing Section */}
       <div className="mb-8">
         <h3 className="text-xl font-semibold text-[#27303F] mb-6">Pricing</h3>
         <div className="space-y-4">
           {course.price.map((price: number | CoursePrice, index: number) => {
-            const priceValue =
-              typeof price === "number" ? price : price.amount || 0;
+            const priceValue = typeof price === "number" ? price : price.amount || 0;
             return (
               <div
                 key={index}
                 className={`p-4 rounded-lg border cursor-pointer transition-all ${
-                  selectedPriceIndex === index
-                    ? "border-teal-600 bg-teal-50"
-                    : "border-gray-200 hover:border-gray-300"
+                  selectedPriceIndex === index ? "border-teal-600 bg-teal-50" : "border-gray-200 hover:border-gray-300"
                 }`}
                 onClick={() => setSelectedPriceIndex(index)}
               >
@@ -304,9 +303,7 @@ const CourseDetails = () => {
                       {index === 2 && "Weekend intensive program"}
                     </div>
                   </div>
-                  <div className="text-xl font-bold text-gray-900">
-                    ${priceValue.toLocaleString()}
-                  </div>
+                  <div className="text-xl font-bold text-gray-900">${priceValue.toLocaleString()}</div>
                 </div>
               </div>
             );
@@ -321,16 +318,13 @@ const CourseDetails = () => {
           <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <div>
               <div className="font-medium text-gray-900">Catalina Weekend</div>
-              <div className="text-sm text-gray-600">
-                Leisure dig ferry 2 day night (food day)
-              </div>
+              <div className="text-sm text-gray-600">Leisure dig ferry 2 day night (food day)</div>
             </div>
             <div className="font-semibold text-gray-900">+$148</div>
           </div>
         </div>
       </div>
 
-      {/* Book Now Button */}
       <div className="w-full">
         <Button
           onClick={() => handleBookNow(courseId)}
@@ -340,102 +334,78 @@ const CourseDetails = () => {
         </Button>
       </div>
 
-      {/* Schedule Section */}
       {renderSchedule()}
     </div>
   );
 
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
-      <section className=" container mx-auto">
+      <section className="container mx-auto">
         <div className="px-4 sm:px-8 lg:px-16 py-4 md:py-14 lg:py-16 space-y-8">
-          <div className="">
-            {/* Image Section */}
-            <div className="relative w-full h-[650px] mx-auto rounded-lg overflow-hidden shadow-md order-1 md:order-2">
-              <Image
-                src={course.image?.url || "/images/course-placeholder.png"}
-                alt={course.title}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
+          <div className="relative w-full h-[650px] mx-auto rounded-lg overflow-hidden shadow-md">
+            <Image
+              src={course.image?.url || "/images/course-placeholder.png"}
+              alt={course.title}
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
+
           <div className="mx-auto container">
-            <div className="w-full grid grid-cols-3 gap-5 justify-between items-start">
-              <div className="w-full col-span-2 space-y-12">
-                {/* Content Section */}
-                <div className="order-2 md:order-1">
-                  <h1 className="text-4xl md:text-5xl text-[#27303F] font-bold mb-6">
-                    {course.title}
-                  </h1>
-                  <p
-                    className="text-gray-700 leading-relaxed text-lg mb-8"
-                    dangerouslySetInnerHTML={{ __html: course.description }}
-                  />
+            <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-5 justify-between items-start">
+              <div className="w-full lg:col-span-2 space-y-12">
+                <h1 className="text-4xl md:text-5xl text-[#27303F] font-bold mb-6">
+                  {course.title}
+                </h1>
+                <p
+                  className="text-gray-700 leading-relaxed text-lg mb-8"
+                  dangerouslySetInnerHTML={{ __html: course.description }}
+                />
 
-                  {/* Features - Course Includes */}
-                  {course.courseIncludes &&
-                    course.courseIncludes.length > 0 && (
-                      <div className="mb-12">
-                        <h3 className="text-xl font-semibold text-[#27303F] mb-4">
-                          Course Includes:
-                        </h3>
-                        <ul className="space-y-4">
-                          {course.courseIncludes.map(
-                            (item: string, idx: number) => (
-                              <li key={idx} className="flex items-start">
-                                <div className="w-2 h-2 bg-teal-600 rounded-full mt-2 mr-4 flex-shrink-0"></div>
-                                <span className="text-gray-700 text-lg">
-                                  {item}
-                                </span>
-                              </li>
-                            ),
-                          )}
-                        </ul>
-                      </div>
-                    )}
-                </div>
+                {course.courseIncludes && course.courseIncludes.length > 0 && (
+                  <div className="mb-12">
+                    <h3 className="text-xl font-semibold text-[#27303F] mb-4">Course Includes:</h3>
+                    <ul className="space-y-4">
+                      {course.courseIncludes.map((item: string, idx: number) => (
+                        <li key={idx} className="flex items-start">
+                          <div className="w-2 h-2 bg-teal-600 rounded-full mt-2 mr-4 flex-shrink-0"></div>
+                          <span className="text-gray-700 text-lg">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
 
-              <div className="w-full col-span-1">
-                {/* Conditional Pricing Layout */}
-                {hasSinglePrice
-                  ? renderSinglePriceLayout()
-                  : renderMultiplePriceLayout()}
+              <div className="w-full lg:col-span-1">
+                {hasSinglePrice ? renderSinglePriceLayout() : renderMultiplePriceLayout()}
               </div>
             </div>
           </div>
+
+          <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+            <DialogContent className="!max-w-xl">
+              <DialogHeader>
+                <DialogTitle>Login Required</DialogTitle>
+                <DialogDescription>
+                  You need to be logged in to book this course. Please login to continue.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowLoginModal(false)}>Cancel</Button>
+                <Button
+                  onClick={() => {
+                    setShowLoginModal(false);
+                    router.push("/login");
+                  }}
+                >
+                  Login Now
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
-
-        <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
-          <DialogContent className="!max-w-xl">
-            <DialogHeader>
-              <DialogTitle>Login Required</DialogTitle>
-              <DialogDescription>
-                You need to be logged in to book this course. Please login to
-                continue.
-              </DialogDescription>
-            </DialogHeader>
-
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setShowLoginModal(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={() => {
-                  setShowLoginModal(false);
-                  router.push("/login");
-                }}
-              >
-                Login Now
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </section>
     </div>
   );
