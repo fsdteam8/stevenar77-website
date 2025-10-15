@@ -14,9 +14,9 @@ export function FormContent(courseData: coursData) {
   return (
     <div className="space-y-6">
       <CourseSelection courseData={courseData} />
-      {courseData.courseData.addOnce.length > 0 && (
+      {/* {courseData.courseData.addOnce.length > 0 && (
         <PricingSelection courseData={courseData} />
-      )}
+      )} */}
       {/* <ParticipantsSelect /> */}
       {/* <DateTimePicker /> */}
     </div>

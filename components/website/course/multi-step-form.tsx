@@ -5,14 +5,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { type BookingState, useBooking } from "./booking-context";
 import { PersonalInformationStep } from "./steps/personal-information-step";
-import { DocumentUploadStep } from "./steps/document-upload-step";
+// import { DocumentUploadStep } from "./steps/document-upload-step";
 import { AllInformationDoneStep } from "./steps/all-information-done-step";
 // import { bookingReducer, createInitialState } from "./booking-reducer";
 
-type FormConfig = {
-  id: string;
-  label: string;
-};
+// type FormConfig = {
+//   id: string;
+//   label: string;
+// };
 
 const steps = [
   { id: 0, title: "Personal Information", component: PersonalInformationStep },

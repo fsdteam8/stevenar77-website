@@ -1,8 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { any, number, string } from "zod";
+// import { any, number, string } from "zod";
 
 export interface sets {
   date: string;
@@ -26,8 +25,8 @@ export interface BookingState {
     duration: string;
     age: string;
     image?: string;
-    // classDates?: string[];
-    classDates?: Schedules[];
+    classDates?: string[];
+    // classDates?: Schedules[];
     formTitle?: string[];
   };
   pricing: string | undefined;
@@ -56,7 +55,7 @@ export interface BookingState {
     emergencyPhoneNumber: string;
     courseName: string;
     shoeSize: string;
-    hight: string;
+    hight: number;
     weight: string;
     gender: string;
   };
@@ -64,8 +63,7 @@ export interface BookingState {
 }
 
 export interface FormConfig {
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  id: any;
+  id: string;
   label: string;
   color: string;
   component: React.ReactNode;

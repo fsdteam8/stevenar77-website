@@ -91,7 +91,7 @@
 
 import { BookingState } from "@/components/website/course/booking-context";
 import { BookingPayload } from "@/types/course";
-import { number } from "zod";
+// import { number } from "zod";
 
 export const mapBookingStateToPayload = (
   state: BookingState,
@@ -99,7 +99,7 @@ export const mapBookingStateToPayload = (
   // Medical history
 
   // Activity questions
-  const activityQuestions: string[] = [];
+  // const activityQuestions: string[] = [];
 
   // Course
   const classId = state.course._id || "";
@@ -133,12 +133,16 @@ export const mapBookingStateToPayload = (
   // Dates
   const classDates: string[] = [];
   if (state.selectedDate) {
-    if (state.selectedTime?.iso) {
+    if (Array.isArray(state.selectedDate)) {
+      // Multiple ISO strings from calendar
+      classDates.push(...state.selectedDate.map((d) => d.toString()));
+    } else if (state.selectedTime?.iso) {
       classDates.push(state.selectedTime.iso);
     } else {
       classDates.push(state.selectedDate.toString());
     }
   }
+
 
   // ✅ Return full payload
   // return {

@@ -28,7 +28,7 @@ export function createInitialState(initialCourse?: {
       age: initialCourse?.age || "10+",
       image: initialCourse?.image,
       classDates: initialCourse?.classDates,
-      formTitle: initialCourse?.formTitle || [], // ✅ FIX: include formTitle
+      formTitle: initialCourse?.formTitle || [],  
     },
     pricing: undefined,
     addOns: [],
@@ -51,12 +51,12 @@ export function createInitialState(initialCourse?: {
       emergencyPhoneNumber: "",
       courseName: initialCourse?.name || "",
       shoeSize: '',
-      high: 0,
+      // high: 0,
       weight: '',
       gender: "male",
       name: "",
       phone: "",
-      hight: ""
+      hight: 0
     },
     // medicalHistory: {},
     // activityQuestions: {
@@ -151,12 +151,10 @@ export function bookingReducer(
       }
     case "SET_PRICE_INDEX":
       return { ...state, selectedPriceIndex: action.payload };
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     case "MARK_FORM_SUBMITTED":
       const formId = action.payload;
-      if (state.submittedForms.includes(formId)) return state; // already submitted
+      if (state.submittedForms.includes(formId)) return state;  
         return { ...state, submittedForms: [...state.submittedForms, formId] };
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     case "RESET_SUBMITTED_FORMS":
       return { ...state, submittedForms: [] };
 
