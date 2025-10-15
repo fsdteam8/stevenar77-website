@@ -75,8 +75,6 @@
 //     medicalDocuments: state.documents,
 //     price: totalPrice,
 
-
-
 //     // Only the fields defined in BookingPayload
 //     gender: state.personalInfo.gender,
 //     shoeSize: state.personalInfo.shoeSize,
@@ -91,7 +89,6 @@
 //   };
 // };
 
-
 import { BookingState } from "@/components/website/course/booking-context";
 import { BookingPayload } from "@/types/course";
 import { number } from "zod";
@@ -100,24 +97,9 @@ export const mapBookingStateToPayload = (
   state: BookingState,
 ): BookingPayload => {
   // Medical history
-  // const medicalHistory = Object.entries(state.medicalHistory || {})
-  //   .filter(([_, isSelected]) => isSelected)
-  //   .map(([condition]) => condition);
 
   // Activity questions
   const activityQuestions: string[] = [];
-  // if (state.activityQuestions?.physicalApproval) {
-  //   activityQuestions.push("I have physical approval for scuba diving activities");
-  // }
-  // if (state.activityQuestions?.canSwim200m) {
-  //   activityQuestions.push("I am comfortable in water and can swim at least 200 meters");
-  // }
-  // if (state.activityQuestions?.claustrophobia) {
-  //   activityQuestions.push("I suffer from claustrophobia");
-  // }
-  // if (state.activityQuestions?.panicAttacks) {
-  //   activityQuestions.push("I have a history of panic attacks or anxiety disorders");
-  // }
 
   // Course
   const classId = state.course._id || "";
@@ -126,21 +108,27 @@ export const mapBookingStateToPayload = (
   }
 
   // Pricing logic
-  // const coursePrice = Array.isArray(state.course.price)
-  //   ? state.course.price[0]
-  //   : state.course.price || 0;
-  // const pricingPrices: Record<string, number> = {
-  //   "3-day": 199,
-  //   "5-day": 399,
-  // };
-  // const pricingPrice = state.pricing ? pricingPrices[state.pricing] || 0 : 0;
-  // ✅ Dynamically sum selected add-ons
+
+  // ✅ Proper pricing calculation
+  const coursePrice = Array.isArray(state.course.price)
+    ? state.course.price[0]
+    : state.course.price || 0;
+
   const addOnPrice = state.addOns
     ? state.addOns.reduce((sum, addon) => sum + (addon.price || 0), 0)
     : 0;
+
   const participants = state.participants || 1;
-  // const totalPrice = (coursePrice + pricingPrice) * participants + addOnPrice;
-   const totalPrice =  participants + addOnPrice;
+
+  const totalPrice = coursePrice * participants + addOnPrice;
+
+  // ✅ Dynamically sum selected add-ons
+  // const addOnPrice = state.addOns
+  //   ? state.addOns.reduce((sum, addon) => sum + (addon.price || 0), 0)
+  //   : 0;
+  // const participants = state.participants || 1;
+  // // const totalPrice = (coursePrice + pricingPrice) * participants + addOnPrice;
+  //  const totalPrice =  participants + addOnPrice;
 
   // Dates
   const classDates: string[] = [];
@@ -174,31 +162,29 @@ export const mapBookingStateToPayload = (
   //   weight: state.personalInfo.weight,
   // };
 
-return {
-  classId,
-  participant: participants,
-  classDate: classDates,
-  medicalDocuments: state.documents,
+  return {
+    classId,
+    participant: participants,
+    classDate: classDates,
+    medicalDocuments: state.documents,
 
-  // Pricing
-  price: totalPrice, // backend expects this
+    // Pricing
+    price: totalPrice, // backend expects this
 
-  // Personal info
-  Username: state.personalInfo.email, // backend expects this
-  email: state.personalInfo.email,
-  phoneNumber: state.personalInfo.phone,
-  emergencyName: state.personalInfo.emergencyName,
-  emergencyPhoneNumber: state.personalInfo.emergencyPhoneNumber,
+    // Personal info
+    Username: state.personalInfo.email, // backend expects this
+    email: state.personalInfo.email,
+    phoneNumber: state.personalInfo.phone,
+    emergencyName: state.personalInfo.emergencyName,
+    emergencyPhoneNumber: state.personalInfo.emergencyPhoneNumber,
 
-  gender: state.personalInfo.gender,
-  shoeSize: Number(state.personalInfo.shoeSize),
-  hight: Number(state.personalInfo.hight),
-  weight: Number(state.personalInfo.weight),
+    gender: state.personalInfo.gender,
+    shoeSize: Number(state.personalInfo.shoeSize),
+    hight: Number(state.personalInfo.hight),
+    weight: Number(state.personalInfo.weight),
 
-  // Add missing properties required by BookingPayload type
-  medicalHistory: [], // empty for now
-  activityLevelSpecificQuestions: [], // empty for now
-};
-
-
+    // Add missing properties required by BookingPayload type
+    medicalHistory: [], // empty for now
+    activityLevelSpecificQuestions: [], // empty for now
+  };
 };

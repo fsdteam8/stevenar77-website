@@ -302,6 +302,8 @@ export function PersonalInformationStep() {
     }
   };
 
+  
+
   const handleDateChange = (date: Date | undefined) => {
     markFieldAsTouched("dateOfBirth");
     setDateOfBirth(date);
@@ -693,7 +695,7 @@ export function PersonalInformationStep() {
             <SelectContent>
               <SelectItem value="male">Male</SelectItem>
               <SelectItem value="female">Female</SelectItem>
-              <SelectItem value="others">Others</SelectItem>
+              {/* <SelectItem value="others">Others</SelectItem> */}
             </SelectContent>
           </Select>
           {hasError("gender") && (

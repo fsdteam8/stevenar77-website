@@ -27,7 +27,7 @@ export interface BookingState {
     age: string;
     image?: string;
     // classDates?: string[];
-    Schedules?: Schedules[];
+    classDates?: Schedules[];
     formTitle?: string[];
   };
   pricing: string | undefined;

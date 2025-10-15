@@ -5,58 +5,64 @@ import { useBooking } from "../booking-context";
 
 export function DateTimePicker() {
   const { state, dispatch } = useBooking();
-  console.log("stevenar", state.course);
- 
-  const handleDateSelect = (date: Date | undefined) => {
+
+  // ✅ Handle user selecting a date
+ const handleDateSelect = (date: Date | undefined) => {
     if (date) dispatch({ type: "SET_DATE", payload: date.toISOString() });
-  };
-  
+  }; 
+
+  console.log("datea",state.course)
+  // ✅ Extract the first active set date from each schedule
+  const allowedDates: string[] =
+    state.course?.classDates
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ?.map((schedule: any) => {
+        const firstSet = schedule.sets?.[0]; // take only first set
+        if (firstSet?.isActive && firstSet?.date) {
+          return new Date(firstSet.date).toDateString(); // store formatted date string
+        }
+        return null;
+      })
+      .filter((d: string | null) => d !== null) ?? [];
+
+  console.log("✅ Allowed Dates:", allowedDates);
+
   return (
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
         Select Date or Time
       </h2>
+
       <div className="grid md:grid-cols-1 gap-6">
-        {/* Date picker */}
-        <div>
-          <Calendar
-            mode="single"
-            selected={
-              state.selectedDate ? new Date(state.selectedDate) : undefined
-            }
-            onSelect={handleDateSelect}
-            className="rounded-md border w-full"
-            disabled={(date) => {
-              // Get only the first set from each schedule that is active
-              const allowedDates = (state.course?.Schedules ?? [])
-                .map((schedule: any) => {
-                  // Get the first set from this schedule
-                  const firstSet = schedule.sets?.[0];
-                  if (firstSet?.isActive) {
-                    return new Date(firstSet.date).toDateString();
-                  }
-                  return null;
-                })
-                .filter((dateStr: string | null) => dateStr !== null);
-              
-              // Disable past dates
-              const now = new Date();
-              now.setHours(0, 0, 0, 0);
-              const isPast = date < now;
-              
-              return isPast || !allowedDates.includes(date.toDateString());
-            }}
-            classNames={{
-              day_selected:
-                "bg-[#0694a2] text-white hover:bg-[#0694a2] hover:text-white focus:bg-[#0694a2] focus:text-white",
-              day_today: "bg-[#0694a2] text-white",
-            }}
-          />
-        </div>
+        <Calendar
+          mode="single"
+          selected={
+            state.selectedDate ? new Date(state.selectedDate) : undefined
+          }
+          onSelect={handleDateSelect}
+          className="rounded-md border w-full"
+          disabled={(date) => {
+            // Disable past dates
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            const isPast = date < now;
+
+            // Disable dates not in allowed list
+            const notAllowed = !allowedDates.includes(date.toDateString());
+
+            return isPast || notAllowed;
+          }}
+          classNames={{
+            day_selected:
+              "bg-[#0694a2] text-white hover:bg-[#0694a2] hover:text-white focus:bg-[#0694a2] focus:text-white",
+            day_today: "bg-[#0694a2] text-white",
+          }}
+        />
       </div>
     </Card>
   );
 }
+
 
 
 // // booking/DateTimePicker.tsx

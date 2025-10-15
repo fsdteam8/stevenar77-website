@@ -41,23 +41,23 @@ export function BookingSummary({ courseData }: BookingSummaryProps) {
   const hasMultiplePrices =
     Array.isArray(state.course.price) && state.course.price.length > 1;
 
-  const pricingOptions: Record<string, number> = {
-    "3-day": 199,
-    "5-day": 399,
-  };
+  // const pricingOptions: Record<string, number> = {
+  //   "3-day": 199,
+  //   "5-day": 399,
+  // };
 
   const basePrice = Array.isArray(state.course.price)
     ? state.course.price[0]
     : state.course.price || 0;
 
-  const pricingPrice = state.pricing
-    ? pricingOptions[state.pricing] || 0
-    : 0;
+  // const pricingPrice = state.pricing
+  //   ? pricingOptions[state.pricing] || 0
+  //   : 0;
 
   const addOnsTotal = state.addOns.reduce((sum, addon) => sum + addon.price, 0);
   const participants = state.participants || 1;
 
-  const totalPrice = (basePrice + pricingPrice) * participants + addOnsTotal;
+  const totalPrice = (basePrice ) * participants + addOnsTotal;
 
   // -------------------------------------------------------
   // ✅ Validation Logic
@@ -173,7 +173,7 @@ export function BookingSummary({ courseData }: BookingSummaryProps) {
               <span>
                 Pricing option ({state.pricing.replace("-", " ")}) (x{participants})
               </span>
-              <span>${(pricingPrice * participants).toFixed(2)}</span>
+              {/* <span>${(pricingPrice * participants).toFixed(2)}</span> */}
             </div>
           )}
 
