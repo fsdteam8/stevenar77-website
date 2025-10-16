@@ -4,7 +4,7 @@ import { BookingContent } from "./booking-content";
 import { BookingSummary } from "./booking-summary";
 import { MultiStepForm } from "./multi-step-form";
 import { BookingProvider } from "./booking-context";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchCourseById, CourseDetail } from "@/lib/course";
 
@@ -12,6 +12,15 @@ export function BookingPage() {
   const params = useParams<{ id: string }>();
   const [course, setCourse] = useState<CourseDetail | null>(null);
   const [loading, setLoading] = useState(true);
+    const searchParams = useSearchParams();
+  
+  // Get the "dates" parameter from the URL
+  const datesParam = searchParams.get("dates");
+
+  // Decode and parse back to an array
+  const dates = datesParam ? JSON.parse(decodeURIComponent(datesParam)) : [];
+
+  console.log(dates)
 
   useEffect(() => {
     if (params.id) {
