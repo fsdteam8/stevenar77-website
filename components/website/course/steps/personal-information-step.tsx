@@ -227,7 +227,7 @@ export function PersonalInformationStep() {
           /^(\d+\.?\d*)\s?(lbs?|kgs?|kg|pounds?|kilograms?)?$/i,
         );
         if (!weightMatch) {
-          return "Please enter a valid weight (e.g., 50lbs or 70lbs)";
+          return "Please enter a valid weight (e.g., 50lbs )";
         }
 
         const weightValue = Number.parseFloat(weightMatch[1]);
@@ -801,7 +801,7 @@ export function PersonalInformationStep() {
           </Label>
           <Input
             id="weight"
-            placeholder="e.g., 50lbs or 70lbs"
+            placeholder="e.g., 50lbs "
             value={state.personalInfo.weight || ""}
             onChange={(e) => handleChange("weight", e.target.value)}
             onBlur={() => markFieldAsTouched("weight")}
