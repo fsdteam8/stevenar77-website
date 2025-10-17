@@ -142,6 +142,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
       // });
 
       // alert("PDF created and added to your booking successfully!");
+      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Enriched Training" } });
       onSubmitSuccess?.();
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
