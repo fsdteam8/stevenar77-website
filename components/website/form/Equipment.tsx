@@ -356,7 +356,9 @@ const handleDownloadPdf = async () => {
       type: "application/pdf",
     });
 
-    dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+    // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Equipment Rental" } });
+
     if (onSubmitSuccess) onSubmitSuccess();
   } catch (error) {
     console.error("❌ PDF generation error:", error);

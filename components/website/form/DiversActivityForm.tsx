@@ -305,7 +305,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
 
     // Add to booking context
     // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
-      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Standards Form" } });
+      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Divers Activity" } });
 
 
     onSubmitSuccess?.();

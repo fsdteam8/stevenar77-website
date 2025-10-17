@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -51,9 +50,7 @@ export function FillupSummary({ courseData }: BookingSummaryProps) {
     ? state.course.price[0]
     : state.course.price || 0;
 
-  const pricingPrice = state.pricing
-    ? pricingOptions[state.pricing] || 0
-    : 0;
+  const pricingPrice = state.pricing ? pricingOptions[state.pricing] || 0 : 0;
 
   const addOnsTotal = state.addOns.reduce((sum, addon) => sum + addon.price, 0);
   const participants = state.participants || 1;
@@ -72,7 +69,9 @@ export function FillupSummary({ courseData }: BookingSummaryProps) {
     }
 
     if (!isOnFinalStep) {
-      setValidationError("Please complete all booking steps before proceeding.");
+      setValidationError(
+        "Please complete all booking steps before proceeding.",
+      );
       return false;
     }
 
@@ -158,7 +157,11 @@ export function FillupSummary({ courseData }: BookingSummaryProps) {
 
         {/* Selected Date & Time */}
         <div className="space-y-2 text-sm text-[#6c757d]">
-          <div>{formatDate(state.selectedDate ? new Date(state.selectedDate) : null)}</div>
+          <div>
+            {formatDate(
+              state.selectedDate ? new Date(state.selectedDate) : null,
+            )}
+          </div>
           <div className="hidden">{selectedTime}am</div>
         </div>
 
@@ -172,7 +175,8 @@ export function FillupSummary({ courseData }: BookingSummaryProps) {
           {hasMultiplePrices && state.pricing && (
             <div className="flex justify-between">
               <span>
-                Pricing option ({state.pricing.replace("-", " ")}) (x{participants})
+                Pricing option ({state.pricing.replace("-", " ")}) (x
+                {participants})
               </span>
               <span>${(pricingPrice * participants).toFixed(2)}</span>
             </div>
@@ -216,6 +220,17 @@ export function FillupSummary({ courseData }: BookingSummaryProps) {
             </AlertDescription>
           </Alert>
         )}
+
+        {/* Submit Form Button  */}
+
+        <Button
+          // onClick={handleSubmit}
+          // disabled={!isCurrentStepValid}
+          // className="px-8 py-2 bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Submit
+        </Button>
 
         {/* Proceed Button */}
         {/* <Button
