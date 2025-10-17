@@ -37,23 +37,24 @@ const validateStepWithErrors = (stepIndex: number, state: BookingState) => {
     // Required forms for this course
     const requiredForms = formConfigs.filter((f) =>
       state.course.formTitle?.some(
-        (title) => f.label.toLowerCase().trim() === title.toLowerCase().trim()
-      )
+        (title) => f.label.toLowerCase().trim() === title.toLowerCase().trim(),
+      ),
     );
 
     // Find missing PDFs
     const missingForms = requiredForms.filter(
       (f) =>
         !state.documents.some(
-          (doc) => doc.label.toLowerCase().trim() === f.label.toLowerCase().trim()
-        )
+          (doc) =>
+            doc.label.toLowerCase().trim() === f.label.toLowerCase().trim(),
+        ),
     );
 
     if (missingForms.length > 0) {
       errors.push(
         `Please upload all required forms: ${missingForms
           .map((f) => f.label)
-          .join(", ")}`
+          .join(", ")}`,
       );
     }
   }
@@ -88,6 +89,57 @@ export function FormFillup() {
     JSON.stringify(state.course.formTitle),
   ]);
 
+  // const handleSubmit = async () => {
+  //   if (!bookingId) {
+  //     alert("Booking ID not found in URL");
+  //     return;
+  //   }
+
+  //   // Trigger validation in child modals
+  //   window.dispatchEvent(new Event("trigger-validation"));
+
+  //   setTimeout(async () => {
+  //     const validation = validateStepWithErrors(state.currentStep, state);
+
+  //     if (!validation.isValid) {
+  //       setValidationErrors(validation.errors);
+  //       setShowValidation(true);
+  //       window.scrollTo({ top: 0, behavior: "smooth" });
+  //       return;
+  //     }
+
+  //     setValidationErrors([]);
+  //     setShowValidation(false);
+  //     setSubmitting(true);
+
+  //     try {
+  //       console.log("🧾 Uploaded forms in state:", state.documents);
+
+  //       // ✅ Send PDFs as FormData
+  //       const formData = new FormData();
+  //       state.documents.forEach((doc) => {
+  //         formData.append("medicalDocuments", doc.file); // doc.file is the File object
+  //       });
+  //       formData.append(
+  //         "submittedForms",
+  //         JSON.stringify(state.documents.map((d) => d.label))
+  //       );
+  //       formData.append("participant", state.participants.toString());
+
+  //       const response = await updateCourseFormBooking(bookingId, formData);
+  //       console.log("✅ API Response:", response);
+  //       alert(response.message || "Booking updated successfully");
+  //     } catch (err) {
+  //       console.error(err);
+  //       alert("Failed to submit form. Check console for details.");
+  //     } finally {
+  //       setSubmitting(false);
+  //     }
+  //   }, 50);
+  // };
+
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
+
   const handleSubmit = async () => {
     if (!bookingId) {
       alert("Booking ID not found in URL");
@@ -117,17 +169,19 @@ export function FormFillup() {
         // ✅ Send PDFs as FormData
         const formData = new FormData();
         state.documents.forEach((doc) => {
-          formData.append("medicalDocuments", doc.file); // doc.file is the File object
+          formData.append("medicalDocuments", doc.file);
         });
         formData.append(
           "submittedForms",
-          JSON.stringify(state.documents.map((d) => d.label))
+          JSON.stringify(state.documents.map((d) => d.label)),
         );
         formData.append("participant", state.participants.toString());
 
         const response = await updateCourseFormBooking(bookingId, formData);
         console.log("✅ API Response:", response);
-        alert(response.message || "Booking updated successfully");
+
+        // ✅ Show Thank You modal instead of alert
+        setShowThankYouModal(true);
       } catch (err) {
         console.error(err);
         alert("Failed to submit form. Check console for details.");
@@ -153,7 +207,9 @@ export function FormFillup() {
       <div className="flex items-center justify-center mb-8">
         <div className="text-2xl max-w-2xl font-semibold text-center p-5">
           <p className="text-gray-600 ">
-            <span className="text-primary">Thank you for Your Payment!</span> You&apos;r Officially On Your Way To <span className="text-primary">Scuba Life Adventure</span>.
+            <span className="text-primary">Thank you for Your Payment!</span>{" "}
+            You&apos;r Officially On Your Way To{" "}
+            <span className="text-primary">Scuba Life Adventure</span>.
           </p>
         </div>
       </div>
@@ -170,6 +226,23 @@ export function FormFillup() {
           {submitting ? "Submitting..." : "Submit"}
         </Button>
       </div>
+
+      {showThankYouModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg max-w-md text-center">
+            <h2 className="text-xl font-bold mb-4">
+              Thank you for Choosing Scuba Life!
+            </h2>
+            <p className="mb-6">You&apos;re officially on your way to adventure.</p>
+            <Button
+              onClick={() => (window.location.href = "/")}
+              className="bg-blue-600 text-white px-6 py-2"
+            >
+              Go to Home
+            </Button>
+          </div>
+        </div>
+      )}
     </Card>
   );
 }
