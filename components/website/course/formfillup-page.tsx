@@ -1,15 +1,15 @@
 "use client";
 import React from "react";
-import { BookingContent } from "./booking-content";
+// import { BookingContent } from "./booking-content";
 // import { BookingSummary } from "./booking-summary";
-import { MultiStepForm } from "./multi-step-form";
+// import { MultiStepForm } from "./multi-step-form";
 import { BookingProvider } from "./booking-context";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchCourseById, CourseDetail } from "@/lib/course";
 import { FillupSummary } from "./fillupSummery";
 import { FormContent } from "./FormContent";
-import { DocumentUploadStep } from "./steps/document-upload-step";
+// import { DocumentUploadStep } from "./steps/document-upload-step";
 import { FormFillup } from "./FormFillup";
 
 const FormFillUpPage = () => {

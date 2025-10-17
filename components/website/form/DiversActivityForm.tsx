@@ -259,7 +259,6 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
         } catch (e) {
           // don't block capture if sanitation fails — fallback still exists via html2canvas backgroundColor
           // but log so you can debug if needed
-          // eslint-disable-next-line no-console
           console.warn("onclone sanitation failed:", e);
         }
       },

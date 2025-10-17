@@ -5,10 +5,10 @@ import Image from "next/image";
 import { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
 import { useBooking } from "../course/booking-context"; //  Add this
-import { quickreview } from "@/lib/quickreview";
-import { useMutation } from "@tanstack/react-query";
+// import { quickreview } from "@/lib/quickreview";
+// import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 
 const loadHTML2Canvas = async () => {
   const { default: html2canvas } = await import("html2canvas");
