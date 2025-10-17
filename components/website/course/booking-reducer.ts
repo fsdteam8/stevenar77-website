@@ -7,7 +7,7 @@ export function createInitialState(initialCourse?: {
   age: string;
   image?: string;
   classDates?: string[];
-  formTitle?:string[];
+  formTitle?: string[];
 }): BookingState {
   let courseId = initialCourse?.id || "";
 
@@ -28,7 +28,7 @@ export function createInitialState(initialCourse?: {
       age: initialCourse?.age || "10+",
       image: initialCourse?.image,
       classDates: initialCourse?.classDates,
-      formTitle: initialCourse?.formTitle || [],  
+      formTitle: initialCourse?.formTitle || [],
     },
     pricing: undefined,
     addOns: [],
@@ -50,13 +50,13 @@ export function createInitialState(initialCourse?: {
       emergencyName: "",
       emergencyPhoneNumber: "",
       courseName: initialCourse?.name || "",
-      shoeSize: '',
+      shoeSize: "",
       // high: 0,
-      weight: '',
+      weight: "",
       gender: "male",
       name: "",
       phone: "",
-      hight: 0
+      hight: 0,
     },
     // medicalHistory: {},
     // activityQuestions: {
@@ -119,11 +119,13 @@ export function bookingReducer(
           ? action.payload
           : [action.payload],
       };
+
     case "ADD_DOCUMENT":
       return {
         ...state,
         documents: [...state.documents, action.payload],
       };
+
     // case "SET_SIGNATURE":
     //   return { ...state, signature: action.payload };
     // case "SET_AGREED": // ✅ add this
@@ -153,8 +155,8 @@ export function bookingReducer(
       return { ...state, selectedPriceIndex: action.payload };
     case "MARK_FORM_SUBMITTED":
       const formId = action.payload;
-      if (state.submittedForms.includes(formId)) return state;  
-        return { ...state, submittedForms: [...state.submittedForms, formId] };
+      if (state.submittedForms.includes(formId)) return state;
+      return { ...state, submittedForms: [...state.submittedForms, formId] };
     case "RESET_SUBMITTED_FORMS":
       return { ...state, submittedForms: [] };
 
@@ -162,6 +164,3 @@ export function bookingReducer(
       return state;
   }
 }
-
-
-

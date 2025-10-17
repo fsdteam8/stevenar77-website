@@ -22,7 +22,22 @@ interface Course {
 
 export function DateTimePicker() {
   const { state, dispatch } = useBooking();
-  const course: Course | undefined = state.course;
+// const course: Course | undefined = state.course;
+const course: Course = {
+  classDates: [
+    {
+      sets: [
+        {
+          date: new Date().toISOString(),
+          location: "Online",
+          type: "Lecture",
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 
   // ✅ Collect all available first dates
   const firstSetDates: Date[] =
@@ -63,7 +78,7 @@ export function DateTimePicker() {
     console.log("📅 All Dates for this First Date:", allSetDates);
 
     // ✅ Dispatch the array to context
-    dispatch({ type: "SET_DATE", payload: allSetDates });
+    // dispatch({ type: "SET_DATE", payload: allSetDates });
   };
 
   // ✅ Handle selected state (array-aware)

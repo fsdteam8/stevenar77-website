@@ -148,12 +148,12 @@ export function DocumentUploadStep() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4 text-[#343a40]">
+      {/* <h2 className="text-2xl font-semibold mb-4 text-[#343a40]">
         Please Fill-Up The Following Papers.
-      </h2>
+      </h2> */}
       <p className="text-[#6c757d] mb-6">
         {" "}
-        Please Click On The Buttons To complete all required Papers. .
+        Please Click On The Buttons To complete all required Papers.
       </p>
 
       {/* ✅ Render Form Buttons */}

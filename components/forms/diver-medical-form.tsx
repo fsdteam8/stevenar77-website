@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { generatePDF } from "@/lib/forms/medical-form-pdf-generator";
 import Image from "next/image";
-// import { useBooking } from "@/context/booking-context";
 import { useMutation } from "@tanstack/react-query";
 import { diverMedicalForm } from "@/lib/diverMedicalForm";
 import { useSession } from "next-auth/react";
@@ -222,7 +221,8 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         console.log("✅ Upload completed successfully!");
 
         // 🔥 Add document to booking context
-        dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+        // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+        dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Standards Form" } });
         console.log("📋 Document added to booking context");
 
         // Only call success after upload completes

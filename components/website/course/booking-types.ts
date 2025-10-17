@@ -10,7 +10,7 @@ export interface sets {
   isActive: boolean;
 }
 export interface Schedules {
-  set : sets[];
+  set: sets[];
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -79,8 +79,8 @@ export type BookingAction =
       type: "SET_PERSONAL_INFO";
       payload: Partial<BookingState["personalInfo"]>;
     }
-  | { type: "SET_DOCUMENTS"; payload: File }
-  | { type: "ADD_DOCUMENT"; payload: File }
+  | { type: "SET_DOCUMENTS"; payload: { file: File; label: string }[] }
+  | { type: "ADD_DOCUMENT"; payload: { file: File; label: string } }
   | { type: "SET_PRICING"; payload: string | undefined }
   | {
       type: "TOGGLE_ADDON";

@@ -1,13 +1,319 @@
+// "use client";
+// import React, { useState, useEffect } from "react";
+// import { useSearchParams } from "next/navigation"; // To get bookingId from URL
+// import { Card } from "@/components/ui/card";
+// import { Button } from "@/components/ui/button";
+// import { useBooking, type BookingState } from "./booking-context";
+// import { DocumentUploadStep } from "./steps/document-upload-step";
+// import { updateCourseFormBooking } from "@/lib/courseformbookingupdate";
+
+// type FormConfig = {
+//   id: string;
+//   label: string;
+// };
+
+// const steps = [
+//   {
+//     id: 0,
+//     title: "Medical Certifications & Document",
+//     component: DocumentUploadStep,
+//   },
+// ];
+
+// const validateStepWithErrors = (stepIndex: number, state: BookingState) => {
+//   const errors: string[] = [];
+//   if (stepIndex === 0) {
+//     const formConfigs: FormConfig[] = [
+//       { id: "modal1", label: "Standards Form" },
+//       { id: "modal2", label: "Continuing Education" },
+//       { id: "modal3", label: "Divers Activity" },
+//       { id: "modal4", label: "Quick Review-Open Waters" },
+//       { id: "modal5", label: "Divers Medical" },
+//       { id: "modal6", label: "Enriched Training" },
+//       { id: "modal7", label: "Equipment Rental" },
+//       { id: "modal8", label: "Rescue Diver Quick Review" },
+//       { id: "modal9", label: "Enriched Air Quick Review" },
+//     ];
+//     const visibleForms = formConfigs.filter((f) =>
+//       state.course.formTitle?.some((title) =>
+//         f.label.toLowerCase().includes(title.toLowerCase()),
+//       ),
+//     );
+//     const allFormsCompleted = visibleForms.every((f) =>
+//       state.submittedForms.includes(f.id),
+//     );
+//     if (!allFormsCompleted)
+//       errors.push("Please complete all required forms before continuing.");
+//   }
+//   return { isValid: errors.length === 0, errors };
+// };
+
+// const validateStep = (stepIndex: number, state: BookingState) =>
+//   validateStepWithErrors(stepIndex, state).isValid;
+
+// export function FormFillup() {
+//   const { state } = useBooking();
+//   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+//   const [showValidation, setShowValidation] = useState(false);
+//   const [submitting, setSubmitting] = useState(false);
+
+//   const searchParams = useSearchParams();
+//   const bookingId = searchParams.get("bookingId"); // get from URL
+
+//   const currentStepData = steps[state.currentStep];
+//   const CurrentStepComponent = currentStepData?.component;
+
+//   const isCurrentStepValid = validateStep(state.currentStep, state);
+
+//   const handleSubmit = async () => {
+//     if (!bookingId) {
+//       alert("Booking ID not found in URL");
+//       return;
+//     }
+
+//     // Trigger validation in child components
+//     window.dispatchEvent(new Event("trigger-validation"));
+
+//     setTimeout(async () => {
+//       const validation = validateStepWithErrors(state.currentStep, state);
+//       if (!validation.isValid) {
+//         setValidationErrors(validation.errors);
+//         setShowValidation(true);
+//         window.scrollTo({ top: 0, behavior: "smooth" });
+//         return;
+//       }
+
+//       setValidationErrors([]);
+//       setShowValidation(false);
+//       setSubmitting(true);
+
+//       try {
+//         const response = await updateCourseFormBooking(bookingId, {
+//           submittedForms: state.submittedForms,
+//           medicalDocuments: state.documents, // send any other data you want
+//           course: state.course,
+//           participant: state.participants,
+//         });
+
+//         console.log("✅ API Response:", response);
+//         // alert(response.message || "Booking updated successfully");
+//       } catch (err) {
+//         alert("Failed to submit form. Check console for details.");
+//       } finally {
+//         setSubmitting(false);
+//       }
+//     }, 50);
+//   };
+
+//   return (
+//     <Card className="p-6 mt-6">
+//       {showValidation && validationErrors.length > 0 && (
+//         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+//           <ul className="list-disc list-inside text-red-700">
+//             {validationErrors.map((err, i) => (
+//               <li key={i}>{err}</li>
+//             ))}
+//           </ul>
+//         </div>
+//       )}
+
+//       {/* Info Message */}
+//       <div className="flex items-center justify-center mb-8">
+//         <div className="text-2xl font-semibold text-center p-5">
+//           <p className="text-primary">
+//             Thank you for Your Payment! You&apos;re now officially choosing
+//             DiveInScuba. Please complete the forms below to finalize your
+//             booking.
+//           </p>
+//         </div>
+//       </div>
+
+//       {CurrentStepComponent && <CurrentStepComponent />}
+
+//       <div className="flex justify-end mt-8">
+//         <Button
+//           onClick={handleSubmit}
+//           disabled={!isCurrentStepValid || submitting}
+//           className="px-8 py-2 bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+//         >
+//           {submitting ? "Submitting..." : "Submit"}
+//         </Button>
+//       </div>
+//     </Card>
+//   );
+// }
+
+// "use client";
+// import React, { useState, useEffect } from "react";
+// import { Card } from "@/components/ui/card";
+// import { Button } from "@/components/ui/button";
+// import { useSearchParams } from "next/navigation";
+// import { type BookingState, useBooking } from "./booking-context";
+// import { DocumentUploadStep } from "./steps/document-upload-step";
+// import { updateCourseFormBooking } from "@/lib/courseformbookingupdate";
+
+// type FormConfig = {
+//   label: string;
+// };
+
+// const steps = [
+//   {
+//     id: 0,
+//     title: "Medical Certifications & Document",
+//     component: DocumentUploadStep,
+//   },
+// ];
+
+// const validateStepWithErrors = (stepIndex: number, state: BookingState) => {
+//   const errors: string[] = [];
+//   if (stepIndex === 0) {
+//     const formConfigs: FormConfig[] = [
+//       { label: "Standards Form" },
+//       { label: "Continuing Education" },
+//       { label: "Divers Activity" },
+//       { label: "Quick Review-Open Waters" },
+//       { label: "Divers Medical" },
+//       { label: "Enriched Training" },
+//       { label: "Equipment Rental" },
+//       { label: "Rescue Diver Quick Review" },
+//       { label: "Enriched Air Quick Review" },
+//     ];
+
+//     // Filter only forms required by this course
+//     const visibleForms = formConfigs.filter((f) =>
+//       state.course.formTitle?.some((title) =>
+//         f.label.toLowerCase().includes(title.toLowerCase())
+//       )
+//     );
+
+//     // ✅ Check if all required PDF forms are uploaded
+//     const allFormsCompleted = visibleForms.every((f) =>
+//       state.documents.some(doc => doc.label === f.label)
+//     );
+
+//     if (!allFormsCompleted)
+//       errors.push("Please complete all required forms before continuing.");
+//   }
+
+//   return { isValid: errors.length === 0, errors };
+// };
+
+// const validateStep = (stepIndex: number, state: BookingState) =>
+//   validateStepWithErrors(stepIndex, state).isValid;
+
+// export function FormFillup() {
+//   const { state } = useBooking();
+//   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+//   const [showValidation, setShowValidation] = useState(false);
+//   const [submitting, setSubmitting] = useState(false);
+//   const [canSubmit, setCanSubmit] = useState(false);
+
+//   const searchParams = useSearchParams();
+//   const bookingId = searchParams.get("bookingId"); // get from URL
+
+//   const currentStepData = steps[state.currentStep];
+//   const CurrentStepComponent = currentStepData?.component;
+
+//   // ✅ Automatically check if submit should be enabled
+//   useEffect(() => {
+//     const isValid = validateStep(state.currentStep, state);
+//     setCanSubmit(isValid);
+//   }, [
+//     JSON.stringify(state.documents),
+//     state.currentStep,
+//     JSON.stringify(state.course.formTitle),
+//   ]);
+
+//   const handleSubmit = async () => {
+//     if (!bookingId) {
+//       alert("Booking ID not found in URL");
+//       return;
+//     }
+
+//     // Trigger validation in child modals
+//     window.dispatchEvent(new Event("trigger-validation"));
+
+//     setTimeout(async () => {
+//       const validation = validateStepWithErrors(state.currentStep, state);
+//       if (!validation.isValid) {
+//         setValidationErrors(validation.errors);
+//         setShowValidation(true);
+//         window.scrollTo({ top: 0, behavior: "smooth" });
+//         return;
+//       }
+
+//       setValidationErrors([]);
+//       setShowValidation(false);
+//       setSubmitting(true);
+
+//       try {
+//         console.log("🧾 Uploaded forms in state:", state.documents);
+
+//         // ✅ Send PDF forms as FormData
+//         const formData = new FormData();
+//         state.documents.forEach(doc => {
+//           formData.append("medicalDocuments", doc.file); // doc.file contains the File object
+//         });
+//         formData.append(
+//           "submittedForms",
+//           JSON.stringify(state.documents.map(d => d.label))
+//         );
+//         formData.append("participant", state.participants.toString());
+
+//         const response = await updateCourseFormBooking(bookingId, formData);
+//         console.log("✅ API Response:", response);
+//         alert(response.message || "Booking updated successfully");
+//       } catch (err) {
+//         console.error(err);
+//         alert("Failed to submit form. Check console for details.");
+//       } finally {
+//         setSubmitting(false);
+//       }
+//     }, 50);
+//   };
+
+//   return (
+//     <Card className="p-6 mt-6">
+//       {showValidation && validationErrors.length > 0 && (
+//         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+//           <ul className="list-disc list-inside text-red-700">
+//             {validationErrors.map((err, i) => (
+//               <li key={i}>{err}</li>
+//             ))}
+//           </ul>
+//         </div>
+//       )}
+
+//       <div className="flex items-center justify-center mb-8">
+//         <div className="text-2xl font-semibold text-center p-5">
+//           <p className="text-primary">
+//             Thank you for Your Payment! Please complete the forms below to finalize your booking.
+//           </p>
+//         </div>
+//       </div>
+
+//       {/* Modal step */}
+//       {CurrentStepComponent && <CurrentStepComponent />}
+
+//       <div className="flex justify-end mt-8">
+//         <Button
+//           onClick={handleSubmit}
+//           disabled={!canSubmit || submitting}
+//           className="px-8 py-2 bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+//         >
+//           {submitting ? "Submitting..." : "Submit"}
+//         </Button>
+//       </div>
+//     </Card>
+//   );
+// }
+
 "use client";
-import React from 'react'
-import { useState } from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { type BookingState, useBooking } from "./booking-context";
-import { PersonalInformationStep } from "./steps/personal-information-step";
 import { DocumentUploadStep } from "./steps/document-upload-step";
-import { AllInformationDoneStep } from "./steps/all-information-done-step";
-// import { bookingReducer, createInitialState } from "./booking-reducer";
 
 type FormConfig = {
   id: string;
@@ -22,7 +328,6 @@ const steps = [
   },
 ];
 
-// Detailed validation with error messages for each step
 const validateStepWithErrors = (
   stepIndex: number,
   state: BookingState,
@@ -30,9 +335,7 @@ const validateStepWithErrors = (
   const errors: string[] = [];
 
   switch (stepIndex) {
-
-    case 0: // Document Upload Step
-      // Check if all visible forms for current course are completed
+    case 0:
       const formConfigs: FormConfig[] = [
         { id: "modal1", label: "Standards Form" },
         { id: "modal2", label: "Continuing Education" },
@@ -46,23 +349,23 @@ const validateStepWithErrors = (
       ];
 
       // Filter forms relevant to current course
+      // const visibleForms = formConfigs.filter((f) =>
+      //   state.course.formTitle?.some((title) =>
+      //     f.label.toLowerCase().includes(title.toLowerCase())
+      //   )
+      // );
       const visibleForms = formConfigs.filter((f) =>
-        state.course.formTitle?.some((title) =>
-          f.label.toLowerCase().includes(title.toLowerCase()),
+        state.course.formTitle?.some(
+          (title) => f.label.toLowerCase() === title.toLowerCase(),
         ),
       );
 
-      // ✅ Check if all visible forms are completed
-      const incompleteForms = visibleForms.every((f) =>
+      // ✅ Check if all required PDF forms are completed
+      const allFormsCompleted = visibleForms.every((f) =>
         state.submittedForms.includes(f.id),
       );
 
-      // Find missing forms
-      // const incompleteForms = visibleForms.filter(
-      //   (f) => !state.submittedForms?.includes(f.id),
-      // );
-
-      if (!incompleteForms) {
+      if (!allFormsCompleted) {
         errors.push("Please complete all required forms before continuing.");
       }
       break;
@@ -77,62 +380,51 @@ const validateStepWithErrors = (
   };
 };
 
-// Simple validation function for button state
 const validateStep = (stepIndex: number, state: BookingState): boolean => {
   return validateStepWithErrors(stepIndex, state).isValid;
 };
 
 export function FormFillup() {
-  const { state, dispatch } = useBooking();
+  const { state } = useBooking();
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showValidation, setShowValidation] = useState(false);
 
   const currentStepData = steps[state.currentStep];
   const CurrentStepComponent = currentStepData?.component;
 
-  // Check if current step is valid
   const isCurrentStepValid = validateStep(state.currentStep, state);
 
-  const handleNext = () => {
-    // Trigger validation display in child component
+  const handleSubmit = () => {
     window.dispatchEvent(new Event("trigger-validation"));
 
-    // Small delay to allow child component to update
     setTimeout(() => {
-      // Validate current step and get errors
       const validation = validateStepWithErrors(state.currentStep, state);
 
       if (!validation.isValid) {
         setValidationErrors(validation.errors);
         setShowValidation(true);
-        // Scroll to top to show error message
         window.scrollTo({ top: 0, behavior: "smooth" });
-        return; // ⬅️ THIS BLOCKS PROGRESSION
+        return;
       }
 
-      // This code only runs if validation passes
+      // ✅ If all forms are completed, show the full form data
       setValidationErrors([]);
       setShowValidation(false);
 
-      if (isLastStep && validation.isValid) {
-        console.log("Form completed!", state);
-      } else if (state.currentStep < steps.length - 1 && validation.isValid) {
-        dispatch({ type: "SET_STEP", payload: state.currentStep + 1 }); // Only advances if valid
-      }
+      console.log("✅ FORM SUBMITTED SUCCESSFULLY!");
+      console.log("📦 Full Booking State:", state);
+
+      // Example: If you want only submitted forms data
+      console.log("🧾 Submitted Forms:", state.submittedForms);
+
+      // Optional: send to backend
+      // fetch("/api/submit", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(state),
+      // });
     }, 50);
   };
-
-  const handleBack = () => {
-    if (state.currentStep > 0) {
-      setValidationErrors([]);
-      setShowValidation(false);
-      // Reset validation trigger in child component
-      window.dispatchEvent(new Event("reset-validation"));
-      dispatch({ type: "SET_STEP", payload: state.currentStep - 1 });
-    }
-  };
-
-  const isLastStep = state.currentStep === steps.length - 1;
 
   return (
     <Card className="p-6 mt-6">
@@ -156,7 +448,7 @@ export function FormFillup() {
             </div>
             <div className="ml-3 flex-1">
               <h3 className="text-sm font-medium text-red-800">
-                Please Click complete all required fields
+                Please complete all required forms
               </h3>
               <div className="mt-2 text-sm text-red-700">
                 <ul className="list-disc list-inside space-y-1">
@@ -170,50 +462,29 @@ export function FormFillup() {
         </div>
       )}
 
-      {/* Progress Indicator */}
+      {/* Info Message */}
       <div className="flex items-center justify-center mb-8">
-        {steps.map((step, index) => (
-          <div key={step.id} className="flex items-center">
-            <div
-              className={ ` p-5 rounded-md flex items-center justify-center text-sm font-medium ${
-                index <= state.currentStep
-                  ? "bg-[#0694a2] text-white"
-                  : "bg-[#c0c3c1] text-[#68706a]"
-              }`}
-            >
-              <p className='text-xl font-bold'>
-                Fill-Up The Forms, It is Required To Get Access To The Course.
-              </p>
-            </div>
-            
-          </div>
-        ))}
+        <div className="text-2xl font-semibold text-center p-5">
+          <p className="text-primary">
+            Thank you for Your Payment! You&apos;re now officially choosing
+            DiveInScuba. Please complete the forms below to finalize your
+            booking.
+          </p>
+        </div>
       </div>
 
       {/* Step Content */}
       {CurrentStepComponent && <CurrentStepComponent />}
 
-      {/* Navigation Buttons */}
-      <div className="flex justify-between mt-8">
+      {/* Submit Button */}
+      <div className="flex justify-end mt-8">
         <Button
-          variant="outline"
-          onClick={handleBack}
-          disabled={state.currentStep === 0}
-          className="px-8 py-2 border-[#0694a2] text-[#0694a2] hover:bg-[#0694a2] hover:text-white bg-transparent"
+          onClick={handleSubmit}
+          disabled={!isCurrentStepValid}
+          className="px-8 py-2 bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Back
+          Submit
         </Button>
-
-        {/* Hide the Complete button on the last step (index 2) */}
-        {state.currentStep !== 2 && (
-          <Button
-            onClick={handleNext}
-            disabled={!isCurrentStepValid}
-            className="px-8 py-2 bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLastStep ? "Complete" : "Next"}
-          </Button>
-        )}
       </div>
     </Card>
   );
