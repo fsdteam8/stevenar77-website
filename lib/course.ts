@@ -17,7 +17,15 @@ export interface ScheduleDate {
 }
 
 export interface ScheduleSet {
-  sets: ScheduleDate[];
+  title: string;
+  description: string;
+  participents: number;
+  totalParticipents: number;
+  sets: {
+    date: string;
+    location: string;
+    type: string;
+  }[];
 }
 // ----------------------
 // Main CourseDetail type
@@ -30,9 +38,9 @@ export interface CourseDetail {
     public_id: string;
     url: string;
   }; // Single image object, not array
-  description: string; // The main description
-  price: number[]; // Array of prices
-  courseIncludes: string[]; // Features array
+  description: string;  
+  price: number[];  
+  courseIncludes: string[];  
   duration: string;
   totalReviews: number;
   avgRating: number;
@@ -43,7 +51,7 @@ export interface CourseDetail {
   minAge?: number;
   addOnce: AddOnce[];
   formTitle?: string[];
-  schedule?: ScheduleSet[];  
+  schedule?: ScheduleSet[];
 }
 
 // ----------------------
