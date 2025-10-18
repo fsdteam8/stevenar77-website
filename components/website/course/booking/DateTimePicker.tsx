@@ -1,117 +1,132 @@
+// "use client";
+
+// import { useEffect } from "react";
+// import { Card } from "@/components/ui/card";
+// import { useBooking } from "../booking-context";
+// import { useSearchParams } from "next/navigation";
+
+// export function DateTimePicker() {
+//   const { state, dispatch } = useBooking();
+//   const searchParams = useSearchParams();
+
+//   // ✅ Step 1: URL থেকে "dates" parameter ধরো
+//   const rawDates = searchParams.get("dates");
+
+//   useEffect(() => {
+//     if (!rawDates) return;
+
+//     try {
+//       // ✅ Step 2: Decode + Parse JSON array
+//       const decoded = decodeURIComponent(rawDates);
+//       const parsedDates: string[] = JSON.parse(decoded);
+
+//       console.log("🗓️ Dates from URL:", parsedDates);
+
+//   // ✅ Step 3: Context এ সেট করো
+//         if (parsedDates && parsedDates.length > 0) {
+//           // Reducer expects a single string payload; use the first parsed date
+//           dispatch({ type: "SET_DATE", payload: parsedDates[0] });
+//         }
+//       } catch (err) {
+//         console.error("❌ Failed to parse dates from URL:", err);
+//       }
+//     }, [rawDates, dispatch]);
+
+//   // ✅ Step 4: Context থেকে selectedDate দেখা
+//   const selectedDates = Array.isArray(state.selectedDate)
+//     ? state.selectedDate
+//     : state.selectedDate
+//     ? [state.selectedDate]
+//     : [];
+
+//   return (
+//     <Card className="p-6">
+//       <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
+//         Selected Date(s)
+//       </h2>
+
+//       {selectedDates.length > 0 ? (
+//         <ul className="list-disc list-inside text-sm text-gray-700">
+//           {selectedDates.map((d, i) => (
+//             <li key={i}> adfjasdf {new Date(d).toLocaleString()}</li>
+//           ))}
+//         </ul>
+//       ) : (
+//         <p className="text-gray-500 text-sm">No date selected from URL</p>
+//       )}
+//     </Card>
+//   );
+// }
+
+
+
 "use client";
 
+import { useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { Calendar } from "@/components/ui/calendar";
 import { useBooking } from "../booking-context";
-
-// ✅ Type definitions
-interface ScheduleSet {
-  date: string;
-  location?: string;
-  type?: string;
-  isActive?: boolean;
-}
-
-interface ClassDate {
-  sets: ScheduleSet[];
-}
-
-interface Course {
-  classDates?: ClassDate[];
-}
+import { useSearchParams } from "next/navigation";
 
 export function DateTimePicker() {
   const { state, dispatch } = useBooking();
-// const course: Course | undefined = state.course;
-const course: Course = {
-  classDates: [
-    {
-      sets: [
-        {
-          date: new Date().toISOString(),
-          location: "Online",
-          type: "Lecture",
-          isActive: true,
-        },
-      ],
-    },
-  ],
-};
+  const searchParams = useSearchParams();
 
+  const rawDates = searchParams.get("dates");
 
-  // ✅ Collect all available first dates
-  const firstSetDates: Date[] =
-    course?.classDates
-      ?.map((classDate) => {
-        const firstSet = classDate.sets?.[0];
-        if (!firstSet?.date) return null;
-        const parsed = new Date(firstSet.date);
-        return isNaN(parsed.getTime()) ? null : parsed;
-      })
-      .filter((d): d is Date => d !== null) ?? [];
+  useEffect(() => {
+    if (!rawDates) return;
 
-  const allowedDates = firstSetDates.map((d) => d.toDateString());
-  console.log("🎯 First Dates from each sets:", firstSetDates);
+    try {
+      const decoded = decodeURIComponent(rawDates);
+      const parsed = JSON.parse(decoded);
 
-  // ✅ Handle user selecting a first date
-  const handleDateSelect = (date: Date | undefined) => {
-    if (!date) return;
+      // ✅ Always ensure it's an array
+      const parsedDates = Array.isArray(parsed) ? parsed : [parsed];
 
-    // Find the classDate that matches this selected date
-    const matchedClassDate = course?.classDates?.find((classDate) => {
-      const firstSet = classDate.sets?.[0];
-      return (
-        firstSet?.date &&
-        new Date(firstSet.date).toDateString() === date.toDateString()
-      );
-    });
+      console.log("🗓️ Parsed Dates from URL:", parsedDates);
 
-    // ✅ Collect all related set dates for that class
-    const allSetDates =
-      matchedClassDate?.sets
-        ?.map((s) => {
-          const parsed = new Date(s.date);
-          return !isNaN(parsed.getTime()) ? parsed.toISOString() : null;
-        })
-        .filter((d): d is string => d !== null) ?? [];
+      dispatch({ type: "SET_DATE", payload: parsedDates });
+    } catch (err) {
+      console.error("❌ Error parsing URL dates:", err);
+    }
+  }, [rawDates, dispatch]);
 
-    console.log("📅 All Dates for this First Date:", allSetDates);
-
-    // ✅ Dispatch the array to context
-    // dispatch({ type: "SET_DATE", payload: allSetDates });
-  };
-
-  // ✅ Handle selected state (array-aware)
-  const selectedDate =
-    Array.isArray(state.selectedDate) && state.selectedDate.length > 0
-      ? new Date(state.selectedDate[0])
-      : typeof state.selectedDate === "string"
-      ? new Date(state.selectedDate)
-      : undefined;
+  const selectedDates = Array.isArray(state.selectedDate)
+    ? state.selectedDate
+    : state.selectedDate
+      ? [state.selectedDate]
+      : [];
 
   return (
     <Card className="p-6">
-      <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
-        Select Available Date
+      <h2 className="text-xl  font-semibold mb-4 text-[#343a40]">
+        Your Selected Training Dates
       </h2>
 
-      <div className="grid md:grid-cols-1 gap-6">
-        <Calendar
-          mode="single"
-          selected={
-            !isNaN(selectedDate?.getTime() ?? NaN) ? selectedDate : undefined
-          }
-          onSelect={handleDateSelect}
-          className="rounded-md border w-full"
-          disabled={(date) => !allowedDates.includes(date.toDateString())}
-          classNames={{
-            day_selected:
-              "bg-[#0694a2] text-white hover:bg-[#0694a2] hover:text-white focus:bg-[#0694a2] focus:text-white",
-            day_today:
-              "border border-[#0694a2] text-[#0694a2] font-semibold",
-          }}
-        />
-      </div>
+      {selectedDates.length > 0 ? (
+        <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+          {selectedDates.map((date, index) => (
+            <li key={index}>
+              <span className="text-gray-600">
+                Session {index + 1}:
+              </span>{" "}
+              <span className="font-medium text-xl text-[#212529]">
+                {new Date(date).toISOString().split("T")[0]}
+              </span>
+            </li>
+          ))}
+
+          {/* <p className="mt-3 text-sm text-gray-600">
+            Please make sure these dates match your availability before continuing.
+          </p> */}
+        </ul>
+      ) : (
+        <p className="text-gray-500 text-sm">
+          No training dates were found in your booking link.
+          <br />
+          Please go back and select a schedule to continue.
+        </p>
+      )}
     </Card>
   );
 }

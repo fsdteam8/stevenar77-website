@@ -107,24 +107,7 @@ const CourseDetails = () => {
   const hasSinglePrice =
     !course.price || !Array.isArray(course.price) || course.price.length <= 1;
 
-  const getPriceDisplay = () => {
-    if (
-      !course.price ||
-      !Array.isArray(course.price) ||
-      course.price.length === 0
-    ) {
-      return "Price not available";
-    }
-
-    if (course.price.length === 1) {
-      return `$${course.price[0].toLocaleString()}`;
-    }
-
-    const minPrice = Math.min(...course.price);
-    const maxPrice = Math.max(...course.price);
-    return `$${minPrice.toLocaleString()} - $${maxPrice.toLocaleString()}`;
-  };
-
+  
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -287,19 +270,7 @@ const CourseDetails = () => {
   // Single Price Layout
   const renderSinglePriceLayout = () => (
     <div className="border-t border-gray-200">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-        <div className="text-2xl font-bold text-gray-900">
-          {getPriceDisplay()}
-        </div>
-      </div>
-      <div className="w-full mt-6">
-        <Button
-          onClick={() => handleBookNow(courseId)}
-          className="w-full sm:w-auto text-center bg-teal-600 hover:bg-teal-700 text-white font-semibold px-20 py-6 rounded-lg transition-colors text-lg shadow-lg hover:shadow-xl"
-        >
-          Book Now
-        </Button>
-      </div>
+      
       {renderSchedule()}
     </div>
   );
@@ -307,72 +278,7 @@ const CourseDetails = () => {
   // Multiple Price Layout
   const renderMultiplePriceLayout = () => (
     <div className="border-t border-gray-200 pt-8">
-      <div className="mb-8">
-        <h3 className="text-xl font-semibold text-[#27303F] mb-6">Pricing</h3>
-        <div className="space-y-4">
-          {course.price.map((price: number | CoursePrice, index: number) => {
-            const priceValue =
-              typeof price === "number" ? price : price.amount || 0;
-            return (
-              <div
-                key={index}
-                className={`p-4 rounded-lg border cursor-pointer transition-all ${
-                  selectedPriceIndex === index
-                    ? "border-teal-600 bg-teal-50"
-                    : "border-gray-200 hover:border-gray-300"
-                }`}
-                onClick={() => setSelectedPriceIndex(index)}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-semibold text-gray-900">
-                      {index === 0 && "5 Days Program"}
-                      {index === 1 && "3 Days Upgrade"}
-                      {index === 2 && "Weekend Special"}
-                      {index > 2 && `Option ${index + 1}`}
-                    </div>
-                    <div className="text-sm text-gray-600 mt-1">
-                      {index === 0 &&
-                        "Full certification, the gold-guide comfort step by step"}
-                      {index === 1 &&
-                        "If you already have a 2 dive/tour (bring a p. Third buoyancy or termos)"}
-                      {index === 2 && "Weekend intensive program"}
-                    </div>
-                  </div>
-                  <div className="text-xl font-bold text-gray-900">
-                    ${priceValue.toLocaleString()}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Add-on Section */}
-      <div className="mb-8">
-        <h4 className="text-lg font-semibold text-[#27303F] mb-4">Add-on</h4>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <div className="font-medium text-gray-900">Catalina Weekend</div>
-              <div className="text-sm text-gray-600">
-                Leisure dig ferry 2 day night (food day)
-              </div>
-            </div>
-            <div className="font-semibold text-gray-900">+$148</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full">
-        <Button
-          onClick={() => handleBookNow(courseId)}
-          className="w-full text-center bg-teal-600 hover:bg-teal-700 text-white font-semibold py-4 rounded-lg transition-colors text-lg shadow-lg hover:shadow-xl"
-        >
-          Book Now
-        </Button>
-      </div>
+     
 
       {renderSchedule()}
     </div>

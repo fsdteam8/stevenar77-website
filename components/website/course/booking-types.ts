@@ -36,7 +36,7 @@ export interface BookingState {
     price: number;
   }>;
   participants: number;
-  selectedDate: string | null;
+  selectedDate: string[] | null;
   selectedTime: { label: string; iso: string | null };
   addOnSelected: boolean;
   selectedPricing: string | undefined;
@@ -73,7 +73,7 @@ export type BookingAction =
   | { type: "SET_STEP"; payload: number }
   | { type: "SET_COURSE"; payload: BookingState["course"] }
   | { type: "SET_PARTICIPANTS"; payload: number }
-  | { type: "SET_DATE"; payload: string | null }
+  | { type: "SET_DATE"; payload: string[] | null }
   | { type: "SET_TIME"; payload: BookingState["selectedTime"] }
   | {
       type: "SET_PERSONAL_INFO";
