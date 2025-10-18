@@ -159,7 +159,12 @@ export function FillupSummary({ courseData }: BookingSummaryProps) {
         <div className="space-y-2 text-sm text-[#6c757d]">
           <div>
             {formatDate(
-              state.selectedDate ? new Date(state.selectedDate) : null,
+              (() => {
+                const sd = state.selectedDate;
+                if (!sd) return null;
+                if (Array.isArray(sd)) return new Date(sd[0]);
+                return new Date(sd);
+              })(),
             )}
           </div>
           <div className="hidden">{selectedTime}am</div>
