@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { generatePDF } from "@/lib/forms/medical-form-pdf-generator";
-import Image from "next/image";
-// import { useBooking } from "@/context/booking-context";
 import { useMutation } from "@tanstack/react-query";
 import { diverMedicalForm } from "@/lib/diverMedicalForm";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { useBooking } from "../website/course/booking-context";
+import { useSearchParams } from "next/navigation";
 
 interface FormData {
   participantName: string;
@@ -76,15 +76,16 @@ interface DiverMedicalFormProps {
   onSubmitSuccess?: () => void;
 }
 
-// export function DiverMedicalForm() {
 const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
   onSubmitSuccess,
 }) => {
-  const [, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: session } = useSession();
-  const { dispatch } = useBooking(); // 🔥 Add this
-  const id = session?.user?.id || "";
+  const { dispatch } = useBooking();
   const token = session?.accessToken || "";
+
+  const searchParams = useSearchParams();
+  const bookingId = searchParams.get("bookingId");
 
   const uploadMutation = useMutation({
     mutationFn: async ({
@@ -105,12 +106,8 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
       return diverMedicalForm(id, token, documents);
     },
-    onSuccess: (data) => {
-      console.log("✅ Mutation onSuccess:", data);
-    },
-    onError: (error) => {
-      console.error("❌ Mutation onError:", error);
-    },
+    onSuccess: (data) => console.log("✅ Mutation onSuccess:", data),
+    onError: (error) => console.error("❌ Mutation onError:", error),
   });
 
   const [formData, setFormData] = useState<FormData>({
@@ -179,21 +176,12 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // const handleExportPDF = async () => {
-  //   try {
-  //     await generatePDF(formData);
-  //   } catch (error) {
-  //     console.error("Error generating PDF:", error);
-  //   }
-  // };
-
   const handleExportPDF = async () => {
     try {
       setIsSubmitting(true);
 
-      // Validate session data
-      if (!id) {
-        toast.error("User ID not found. Please log in again.");
+      if (!bookingId) {
+        toast.error("Booking ID not found in URL.");
         return;
       }
 
@@ -203,8 +191,6 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       }
 
       console.log("📄 Generating PDF...");
-
-      // Generate PDF
       const pdfFile = await generatePDF(formData);
 
       console.log("✅ PDF Generated:", {
@@ -213,63 +199,373 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         type: pdfFile.type,
       });
 
-      // Upload PDF and WAIT for completion
-      if (pdfFile instanceof File) {
-        console.log("📤 Starting upload with ID:", id);
-
-        await uploadMutation.mutateAsync({ id, token, documents: pdfFile });
-
-        console.log("✅ Upload completed successfully!");
-
-        // 🔥 Add document to booking context
-        dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
-        console.log("📋 Document added to booking context");
-
-        // Only call success after upload completes
-        // toast.success("Diver Medical Form uploaded successfully!");
-        if (onSubmitSuccess) {
-          console.log("🎯 [DiverMedicalForm] About to call onSubmitSuccess");
-          onSubmitSuccess();
-          console.log(
-            "✅ [DiverMedicalForm] onSubmitSuccess called successfully",
-          );
-        } else {
-          console.error("❌ [DiverMedicalForm] onSubmitSuccess is undefined!");
-        }
-      } else {
+      if (!(pdfFile instanceof File)) {
         throw new Error("Generated file is not a valid File object");
       }
+
+      console.log("📤 Starting upload with bookingId:", bookingId);
+      await uploadMutation.mutateAsync({ id: bookingId, token, documents: pdfFile });
+
+      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Divers Medical" } });
+      console.log("📋 Document added to booking context");
+
+      if (onSubmitSuccess) onSubmitSuccess();
     } catch (error) {
       console.error("❌ [DiverMedicalForm] Error in handleExportPDF:", error);
-
-      if (error instanceof Error) {
-        toast.error(`Failed: ${error.message}`);
-      } else {
-        toast.error("Failed to submit diver medical form");
-      }
+      toast.error(error instanceof Error ? `Failed: ${error.message}` : "Failed to submit diver medical form");
     } finally {
-      console.log("🏁 [DiverMedicalForm] Setting isSubmitting to false");
       setIsSubmitting(false);
     }
   };
+
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 3;
+  const nextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
+  const prevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
+  const goToPage = (page: number) => setCurrentPage(page);
+  
+  
+  // "use client";
 
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+// import { useState } from "react";
+// import { Button } from "@/components/ui/button";
+// import { generatePDF } from "@/lib/forms/medical-form-pdf-generator";
+// import Image from "next/image";
+// import { useMutation } from "@tanstack/react-query";
+// import { diverMedicalForm } from "@/lib/diverMedicalForm";
+// import { useSession } from "next-auth/react";
+// import { toast } from "sonner";
+// import { useBooking } from "../website/course/booking-context";
+// import { useSearchParams } from "next/navigation";
 
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+// interface FormData {
+//   participantName: string;
+//   birthdate: string;
+//   facilityName: string;
+//   instructorName: string;
+//   date: string;
+//   participantSignature: string;
+//   question1: boolean;
+//   question2: boolean;
+//   question3: boolean;
+//   question4: boolean;
+//   question5: boolean;
+//   question6: boolean;
+//   question7: boolean;
+//   question8: boolean;
+//   question9: boolean;
+//   question10: boolean;
+//   boxA1: boolean;
+//   boxA2: boolean;
+//   boxA3: boolean;
+//   boxA4: boolean;
+//   boxA5: boolean;
+//   boxB1: boolean;
+//   boxB2: boolean;
+//   boxB3: boolean;
+//   boxB4: boolean;
+//   boxC1: boolean;
+//   boxC2: boolean;
+//   boxC3: boolean;
+//   boxC4: boolean;
+//   boxD1: boolean;
+//   boxD2: boolean;
+//   boxD3: boolean;
+//   boxD4: boolean;
+//   boxD5: boolean;
+//   boxE1: boolean;
+//   boxE2: boolean;
+//   boxE3: boolean;
+//   boxE4: boolean;
+//   boxF1: boolean;
+//   boxF2: boolean;
+//   boxF3: boolean;
+//   boxF4: boolean;
+//   boxF5: boolean;
+//   boxG1: boolean;
+//   boxG2: boolean;
+//   boxG3: boolean;
+//   boxG4: boolean;
+//   boxG5: boolean;
+//   boxG6: boolean;
+//   medicalExaminerName: string;
+//   medicalExaminerSignature: string;
+//   medicalExaminerDate: string;
+//   medicalExaminerPhone: string;
+//   medicalExaminerClinic: string;
+//   medicalExaminerAddress: string;
+//   medicalExaminerEmail: string;
+//   medicalExaminerCredentials: string;
+//   evaluationResult: "approved" | "not-approved" | "";
+// }
 
-  const goToPage = (page: number) => {
-    setCurrentPage(page);
-  };
+// interface DiverMedicalFormProps {
+//   onSubmitSuccess?: () => void;
+// }
+
+// // export function DiverMedicalForm() {
+// const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
+//   onSubmitSuccess,
+// }) => {
+//   const [, setIsSubmitting] = useState(false);
+//   const { data: session } = useSession();
+//   const { dispatch } = useBooking(); // 🔥 Add this
+//   const id = session?.user?.id || "";
+//   const token = session?.accessToken || "";
+
+//   const uploadMutation = useMutation({
+//     mutationFn: async ({
+//       id,
+//       documents,
+//       token,
+//     }: {
+//       id: string;
+//       documents: File;
+//       token: string;
+//     }) => {
+//       console.log("🚀 Mutation executing with:", {
+//         id,
+//         tokenExists: !!token,
+//         fileName: documents.name,
+//         fileSize: documents.size,
+//       });
+
+//       return diverMedicalForm(id, token, documents);
+//     },
+//     onSuccess: (data) => {
+//       console.log("✅ Mutation onSuccess:", data);
+//     },
+//     onError: (error) => {
+//       console.error("❌ Mutation onError:", error);
+//     },
+//   });
+
+//   const [formData, setFormData] = useState<FormData>({
+//     participantName: "",
+//     birthdate: "",
+//     facilityName: "",
+//     instructorName: "",
+//     date: "",
+//     participantSignature: "",
+//     question1: false,
+//     question2: false,
+//     question3: false,
+//     question4: false,
+//     question5: false,
+//     question6: false,
+//     question7: false,
+//     question8: false,
+//     question9: false,
+//     question10: false,
+//     boxA1: false,
+//     boxA2: false,
+//     boxA3: false,
+//     boxA4: false,
+//     boxA5: false,
+//     boxB1: false,
+//     boxB2: false,
+//     boxB3: false,
+//     boxB4: false,
+//     boxC1: false,
+//     boxC2: false,
+//     boxC3: false,
+//     boxC4: false,
+//     boxD1: false,
+//     boxD2: false,
+//     boxD3: false,
+//     boxD4: false,
+//     boxD5: false,
+//     boxE1: false,
+//     boxE2: false,
+//     boxE3: false,
+//     boxE4: false,
+//     boxF1: false,
+//     boxF2: false,
+//     boxF3: false,
+//     boxF4: false,
+//     boxF5: false,
+//     boxG1: false,
+//     boxG2: false,
+//     boxG3: false,
+//     boxG4: false,
+//     boxG5: false,
+//     boxG6: false,
+//     medicalExaminerName: "",
+//     medicalExaminerSignature: "",
+//     medicalExaminerDate: "",
+//     medicalExaminerPhone: "",
+//     medicalExaminerClinic: "",
+//     medicalExaminerAddress: "",
+//     medicalExaminerEmail: "",
+//     medicalExaminerCredentials: "",
+//     evaluationResult: "",
+//   });
+
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   const updateFormData = (field: keyof FormData, value: any) => {
+//     setFormData((prev) => ({ ...prev, [field]: value }));
+//   };
+
+//   // const handleExportPDF = async () => {
+//   //   try {
+//   //     setIsSubmitting(true);
+
+//   //     // Validate session data
+//   //     if (!id) {
+//   //       toast.error("User ID not found. Please log in again.");
+//   //       return;
+//   //     }
+
+//   //     if (!token) {
+//   //       toast.error("Authentication token not found. Please log in again.");
+//   //       return;
+//   //     }
+
+//   //     console.log("📄 Generating PDF...");
+
+//   //     // Generate PDF
+//   //     const pdfFile = await generatePDF(formData);
+
+//   //     console.log("✅ PDF Generated:", {
+//   //       name: pdfFile.name,
+//   //       size: `${(pdfFile.size / 1024).toFixed(2)} KB`,
+//   //       type: pdfFile.type,
+//   //     });
+
+//   //     // Upload PDF and WAIT for completion
+//   //     if (pdfFile instanceof File) {
+//   //       console.log("📤 Starting upload with ID:", id);
+
+//   //       await uploadMutation.mutateAsync({ id, token, documents: pdfFile });
+
+//   //       console.log("✅ Upload completed successfully!");
+
+//   //       // 🔥 Add document to booking context
+//   //       // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+//   //       dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Divers Medical" } });
+//   //       console.log("📋 Document added to booking context");
+
+//   //       // Only call success after upload completes
+//   //       // toast.success("Diver Medical Form uploaded successfully!");
+//   //       if (onSubmitSuccess) {
+//   //         console.log("🎯 [DiverMedicalForm] About to call onSubmitSuccess");
+//   //         onSubmitSuccess();
+//   //         console.log(
+//   //           "✅ [DiverMedicalForm] onSubmitSuccess called successfully",
+//   //         );
+//   //       } else {
+//   //         console.error("❌ [DiverMedicalForm] onSubmitSuccess is undefined!");
+//   //       }
+//   //     } else {
+//   //       throw new Error("Generated file is not a valid File object");
+//   //     }
+//   //   } catch (error) {
+//   //     console.error("❌ [DiverMedicalForm] Error in handleExportPDF:", error);
+
+//   //     if (error instanceof Error) {
+//   //       toast.error(`Failed: ${error.message}`);
+//   //     } else {
+//   //       toast.error("Failed to submit diver medical form");
+//   //     }
+//   //   } finally {
+//   //     console.log("🏁 [DiverMedicalForm] Setting isSubmitting to false");
+//   //     setIsSubmitting(false);
+//   //   }
+//   // };
+  
+
+//   // ✅ Get bookingId from URL instead of session user ID
+//   const searchParams = useSearchParams();
+//   const bookingId = searchParams.get("bookingId");
+// const handleExportPDF = async () => {
+//   try {
+//     setIsSubmitting(true);
+
+
+//     if (!bookingId) {
+//       toast.error("Booking ID not found in URL.");
+//       return;
+//     }
+
+//     if (!token) {
+//       toast.error("Authentication token not found. Please log in again.");
+//       return;
+//     }
+
+//     console.log("📄 Generating PDF...");
+
+//     // Generate PDF
+//     const pdfFile = await generatePDF(formData);
+
+//     console.log("✅ PDF Generated:", {
+//       name: pdfFile.name,
+//       size: `${(pdfFile.size / 1024).toFixed(2)} KB`,
+//       type: pdfFile.type,
+//     });
+
+//     // Upload PDF and WAIT for completion
+//     if (pdfFile instanceof File) {
+//       console.log("📤 Starting upload with bookingId:", bookingId);
+
+//       await uploadMutation.mutateAsync({
+//         id: bookingId,
+//         token,
+//         documents: pdfFile,
+//       });
+
+//       console.log("✅ Upload completed successfully!");
+
+//       dispatch({
+//         type: "ADD_DOCUMENT",
+//         payload: { file: pdfFile, label: "Divers Medical" },
+//       });
+//       console.log("📋 Document added to booking context");
+
+//       if (onSubmitSuccess) {
+//         console.log("🎯 [DiverMedicalForm] About to call onSubmitSuccess");
+//         onSubmitSuccess();
+//         console.log(
+//           "✅ [DiverMedicalForm] onSubmitSuccess called successfully"
+//         );
+//       } else {
+//         console.error("❌ [DiverMedicalForm] onSubmitSuccess is undefined!");
+//       }
+//     } else {
+//       throw new Error("Generated file is not a valid File object");
+//     }
+//   } catch (error) {
+//     console.error("❌ [DiverMedicalForm] Error in handleExportPDF:", error);
+
+//     if (error instanceof Error) {
+//       toast.error(`Failed: ${error.message}`);
+//     } else {
+//       toast.error("Failed to submit diver medical form");
+//     }
+//   } finally {
+//     console.log("🏁 [DiverMedicalForm] Setting isSubmitting to false");
+//     setIsSubmitting(false);
+//   }
+// };
+
+
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const totalPages = 3;
+
+//   const nextPage = () => {
+//     if (currentPage < totalPages) {
+//       setCurrentPage(currentPage + 1);
+//     }
+//   };
+
+//   const prevPage = () => {
+//     if (currentPage > 1) {
+//       setCurrentPage(currentPage - 1);
+//     }
+//   };
+
+//   const goToPage = (page: number) => {
+//     setCurrentPage(page);
+//   };
 
   return (
     <div className="min-h-screen bg-white">

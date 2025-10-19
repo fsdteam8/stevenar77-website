@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useState, useRef } from "react";
+import { useBooking } from "../course/booking-context";
 
 // const loadJsPDF = async () => {
 //   const { default: jsPDF } = await import("jspdf");
@@ -12,7 +13,6 @@ const loadJsPDF = async () => {
   return jsPDF;
 };
 
-
 const loadHTML2Canvas = async () => {
   const { default: html2canvas } = await import("html2canvas");
   return html2canvas;
@@ -22,9 +22,10 @@ interface PadiQuickReviewProps {
   onSubmitSuccess?: () => void;
 }
 
-
 // export default function PadiQuickReview() {
-export default function PadiQuickReview({ onSubmitSuccess }: PadiQuickReviewProps){
+export default function PadiQuickReview({
+  onSubmitSuccess,
+}: PadiQuickReviewProps) {
   const [formData, setFormData] = useState({
     name: "",
     date: "",
@@ -33,6 +34,8 @@ export default function PadiQuickReview({ onSubmitSuccess }: PadiQuickReviewProp
     answers: {} as Record<number, string>,
   });
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const { dispatch } = useBooking();
 
   const formRef = useRef<HTMLDivElement>(null);
 
@@ -350,7 +353,15 @@ export default function PadiQuickReview({ onSubmitSuccess }: PadiQuickReviewProp
       document.head.removeChild(tempStyle);
 
       const fileName = `PADI_Quick_Review_${formData.name.replace(/[^a-zA-Z0-9]/g, "_").trim()}.pdf`;
+      // Create a Blob and File from the generated PDF so we can store/dispatch it
+      const pdfBlob = pdf.output("blob");
+      const pdfFileObj = new File([pdfBlob], fileName, { type: "application/pdf" });
       pdf.save(fileName);
+      dispatch({
+        type: "ADD_DOCUMENT",
+        payload: { file: pdfFileObj, label: "Quick Review-Open Waters" },
+      });
+
       onSubmitSuccess?.(); // ✅ close modal or mark complete
     } catch (error: unknown) {
       console.error("PDF download failed:", error);

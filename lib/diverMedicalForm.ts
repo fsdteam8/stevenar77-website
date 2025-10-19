@@ -1,35 +1,4 @@
-// import axiosInstance from "./axiosInstance";
-
-// const api = axiosInstance;
-
-// export async function diverMedicalForm(
-//   id: string,
-//   token: string,
-//   file: File
-// ) {
-//   try {
-//     const documents = new FormData();
-//     documents.append("documents", file);
-
-//     const res = await api.patch(
-//       `/class/bookings/${id}/submit-form`,
-//       documents,
-//       {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }
-//     );
-
-//     console.log("Diver Medical Form upload response:", res.data);
-//     return res.data;
-//   } catch (error) {
-//     console.error("Diver Medical Form upload error:", error);
-//     throw error;
-//   }
-// }
-
+// lib/diverMedicalForm.ts
 import axiosInstance from "./axiosInstance";
 
 const api = axiosInstance;

@@ -5,14 +5,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { type BookingState, useBooking } from "./booking-context";
 import { PersonalInformationStep } from "./steps/personal-information-step";
-import { DocumentUploadStep } from "./steps/document-upload-step";
+// import { DocumentUploadStep } from "./steps/document-upload-step";
 import { AllInformationDoneStep } from "./steps/all-information-done-step";
 // import { bookingReducer, createInitialState } from "./booking-reducer";
 
-type FormConfig = {
-  id: string;
-  label: string;
-};
+// type FormConfig = {
+//   id: string;
+//   label: string;
+// };
 
 const steps = [
   { id: 0, title: "Personal Information", component: PersonalInformationStep },
@@ -158,6 +158,9 @@ export function MultiStepForm() {
   return (
     <Card className="p-6 mt-6">
       {/* Validation Error Alert */}
+      <div className="text-center font-bold text-2xl text-gray-700 mb-6">
+        Course Booking For Single Person
+      </div>
       {showValidation && validationErrors.length > 0 && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
           <div className="flex items-start">

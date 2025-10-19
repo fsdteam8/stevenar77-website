@@ -125,7 +125,8 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
       });
 
       // ✅ Add to booking context instead of downloading
-      dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Standards Form" } });
 
       onSubmitSuccess?.();
 

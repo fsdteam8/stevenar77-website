@@ -175,7 +175,7 @@ const FeaturedClasses: React.FC = () => {
               <FeatureCard
                 {...course}
                 onSeeMore={() => router.push(`/courses/${course.id}`)}
-                onBookNow={() => handleBookNow(course.id)}
+                onBookNow={() => router.push(`/courses/${course.id}`)}
               >
                 <div className="p-5 space-y-4 ">
                   {/* Title + Rating */}
@@ -216,16 +216,16 @@ const FeaturedClasses: React.FC = () => {
                       <Target className="h-4 w-4" />
                       {course.location}
                     </span>
-                    <span className="flex items-center font-normal gap-2">
+                    {/* <span className="flex items-center font-normal gap-2">
                       <UserRound className="h-4 w-4" />
                       <span className="text-[12px] text-[#68706A]">
                         {course.students} Students
                       </span>
-                    </span>
+                    </span> */}
                   </div>
 
                   {/* Features */}
-                  {course.features.length > 0 && (
+                  {/* {course.features.length > 0 && (
                     <div>
                       <p className="font-medium mb-4 text-[20px] text-[#27303F]">
                         Course Includes:
@@ -241,9 +241,9 @@ const FeaturedClasses: React.FC = () => {
                             <span>{feature}</span>
                           </li>
                         ))}
-                      </ul>
+                      </ul> */}
 
-                      {/* "See more" only if features > 3 */}
+                      {/* "See more" only if features > 3
                       {course.features.length > 3 && (
                         <Button
                           onClick={() => onSeeMore(course.id)} // pass the course ID
@@ -253,16 +253,16 @@ const FeaturedClasses: React.FC = () => {
                         </Button>
                       )}
                     </div>
-                  )}
+                  )} */}
 
                   {/* Price + Age */}
                   <div className="flex justify-between items-center">
                     {/* <p className="text-xl md:text-[24px] font-medium text-gray-900">
                       ${course.price}
                     </p> */}
-                    <span className="text-xs text-[#0694A2] font-normal">
+                    {/* <span className="text-xs text-[#0694A2] font-normal">
                       Age {course.ageRestriction}
-                    </span>
+                    </span> */}
                   </div>
                 </div>
               </FeatureCard>

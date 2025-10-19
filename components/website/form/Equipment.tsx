@@ -143,110 +143,6 @@ export default function PadiForm({
     return Object.keys(newErrors).length === 0;
   };
 
-  // const handleDownloadPdf = async () => {
-  //   if (!validateForm()) {
-  //     alert("Please fill in all required fields correctly");
-  //     return;
-  //   }
-
-  //   if (!printRef.current) {
-  //     alert("Cannot generate PDF - form not loaded");
-  //     return;
-  //   }
-
-  //   setIsGeneratingPDF(true);
-
-  //   try {
-  //     console.log("Generating PDF...");
-  //     const html2canvas = await loadHTML2Canvas();
-
-  //     const canvas = await html2canvas(printRef.current, {
-  //       scale: 1,
-  //       useCORS: true,
-  //       allowTaint: true,
-  //       backgroundColor: "#ffffff",
-  //       logging: false,
-  //       ignoreElements: (element) => {
-  //         return (
-  //           element.classList.contains("no-print") ||
-  //           !!(
-  //             element.tagName === "IMG" &&
-  //             element.getAttribute("src")?.startsWith("http")
-  //           )
-  //         );
-  //       },
-  //       onclone: (clonedDoc) => {
-  //         const allEls = clonedDoc.querySelectorAll("*");
-  //         allEls.forEach((el) => {
-  //           const htmlEl = el as HTMLElement;
-  //           if (htmlEl.style) {
-  //             const props = ["color", "backgroundColor", "borderColor"];
-  //             props.forEach((prop) => {
-  //               const value = htmlEl.style.getPropertyValue(prop);
-  //               if (value && value.includes("lab")) {
-  //                 htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
-  //               }
-  //             });
-
-  //             if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
-  //               htmlEl.style.color = "rgb(0, 0, 0)";
-  //             }
-  //             if (
-  //               htmlEl.tagName !== "INPUT" &&
-  //               (!htmlEl.style.backgroundColor ||
-  //                 htmlEl.style.backgroundColor.includes("lab"))
-  //             ) {
-  //               htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-  //             }
-  //             if (
-  //               !htmlEl.style.borderColor ||
-  //               htmlEl.style.borderColor.includes("lab")
-  //             ) {
-  //               htmlEl.style.borderColor = "rgb(0, 0, 0)";
-  //             }
-
-  //             htmlEl.style.removeProperty("filter");
-  //             htmlEl.style.removeProperty("backdrop-filter");
-  //             htmlEl.style.removeProperty("box-shadow");
-  //           }
-  //         });
-  //       },
-  //     });
-
-  //     const imgData = canvas.toDataURL("image/jpeg", 0.75);
-  //     const jsPDF = await loadJsPDF();
-  //     const pdf = new jsPDF("p", "mm", "a4");
-  //     const pageWidth = pdf.internal.pageSize.getWidth();
-  //     const imgProps = pdf.getImageProperties(imgData);
-  //     const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
-
-  //     pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);
-
-  //     const pdfBlob = pdf.output("blob");
-  //     const fileSizeMB = pdfBlob.size / 1024 / 1024;
-
-  //     console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
-
-  //     const fileName = `PADI_Equipment_Rental_${formData.name
-  //       .replace(/[^a-zA-Z0-9\s]/g, "")
-  //       .replace(/\s+/g, "_")
-  //       .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
-
-  //     const pdfFile = new File([pdfBlob], fileName, {
-  //       type: "application/pdf",
-  //     });
-
-  //     dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
-
-  //     // alert("PDF created and added to your booking successfully!");
-  //     if (onSubmitSuccess) onSubmitSuccess();
-  //   } catch (error: unknown) {
-  //     console.error("Error generating PDF:", error);
-  //     alert("PDF generation failed. Please try again.");
-  //   } finally {
-  //     setIsGeneratingPDF(false);
-  //   }
-  // };
 const handleDownloadPdf = async () => {
   if (!validateForm()) {
     alert("Please fill in all required fields correctly");
@@ -356,7 +252,9 @@ const handleDownloadPdf = async () => {
       type: "application/pdf",
     });
 
-    dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+    // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Equipment Rental" } });
+
     if (onSubmitSuccess) onSubmitSuccess();
   } catch (error) {
     console.error("❌ PDF generation error:", error);
