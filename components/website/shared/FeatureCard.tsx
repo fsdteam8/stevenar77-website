@@ -54,17 +54,17 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
         <div className="flex gap-3 px-4 pb-4 mt-auto">
           <Button
             variant="outline"
-            className="flex-1 text-[16px] py-3 px-[16px] font-medium leading-[150%] text-[#0694A2]"
+            className="flex-1 text-[16px] py-3 px-[16px] font-medium leading-[150%] text-white bg-[#0694A2] "
             onClick={onSeeMore}
           >
             See More
           </Button>
-          <Button
+          {/* <Button
             className="flex-1 bg-[#0694A2] py-3 px-[16px] text-white hover:bg-cyan-700"
             onClick={onBookNow}
           >
             Book Now
-          </Button>
+          </Button> */}
         </div>
       </div>
     </section>

@@ -142,9 +142,9 @@ export function DocumentUploadStep() {
     submittedForms.includes(f.id),
   );
 
-  const handleNext = () => {
-    dispatch({ type: "SET_STEP", payload: state.currentStep + 1 });
-  };
+  // const handleNext = () => {
+  //   dispatch({ type: "SET_STEP", payload: state.currentStep + 1 });
+  // };
 
   return (
     <div>

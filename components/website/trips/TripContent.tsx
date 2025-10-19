@@ -11,6 +11,7 @@ import {
 import Image from "next/image";
 import { Trip } from "@/services/hooks/trip/useTrip";
 import { useTripBooking } from "../course/steps/TripBookingContext";
+import { useSearchParams } from "next/navigation";
 
 interface TripContentProps {
   trip: Trip;
@@ -18,6 +19,12 @@ interface TripContentProps {
 
 export function TripContent({ trip }: TripContentProps) {
   const { state, dispatch } = useTripBooking();
+
+  // ✅ Get quantity from URL (e.g. ?quantity=3)
+  const searchParams = useSearchParams();
+  const quantity = Number(searchParams.get("q")) || 1;
+
+  console.log('this is conetnt page',quantity);
 
   // Generate participant options based on trip's maximum capacity
   const participantOptions = Array.from(
@@ -61,6 +68,7 @@ export function TripContent({ trip }: TripContentProps) {
                 {/* <span>📍 {trip.location}</span> */}
                 {/* <span>📅 {new Date(trip.startDate).toLocaleDateString()}</span> */}
               </div>
+              
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-[#343a40]">
