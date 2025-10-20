@@ -167,7 +167,7 @@ const CourseDetails = () => {
                           </p>
                         </div>
 
-                        <div className="mt-10 border p-1 rounded-full">
+                        <div className="mt-10 border p-1 rounded-full cursor-pointer">
                           <ChevronDown
                             className={`w-5 h-5 text-gray-600 transition-transform duration-300 cursor-pointer  ${
                               isOpen ? "rotate-180" : ""
@@ -177,7 +177,7 @@ const CourseDetails = () => {
                       </div>
 
                       {/* Right: Slots + Action */}
-                      <div className="flex items-center j gap-4 flex-shrink-0 mt-4">
+                      <div className="flex items-center justify-center gap-4 flex-shrink-0 mt-4">
                         {/* Slot info */}
                         <div className="flex items-center gap-2 px-4 py-2 bg-teal-50 border border-teal-200 rounded-lg">
                           <div className="text-center">

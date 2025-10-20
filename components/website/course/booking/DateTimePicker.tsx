@@ -20,7 +20,6 @@ export function DateTimePicker() {
       const decoded = decodeURIComponent(rawSchedule);
       const parsed = JSON.parse(decoded);
 
-
       // ✅ Dispatch scheduleId to state
       if (parsed._id) {
         dispatch({ type: "SET_SCHEDULE_ID", payload: parsed._id });

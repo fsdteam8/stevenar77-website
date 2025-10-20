@@ -56,6 +56,7 @@ export interface BookingPayload {
   activityLevelSpecificQuestions: string[];
   medicalDocuments: File[];
   price: number;
+  scheduleId: string;
 
   // Personal info
   Username: string;   // ✅ matches backend case
@@ -66,7 +67,7 @@ export interface BookingPayload {
 
   gender: string;
   shoeSize: number;
-  hight: number;   // backend typo, keep as-is
+  hight: string;   // backend typo, keep as-is
   weight: number;
 }
 

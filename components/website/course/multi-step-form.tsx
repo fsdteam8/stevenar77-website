@@ -103,6 +103,8 @@ const validateStep = (stepIndex: number, state: BookingState): boolean => {
   return validateStepWithErrors(stepIndex, state).isValid;
 };
 
+
+
 export function MultiStepForm() {
   const { state, dispatch } = useBooking();
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -113,6 +115,8 @@ export function MultiStepForm() {
 
   // Check if current step is valid
   const isCurrentStepValid = validateStep(state.currentStep, state);
+
+  console.log("this is state",state)
 
   const handleNext = () => {
     // Trigger validation display in child component
@@ -240,6 +244,7 @@ export function MultiStepForm() {
             {isLastStep ? "Complete" : "Next"}
           </Button>
         )}
+        
       </div>
     </Card>
   );
