@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ type TripFormValues = z.infer<typeof tripSchema>;
 
 export function TripForm() {
   const { state, dispatch } = useTripBooking();
+  const [isSaved, setIsSaved] = useState(false); // ✅ track if form is saved
 
   const form = useForm<TripFormValues>({
     resolver: zodResolver(tripSchema),
@@ -44,7 +46,10 @@ export function TripForm() {
     },
   });
 
-  const onSubmit = (values: TripFormValues) => {
+  const onSubmit = async (values: TripFormValues) => {
+    // Simulate async operation (optional)
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
     dispatch({
       type: "SET_PERSONAL_INFO",
       payload: {
@@ -53,6 +58,8 @@ export function TripForm() {
         email: values.email,
       },
     });
+
+    setIsSaved(true); // ✅ mark as saved permanently
   };
 
   return (
@@ -132,8 +139,16 @@ export function TripForm() {
 
           {/* Submit button full width */}
           <div className="md:col-span-2 mt-4">
-            <Button type="submit" className="w-full">
-              Save & Continue
+            <Button
+              type="submit"
+              className={`w-full ${isSaved ? "bg-gray-400 cursor-no-drop" : ""}`}
+              disabled={isSaved || form.formState.isSubmitting}
+            >
+              {isSaved
+                ? "Saved"
+                : form.formState.isSubmitting
+                ? "Saving..."
+                : "Save & Continue"}
             </Button>
           </div>
         </form>

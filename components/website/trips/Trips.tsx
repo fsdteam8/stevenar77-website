@@ -14,6 +14,8 @@ export default function Trips() {
   const { data: trips, isLoading, isError, error } = useTrips();
   // const router = useRouter();
 
+  console.log(trips)
+
   if (isLoading)
     return (
       <div className="bg-white py-10">
@@ -72,6 +74,7 @@ export default function Trips() {
           image={trip.images?.[0]?.url || "/images/default-trip.jpg"}
           title={trip.title}
           shortDescription={trip.description}
+          price={trip?.price}
           seeMoreLink={`/trips/${trip._id}`} // dynamic route
           bookNowLink={`/trips/book/${trip._id}`} // dynamic booking route
           reverse={index % 2 === 1} // alternate layout

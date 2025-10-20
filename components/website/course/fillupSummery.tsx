@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { format } from "date-fns";
 import { useSession, signIn } from "next-auth/react";
-import { Loader2, AlertCircle } from "lucide-react";
+import {  AlertCircle } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ interface BookingSummaryProps {
 
 export function FillupSummary({ courseData }: BookingSummaryProps) {
   const { state } = useBooking();
-  const { data: session, status } = useSession();
+  const {  status } = useSession();
   const createBookingMutation = useCreateBooking();
 
   const [validationError, setValidationError] = useState<string>("");

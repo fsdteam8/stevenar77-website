@@ -55,7 +55,7 @@ export default function TripsDetails() {
 
   if (!trip) return <p className="text-center mt-10">Trip not found</p>;
 
-  const totalPrice = trip.price * quantity;
+  // const totalPrice = trip.price * quantity;
 
   return (
     <div className="container mx-auto my-16 md:my-32 px-4">
@@ -86,23 +86,7 @@ export default function TripsDetails() {
             {/* {trip.description} */}
           </p>
 
-          {/* Quantity & Price */}
-          <div className="flex items-center gap-3 pb-4 mt-5">
-            <Button
-              onClick={decrease}
-              className="border border-[#68706A] bg-transparent hover:bg-gray-200 px-3 py-1 cursor-pointer"
-            >
-              <Minus className="text-gray-800" />
-            </Button>
-            <span className="text-lg">{quantity}</span>
-            <Button
-              onClick={increase}
-              className="border border-primary hover:bg-teal-50 px-3 py-1 cursor-pointer"
-            >
-              <Plus className="text-gray-800" />
-            </Button>
-            <span className="ml-4 text-lg font-semibold">$ {totalPrice}</span>
-          </div>
+
 
           {/* Buy Now Button */}
           <Button
