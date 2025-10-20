@@ -54,12 +54,12 @@ export function PersonalInformationStep() {
   });
 
   const [heightFeet, setHeightFeet] = useState<string>(() => {
-    const match = state.personalInfo.height?.match(/^(\d+)'/);
+    const match = state.personalInfo.hight?.match(/^(\d+)'/);
     return match ? match[1] : "";
   });
 
   const [heightInches, setHeightInches] = useState<string>(() => {
-    const match = state.personalInfo.height?.match(/'(\d+)"$/);
+    const match = state.personalInfo.hight?.match(/'(\d+)"$/);
     return match ? match[1] : "";
   });
 
@@ -205,13 +205,13 @@ export function PersonalInformationStep() {
         break;
 
       case "hight":
-        const heightMatch = value.match(/^(\d+)'(\d+)"$/);
-        if (!heightMatch) {
+        const hightMatch = value.match(/^(\d+)'(\d+)"$/);
+        if (!hightMatch) {
           return "Please enter both feet and inches";
         }
 
-        const feet = Number.parseInt(heightMatch[1], 10);
-        const inches = Number.parseInt(heightMatch[2], 10);
+        const feet = Number.parseInt(hightMatch[1], 10);
+        const inches = Number.parseInt(hightMatch[2], 10);
 
         if (isNaN(feet) || feet < 3 || feet > 8) {
           return "Feet must be between 3 and 8";
@@ -268,22 +268,24 @@ export function PersonalInformationStep() {
     markFieldAsTouched(field);
     dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
   };
+console.log(state)
+
 
   const handleHeightChange = (type: "feet" | "inches", value: string) => {
     const numValue = value.replace(/\D/g, "");
-    markFieldAsTouched("height");
+    markFieldAsTouched("hight");
 
     if (type === "feet") {
       setHeightFeet(numValue);
       if (numValue && heightInches) {
         dispatch({
           type: "SET_PERSONAL_INFO",
-          payload: { height: `${numValue}'${heightInches}"` },
+          payload: { hight: `${numValue}'${heightInches}"` },
         });
       } else if (numValue) {
         dispatch({
           type: "SET_PERSONAL_INFO",
-          payload: { height: `${numValue}'0"` },
+          payload: { hight: `${numValue}'0"` },
         });
       }
     } else {
@@ -291,12 +293,12 @@ export function PersonalInformationStep() {
       if (heightFeet && numValue) {
         dispatch({
           type: "SET_PERSONAL_INFO",
-          payload: { height: `${heightFeet}'${numValue}"` },
+          payload: { hight: `${heightFeet}'${numValue}"` },
         });
       } else if (heightFeet) {
         dispatch({
           type: "SET_PERSONAL_INFO",
-          payload: { height: `${heightFeet}'0"` },
+          payload: { hight: `${heightFeet}'0"` },
         });
       }
     }
@@ -742,14 +744,14 @@ export function PersonalInformationStep() {
           <div className="flex gap-2">
             <div className="flex-1">
               <Input
-                id="heightFeet"
+                id="hightFeet"
                 type="number"
                 placeholder="Feet"
                 min="3"
                 max="8"
                 value={heightFeet}
                 onChange={(e) => handleHeightChange("feet", e.target.value)}
-                onBlur={() => markFieldAsTouched("height")}
+                onBlur={() => markFieldAsTouched("hight")}
                 className={
                   hasError("hight")
                     ? "border-red-500 focus-visible:ring-red-500"
@@ -764,14 +766,14 @@ export function PersonalInformationStep() {
             </div>
             <div className="flex-1">
               <Input
-                id="heightInches"
+                id="hightInches"
                 type="number"
                 placeholder="Inches"
                 min="0"
                 max="11"
                 value={heightInches}
                 onChange={(e) => handleHeightChange("inches", e.target.value)}
-                onBlur={() => markFieldAsTouched("height")}
+                onBlur={() => markFieldAsTouched("hight")}
                 className={
                   hasError("hight")
                     ? "border-red-500 focus-visible:ring-red-500"

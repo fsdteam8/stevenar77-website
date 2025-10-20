@@ -76,7 +76,7 @@ const validateStepWithErrors = (
       ) {
         errors.push("Shoe size is required");
       }
-      if (!personalInfo.height || String(personalInfo.height).trim() === "") {
+      if (!personalInfo.hight || String(personalInfo.hight).trim() === "") {
         errors.push("Height is required");
       }
       if (!personalInfo.weight || String(personalInfo.weight).trim() === "") {
