@@ -1,21 +1,19 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-// import { any, number, string } from "zod";
-
 export interface sets {
   date: string;
   location: string;
   type: string;
   isActive: boolean;
 }
+
 export interface Schedules {
   set: sets[];
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface BookingState {
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   submittedForms: any[];
   currentStep: number;
   course: {
@@ -26,7 +24,6 @@ export interface BookingState {
     age: string;
     image?: string;
     classDates?: string[];
-    // classDates?: Schedules[];
     formTitle?: string[];
   };
   pricing: string | undefined;
@@ -37,6 +34,7 @@ export interface BookingState {
   }>;
   participants: number;
   selectedDate: string[] | null;
+  scheduleId?: undefined; // ✅ new field to store the schedule _id
   selectedTime: { label: string; iso: string | null };
   addOnSelected: boolean;
   selectedPricing: string | undefined;
@@ -55,7 +53,7 @@ export interface BookingState {
     emergencyPhoneNumber: string;
     courseName: string;
     shoeSize: string;
-    hight: number;
+    hight: string;
     weight: string;
     gender: string;
   };
@@ -74,6 +72,7 @@ export type BookingAction =
   | { type: "SET_COURSE"; payload: BookingState["course"] }
   | { type: "SET_PARTICIPANTS"; payload: number }
   | { type: "SET_DATE"; payload: string[] | null }
+  | { type: "SET_SCHEDULE_ID"; payload: string } 
   | { type: "SET_TIME"; payload: BookingState["selectedTime"] }
   | {
       type: "SET_PERSONAL_INFO";

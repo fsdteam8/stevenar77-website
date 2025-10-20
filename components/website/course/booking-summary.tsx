@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { format } from "date-fns";
 import { useSession, signIn } from "next-auth/react";
@@ -14,14 +14,15 @@ import { useBooking } from "./booking-context";
 import { useCreateBooking } from "@/services/hooks/profile/useCreateBooking";
 import { mapBookingStateToPayload } from "@/utils/booking-mapper";
 import type { CourseDetail } from "@/lib/course";
+import { useSearchParams } from "next/navigation";
 
 interface BookingSummaryProps {
   courseData: CourseDetail;
 }
 
-export function BookingSummary({  }: BookingSummaryProps) {
+export function BookingSummary({}: BookingSummaryProps) {
   const { state } = useBooking();
-  const {  status } = useSession();
+  const { status } = useSession();
   const createBookingMutation = useCreateBooking();
 
   const [validationError, setValidationError] = useState<string>("");
@@ -29,6 +30,25 @@ export function BookingSummary({  }: BookingSummaryProps) {
   const isAuthenticated = status === "authenticated";
   const isOnFinalStep = state.currentStep === 1;
   const selectedTime = "10:00";
+  const [scheduleId, setScheduleId] = useState<string | undefined>(undefined);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const rawSchedule = searchParams.get("schedule");
+    if (rawSchedule) {
+      try {
+        const decoded = decodeURIComponent(rawSchedule);
+        const scheduleObj = JSON.parse(decoded);
+        setScheduleId(scheduleObj._id);
+        console.log("Full schedule object:", scheduleObj);
+        console.log("Schedule ID:", scheduleObj._id);
+      } catch (error) {
+        console.error("Invalid schedule JSON:", error);
+      }
+    }
+  }, [searchParams]); 
+
+  console.log("Current Schedule ID (state):", scheduleId);
 
   // ✅ Format class date safely (supports array)
   const formatDate = (dateInput: string[] | string | null): string => {
@@ -57,7 +77,9 @@ export function BookingSummary({  }: BookingSummaryProps) {
       return false;
     }
     if (!isOnFinalStep) {
-      setValidationError("Please complete all booking steps before proceeding.");
+      setValidationError(
+        "Please complete all booking steps before proceeding.",
+      );
       return false;
     }
 
@@ -82,6 +104,7 @@ export function BookingSummary({  }: BookingSummaryProps) {
       const bookingPayload = {
         ...mapBookingStateToPayload(state),
         selectedTime,
+        scheduleId
       };
 
       console.log("✅ Final booking payload:", bookingPayload);

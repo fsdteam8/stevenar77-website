@@ -12,15 +12,14 @@ export function BookingPage() {
   const params = useParams<{ id: string }>();
   const [course, setCourse] = useState<CourseDetail | null>(null);
   const [loading, setLoading] = useState(true);
-    const searchParams = useSearchParams();
-  
-  // Get the "dates" parameter from the URL
-  const datesParam = searchParams.get("dates");
+  const searchParams = useSearchParams();
+  const scheduleParam = searchParams.get("schedule");
 
-  // Decode and parse back to an array
-  const dates = datesParam ? JSON.parse(decodeURIComponent(datesParam)) : [];
+  const schedule = scheduleParam
+    ? JSON.parse(decodeURIComponent(scheduleParam))
+    : null;
 
-  console.log(dates)
+  console.log(schedule);
 
   useEffect(() => {
     if (params.id) {
@@ -55,7 +54,7 @@ export function BookingPage() {
     age: "All Ages", // replace if you have actual age field
     image: course.image?.url,
     duration: course.duration,
-    classDates: course.schedule || [], 
+    classDates: course.schedule || [],
     formTitle: course.formTitle || [], // ✅ include this
   };
 
@@ -74,11 +73,11 @@ export function BookingPage() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <BookingContent courseData={course}/>
-              <MultiStepForm  />
+              <BookingContent courseData={course} />
+              <MultiStepForm />
             </div>
             <div className="lg:col-span-1">
-              <BookingSummary courseData={course}  />
+              <BookingSummary courseData={course} />
             </div>
           </div>
         </main>

@@ -80,7 +80,7 @@ export function DocumentUploadStep() {
     },
     {
       id: "modal4",
-      label: "Quick Review-Open Waters",
+      label: "Quick Review",
       color: "green",
       component: (
         <PadiQuickReview onSubmitSuccess={() => handleFormSubmit("modal4")} />
@@ -110,24 +110,24 @@ export function DocumentUploadStep() {
         <PadiForm onSubmitSuccess={() => handleFormSubmit("modal7")} />
       ),
     },
-    {
-      id: "modal8",
-      label: "Rescue Diver Quick Review",
-      color: "green",
-      component: (
-        <ResqueDiverQuickReview
-          onSubmitSuccess={() => handleFormSubmit("modal8")}
-        />
-      ),
-    },
-    {
-      id: "modal9",
-      label: "Enriched Air Quick Review",
-      color: "green",
-      component: (
-        <QuickReview onSubmitSuccess={() => handleFormSubmit("modal9")} />
-      ),
-    },
+    // {
+    //   id: "modal8",
+    //   label: "Resque Diver-Quick Review",
+    //   color: "green",
+    //   component: (
+    //     <ResqueDiverQuickReview
+    //       onSubmitSuccess={() => handleFormSubmit("modal8")}
+    //     />
+    //   ),
+    // },
+    // {
+    //   id: "modal9",
+    //   label: "Enriched Air -Quick Review",
+    //   color: "green",
+    //   component: (
+    //     <QuickReview onSubmitSuccess={() => handleFormSubmit("modal9")} />
+    //   ),
+    // },
   ];
 
   // Only show forms relevant to current course
@@ -142,9 +142,9 @@ export function DocumentUploadStep() {
     submittedForms.includes(f.id),
   );
 
-  const handleNext = () => {
-    dispatch({ type: "SET_STEP", payload: state.currentStep + 1 });
-  };
+  // const handleNext = () => {
+  //   dispatch({ type: "SET_STEP", payload: state.currentStep + 1 });
+  // };
 
   return (
     <div>
