@@ -519,7 +519,6 @@ const { dispatch } = useBooking();
 };
 
 export default ResqueDiverQuickReview;
-function onSubmitSuccess() {
-  throw new Error("Function not implemented.");
-}
+const onSubmitSuccess = () => {};
+
 

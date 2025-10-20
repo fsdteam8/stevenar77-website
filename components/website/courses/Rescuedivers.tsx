@@ -23,6 +23,7 @@ export interface ScheduleDate {
 }
 
 export interface ScheduleSet {
+  _id: string;
   title: string;
   description: string;
   participents: number;
@@ -49,23 +50,27 @@ const CourseDetails = () => {
   const courseId = params?.id as string;
   const { data: course, isLoading, isError, error } = useCourse(courseId);
 
-  console.log("this is courses data", course);
+  console.log("this is courses data", course?.price);
 
-  const [selectedPriceIndex, setSelectedPriceIndex] = useState(0);
+  // const [selectedPriceIndex, setSelectedPriceIndex] = useState(0);
   const [openSet, setOpenSet] = useState<number | null>(0);
   const router = useRouter();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { status } = useSession();
   const isLoggedIn = status === "authenticated";
 
-  const handleBookNow = (courseId: string, sets?: ScheduleDate[]) => {
-    // extract only date values
-    const datesOnly = sets?.map((item) => item.date) || [];
+  const handleBookNow = (courseId: string, scheduleSet?: ScheduleSet) => {
+    if (!scheduleSet) return;
+    // Prepare payload: only _id and dates
+    const payload = {
+      _id: scheduleSet._id,
+      dates: scheduleSet.sets.map((item) => item.date),
+    };
 
-    // encode dates array for URL
-    const datesParam = encodeURIComponent(JSON.stringify(datesOnly));
+    // Encode for URL
+    const scheduleParam = encodeURIComponent(JSON.stringify(payload));
 
-    const redirectPath = `/courses/book/${courseId}?dates=${datesParam}`;
+    const redirectPath = `/courses/book/${courseId}?schedule=${scheduleParam}`;
 
     if (!isLoggedIn) {
       localStorage.setItem("redirectAfterLogin", redirectPath);
@@ -74,7 +79,6 @@ const CourseDetails = () => {
       router.push(redirectPath);
     }
   };
-
   // Loading state
   if (isLoading) {
     return (
@@ -107,7 +111,6 @@ const CourseDetails = () => {
   const hasSinglePrice =
     !course.price || !Array.isArray(course.price) || course.price.length <= 1;
 
-  
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -135,7 +138,8 @@ const CourseDetails = () => {
         </div>
 
         <div className="space-y-4">
-          {course?.schedule?.map((scheduleSet: ScheduleSet, setIndex: number) => {
+          {course?.schedule?.map(
+            (scheduleSet: ScheduleSet, setIndex: number) => {
               if (!scheduleSet?.sets || scheduleSet?.sets?.length === 0)
                 return null;
               const isOpen = openSet === setIndex;
@@ -150,19 +154,30 @@ const CourseDetails = () => {
                     onClick={() => toggleSet(setIndex)}
                     className="w-full px-6 py-5 hover:bg-gray-50 transition-colors"
                   >
-                    <div className="flex items-start justify-between gap-4">
+                    <div className=" items-start justify-between gap-1">
                       {/* Left: Title + Description */}
-                      <div className="flex-1 text-left">
-                        <h4 className="text-[18px] font-semibold text-gray-900 mb-2">
-                          {scheduleSet.title}
-                        </h4>
-                        <p className="text-sm text-gray-600 leading-relaxed border rounded-md px-2 bg-blue-50 p-1">
-                          {scheduleSet.description}
-                        </p>
+
+                      <div className="flex gap-4">
+                        <div className="flex-1 text-left">
+                          <h4 className="text-[18px] font-semibold text-gray-900 mb-2">
+                            {scheduleSet.title}
+                          </h4>
+                          <p className="text-sm text-gray-600 leading-relaxed border rounded-md px-2 bg-blue-50 p-1">
+                            {scheduleSet.description}
+                          </p>
+                        </div>
+
+                        <div className="mt-10 border p-1 rounded-full">
+                          <ChevronDown
+                            className={`w-5 h-5 text-gray-600 transition-transform duration-300 cursor-pointer  ${
+                              isOpen ? "rotate-180" : ""
+                            }`}
+                          />
+                        </div>
                       </div>
 
                       {/* Right: Slots + Action */}
-                      <div className="flex items-center gap-4 flex-shrink-0 mt-10">
+                      <div className="flex items-center j gap-4 flex-shrink-0 mt-4">
                         {/* Slot info */}
                         <div className="flex items-center gap-2 px-4 py-2 bg-teal-50 border border-teal-200 rounded-lg">
                           <div className="text-center">
@@ -180,7 +195,7 @@ const CourseDetails = () => {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleBookNow(courseId, scheduleSet.sets);
+                              handleBookNow(courseId, scheduleSet);
                             }}
                             className="px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 transition-colors cursor-pointer"
                           >
@@ -194,13 +209,6 @@ const CourseDetails = () => {
                             Sold Out
                           </button>
                         )}
-
-                        {/* Chevron icon */}
-                        <ChevronDown
-                          className={`w-5 h-5 text-gray-600 transition-transform duration-300 cursor-pointer ${
-                            isOpen ? "rotate-180" : ""
-                          }`}
-                        />
                       </div>
                     </div>
                   </button>
@@ -267,21 +275,28 @@ const CourseDetails = () => {
     );
   };
 
-  // Single Price Layout
+  // Single Price Layout (Enhanced UI)
   const renderSinglePriceLayout = () => (
-    <div className="border-t border-gray-200">
-      
+    <div className="border-t border-gray-200 mt-6 pt-6">
+      <div className="flex flex-col md:flex-row md:items-center gap-4">
+        <h3 className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+          <span>Course Price</span>
+        </h3>
+        <div className="text-3xl font-bold text-primary bg-primary/10 px-5 py-2 rounded-2xl shadow-sm">
+          $ {course.price}
+        </div>
+      </div>
+
+      {/* subtle divider */}
+      <div className="h-px bg-gray-100 my-5" />
+
       {renderSchedule()}
     </div>
   );
 
   // Multiple Price Layout
   const renderMultiplePriceLayout = () => (
-    <div className="border-t border-gray-200 pt-8">
-     
-
-      {renderSchedule()}
-    </div>
+    <div className="border-t border-gray-200 pt-8">{renderSchedule()}</div>
   );
 
   return (

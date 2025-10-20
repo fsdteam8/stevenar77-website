@@ -124,7 +124,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
             <span className="text-[#6c757d]">
               Trip fee (x{state.participants})
             </span>
-            <span className="font-medium">${state.course.price}</span>
+            <span className="font-medium">${state.course.price * state.participants}</span>
           </div>
           {/* <div className="flex justify-between">
             <span className="text-[#6c757d]">Equipment rental</span>

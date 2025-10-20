@@ -25,7 +25,7 @@ export const useCreateBooking = () => {
       payload.classDate.forEach((date) => {
         formData.append("classDate[]", date);
       });
-
+ 
 
 
       // ===== Personal Info (new) =====
