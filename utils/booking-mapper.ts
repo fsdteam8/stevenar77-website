@@ -143,7 +143,6 @@ export const mapBookingStateToPayload = (
     }
   }
 
-
   // ✅ Return full payload
   // return {
   //   classId,
@@ -184,8 +183,9 @@ export const mapBookingStateToPayload = (
 
     gender: state.personalInfo.gender,
     shoeSize: Number(state.personalInfo.shoeSize),
-    hight: Number(state.personalInfo.hight),
+    hight: state.personalInfo.hight,
     weight: Number(state.personalInfo.weight),
+    scheduleId: state.personalInfo.scheduleId,
 
     // Add missing properties required by BookingPayload type
     medicalHistory: [], // empty for now

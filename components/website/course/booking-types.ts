@@ -53,7 +53,7 @@ export interface BookingState {
     emergencyPhoneNumber: string;
     courseName: string;
     shoeSize: string;
-    hight: number;
+    hight: string;
     weight: string;
     gender: string;
   };
