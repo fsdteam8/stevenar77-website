@@ -1,27 +1,22 @@
-"use client";
-
-import PaymentSuccess from "@/components/website/reusable/PaymentSuccess";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import ProductPaymentSuccess from "@/components/website/reusable/ProductPaymentSuccess";
+import Link from "next/link";
 import React from "react";
 
-const PaymentPage = () => {
-  const router = useRouter();
-
+const page = () => {
   return (
     <div className="bg-gray-50">
       <div className="container mx-auto">
         <div className=" flex flex-col items-center justify-center px-4 py-8 space-y-6">
           {/* Go Back Button */}
           <div className="w-full   flex justify-start">
-            <Button variant="outline" onClick={() => router.push("/trips")}>
-              Back to Trips
-            </Button>
+            <Link href="/shop">
+              <Button variant="outline">Back to Shop</Button>
+            </Link>
           </div>
-
           {/* Payment Success Card */}
-          <div className="max-w-3xl w-full ">
-            <PaymentSuccess />
+          <div className="max-w-3xl w-full">
+            <ProductPaymentSuccess />
           </div>
         </div>
       </div>
@@ -29,4 +24,4 @@ const PaymentPage = () => {
   );
 };
 
-export default PaymentPage;
+export default page;

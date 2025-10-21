@@ -29,6 +29,7 @@ const PaymentSuccess = () => {
           <div className="text-center mx-auto mb-6 border p-4 bg-gray-50 rounded-lg leading-8">
             <p className="mb-4 px-4 font-semibold text-gray-700">
             If you&apos;ve Booked Trip for Multiple People, Be Sure To Send Us
+            <br />
             <span className="text-primary">Each Participant&apos;s Name , Email, Phone Number And Any Special
             Requirements at least 7 Days Before </span>The Trip Start Date.
           </p>
