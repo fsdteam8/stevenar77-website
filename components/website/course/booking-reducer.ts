@@ -7,7 +7,7 @@ export function createInitialState(initialCourse?: {
   age: string;
   image?: string;
   classDates?: string[];
-  formTitle?:string[];
+  formTitle?: string[];
 }): BookingState {
   let courseId = initialCourse?.id || "";
 
@@ -28,7 +28,7 @@ export function createInitialState(initialCourse?: {
       age: initialCourse?.age || "10+",
       image: initialCourse?.image,
       classDates: initialCourse?.classDates,
-      formTitle: initialCourse?.formTitle || [], // ✅ FIX: include formTitle
+      formTitle: initialCourse?.formTitle || [],
     },
     pricing: undefined,
     addOns: [],
@@ -42,7 +42,8 @@ export function createInitialState(initialCourse?: {
       username: "",
       email: "",
       phoneNumber: "",
-      dateOfBirth: "",
+      age:0,
+      // dateOfBirth: "",
       address: "",
       city: "",
       state: "",
@@ -50,13 +51,13 @@ export function createInitialState(initialCourse?: {
       emergencyName: "",
       emergencyPhoneNumber: "",
       courseName: initialCourse?.name || "",
-      shoeSize: '',
-      high: 0,
-      weight: '',
+      shoeSize: "",
+      // high: 0, 
+      weight: "",
       gender: "male",
       name: "",
       phone: "",
-      hight: ""
+      hight: "",
     },
     // medicalHistory: {},
     // activityQuestions: {
@@ -119,11 +120,13 @@ export function bookingReducer(
           ? action.payload
           : [action.payload],
       };
+
     case "ADD_DOCUMENT":
       return {
         ...state,
         documents: [...state.documents, action.payload],
       };
+
     // case "SET_SIGNATURE":
     //   return { ...state, signature: action.payload };
     // case "SET_AGREED": // ✅ add this
@@ -151,12 +154,10 @@ export function bookingReducer(
       }
     case "SET_PRICE_INDEX":
       return { ...state, selectedPriceIndex: action.payload };
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     case "MARK_FORM_SUBMITTED":
       const formId = action.payload;
-      if (state.submittedForms.includes(formId)) return state; // already submitted
-        return { ...state, submittedForms: [...state.submittedForms, formId] };
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      if (state.submittedForms.includes(formId)) return state;
+      return { ...state, submittedForms: [...state.submittedForms, formId] };
     case "RESET_SUBMITTED_FORMS":
       return { ...state, submittedForms: [] };
 
@@ -164,6 +165,3 @@ export function bookingReducer(
       return state;
   }
 }
-
-
-

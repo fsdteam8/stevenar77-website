@@ -1,15 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { generatePDF } from "@/lib/forms/medical-form-pdf-generator";
-import Image from "next/image";
-// import { useBooking } from "@/context/booking-context";
-import { useMutation } from "@tanstack/react-query";
-import { diverMedicalForm } from "@/lib/diverMedicalForm";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { useBooking } from "../website/course/booking-context";
+import { useSearchParams } from "next/navigation";
 
 interface FormData {
   participantName: string;
@@ -76,42 +74,18 @@ interface DiverMedicalFormProps {
   onSubmitSuccess?: () => void;
 }
 
-// export function DiverMedicalForm() {
 const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
   onSubmitSuccess,
 }) => {
-  const [, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: session } = useSession();
-  const { dispatch } = useBooking(); // 🔥 Add this
-  const id = session?.user?.id || "";
+  const { dispatch } = useBooking();
   const token = session?.accessToken || "";
 
-  const uploadMutation = useMutation({
-    mutationFn: async ({
-      id,
-      documents,
-      token,
-    }: {
-      id: string;
-      documents: File;
-      token: string;
-    }) => {
-      console.log("🚀 Mutation executing with:", {
-        id,
-        tokenExists: !!token,
-        fileName: documents.name,
-        fileSize: documents.size,
-      });
+  const searchParams = useSearchParams();
+  const bookingId = searchParams.get("bookingId");
 
-      return diverMedicalForm(id, token, documents);
-    },
-    onSuccess: (data) => {
-      console.log("✅ Mutation onSuccess:", data);
-    },
-    onError: (error) => {
-      console.error("❌ Mutation onError:", error);
-    },
-  });
+ 
 
   const [formData, setFormData] = useState<FormData>({
     participantName: "",
@@ -179,21 +153,12 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // const handleExportPDF = async () => {
-  //   try {
-  //     await generatePDF(formData);
-  //   } catch (error) {
-  //     console.error("Error generating PDF:", error);
-  //   }
-  // };
-
   const handleExportPDF = async () => {
     try {
       setIsSubmitting(true);
 
-      // Validate session data
-      if (!id) {
-        toast.error("User ID not found. Please log in again.");
+      if (!bookingId) {
+        toast.error("Booking ID not found in URL.");
         return;
       }
 
@@ -203,8 +168,6 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       }
 
       console.log("📄 Generating PDF...");
-
-      // Generate PDF
       const pdfFile = await generatePDF(formData);
 
       console.log("✅ PDF Generated:", {
@@ -213,64 +176,32 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         type: pdfFile.type,
       });
 
-      // Upload PDF and WAIT for completion
-      if (pdfFile instanceof File) {
-        console.log("📤 Starting upload with ID:", id);
-
-        await uploadMutation.mutateAsync({ id, token, documents: pdfFile });
-
-        console.log("✅ Upload completed successfully!");
-
-        // 🔥 Add document to booking context
-        dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
-        console.log("📋 Document added to booking context");
-
-        // Only call success after upload completes
-        // toast.success("Diver Medical Form uploaded successfully!");
-        if (onSubmitSuccess) {
-          console.log("🎯 [DiverMedicalForm] About to call onSubmitSuccess");
-          onSubmitSuccess();
-          console.log(
-            "✅ [DiverMedicalForm] onSubmitSuccess called successfully",
-          );
-        } else {
-          console.error("❌ [DiverMedicalForm] onSubmitSuccess is undefined!");
-        }
-      } else {
+      if (!(pdfFile instanceof File)) {
         throw new Error("Generated file is not a valid File object");
       }
+
+      console.log("📤 Starting upload with bookingId:", bookingId);
+      // await uploadMutation.mutateAsync({ id: bookingId, token, documents: pdfFile });
+
+      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Divers Medical" } });
+      console.log("📋 Document added to booking context");
+
+      if (onSubmitSuccess) onSubmitSuccess();
     } catch (error) {
       console.error("❌ [DiverMedicalForm] Error in handleExportPDF:", error);
-
-      if (error instanceof Error) {
-        toast.error(`Failed: ${error.message}`);
-      } else {
-        toast.error("Failed to submit diver medical form");
-      }
+      toast.error(error instanceof Error ? `Failed: ${error.message}` : "Failed to submit diver medical form");
     } finally {
-      console.log("🏁 [DiverMedicalForm] Setting isSubmitting to false");
       setIsSubmitting(false);
     }
   };
+
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 3;
-
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const goToPage = (page: number) => {
-    setCurrentPage(page);
-  };
-
+  const nextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
+  const prevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
+  const goToPage = (page: number) => setCurrentPage(page);
+  
+ 
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto p-6">

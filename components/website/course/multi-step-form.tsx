@@ -5,14 +5,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { type BookingState, useBooking } from "./booking-context";
 import { PersonalInformationStep } from "./steps/personal-information-step";
-import { DocumentUploadStep } from "./steps/document-upload-step";
+// import { DocumentUploadStep } from "./steps/document-upload-step";
 import { AllInformationDoneStep } from "./steps/all-information-done-step";
 // import { bookingReducer, createInitialState } from "./booking-reducer";
 
-type FormConfig = {
-  id: string;
-  label: string;
-};
+// type FormConfig = {
+//   id: string;
+//   label: string;
+// };
 
 const steps = [
   { id: 0, title: "Personal Information", component: PersonalInformationStep },
@@ -46,9 +46,13 @@ const validateStepWithErrors = (
       if (!personalInfo.phone?.trim()) {
         errors.push("Phone number is required");
       }
-      if (!personalInfo.dateOfBirth?.trim()) {
-        errors.push("Date of birth is required");
+      // if (!personalInfo.dateOfBirth?.trim()) {
+      //   errors.push("Date of birth is required");
+      // }
+      if (!personalInfo.age) {
+        errors.push("Age is required");
       }
+
       if (!personalInfo.address?.trim()) {
         errors.push("Address is required");
       }
@@ -76,7 +80,7 @@ const validateStepWithErrors = (
       ) {
         errors.push("Shoe size is required");
       }
-      if (!personalInfo.height || String(personalInfo.height).trim() === "") {
+      if (!personalInfo.hight || String(personalInfo.hight).trim() === "") {
         errors.push("Height is required");
       }
       if (!personalInfo.weight || String(personalInfo.weight).trim() === "") {
@@ -113,6 +117,8 @@ export function MultiStepForm() {
 
   // Check if current step is valid
   const isCurrentStepValid = validateStep(state.currentStep, state);
+
+  console.log("this is state", state);
 
   const handleNext = () => {
     // Trigger validation display in child component
@@ -158,6 +164,9 @@ export function MultiStepForm() {
   return (
     <Card className="p-6 mt-6">
       {/* Validation Error Alert */}
+      <div className="text-center font-bold text-2xl text-gray-700 mb-6">
+        Course Booking For Single Person
+      </div>
       {showValidation && validationErrors.length > 0 && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
           <div className="flex items-start">

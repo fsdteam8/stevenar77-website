@@ -25,7 +25,7 @@ export const useCreateBooking = () => {
       payload.classDate.forEach((date) => {
         formData.append("classDate[]", date);
       });
-
+ 
 
 
       // ===== Personal Info (new) =====
@@ -42,6 +42,7 @@ export const useCreateBooking = () => {
       formData.append("shoeSize", payload.shoeSize.toString());
       formData.append("hight", payload.hight.toString()); // ⚠️ confirm backend spelling
       formData.append("weight", payload.weight.toString());
+      formData.append("scheduleId", payload.scheduleId.toString());
 
       // payload.classDate.forEach(date => {
 

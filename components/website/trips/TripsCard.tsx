@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import {
@@ -12,21 +11,22 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Minus, Plus } from "lucide-react";
 
 interface TripsCardProps {
   image: string;
   title: string;
   shortDescription: string;
-  seeMoreLink: string;
+  price: number; // ✅ Added number type
   bookNowLink: string;
-  reverse?: boolean; // optional, default = false
+  reverse?: boolean;
 }
 
 export default function TripsCard({
   image,
   title,
   shortDescription,
-  seeMoreLink,
+  price,
   bookNowLink,
   reverse = false,
 }: TripsCardProps) {
@@ -35,12 +35,22 @@ export default function TripsCard({
   const isLoggedIn = status === "authenticated";
   const [showLoginModal, setShowLoginModal] = useState(false);
 
+  const [quantity, setQuantity] = useState(1);
+  const totalPrice = price * quantity; // ✅ Calculate total
+
+  const increase = () => setQuantity((prev) => prev + 1);
+  const decrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+
   const handleBookNow = () => {
+    // Create URL with quantity as query parameter
+    const urlWithQuantity = `${bookNowLink}?q=${quantity}`;
+
     if (!isLoggedIn) {
-      localStorage.setItem("redirectAfterLogin", bookNowLink);
+      // Save redirect path with quantity
+      localStorage.setItem("redirectAfterLogin", urlWithQuantity);
       setShowLoginModal(true);
     } else {
-      router.push(bookNowLink);
+      router.push(urlWithQuantity);
     }
   };
 
@@ -51,7 +61,7 @@ export default function TripsCard({
           reverse ? "md:[direction:rtl]" : ""
         }`}
       >
-        {/* Image */}
+        {/* ✅ Image */}
         <div className="md:col-span-5 flex justify-center">
           <Image
             src={image}
@@ -62,29 +72,48 @@ export default function TripsCard({
           />
         </div>
 
-        {/* Content */}
+        {/* ✅ Content */}
         <div
           className={`md:col-span-7 p-4 ${reverse ? "md:[direction:ltr]" : ""}`}
         >
           {/* Title */}
           <h1 className="text-[#27303F] text-2xl font-semibold">{title}</h1>
 
-          {/* Short Description */}
+          {/* Description */}
           <p
             className="text-[#68706A] text-base font-medium my-3 italic leading-relaxed"
             dangerouslySetInnerHTML={{ __html: shortDescription }}
-          >
-            {/* {shortDescription} */}
-          </p>
+          />
 
-          {/* Buttons */}
-          <div className="flex gap-4 mt-4 flex-wrap">
-            <Link href={seeMoreLink}>
-              <Button className="border border-[#0694A2] text-gray-800 px-12 py-2 md:px-20 rounded-md hover:bg-gray-200 bg-transparent  transition cursor-pointer">
-                See More
+          {/* Quantity & Price Section */}
+          <div className="flex items-center gap-3 mt-6 flex-wrap">
+            {/* Quantity Controls */}
+            <div className="flex items-center gap-3 border rounded-lg px-3 py-2 bg-gray-50">
+              <Button
+                onClick={decrease}
+                className="border border-gray-300 bg-white hover:bg-gray-100 p-2"
+              >
+                <Minus className="text-gray-800 w-4 h-4" />
               </Button>
-            </Link>
 
+              <span className="text-lg font-medium w-6 text-center">
+                {quantity}
+              </span>
+
+              <Button
+                onClick={increase}
+                className="border border-primary bg-white hover:bg-teal-50 p-2"
+              >
+                <Plus className="text-gray-800 w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* ✅ Total Price */}
+            <span className="ml-4 text-lg font-semibold text-gray-800">
+              Total: ${totalPrice.toFixed(2)}
+            </span>
+
+            {/* Buy Now Button */}
             <Button
               onClick={handleBookNow}
               className="bg-[#0694A2] text-white px-12 py-2 md:px-20 rounded-md hover:bg-[#057c88] transition cursor-pointer"
@@ -100,7 +129,7 @@ export default function TripsCard({
             <DialogHeader>
               <DialogTitle>Login Required</DialogTitle>
               <DialogDescription>
-                You need to be logged in to book this trip. Please login to
+                You need to be logged in to book this trip. Please log in to
                 continue.
               </DialogDescription>
             </DialogHeader>

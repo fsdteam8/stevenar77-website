@@ -5,7 +5,7 @@ import {
   Lock,
   BookOpen,
   MapPin,
-  ShoppingBag,
+  // ShoppingBag,
   LogOut,
   Menu,
   ShoppingBasket,

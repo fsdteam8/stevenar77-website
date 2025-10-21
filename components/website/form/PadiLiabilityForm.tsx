@@ -118,10 +118,13 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }
         type: "application/pdf",
       });
 
-      dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Continuing Education" } });
+
 
       // alert("PDF created and added to your booking successfully!");
     onSubmitSuccess?.(); // ✅ add this right after successful dispatch
+    
 
     } catch (error) {
       console.error("Error generating PDF:", error);

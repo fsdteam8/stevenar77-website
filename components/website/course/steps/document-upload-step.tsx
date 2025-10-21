@@ -80,7 +80,7 @@ export function DocumentUploadStep() {
     },
     {
       id: "modal4",
-      label: "Quick Review-Open Waters",
+      label: "Quick Review",
       color: "green",
       component: (
         <PadiQuickReview onSubmitSuccess={() => handleFormSubmit("modal4")} />
@@ -110,24 +110,24 @@ export function DocumentUploadStep() {
         <PadiForm onSubmitSuccess={() => handleFormSubmit("modal7")} />
       ),
     },
-    {
-      id: "modal8",
-      label: "Rescue Diver Quick Review",
-      color: "green",
-      component: (
-        <ResqueDiverQuickReview
-          onSubmitSuccess={() => handleFormSubmit("modal8")}
-        />
-      ),
-    },
-    {
-      id: "modal9",
-      label: "Enriched Air Quick Review",
-      color: "green",
-      component: (
-        <QuickReview onSubmitSuccess={() => handleFormSubmit("modal9")} />
-      ),
-    },
+    // {
+    //   id: "modal8",
+    //   label: "Resque Diver-Quick Review",
+    //   color: "green",
+    //   component: (
+    //     <ResqueDiverQuickReview
+    //       onSubmitSuccess={() => handleFormSubmit("modal8")}
+    //     />
+    //   ),
+    // },
+    // {
+    //   id: "modal9",
+    //   label: "Enriched Air -Quick Review",
+    //   color: "green",
+    //   component: (
+    //     <QuickReview onSubmitSuccess={() => handleFormSubmit("modal9")} />
+    //   ),
+    // },
   ];
 
   // Only show forms relevant to current course
@@ -142,18 +142,19 @@ export function DocumentUploadStep() {
     submittedForms.includes(f.id),
   );
 
-  const handleNext = () => {
-    dispatch({ type: "SET_STEP", payload: state.currentStep + 1 });
-  };
+  // const handleNext = () => {
+  //   dispatch({ type: "SET_STEP", payload: state.currentStep + 1 });
+  // };
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4 text-[#343a40]">
+      {/* <h2 className="text-2xl font-semibold mb-4 text-[#343a40]">
         Please Fill-Up The Following Papers.
-      </h2>
-      <p className="text-[#6c757d] mb-6">
+      </h2> */}
+      <p className="text-[#6c757d] text-xl px-3 max-w-xl mb-6">
         {" "}
-        Please Click On The Buttons To complete all required Papers. .
+        Please complete all the required Documents below to Secure your spot in
+        the class.
       </p>
 
       {/* ✅ Render Form Buttons */}
@@ -163,7 +164,8 @@ export function DocumentUploadStep() {
             key={btn.id}
             onClick={() => setOpenModal(btn.id)} // This opens the modal for the respective form
             disabled={submittedForms.includes(btn.id)} // Disable if form is already submitted
-            className={`bg-teal-500 hover:bg-teal-600 text-white disabled:opacity-50 disabled:cursor-not-allowed`}
+            // className={`bg-teal-500 hover:bg-teal-600 text-white disabled:opacity-50 hover:zoom-in-5 disabled:cursor-not-allowed`}
+            className={`bg-teal-500 hover:bg-teal-600 text-white disabled:opacity-50 hover:scale-105 transition-transform duration-300 disabled:cursor-not-allowed`}
           >
             {btn.label}
           </Button>
@@ -197,7 +199,7 @@ export function DocumentUploadStep() {
 
       {!allVisibleFormsCompleted && (
         <p className="text-sm text-gray-500 mt-2">
-          Please complete all required forms before continuing.
+          Fill out all the forms to proceed to Submit.
         </p>
       )}
     </div>

@@ -10,23 +10,44 @@ export interface AddOnce {
   _id?: string;
 }
 
+
 export interface ScheduleDate {
   date: string;
   location: string;
   type: string;
+  _id?: string;
+  isActive?: boolean;
 }
 
 export interface ScheduleSet {
+  _id: string; // required
   title: string;
   description: string;
   participents: number;
   totalParticipents: number;
-  sets: {
-    date: string;
-    location: string;
-    type: string;
-  }[];
+  sets: ScheduleDate[];
 }
+
+
+// export interface ScheduleDate {
+//   date: string;
+//   location: string;
+//   type: string;
+//   _id?: string;
+//   isActive?: boolean;
+// }
+
+// export interface ScheduleSet {
+//   title: string;
+//   description: string;
+//   participents: number;
+//   totalParticipents: number;
+//   sets: {
+//     date: string;
+//     location: string;
+//     type: string;
+//   }[];
+// }
 // ----------------------
 // Main CourseDetail type
 // ----------------------

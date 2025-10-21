@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useState, useRef } from "react";
-// import { useBooking } from "../course/booking-context";
+import { useBooking } from "../course/booking-context";
 import { useMutation } from "@tanstack/react-query";
 import { quickreview } from "@/lib/quickreview";
 import { toast } from "sonner";
@@ -23,7 +23,7 @@ interface ResqueDiverQuickReviewProps {
 
 // const ResqueDiverQuickReview = () => {
 const ResqueDiverQuickReview: React.FC<ResqueDiverQuickReviewProps> = () => {
-// const { dispatch } = useBooking();
+const { dispatch } = useBooking();
 
   const [participantName, setParticipantName] = useState("");
   const [guardianSignature, setGuardianSignature] = useState("");
@@ -354,6 +354,8 @@ const ResqueDiverQuickReview: React.FC<ResqueDiverQuickReviewProps> = () => {
       });
 
       // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Rescue Diver Quick Review" } });
+
 
       alert("PDF created and added to your booking successfully!");
       onSubmitSuccess?.();
@@ -517,7 +519,6 @@ const ResqueDiverQuickReview: React.FC<ResqueDiverQuickReviewProps> = () => {
 };
 
 export default ResqueDiverQuickReview;
-function onSubmitSuccess() {
-  throw new Error("Function not implemented.");
-}
+const onSubmitSuccess = () => {};
+
 

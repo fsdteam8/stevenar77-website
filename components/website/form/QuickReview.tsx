@@ -341,6 +341,7 @@ const QuickReview: React.FC<QuickReviewProps> = () => {
       });
 
       // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      
 
       toast.success("PDF created and added to your booking successfully!");
     } catch (error: unknown) {

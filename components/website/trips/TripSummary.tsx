@@ -7,6 +7,7 @@ import { useTripCheckout } from "@/services/hooks/trip/useTripCheckout";
 import { useState } from "react";
 import { useTripBooking } from "../course/steps/TripBookingContext";
 import { Trip } from "@/services/hooks/trip/useTrip";
+import { useSearchParams } from "next/navigation";
 
 interface TripSummaryProps {
   trip: Trip;
@@ -16,6 +17,13 @@ export function TripSummary({ trip }: TripSummaryProps) {
   const { state } = useTripBooking();
   const checkout = useTripCheckout(state.tripId);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  
+    // ✅ Get quantity from URL (e.g. ?quantity=3)
+  const searchParams = useSearchParams();
+  const quantity = Number(searchParams.get("q")) || 1;
+
+  console.log(quantity)
 
   // Split full name into first and last
   const [firstName, lastName] = state.personalInfo.name.split(" ");
@@ -91,7 +99,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
           <p>
             <span className="font-medium">First Name:</span>{" "}
             {firstName || <span className="text-red-500 italic">Required</span>}
-          </p>
+          </p>  
           <p>
             <span className="font-medium">Last Name:</span>{" "}
             {lastName || <span className="text-red-500 italic">Required</span>}
@@ -116,7 +124,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
             <span className="text-[#6c757d]">
               Trip fee (x{state.participants})
             </span>
-            <span className="font-medium">${state.course.price}</span>
+            <span className="font-medium">${state.course.price * state.participants}</span>
           </div>
           {/* <div className="flex justify-between">
             <span className="text-[#6c757d]">Equipment rental</span>
