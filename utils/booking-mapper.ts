@@ -86,12 +86,13 @@ export const mapBookingStateToPayload = (
     price: totalPrice, // backend expects this
 
     // Personal info
-    Username: state.personalInfo.email, // backend expects this
+    Username: state.personalInfo.name, // backend expects this
     email: state.personalInfo.email,
     phoneNumber: state.personalInfo.phone,
     emergencyName: state.personalInfo.emergencyName,
     emergencyPhoneNumber: state.personalInfo.emergencyPhoneNumber,
-
+    age: state.personalInfo.age,
+    // dateOfBirth: state.personalInfo.dateOfBirth,
     gender: state.personalInfo.gender,
     shoeSize: Number(state.personalInfo.shoeSize),
     hight: state.personalInfo.hight,

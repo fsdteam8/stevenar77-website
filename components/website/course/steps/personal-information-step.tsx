@@ -26,7 +26,8 @@ type PersonalInfoKeys =
   | "name"
   | "email"
   | "phone"
-  | "dateOfBirth"
+  // | "dateOfBirth"
+  | "age"
   | "address"
   | "city"
   | "state"
@@ -43,15 +44,15 @@ export function PersonalInformationStep() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
 
-  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(() => {
-    if (state.personalInfo.dateOfBirth) {
-      const [month, day, year] = state.personalInfo.dateOfBirth
-        .split("/")
-        .map(Number);
-      return new Date(year, month - 1, day);
-    }
-    return undefined;
-  });
+  // const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(() => {
+  //   if (state.personalInfo.dateOfBirth) {
+  //     const [month, day, year] = state.personalInfo.dateOfBirth
+  //       .split("/")
+  //       .map(Number);
+  //     return new Date(year, month - 1, day);
+  //   }
+  //   return undefined;
+  // });
 
   const [heightFeet, setHeightFeet] = useState<string>(() => {
     const match = state.personalInfo.hight?.match(/^(\d+)'/);
@@ -67,7 +68,8 @@ export function PersonalInformationStep() {
     "name",
     "email",
     "phone",
-    "dateOfBirth",
+    // "dateOfBirth",
+    "age",
     "address",
     "city",
     "state",
@@ -79,6 +81,12 @@ export function PersonalInformationStep() {
     "hight",
     "weight",
   ];
+  
+
+  const [age, setAge] = useState<string>(
+  state.personalInfo?.age !== undefined ? String(state.personalInfo.age) : ""
+);
+
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const validateField = (field: PersonalInfoKeys, rawValue: any): string => {
@@ -134,33 +142,39 @@ export function PersonalInformationStep() {
       //   }
       //   break;
 
-      case "dateOfBirth":
-        const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
-        if (!dateRegex.test(value)) {
-          return "Please use MM/DD/YYYY format";
-        }
+      // case "dateOfBirth":
+      //   const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
+      //   if (!dateRegex.test(value)) {
+      //     return "Please use MM/DD/YYYY format";
+      //   }
 
-        const [month, day, year] = value.split("/").map(Number);
-        const date = new Date(year, month - 1, day);
+      //   const [month, day, year] = value.split("/").map(Number);
+      //   const date = new Date(year, month - 1, day);
 
-        if (
-          date.getFullYear() !== year ||
-          date.getMonth() !== month - 1 ||
-          date.getDate() !== day
-        ) {
-          return "Please enter a valid date";
-        }
+      //   if (
+      //     date.getFullYear() !== year ||
+      //     date.getMonth() !== month - 1 ||
+      //     date.getDate() !== day
+      //   ) {
+      //     return "Please enter a valid date";
+      //   }
 
-        const minAge = new Date();
-        minAge.setFullYear(minAge.getFullYear() - 5);
-        if (date > minAge) {
-          return "Must be at least 5 years old";
-        }
+      //   const minAge = new Date();
+      //   minAge.setFullYear(minAge.getFullYear() - 5);
+      //   if (date > minAge) {
+      //     return "Must be at least 5 years old";
+      //   }
 
-        const maxAge = new Date();
-        maxAge.setFullYear(maxAge.getFullYear() - 120);
-        if (date < maxAge) {
-          return "Please enter a valid birth date";
+      //   const maxAge = new Date();
+      //   maxAge.setFullYear(maxAge.getFullYear() - 120);
+      //   if (date < maxAge) {
+      //     return "Please enter a valid birth date";
+      //   }
+      //   break;
+      case "age":
+        const ageNum = Number(rawValue);
+        if (isNaN(ageNum) || ageNum < 1 || ageNum > 120) {
+          return "Please enter a valid age";
         }
         break;
 
@@ -264,12 +278,24 @@ export function PersonalInformationStep() {
     setTouchedFields((prev) => new Set(prev).add(field));
   };
 
+  // const handleChange = (field: PersonalInfoKeys, value: string) => {
+  //   markFieldAsTouched(field);
+  //   dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
+  // };
+
   const handleChange = (field: PersonalInfoKeys, value: string) => {
     markFieldAsTouched(field);
-    dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
-  };
-console.log(state)
 
+    if (field === "age") {
+      const numericValue = value === "" ? 0 : Number(value);
+      dispatch({
+        type: "SET_PERSONAL_INFO",
+        payload: { [field]: numericValue },
+      });
+    } else {
+      dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
+    }
+  };
 
   const handleHeightChange = (type: "feet" | "inches", value: string) => {
     const numValue = value.replace(/\D/g, "");
@@ -304,21 +330,19 @@ console.log(state)
     }
   };
 
-  
-
-  const handleDateChange = (date: Date | undefined) => {
-    markFieldAsTouched("dateOfBirth");
-    setDateOfBirth(date);
-    if (date) {
-      const formattedDate = format(date, "MM/dd/yyyy");
-      dispatch({
-        type: "SET_PERSONAL_INFO",
-        payload: { dateOfBirth: formattedDate },
-      });
-    } else {
-      dispatch({ type: "SET_PERSONAL_INFO", payload: { dateOfBirth: "" } });
-    }
-  };
+  // const handleDateChange = (date: Date | undefined) => {
+  //   markFieldAsTouched("dateOfBirth");
+  //   setDateOfBirth(date);
+  //   if (date) {
+  //     const formattedDate = format(date, "MM/dd/yyyy");
+  //     dispatch({
+  //       type: "SET_PERSONAL_INFO",
+  //       payload: { dateOfBirth: formattedDate },
+  //     });
+  //   } else {
+  //     dispatch({ type: "SET_PERSONAL_INFO", payload: { dateOfBirth: "" } });
+  //   }
+  // };
 
   const hasError = (field: PersonalInfoKeys): boolean => {
     return touchedFields.has(field) && !!errors[field];
@@ -440,7 +464,7 @@ console.log(state)
           )}
         </div>
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label
             htmlFor="dob"
             className={hasError("dateOfBirth") ? "text-red-600" : ""}
@@ -489,6 +513,34 @@ console.log(state)
           {hasError("dateOfBirth") && (
             <p id="dob-error" className="text-sm text-red-600">
               {getErrorMessage("dateOfBirth")}
+            </p>
+          )}
+        </div> */}
+        <div className="space-y-2">
+          <Label
+            htmlFor="age"
+            className={hasError("age") ? "text-red-600" : ""}
+          >
+            Age <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="age"
+            type="number"
+            min={1}
+            max={120}
+            placeholder="Enter your age"
+            value={state.personalInfo.age || ""}
+            onChange={(e) => handleChange("age", e.target.value)}
+            onBlur={() => markFieldAsTouched("age")}
+            className={
+              hasError("age") ? "border-red-500 focus-visible:ring-red-500" : ""
+            }
+            aria-invalid={hasError("age")}
+            aria-describedby={hasError("age") ? "age-error" : undefined}
+          />
+          {hasError("age") && (
+            <p id="age-error" className="text-sm text-red-600">
+              {getErrorMessage("age")}
             </p>
           )}
         </div>
