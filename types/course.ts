@@ -1,4 +1,3 @@
-
 export interface UserProfile {
   _id: string;
   firstName: string;
@@ -59,18 +58,18 @@ export interface BookingPayload {
   scheduleId: string;
 
   // Personal info
-  Username: string;   // ✅ matches backend case
+  Username: string; // ✅ matches backend case
   email: string;
   phoneNumber?: string;
   emergencyName?: string;
   emergencyPhoneNumber?: string;
-
+  // dateOfBirth?: string;
+  age?: number;
   gender: string;
   shoeSize: number;
-  hight: string;   // backend typo, keep as-is
+  hight: string; // backend typo, keep as-is
   weight: number;
 }
-
 
 export interface BookingResponse {
   bookingId: string;

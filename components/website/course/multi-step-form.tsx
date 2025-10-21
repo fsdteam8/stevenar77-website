@@ -46,9 +46,13 @@ const validateStepWithErrors = (
       if (!personalInfo.phone?.trim()) {
         errors.push("Phone number is required");
       }
-      if (!personalInfo.dateOfBirth?.trim()) {
-        errors.push("Date of birth is required");
+      // if (!personalInfo.dateOfBirth?.trim()) {
+      //   errors.push("Date of birth is required");
+      // }
+      if (!personalInfo.age) {
+        errors.push("Age is required");
       }
+
       if (!personalInfo.address?.trim()) {
         errors.push("Address is required");
       }
@@ -76,7 +80,7 @@ const validateStepWithErrors = (
       ) {
         errors.push("Shoe size is required");
       }
-      if (!personalInfo.height || String(personalInfo.height).trim() === "") {
+      if (!personalInfo.hight || String(personalInfo.hight).trim() === "") {
         errors.push("Height is required");
       }
       if (!personalInfo.weight || String(personalInfo.weight).trim() === "") {
@@ -103,8 +107,6 @@ const validateStep = (stepIndex: number, state: BookingState): boolean => {
   return validateStepWithErrors(stepIndex, state).isValid;
 };
 
-
-
 export function MultiStepForm() {
   const { state, dispatch } = useBooking();
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -116,7 +118,7 @@ export function MultiStepForm() {
   // Check if current step is valid
   const isCurrentStepValid = validateStep(state.currentStep, state);
 
-  console.log("this is state",state)
+  console.log("this is state", state);
 
   const handleNext = () => {
     // Trigger validation display in child component
@@ -244,7 +246,6 @@ export function MultiStepForm() {
             {isLastStep ? "Complete" : "Next"}
           </Button>
         )}
-        
       </div>
     </Card>
   );

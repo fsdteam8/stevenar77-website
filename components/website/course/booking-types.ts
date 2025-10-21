@@ -44,7 +44,8 @@ export interface BookingState {
     name: string;
     email: string;
     phone: string;
-    dateOfBirth: string;
+    age:number;
+    // dateOfBirth: string;
     address: string;
     city: string;
     state: string;

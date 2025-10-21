@@ -26,7 +26,8 @@ type PersonalInfoKeys =
   | "name"
   | "email"
   | "phone"
-  | "dateOfBirth"
+  // | "dateOfBirth"
+  | "age"
   | "address"
   | "city"
   | "state"
@@ -43,23 +44,23 @@ export function PersonalInformationStep() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
 
-  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(() => {
-    if (state.personalInfo.dateOfBirth) {
-      const [month, day, year] = state.personalInfo.dateOfBirth
-        .split("/")
-        .map(Number);
-      return new Date(year, month - 1, day);
-    }
-    return undefined;
-  });
+  // const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(() => {
+  //   if (state.personalInfo.dateOfBirth) {
+  //     const [month, day, year] = state.personalInfo.dateOfBirth
+  //       .split("/")
+  //       .map(Number);
+  //     return new Date(year, month - 1, day);
+  //   }
+  //   return undefined;
+  // });
 
   const [heightFeet, setHeightFeet] = useState<string>(() => {
-    const match = state.personalInfo.height?.match(/^(\d+)'/);
+    const match = state.personalInfo.hight?.match(/^(\d+)'/);
     return match ? match[1] : "";
   });
 
   const [heightInches, setHeightInches] = useState<string>(() => {
-    const match = state.personalInfo.height?.match(/'(\d+)"$/);
+    const match = state.personalInfo.hight?.match(/'(\d+)"$/);
     return match ? match[1] : "";
   });
 
@@ -67,7 +68,8 @@ export function PersonalInformationStep() {
     "name",
     "email",
     "phone",
-    "dateOfBirth",
+    // "dateOfBirth",
+    "age",
     "address",
     "city",
     "state",
@@ -79,6 +81,12 @@ export function PersonalInformationStep() {
     "hight",
     "weight",
   ];
+  
+
+  const [age, setAge] = useState<string>(
+  state.personalInfo?.age !== undefined ? String(state.personalInfo.age) : ""
+);
+
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const validateField = (field: PersonalInfoKeys, rawValue: any): string => {
@@ -134,33 +142,39 @@ export function PersonalInformationStep() {
       //   }
       //   break;
 
-      case "dateOfBirth":
-        const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
-        if (!dateRegex.test(value)) {
-          return "Please use MM/DD/YYYY format";
-        }
+      // case "dateOfBirth":
+      //   const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
+      //   if (!dateRegex.test(value)) {
+      //     return "Please use MM/DD/YYYY format";
+      //   }
 
-        const [month, day, year] = value.split("/").map(Number);
-        const date = new Date(year, month - 1, day);
+      //   const [month, day, year] = value.split("/").map(Number);
+      //   const date = new Date(year, month - 1, day);
 
-        if (
-          date.getFullYear() !== year ||
-          date.getMonth() !== month - 1 ||
-          date.getDate() !== day
-        ) {
-          return "Please enter a valid date";
-        }
+      //   if (
+      //     date.getFullYear() !== year ||
+      //     date.getMonth() !== month - 1 ||
+      //     date.getDate() !== day
+      //   ) {
+      //     return "Please enter a valid date";
+      //   }
 
-        const minAge = new Date();
-        minAge.setFullYear(minAge.getFullYear() - 5);
-        if (date > minAge) {
-          return "Must be at least 5 years old";
-        }
+      //   const minAge = new Date();
+      //   minAge.setFullYear(minAge.getFullYear() - 5);
+      //   if (date > minAge) {
+      //     return "Must be at least 5 years old";
+      //   }
 
-        const maxAge = new Date();
-        maxAge.setFullYear(maxAge.getFullYear() - 120);
-        if (date < maxAge) {
-          return "Please enter a valid birth date";
+      //   const maxAge = new Date();
+      //   maxAge.setFullYear(maxAge.getFullYear() - 120);
+      //   if (date < maxAge) {
+      //     return "Please enter a valid birth date";
+      //   }
+      //   break;
+      case "age":
+        const ageNum = Number(rawValue);
+        if (isNaN(ageNum) || ageNum < 1 || ageNum > 120) {
+          return "Please enter a valid age";
         }
         break;
 
@@ -205,13 +219,13 @@ export function PersonalInformationStep() {
         break;
 
       case "hight":
-        const heightMatch = value.match(/^(\d+)'(\d+)"$/);
-        if (!heightMatch) {
+        const hightMatch = value.match(/^(\d+)'(\d+)"$/);
+        if (!hightMatch) {
           return "Please enter both feet and inches";
         }
 
-        const feet = Number.parseInt(heightMatch[1], 10);
-        const inches = Number.parseInt(heightMatch[2], 10);
+        const feet = Number.parseInt(hightMatch[1], 10);
+        const inches = Number.parseInt(hightMatch[2], 10);
 
         if (isNaN(feet) || feet < 3 || feet > 8) {
           return "Feet must be between 3 and 8";
@@ -264,26 +278,40 @@ export function PersonalInformationStep() {
     setTouchedFields((prev) => new Set(prev).add(field));
   };
 
+  // const handleChange = (field: PersonalInfoKeys, value: string) => {
+  //   markFieldAsTouched(field);
+  //   dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
+  // };
+
   const handleChange = (field: PersonalInfoKeys, value: string) => {
     markFieldAsTouched(field);
-    dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
+
+    if (field === "age") {
+      const numericValue = value === "" ? 0 : Number(value);
+      dispatch({
+        type: "SET_PERSONAL_INFO",
+        payload: { [field]: numericValue },
+      });
+    } else {
+      dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
+    }
   };
 
   const handleHeightChange = (type: "feet" | "inches", value: string) => {
     const numValue = value.replace(/\D/g, "");
-    markFieldAsTouched("height");
+    markFieldAsTouched("hight");
 
     if (type === "feet") {
       setHeightFeet(numValue);
       if (numValue && heightInches) {
         dispatch({
           type: "SET_PERSONAL_INFO",
-          payload: { height: `${numValue}'${heightInches}"` },
+          payload: { hight: `${numValue}'${heightInches}"` },
         });
       } else if (numValue) {
         dispatch({
           type: "SET_PERSONAL_INFO",
-          payload: { height: `${numValue}'0"` },
+          payload: { hight: `${numValue}'0"` },
         });
       }
     } else {
@@ -291,32 +319,30 @@ export function PersonalInformationStep() {
       if (heightFeet && numValue) {
         dispatch({
           type: "SET_PERSONAL_INFO",
-          payload: { height: `${heightFeet}'${numValue}"` },
+          payload: { hight: `${heightFeet}'${numValue}"` },
         });
       } else if (heightFeet) {
         dispatch({
           type: "SET_PERSONAL_INFO",
-          payload: { height: `${heightFeet}'0"` },
+          payload: { hight: `${heightFeet}'0"` },
         });
       }
     }
   };
 
-  
-
-  const handleDateChange = (date: Date | undefined) => {
-    markFieldAsTouched("dateOfBirth");
-    setDateOfBirth(date);
-    if (date) {
-      const formattedDate = format(date, "MM/dd/yyyy");
-      dispatch({
-        type: "SET_PERSONAL_INFO",
-        payload: { dateOfBirth: formattedDate },
-      });
-    } else {
-      dispatch({ type: "SET_PERSONAL_INFO", payload: { dateOfBirth: "" } });
-    }
-  };
+  // const handleDateChange = (date: Date | undefined) => {
+  //   markFieldAsTouched("dateOfBirth");
+  //   setDateOfBirth(date);
+  //   if (date) {
+  //     const formattedDate = format(date, "MM/dd/yyyy");
+  //     dispatch({
+  //       type: "SET_PERSONAL_INFO",
+  //       payload: { dateOfBirth: formattedDate },
+  //     });
+  //   } else {
+  //     dispatch({ type: "SET_PERSONAL_INFO", payload: { dateOfBirth: "" } });
+  //   }
+  // };
 
   const hasError = (field: PersonalInfoKeys): boolean => {
     return touchedFields.has(field) && !!errors[field];
@@ -438,7 +464,7 @@ export function PersonalInformationStep() {
           )}
         </div>
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label
             htmlFor="dob"
             className={hasError("dateOfBirth") ? "text-red-600" : ""}
@@ -487,6 +513,34 @@ export function PersonalInformationStep() {
           {hasError("dateOfBirth") && (
             <p id="dob-error" className="text-sm text-red-600">
               {getErrorMessage("dateOfBirth")}
+            </p>
+          )}
+        </div> */}
+        <div className="space-y-2">
+          <Label
+            htmlFor="age"
+            className={hasError("age") ? "text-red-600" : ""}
+          >
+            Age <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="age"
+            type="number"
+            min={1}
+            max={120}
+            placeholder="Enter your age"
+            value={state.personalInfo.age || ""}
+            onChange={(e) => handleChange("age", e.target.value)}
+            onBlur={() => markFieldAsTouched("age")}
+            className={
+              hasError("age") ? "border-red-500 focus-visible:ring-red-500" : ""
+            }
+            aria-invalid={hasError("age")}
+            aria-describedby={hasError("age") ? "age-error" : undefined}
+          />
+          {hasError("age") && (
+            <p id="age-error" className="text-sm text-red-600">
+              {getErrorMessage("age")}
             </p>
           )}
         </div>
@@ -742,14 +796,14 @@ export function PersonalInformationStep() {
           <div className="flex gap-2">
             <div className="flex-1">
               <Input
-                id="heightFeet"
+                id="hightFeet"
                 type="number"
                 placeholder="Feet"
                 min="3"
                 max="8"
                 value={heightFeet}
                 onChange={(e) => handleHeightChange("feet", e.target.value)}
-                onBlur={() => markFieldAsTouched("height")}
+                onBlur={() => markFieldAsTouched("hight")}
                 className={
                   hasError("hight")
                     ? "border-red-500 focus-visible:ring-red-500"
@@ -764,14 +818,14 @@ export function PersonalInformationStep() {
             </div>
             <div className="flex-1">
               <Input
-                id="heightInches"
+                id="hightInches"
                 type="number"
                 placeholder="Inches"
                 min="0"
                 max="11"
                 value={heightInches}
                 onChange={(e) => handleHeightChange("inches", e.target.value)}
-                onBlur={() => markFieldAsTouched("height")}
+                onBlur={() => markFieldAsTouched("hight")}
                 className={
                   hasError("hight")
                     ? "border-red-500 focus-visible:ring-red-500"

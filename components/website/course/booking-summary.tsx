@@ -97,24 +97,51 @@ export function BookingSummary({}: BookingSummaryProps) {
     return true;
   };
 
+  // const handleProceedToPayment = async () => {
+  //   if (!validateBooking()) return;
+
+  //   try {
+  //     const bookingPayload = {
+  //       ...mapBookingStateToPayload(state),
+  //       selectedTime,
+  //       scheduleId
+  //     };
+
+  //     console.log("✅ Final booking payload:", bookingPayload);
+
+  //     await createBookingMutation.mutateAsync(bookingPayload);
+  //   } catch (error) {
+  //     console.error("Booking failed:", error);
+  //     setValidationError("Failed to create booking. Please try again.");
+  //   }
+  // };
+
   const handleProceedToPayment = async () => {
-    if (!validateBooking()) return;
+  // Validate required fields first
+  if (!validateBooking()) return;
 
-    try {
-      const bookingPayload = {
-        ...mapBookingStateToPayload(state),
-        selectedTime,
-        scheduleId
-      };
+  if (!scheduleId) {
+    setValidationError("Please select a valid schedule before proceeding.");
+    return;
+  }
 
-      console.log("✅ Final booking payload:", bookingPayload);
+  try {
+    // Ensure scheduleId is always a string
+    const bookingPayload = {
+      ...mapBookingStateToPayload(state),
+      selectedTime,
+      scheduleId, // guaranteed to be string here
+    };
 
-      await createBookingMutation.mutateAsync(bookingPayload);
-    } catch (error) {
-      console.error("Booking failed:", error);
-      setValidationError("Failed to create booking. Please try again.");
-    }
-  };
+    console.log("✅ Final booking payload:", bookingPayload);
+
+    await createBookingMutation.mutateAsync(bookingPayload);
+  } catch (error) {
+    console.error("Booking failed:", error);
+    setValidationError("Failed to create booking. Please try again.");
+  }
+};
+
 
   const handleSignIn = () => signIn();
 
