@@ -10,6 +10,7 @@ export interface CourseData {
   duration: string;
   totalReviews: number;
   avgRating: number;
+  location: string;
   totalParticipates: number;
   image?: {
     public_id: string;

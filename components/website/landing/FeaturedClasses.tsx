@@ -66,6 +66,7 @@ const FeaturedClasses: React.FC = () => {
       reviews: c.totalReviews || 0,
       duration: c.duration || "Duration TBD",
       students: c.totalParticipates || 0,
+      location: c.location || "Location TBD",
       features: Array.isArray(c.courseIncludes) ? c.courseIncludes : [],
       // Handle price array - take first price or calculate average
       price:
@@ -73,7 +74,7 @@ const FeaturedClasses: React.FC = () => {
           ? `${Number(c.price[0]).toFixed(2)}`
           : "Contact for Price",
       ageRestriction: "16+", // Default since not in API
-      location: "Location TBD", // Default since not in API
+      // location: "Location TBD", // Default since not in API
     }));
   }, [apiCourses]);
 
