@@ -29,7 +29,7 @@ export function Sidebar({ activeTab, onNavigate }: SidebarProps) {
 
   const menuItems = [
     { id: "profile", label: "Profile", icon: User },
-    { id: "change-password", label: "Changes Password", icon: Lock },
+    { id: "change-password", label: "Change Password", icon: Lock },
     { id: "course-history", label: "Course History", icon: BookOpen },
     { id: "trips-history", label: "Trips History", icon: MapPin },
     { id: "order-history", label: "Order History", icon: ShoppingBasket},

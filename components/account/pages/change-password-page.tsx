@@ -186,10 +186,10 @@ export function ChangePasswordPage() {
               <h2 className="text-xl sm:text-2xl font-semibold text-[#364039] mb-2">
                 Change Password
               </h2>
-              <p className="text-[#68706a] text-sm sm:text-base">
+              {/* <p className="text-[#68706a] text-sm sm:text-base">
                 Manage your account preferences, security settings, and privacy
                 options.
-              </p>
+              </p> */}
             </div>
 
             {/* Password Fields */}
