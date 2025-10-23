@@ -18,12 +18,11 @@ export function TripSummary({ trip }: TripSummaryProps) {
   const checkout = useTripCheckout(state.tripId);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  
-    // ✅ Get quantity from URL (e.g. ?quantity=3)
+  // ✅ Get quantity from URL (e.g. ?quantity=3)
   const searchParams = useSearchParams();
   const quantity = Number(searchParams.get("q")) || 1;
 
-  console.log(quantity)
+  console.log(quantity);
 
   // Split full name into first and last
   const [firstName, lastName] = state.personalInfo.name.split(" ");
@@ -99,7 +98,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
           <p>
             <span className="font-medium">First Name:</span>{" "}
             {firstName || <span className="text-red-500 italic">Required</span>}
-          </p>  
+          </p>
           <p>
             <span className="font-medium">Last Name:</span>{" "}
             {lastName || <span className="text-red-500 italic">Required</span>}
@@ -124,7 +123,16 @@ export function TripSummary({ trip }: TripSummaryProps) {
             <span className="text-[#6c757d]">
               Trip fee (x{state.participants})
             </span>
-            <span className="font-medium">${state.course.price * state.participants}</span>
+            <span className="font-medium">
+              $
+              {(state.course.price * state.participants).toLocaleString(
+                "en-US",
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                },
+              )}
+            </span>
           </div>
           {/* <div className="flex justify-between">
             <span className="text-[#6c757d]">Equipment rental</span>
@@ -140,7 +148,16 @@ export function TripSummary({ trip }: TripSummaryProps) {
         <div className="border-t pt-4">
           <div className="flex justify-between text-lg font-semibold">
             <span>Total</span>
-            <span>${state.course.price * state.participants}</span>
+            <span>
+              $
+              {(state.course.price * state.participants).toLocaleString(
+                "en-US",
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                },
+              )}
+            </span>
           </div>
           {/* <p className="text-xs text-[#6c757d] mt-1">100% Safe & Secure</p> */}
           {/* <p className="text-xs text-[#6c757d]">Free Cancellation up to 24h</p> */}

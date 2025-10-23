@@ -111,6 +111,10 @@ const CourseDetails = () => {
   const hasSinglePrice =
     !course.price || !Array.isArray(course.price) || course.price.length <= 1;
 
+  const displayPrice = Array.isArray(course.price)
+    ? course.price[0]
+    : course.price;
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -179,16 +183,26 @@ const CourseDetails = () => {
                       {/* Right: Slots + Action */}
                       <div className="flex items-center justify-center gap-4 flex-shrink-0 mt-4">
                         {/* Slot info */}
-                        <div className="flex items-center gap-2 px-4 py-2 bg-teal-50 border border-teal-200 rounded-lg">
+                        {/* <div className="flex items-center gap-2 px-4 py-2 bg-teal-50 border border-teal-200 rounded-lg">
                           <div className="text-center">
                             <div className="text-[18px] font-semibold text-teal-700">
                               {scheduleSet.participents}
                             </div>
                           </div>
                           <div className="text-xs text-gray-500 font-medium">
-                            Slots
+                            Spots
                           </div>
-                        </div>
+                        </div> */}
+
+                        {scheduleSet.participents > 0 &&
+                          scheduleSet.participents <= 2 && (
+                            <div className="flex items-center gap-2 px-4 py-2 bg-red-50 border border-red-200 rounded-lg animate-pulse">
+                              <div className="text-base font-semibold text-red-700">
+                                Only {scheduleSet.participents} spot
+                                {scheduleSet.participents > 1 ? "s" : ""} left
+                              </div>
+                            </div>
+                          )}
 
                         {/* Conditional Button */}
                         {scheduleSet.participents > 0 ? (
@@ -283,7 +297,11 @@ const CourseDetails = () => {
           <span>Course Price</span>
         </h3>
         <div className="text-3xl font-bold text-primary bg-primary/10 px-5 py-2 rounded-2xl shadow-sm">
-          $ {course.price}
+          $
+          {displayPrice?.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
         </div>
       </div>
 

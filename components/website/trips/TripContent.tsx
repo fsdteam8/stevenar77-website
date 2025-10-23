@@ -27,7 +27,7 @@ export function TripContent({ trip }: TripContentProps) {
 
   // ✅ Local + Context synced
   const [selectedParticipants, setSelectedParticipants] = useState<number>(
-    state.participants || queryQuantity
+    state.participants || queryQuantity,
   );
 
   // ✅ On mount: set from query param if exists
@@ -41,7 +41,7 @@ export function TripContent({ trip }: TripContentProps) {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryQuantity]);  
+  }, [queryQuantity]);
 
   // ✅ When user selects new value → update both
   const handleSelectChange = (value: string) => {
@@ -52,7 +52,7 @@ export function TripContent({ trip }: TripContentProps) {
 
   const participantOptions = Array.from(
     { length: trip.maximumCapacity },
-    (_, i) => i + 1
+    (_, i) => i + 1,
   );
 
   return (
@@ -75,20 +75,15 @@ export function TripContent({ trip }: TripContentProps) {
 
             <div className="flex-1">
               <h3 className="font-semibold text-[#343a40]">{trip.title}</h3>
-              <p
-                className="text-sm text-[#6c757d] mb-2"
-                dangerouslySetInnerHTML={{
-                  __html:
-                    trip.description.length > 100
-                      ? `${trip.description.substring(0, 120)}...`
-                      : trip.description,
-                }}
-              />
             </div>
 
             <div className="text-right">
               <div className="text-2xl font-bold text-[#343a40]">
-                ${trip.price}
+                $
+                {trip.price.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </div>
               <div className="text-sm text-[#6c757d]">Per Person</div>
             </div>
@@ -122,7 +117,11 @@ export function TripContent({ trip }: TripContentProps) {
 
           {/* Total Price Display */}
           <div className="mt-4 text-right text-lg font-semibold text-[#0694a2]">
-            Total: ${(trip.price * selectedParticipants).toFixed(2)}
+            Total: $
+            {(trip.price * selectedParticipants).toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </div>
         </div>
       </Card>
