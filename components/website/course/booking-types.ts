@@ -21,7 +21,7 @@ export interface BookingState {
     name: string;
     price: number;
     duration: string;
-    age: string;
+    age: number | undefined;
     image?: string;
     classDates?: string[];
     formTitle?: string[];
@@ -44,7 +44,7 @@ export interface BookingState {
     name: string;
     email: string;
     phone: string;
-    age:number;
+    age: number | undefined;
     // dateOfBirth: string;
     address: string;
     city: string;

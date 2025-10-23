@@ -31,24 +31,56 @@ export function BookingSummary({}: BookingSummaryProps) {
   const isOnFinalStep = state.currentStep === 1;
   const selectedTime = "10:00";
   const [scheduleId, setScheduleId] = useState<string | undefined>(undefined);
+    const [scheduleDates, setScheduleDates] = useState<string[]>([]);
   const searchParams = useSearchParams();
+
+  const selectedDates = Array.isArray(state.selectedDate)
+    ? state.selectedDate
+    : state.selectedDate
+      ? [state.selectedDate]
+      : [];
+
+  // useEffect(() => {
+  //   const rawSchedule = searchParams.get("schedule");
+  //   if (rawSchedule) {
+  //     try {
+  //       const decoded = decodeURIComponent(rawSchedule);
+  //       const scheduleObj = JSON.parse(decoded);
+  //       setScheduleId(scheduleObj._id);
+  //       console.log("Full schedule object:", scheduleObj);
+  //       console.log("Schedule ID:", scheduleObj._id);
+  //     } catch (error) {
+  //       console.error("Invalid schedule JSON:", error);
+  //     }
+  //   }
+  // }, [searchParams]);
 
   useEffect(() => {
     const rawSchedule = searchParams.get("schedule");
-    if (rawSchedule) {
-      try {
-        const decoded = decodeURIComponent(rawSchedule);
-        const scheduleObj = JSON.parse(decoded);
-        setScheduleId(scheduleObj._id);
-        console.log("Full schedule object:", scheduleObj);
-        console.log("Schedule ID:", scheduleObj._id);
-      } catch (error) {
-        console.error("Invalid schedule JSON:", error);
-      }
-    }
-  }, [searchParams]); 
 
-  console.log("Current Schedule ID (state):", scheduleId);
+    if (!rawSchedule) return;
+
+    try {
+      const decoded = decodeURIComponent(rawSchedule);
+      const scheduleObj = JSON.parse(decoded);
+
+      if (scheduleObj._id) {
+        setScheduleId(scheduleObj._id);
+      }
+
+      if (Array.isArray(scheduleObj.dates)) {
+        setScheduleDates(scheduleObj.dates);
+      } else if (scheduleObj.dates) {
+        setScheduleDates([scheduleObj.dates]);
+      }
+
+      console.log("✅ Full schedule object:", scheduleObj);
+    } catch (error) {
+      console.error("❌ Invalid schedule JSON:", error);
+    }
+  }, [searchParams]);
+
+  // console.log("Current Schedule ID (state):", scheduleId);
 
   // ✅ Format class date safely (supports array)
   const formatDate = (dateInput: string[] | string | null): string => {
@@ -117,31 +149,30 @@ export function BookingSummary({}: BookingSummaryProps) {
   // };
 
   const handleProceedToPayment = async () => {
-  // Validate required fields first
-  if (!validateBooking()) return;
+    // Validate required fields first
+    if (!validateBooking()) return;
 
-  if (!scheduleId) {
-    setValidationError("Please select a valid schedule before proceeding.");
-    return;
-  }
+    if (!scheduleId) {
+      setValidationError("Please select a valid schedule before proceeding.");
+      return;
+    }
 
-  try {
-    // Ensure scheduleId is always a string
-    const bookingPayload = {
-      ...mapBookingStateToPayload(state),
-      selectedTime,
-      scheduleId, // guaranteed to be string here
-    };
+    try {
+      // Ensure scheduleId is always a string
+      const bookingPayload = {
+        ...mapBookingStateToPayload(state),
+        selectedTime,
+        scheduleId, // guaranteed to be string here
+      };
 
-    console.log("✅ Final booking payload:", bookingPayload);
+      console.log("✅ Final booking payload:", bookingPayload);
 
-    await createBookingMutation.mutateAsync(bookingPayload);
-  } catch (error) {
-    console.error("Booking failed:", error);
-    setValidationError("Failed to create booking. Please try again.");
-  }
-};
-
+      await createBookingMutation.mutateAsync(bookingPayload);
+    } catch (error) {
+      console.error("Booking failed:", error);
+      setValidationError("Failed to create booking. Please try again.");
+    }
+  };
 
   const handleSignIn = () => signIn();
 
@@ -165,9 +196,9 @@ export function BookingSummary({}: BookingSummaryProps) {
             <h3 className="font-medium text-[#343a40]">
               {state.course.name || "Unknown Course"}
             </h3>
-            {state.course.age && (
+            {/* {state.course.age && (
               <p className="text-sm text-[#6c757d]">Age: {state.course.age}</p>
-            )}
+            )} */}
           </div>
         </div>
 
@@ -186,7 +217,24 @@ export function BookingSummary({}: BookingSummaryProps) {
 
         {/* Selected Date */}
         <div className="space-y-2 text-sm text-[#6c757d]">
-          <div>{formatDate(state.selectedDate)}</div>
+          {/* <div>{formatDate(state.selectedDate)}</div>
+           */}
+          {/* 🗓️ Selected Dates from URL */}
+        <div className="space-y-2 text-sm text-[#6c757d]">
+          <p className="font-semibold text-[#343a40]">Selected Training Dates:</p>
+
+          {scheduleDates.length > 0 ? (
+            <ul className="list-disc list-inside text-gray-700 space-y-1">
+              {scheduleDates.map((date, index) => (
+                <li key={index} className="font-medium text-[#212529]">
+                  {formatDate(date)}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500 text-sm">No date found in schedule.</p>
+          )}
+        </div>
           <div className="hidden">{selectedTime}am</div>
         </div>
 

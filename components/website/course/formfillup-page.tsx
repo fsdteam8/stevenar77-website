@@ -47,7 +47,7 @@ const FormFillUpPage = () => {
     id: course._id,
     name: course.title,
     price: course.price[0] || 0,
-    age: "All Ages", // replace if you have actual age field
+    age: undefined, // use a number or undefined to match BookingProviderProps
     image: course.image?.url,
     duration: course.duration,
     classDates: course.classDates || [],
@@ -58,23 +58,29 @@ const FormFillUpPage = () => {
     <BookingProvider initialCourse={initialCourse}>
       <div className="min-h-screen bg-[#f8f9fa]">
         <main className="container mx-auto px-4 py-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-[#343a40] mb-2">
+          <div className="text-center  mb-8">
+            {/* <h1 className="text-3xl font-bold text-[#343a40] mb-2">
               Book Your Course
             </h1>
             <p className="text-[#6c757d]">
               Complete your booking in just a few steps
-            </p>
+              </p> */}
+
+            <h1 className="text-2xl  font-semibold text-center py-20 max-w-6xl mx-auto">
+              <span className="text-primary">Thanks for your payment!</span> You&apos;re officially on your way to your
+              Scuba Life adventure.<span className="text-primary"> Please complete all the required documents
+              below to secure your spot in the class.</span>
+            </h1>
+            <FormFillup />
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <FormContent courseData={course} />
+              {/* <FormContent courseData={course} /> */}
               {/* <DocumentUploadStep /> */}
-              <FormFillup />
             </div>
             <div className="lg:col-span-1">
-              <FillupSummary courseData={course} />
+              {/* <FillupSummary courseData={course} /> */}
             </div>
           </div>
         </main>
