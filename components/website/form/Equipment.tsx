@@ -133,144 +133,143 @@ export default function PadiForm({
     if (!formData.signature.trim())
       newErrors.signature = "Signature is required";
 
-
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Invalid email format";
     }
 
-    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-const handleDownloadPdf = async () => {
-  if (!validateForm()) {
-    alert("Please fill in all required fields correctly");
-    return;
-  }
-
-  if (!printRef.current) {
-    alert("Cannot generate PDF - form not loaded");
-    return;
-  }
-
-  setIsGeneratingPDF(true);
-
-  try {
-    console.log("🧾 Generating PDF...");
-
-    const html2canvas = await loadHTML2Canvas();
-    const jsPDF = await loadJsPDF();
-
-    const canvas = await html2canvas(printRef.current, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: "#ffffff",
-      logging: false,
-      ignoreElements: (element) => {
-        return (
-          element.classList.contains("no-print") ||
-          !!(
-            element.tagName === "IMG" &&
-            element.getAttribute("src")?.startsWith("http")
-          )
-        );
-      },
-      onclone: (clonedDoc) => {
-        const allEls = clonedDoc.querySelectorAll("*");
-        allEls.forEach((el) => {
-          const htmlEl = el as HTMLElement;
-          if (htmlEl.style) {
-            const props = ["color", "backgroundColor", "borderColor"];
-            props.forEach((prop) => {
-              const value = htmlEl.style.getPropertyValue(prop);
-              if (value && value.includes("lab")) {
-                htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
-              }
-            });
-
-            if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
-              htmlEl.style.color = "rgb(0, 0, 0)";
-            }
-            if (
-              htmlEl.tagName !== "INPUT" &&
-              (!htmlEl.style.backgroundColor ||
-                htmlEl.style.backgroundColor.includes("lab"))
-            ) {
-              htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-            }
-            if (
-              !htmlEl.style.borderColor ||
-              htmlEl.style.borderColor.includes("lab")
-            ) {
-              htmlEl.style.borderColor = "rgb(0, 0, 0)";
-            }
-
-            htmlEl.style.removeProperty("filter");
-            htmlEl.style.removeProperty("backdrop-filter");
-            htmlEl.style.removeProperty("box-shadow");
-          }
-        });
-      },
-    });
-
-    const imgData = canvas.toDataURL("image/jpeg", 0.75);
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    console.log("🖼️ Image dimensions:", { imgWidth, imgHeight, pageHeight });
-
-    let heightLeft = imgHeight;
-    let position = 0;
-
-    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-
-    // ✅ Add extra pages for remaining content
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+  const handleDownloadPdf = async () => {
+    if (!validateForm()) {
+      alert("Please fill in all required fields correctly");
+      return;
     }
 
-    const pdfBlob = pdf.output("blob");
-    const fileSizeMB = pdfBlob.size / 1024 / 1024;
-    console.log(`✅ PDF generated successfully: ${fileSizeMB.toFixed(2)} MB`);
+    if (!printRef.current) {
+      alert("Cannot generate PDF - form not loaded");
+      return;
+    }
 
-    const fileName = `PADI_Equipment_Rental_${formData.name
-      .replace(/[^a-zA-Z0-9\s]/g, "")
-      .replace(/\s+/g, "_")
-      .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
+    setIsGeneratingPDF(true);
 
-    const pdfFile = new File([pdfBlob], fileName, {
-      type: "application/pdf",
-    });
+    try {
+      console.log("🧾 Generating PDF...");
 
-    // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
-      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Equipment Rental" } });
+      const html2canvas = await loadHTML2Canvas();
+      const jsPDF = await loadJsPDF();
 
-    if (onSubmitSuccess) onSubmitSuccess();
-  } catch (error) {
-    console.error("❌ PDF generation error:", error);
-    alert("PDF generation failed. Please try again. Check console for details.");
-  } finally {
-    setIsGeneratingPDF(false);
-  }
-};
+      const canvas = await html2canvas(printRef.current, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        logging: false,
+        ignoreElements: (element) => {
+          return (
+            element.classList.contains("no-print") ||
+            !!(
+              element.tagName === "IMG" &&
+              element.getAttribute("src")?.startsWith("http")
+            )
+          );
+        },
+        onclone: (clonedDoc) => {
+          const allEls = clonedDoc.querySelectorAll("*");
+          allEls.forEach((el) => {
+            const htmlEl = el as HTMLElement;
+            if (htmlEl.style) {
+              const props = ["color", "backgroundColor", "borderColor"];
+              props.forEach((prop) => {
+                const value = htmlEl.style.getPropertyValue(prop);
+                if (value && value.includes("lab")) {
+                  htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
+                }
+              });
 
+              if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
+                htmlEl.style.color = "rgb(0, 0, 0)";
+              }
+              if (
+                htmlEl.tagName !== "INPUT" &&
+                (!htmlEl.style.backgroundColor ||
+                  htmlEl.style.backgroundColor.includes("lab"))
+              ) {
+                htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
+              }
+              if (
+                !htmlEl.style.borderColor ||
+                htmlEl.style.borderColor.includes("lab")
+              ) {
+                htmlEl.style.borderColor = "rgb(0, 0, 0)";
+              }
 
+              htmlEl.style.removeProperty("filter");
+              htmlEl.style.removeProperty("backdrop-filter");
+              htmlEl.style.removeProperty("box-shadow");
+            }
+          });
+        },
+      });
+
+      const imgData = canvas.toDataURL("image/jpeg", 0.75);
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      console.log("🖼️ Image dimensions:", { imgWidth, imgHeight, pageHeight });
+
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      // ✅ Add extra pages for remaining content
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      const pdfBlob = pdf.output("blob");
+      const fileSizeMB = pdfBlob.size / 1024 / 1024;
+      console.log(`✅ PDF generated successfully: ${fileSizeMB.toFixed(2)} MB`);
+
+      const fileName = `PADI_Equipment_Rental_${formData.name
+        .replace(/[^a-zA-Z0-9\s]/g, "")
+        .replace(/\s+/g, "_")
+        .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
+
+      const pdfFile = new File([pdfBlob], fileName, {
+        type: "application/pdf",
+      });
+
+      // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
+      dispatch({
+        type: "ADD_DOCUMENT",
+        payload: { file: pdfFile, label: "Equipment Rental" },
+      });
+
+      if (onSubmitSuccess) onSubmitSuccess();
+    } catch (error) {
+      console.error("❌ PDF generation error:", error);
+      alert(
+        "PDF generation failed. Please try again. Check console for details.",
+      );
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-4xl mx-auto space-y-4">
-        
-
         <div
           ref={printRef}
           className="bg-white p-6 shadow-lg"
@@ -307,6 +306,7 @@ const handleDownloadPdf = async () => {
                   <input
                     type="text"
                     name="name"
+                    placeholder="Fill up Your Name"
                     value={formData.name}
                     onChange={handleInputChange}
                     className="flex-1 border-0 border-b border-black bg-transparent outline-none"
@@ -320,6 +320,7 @@ const handleDownloadPdf = async () => {
                     <input
                       type="text"
                       name="address"
+                      placeholder="Fill up Your Address"
                       value={formData.address}
                       onChange={handleInputChange}
                       className="w-full border-0 border-b border-black bg-transparent outline-none mb-1"
@@ -352,7 +353,7 @@ const handleDownloadPdf = async () => {
                     value={formData.phoneHome}
                     onChange={handleInputChange}
                     className="flex-1 ml-1 border-0 border-b border-black bg-transparent outline-none"
-                    placeholder="000-0000"
+                    placeholder="Your Phone Number"
                   />
                 </div>
 
@@ -374,7 +375,7 @@ const handleDownloadPdf = async () => {
                     value={formData.phoneWork}
                     onChange={handleInputChange}
                     className="flex-1 ml-1 border-0 border-b border-black bg-transparent outline-none"
-                    placeholder="000-0000"
+                    placeholder="Your Phone Number"
                   />
                 </div>
 
@@ -384,6 +385,7 @@ const handleDownloadPdf = async () => {
                   <input
                     type="email"
                     name="email"
+                    placeholder="example@gmail.com"
                     value={formData.email}
                     onChange={handleInputChange}
                     className="flex-1 border-0 border-b border-black bg-transparent outline-none"
@@ -396,6 +398,7 @@ const handleDownloadPdf = async () => {
                   <input
                     type="text"
                     name="localAddress"
+                    placeholder="Your Local Address"
                     value={formData.localAddress}
                     onChange={handleInputChange}
                     className="flex-1 border-0 border-b border-black bg-transparent outline-none"
@@ -420,7 +423,7 @@ const handleDownloadPdf = async () => {
                     value={formData.localPhone}
                     onChange={handleInputChange}
                     className="flex-1 ml-1 border-0 border-b border-black bg-transparent outline-none"
-                    placeholder="000-0000"
+                    placeholder="Your Local Phone Number"
                   />
                 </div>
               </div>
@@ -452,6 +455,7 @@ const handleDownloadPdf = async () => {
                   <input
                     type="text"
                     className="w-full border-0 border-b border-black bg-transparent outline-none"
+                    disabled
                     style={{ minHeight: "25px", fontFamily: "cursive" }}
                     // ❌ NO name="signature" and NO onChange handler!
                   />{" "}
@@ -625,7 +629,7 @@ const handleDownloadPdf = async () => {
 
             <div className="text-right text-xs">- page 1 of 2 -</div>
           </div>
-<div className="py-48"></div>
+          <div className="py-48"></div>
           {/* Page 2 */}
           <div className="mt-12">
             <div className="text-center mb-4">
@@ -887,7 +891,6 @@ const handleDownloadPdf = async () => {
           {isGeneratingPDF ? "Generating PDF..." : "Submit Form"}
         </Button>
       </div>
-
 
       {/* Print Styles */}
       <style jsx>{`
