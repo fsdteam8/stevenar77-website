@@ -74,7 +74,7 @@ function TripBookingContent() {
       <main className="container mx-auto px-4 py-8 relative">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#343a40] mb-2">Book Your Trip</h1>
-          <p className="text-[#6c757d]">Complete your booking in just a few steps</p>
+          {/* <p className="text-[#6c757d]">Complete your booking in just a few steps</p> */}
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">

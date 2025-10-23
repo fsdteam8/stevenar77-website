@@ -74,7 +74,7 @@ export default function GetInTouch() {
             Get in Touch
           </h2>
           <p className="text-[#6C757D] text-sm pt-2 md:text-base mb-6">
-            Our friendly team would love to hear from you.
+            We might be diving, but we&apos;ll surface soon and get back to you!
           </p>
 
           <Form {...form}>

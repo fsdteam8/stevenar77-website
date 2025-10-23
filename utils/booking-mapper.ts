@@ -55,26 +55,25 @@ export const mapBookingStateToPayload = (
   }
 
   // ✅ Return full payload
-  // return {
-  //   classId,
-  //   participant: participants,
-  //   classDate: classDates,                     // ✅ now included
-  //   // activityLevelSpecificQuestions: activityQuestions,  // ✅ now included
-  //   medicalDocuments: state.documents,
-  //   price: totalPrice, 
-
-  //   // Personal info
-  //   Username: state.personalInfo.username, // ⚡ backend requires capitalized "Username"
-  //   email: state.personalInfo.email,
-  //   phoneNumber: state.personalInfo.phoneNumber,
-  //   emergencyName: state.personalInfo.emergencyName,
-  //   emergencyPhoneNumber: state.personalInfo.emergencyPhoneNumber,
-
-  //   gender: state.personalInfo.gender,
-  //   shoeSize: state.personalInfo.shoeSize,
-  //   hight: state.personalInfo.hight,
-  //   weight: state.personalInfo.weight,
-  // };
+  console.log("==== DEBUG BOOKING PAYLOAD ====");
+  console.log("Personal Info:", state.personalInfo);
+  console.log(
+    "Age value:",
+    state.personalInfo.age,
+    "Type:",
+    typeof state.personalInfo.age,
+  );
+  console.log("Final Payload Preview:", {
+    Username: state.personalInfo.name,
+    email: state.personalInfo.email,
+    phoneNumber: state.personalInfo.phone,
+    age: state.personalInfo.age,
+    gender: state.personalInfo.gender,
+    shoeSize: state.personalInfo.shoeSize,
+    hight: state.personalInfo.hight,
+    weight: state.personalInfo.weight,
+  });
+  console.log("================================");
 
   return {
     classId,
@@ -91,12 +90,12 @@ export const mapBookingStateToPayload = (
     phoneNumber: state.personalInfo.phone,
     emergencyName: state.personalInfo.emergencyName,
     emergencyPhoneNumber: state.personalInfo.emergencyPhoneNumber,
-    age: state.personalInfo.age,
     // dateOfBirth: state.personalInfo.dateOfBirth,
     gender: state.personalInfo.gender,
     shoeSize: Number(state.personalInfo.shoeSize),
     hight: state.personalInfo.hight,
     weight: Number(state.personalInfo.weight),
+    age: state.personalInfo.age,
     scheduleId: state.personalInfo.scheduleId,
 
     // Add missing properties required by BookingPayload type

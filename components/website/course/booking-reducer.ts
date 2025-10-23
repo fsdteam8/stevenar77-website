@@ -4,7 +4,7 @@ export function createInitialState(initialCourse?: {
   id: string;
   name: string;
   price: number;
-  age: string;
+  age: number | undefined;
   image?: string;
   classDates?: string[];
   formTitle?: string[];
@@ -25,7 +25,7 @@ export function createInitialState(initialCourse?: {
       name: initialCourse?.name || "Open Water Diver",
       price: initialCourse?.price ?? 450,
       duration: "3-4 dives",
-      age: initialCourse?.age || "10+",
+      age: initialCourse?.age ,
       image: initialCourse?.image,
       classDates: initialCourse?.classDates,
       formTitle: initialCourse?.formTitle || [],
@@ -42,7 +42,7 @@ export function createInitialState(initialCourse?: {
       username: "",
       email: "",
       phoneNumber: "",
-      age:0,
+      age: 0,
       // dateOfBirth: "",
       address: "",
       city: "",

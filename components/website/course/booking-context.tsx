@@ -12,7 +12,7 @@ interface BookingProviderProps {
     id: string
     name: string
     price: number
-    age: string
+    age: number | undefined
     image?: string
     formTitle?:string[]
 

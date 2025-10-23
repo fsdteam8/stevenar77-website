@@ -147,18 +147,20 @@ export function DocumentUploadStep() {
   // };
 
   return (
-    <div>
+    <div className="">
       {/* <h2 className="text-2xl font-semibold mb-4 text-[#343a40]">
         Please Fill-Up The Following Papers.
       </h2> */}
-      <p className="text-[#6c757d] text-xl px-3 max-w-xl mb-6">
+      <div className="flex gap-4 mb-6 justify-center flex-wrap">
+        <p className="text-[#6c757d] text-center text-xl px-3 max-w-xl mb-6">
         {" "}
         Please complete all the required Documents below to Secure your spot in
         the class.
       </p>
+      </div>
 
       {/* ✅ Render Form Buttons */}
-      <div className="flex gap-4 mb-6 flex-wrap">
+      <div className="flex gap-4 mb-6 justify-center flex-wrap">
         {visibleForms.map((btn) => (
           <Button
             key={btn.id}
@@ -197,11 +199,11 @@ export function DocumentUploadStep() {
         </Button>
       </div> */}
 
-      {!allVisibleFormsCompleted && (
+      {/* {!allVisibleFormsCompleted && (
         <p className="text-sm text-gray-500 mt-2">
           Fill out all the forms to proceed to Submit.
         </p>
-      )}
+      )} */}
     </div>
   );
 }

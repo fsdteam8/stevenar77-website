@@ -109,8 +109,16 @@ export default function TripsCard({
             </div>
 
             {/* ✅ Total Price */}
-            <span className="ml-4 text-lg font-semibold text-gray-800">
+            {/* <span className="ml-4 text-lg font-semibold text-gray-800">
               Total: ${totalPrice.toFixed(2)}
+            </span> */}
+
+            <span className="ml-4 text-lg font-semibold text-gray-800">
+              Total: $
+              {totalPrice.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </span>
 
             {/* Buy Now Button */}
