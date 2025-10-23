@@ -29,7 +29,7 @@ const ProductPaymentSuccess = () => {
               <Button variant="outline" onClick={() => router.push("/")}>
                 Back to Home
               </Button>
-              <Button onClick={() => router.push("/account")}>View My Orders</Button>
+              {/* <Button onClick={() => router.push("/account")}>View My Orders</Button> */}
             </div>
           </CardContent>
         </Card>
