@@ -214,16 +214,41 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const getRequiredBoxes = () => {
+    const boxes: { question: number; box: string }[] = [];
+    if (formData.question1) boxes.push({ question: 1, box: "A" });
+    if (formData.question2) boxes.push({ question: 2, box: "B" });
+    if (formData.question4) boxes.push({ question: 4, box: "C" });
+    if (formData.question6) boxes.push({ question: 6, box: "D" });
+    if (formData.question7) boxes.push({ question: 7, box: "E" });
+    if (formData.question8) boxes.push({ question: 8, box: "F" });
+    if (formData.question9) boxes.push({ question: 9, box: "G" });
+    return boxes;
+  };
+
+  const getGuidanceMessage = () => {
+    const requiredBoxes = getRequiredBoxes();
+    
+    if (requiredBoxes.length === 0) return null;
+
+    const questions = requiredBoxes.map(b => b.question).join(" & ");
+    const boxes = requiredBoxes.map(b => b.box).join(" & ");
+    const boxText = requiredBoxes.length === 1 ? "Box" : "Boxes";
+    const questionText = requiredBoxes.length === 1 ? "question" : "questions";
+
+    return `Since you answered "Yes" to ${questionText} ${questions}, you'll need to complete all the questions in ${boxText} ${boxes} on page 2 before this document can be submitted.`;
+  };
+
   const validateForm = (): { isValid: boolean; message: string } => {
     const missingFields: string[] = [];
 
     if (formData.question1) {
       if (
-        !formData.boxA1 &&
-        !formData.boxA2 &&
-        !formData.boxA3 &&
-        !formData.boxA4 &&
-        !formData.boxA5
+        formData.boxA1 === null &&
+        formData.boxA2 === null &&
+        formData.boxA3 === null &&
+        formData.boxA4 === null &&
+        formData.boxA5 === null
       ) {
         missingFields.push("Box A - Please answer all questions in Box A");
       }
@@ -231,10 +256,10 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
     if (formData.question2) {
       if (
-        !formData.boxB1 &&
-        !formData.boxB2 &&
-        !formData.boxB3 &&
-        !formData.boxB4
+        formData.boxB1 === null &&
+        formData.boxB2 === null &&
+        formData.boxB3 === null &&
+        formData.boxB4 === null
       ) {
         missingFields.push("Box B - Please answer all questions in Box B");
       }
@@ -242,10 +267,10 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
     if (formData.question4) {
       if (
-        !formData.boxC1 &&
-        !formData.boxC2 &&
-        !formData.boxC3 &&
-        !formData.boxC4
+        formData.boxC1 === null &&
+        formData.boxC2 === null &&
+        formData.boxC3 === null &&
+        formData.boxC4 === null
       ) {
         missingFields.push("Box C - Please answer all questions in Box C");
       }
@@ -253,11 +278,11 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
     if (formData.question6) {
       if (
-        !formData.boxD1 &&
-        !formData.boxD2 &&
-        !formData.boxD3 &&
-        !formData.boxD4 &&
-        !formData.boxD5
+        formData.boxD1 === null &&
+        formData.boxD2 === null &&
+        formData.boxD3 === null &&
+        formData.boxD4 === null &&
+        formData.boxD5 === null
       ) {
         missingFields.push("Box D - Please answer all questions in Box D");
       }
@@ -265,10 +290,10 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
     if (formData.question7) {
       if (
-        !formData.boxE1 &&
-        !formData.boxE2 &&
-        !formData.boxE3 &&
-        !formData.boxE4
+        formData.boxE1 === null &&
+        formData.boxE2 === null &&
+        formData.boxE3 === null &&
+        formData.boxE4 === null
       ) {
         missingFields.push("Box E - Please answer all questions in Box E");
       }
@@ -276,11 +301,11 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
     if (formData.question8) {
       if (
-        !formData.boxF1 &&
-        !formData.boxF2 &&
-        !formData.boxF3 &&
-        !formData.boxF4 &&
-        !formData.boxF5
+        formData.boxF1 === null &&
+        formData.boxF2 === null &&
+        formData.boxF3 === null &&
+        formData.boxF4 === null &&
+        formData.boxF5 === null
       ) {
         missingFields.push("Box F - Please answer all questions in Box F");
       }
@@ -288,12 +313,12 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
     if (formData.question9) {
       if (
-        !formData.boxG1 &&
-        !formData.boxG2 &&
-        !formData.boxG3 &&
-        !formData.boxG4 &&
-        !formData.boxG5 &&
-        !formData.boxG6
+        formData.boxG1 === null &&
+        formData.boxG2 === null &&
+        formData.boxG3 === null &&
+        formData.boxG4 === null &&
+        formData.boxG5 === null &&
+        formData.boxG6 === null
       ) {
         missingFields.push("Box G - Please answer all questions in Box G");
       }
@@ -380,7 +405,31 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
       const validation = validateForm();
       if (!validation.isValid) {
-        toast.error(validation.message);
+        const requiredBoxes = getRequiredBoxes();
+        if (requiredBoxes.length > 0) {
+          const questions = requiredBoxes.map(b => b.question).join(" & ");
+          const boxes = requiredBoxes.map(b => b.box).join(" & ");
+          const boxText = requiredBoxes.length === 1 ? "Box" : "Boxes";
+          const questionText = requiredBoxes.length === 1 ? "question" : "questions";
+          
+          toast.error(
+            `Since you answered "Yes" to ${questionText} ${questions}, you'll need to complete all the questions in ${boxText} ${boxes} on page 2 before this document can be submitted.`,
+            {
+              duration: 6000,
+              style: {
+                background: '#FEE2E2',
+                border: '2px solid #EF4444',
+                color: '#7F1D1D',
+                fontSize: '14px',
+                fontWeight: '600',
+                padding: '16px',
+                borderRadius: '8px',
+              },
+            }
+          );
+        } else {
+          toast.error(validation.message);
+        }
         return;
       }
 
@@ -715,6 +764,15 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                 </div>
               </div>
 
+              {getGuidanceMessage() ? (
+                <div className="mt-4 p-4 bg-red-50 border-2 border-red-400 rounded-lg">
+                  <p className="text-sm font-semibold text-red-800 flex items-start gap-2">
+                    <span className="text-lg">ℹ️</span>
+                    <span>{getGuidanceMessage()}</span>
+                  </p>
+                </div>
+              ) : null}
+
               <p className="text-sm mt-4 text-justify">
                 * <strong>If you answered YES</strong> to questions 3, 5 or 10
                 above <strong>OR</strong> to any of the questions on page 2,
@@ -777,6 +835,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
             {[
               {
                 title: "BOX A – I HAVE/HAVE HAD:",
+                boxLetter: "A",
                 questions: [
                   {
                     text: "Chest surgery, heart surgery, heart valve surgery, an implantable medical device (eg, stent, pacemaker, neurostimulator), pneumothorax, and/or chronic lung disease.",
@@ -802,6 +861,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               },
               {
                 title: "BOX B – I AM OVER 45 YEARS OF AGE AND:",
+                boxLetter: "B",
                 questions: [
                   {
                     text: "I currently smoke or inhale nicotine by other means.",
@@ -823,6 +883,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               },
               {
                 title: "BOX C – I HAVE/HAVE HAD:",
+                boxLetter: "C",
                 questions: [
                   {
                     text: "Sinus surgery within the last 6 months.",
@@ -844,6 +905,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               },
               {
                 title: "BOX D – I HAVE/HAVE HAD:",
+                boxLetter: "D",
                 questions: [
                   {
                     text: "Head injury with loss of consciousness within the past 5 years.",
@@ -869,6 +931,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               },
               {
                 title: "BOX E – I HAVE/HAVE HAD:",
+                boxLetter: "E",
                 questions: [
                   {
                     text: "Behavioral health, mental or psychological problems requiring medical/psychiatric treatment.",
@@ -890,6 +953,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               },
               {
                 title: "BOX F – I HAVE/HAVE HAD:",
+                boxLetter: "F",
                 questions: [
                   {
                     text: "Recurrent back problems in the last 6 months that limit my everyday activity.",
@@ -915,6 +979,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               },
               {
                 title: "BOX G – I HAVE HAD:",
+                boxLetter: "G",
                 questions: [
                   {
                     text: "Ostomy surgery and do not have medical clearance to swim or engage in physical activity.",
@@ -942,65 +1007,92 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                   },
                 ],
               },
-            ].map((box, boxIndex) => (
-              <div key={boxIndex} className="border border-black mb-4">
-                <div className="bg-gray-100 p-2 border-b border-black">
-                  <h3 className="font-bold">{box.title}</h3>
+            ].map((box, boxIndex) => {
+              const requiredBoxes = getRequiredBoxes();
+              const isRequired = requiredBoxes.some(
+                (rb) => rb.box === box.boxLetter
+              );
+
+              return (
+                <div
+                  key={boxIndex}
+                  className={`border-2 mb-4 transition-all ${
+                    isRequired
+                      ? "border-red-500 bg-pink-50 shadow-lg"
+                      : "border-black"
+                  }`}
+                >
+                  <div
+                    className={`p-2 border-b-2 ${
+                      isRequired
+                        ? "bg-pink-200 border-pink-500"
+                        : "bg-gray-100 border-black"
+                    }`}
+                  >
+                    <h3 className="font-bold flex items-center justify-between">
+                      {box.title}
+                      {isRequired && (
+                        <span className="text-pink-700 text-sm font-bold">
+                          ⚠️ REQUIRED - Please complete all questions
+                        </span>
+                      )}
+                    </h3>
+                  </div>
+                  <table className="w-full border-collapse">
+                    <tbody>
+                      {box.questions.map((q, qIndex) => (
+                        <tr
+                          key={qIndex}
+                          className={
+                            qIndex < box.questions.length - 1
+                              ? "border-b border-black"
+                              : ""
+                          }
+                        >
+                          <td className="border-r border-black p-2 text-justify align-top">
+                            {q.text}
+                          </td>
+                          <td className="border-r border-black p-2 w-16 text-center align-top">
+                            <label className="flex items-center justify-center gap-1 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={formData[q.field] === true}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    updateFormData(q.field, true);
+                                  } else {
+                                    updateFormData(q.field, null);
+                                  }
+                                }}
+                                className="w-4 h-4 border border-black"
+                              />
+                              <span className="text-sm">Yes *</span>
+                            </label>
+                          </td>
+                          <td className="p-2 w-16 text-center align-top">
+                            <label className="flex items-center justify-center gap-1 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={formData[q.field] === false}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    updateFormData(q.field, false);
+                                  } else {
+                                    updateFormData(q.field, null);
+                                  }
+                                }}
+                                className="w-4 h-4 border border-black"
+                              />
+                              <span className="text-sm">No</span>
+                            </label>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <table className="w-full border-collapse">
-                  <tbody>
-                    {box.questions.map((q, qIndex) => (
-                      <tr
-                        key={qIndex}
-                        className={
-                          qIndex < box.questions.length - 1
-                            ? "border-b border-black"
-                            : ""
-                        }
-                      >
-                        <td className="border-r border-black p-2 text-justify align-top">
-                          {q.text}
-                        </td>
-                        <td className="border-r border-black p-2 w-16 text-center align-top">
-                          <label className="flex items-center justify-center gap-1 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={formData[q.field] === true}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  updateFormData(q.field, true);
-                                } else {
-                                  updateFormData(q.field, null);
-                                }
-                              }}
-                              className="w-4 h-4 border border-black"
-                            />
-                            <span className="text-sm">Yes *</span>
-                          </label>
-                        </td>
-                        <td className="p-2 w-16 text-center align-top">
-                          <label className="flex items-center justify-center gap-1 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={formData[q.field] === false}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  updateFormData(q.field, false);
-                                } else {
-                                  updateFormData(q.field, null);
-                                }
-                              }}
-                              className="w-4 h-4 border border-black"
-                            />
-                            <span className="text-sm">No</span>
-                          </label>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ))}
+              );
+            })}
 
             <div className="flex justify-between items-center text-xs mt-6">
               <span>
@@ -1263,4 +1355,4 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
   );
 };
 
-export default DiverMedicalForm; 
+export default DiverMedicalForm;
