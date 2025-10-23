@@ -71,7 +71,7 @@ export default function GetInTouch() {
             className="text-2xl md:text-4xl font-bold text-[#343A40]"
             style={{ fontFamily: "var(--font-playfair)" }}
           >
-            Get in Touch
+            Contact Us
           </h2>
           <p className="text-[#6C757D] text-sm pt-2 md:text-base mb-6">
             We might be diving, but we&apos;ll surface soon and get back to you!
