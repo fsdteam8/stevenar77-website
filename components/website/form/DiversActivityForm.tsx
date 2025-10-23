@@ -25,8 +25,10 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
   const [hasInsurance, setHasInsurance] = useState<boolean | null>(null);
   const [signature, setSignature] = useState("");
   const [guardianSignature, setGuardianSignature] = useState("");
+  const [guardianDate, setGuardianDate] = useState("");
   const [date, setDate] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  
 
   const formRef = useRef<HTMLDivElement>(null);
 
@@ -159,51 +161,55 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
   //   }
   // };
 
-
   const handlePrint = async () => {
-  if (!participantName || !signature || !date) {
-    alert("Please fill in required fields: Participant Name, Signature, Date");
-    return;
-  }
+    if (!participantName || !signature || !date) {
+      alert(
+        "Please fill in required fields: Participant Name, Signature, Date",
+      );
+      return;
+    }
 
-  if (hasInsurance === null) {
-    alert("Please select whether you have Diver Accident Insurance");
-    return;
-  }
+    if (hasInsurance === null) {
+      alert("Please select whether you have Diver Accident Insurance");
+      return;
+    }
 
-  if (hasInsurance && !policyNumber.trim()) {
-    alert("Please enter your Policy Number since you have Diver Accident Insurance");
-    return;
-  }
+    if (hasInsurance && !policyNumber.trim()) {
+      alert(
+        "Please enter your Policy Number since you have Diver Accident Insurance",
+      );
+      return;
+    }
 
-  setIsGeneratingPDF(true);
+    setIsGeneratingPDF(true);
 
-  try {
-    if (!formRef.current) throw new Error("Form reference not found");
+    try {
+      if (!formRef.current) throw new Error("Form reference not found");
 
-    console.log("Generating PDF...");
-    const html2canvas = await loadHTML2Canvas();
+      console.log("Generating PDF...");
+      const html2canvas = await loadHTML2Canvas();
 
-    const canvas = await html2canvas(formRef.current, {
-      scale: 1,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: "#ffffff",
-      logging: false,
-      ignoreElements: (el: Element): boolean => {
-        const isNoPrint = el.classList.contains("no-print");
-        const isExternalImg =
-          el.tagName === "IMG" && !!el.getAttribute("src")?.startsWith("http");
-        return isNoPrint || isExternalImg;
-      },
+      const canvas = await html2canvas(formRef.current, {
+        scale: 1,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        logging: false,
+        ignoreElements: (el: Element): boolean => {
+          const isNoPrint = el.classList.contains("no-print");
+          const isExternalImg =
+            el.tagName === "IMG" &&
+            !!el.getAttribute("src")?.startsWith("http");
+          return isNoPrint || isExternalImg;
+        },
 
-      // IMPORTANT: inject styles into the *cloned* document so the capture
-      // renders with a white background and no shadows/filters.
-      onclone: (clonedDoc: Document) => {
-        try {
-          // 1) Inject a stylesheet to force white background and remove visual effects
-          const styleTag = clonedDoc.createElement("style");
-          styleTag.innerHTML = `
+        // IMPORTANT: inject styles into the *cloned* document so the capture
+        // renders with a white background and no shadows/filters.
+        onclone: (clonedDoc: Document) => {
+          try {
+            // 1) Inject a stylesheet to force white background and remove visual effects
+            const styleTag = clonedDoc.createElement("style");
+            styleTag.innerHTML = `
             /* Force page and print-area background white */
             html, body { background-color: #ffffff !important; }
             .print-area { background-color: #ffffff !important; }
@@ -214,111 +220,129 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
             /* Hide non-printing helpers */
             .no-print { display: none !important; }
           `;
-          clonedDoc.head?.appendChild(styleTag);
+            clonedDoc.head?.appendChild(styleTag);
 
-          // 2) Ensure the cloned print-area element has an inline white background
-          const clonedPrint = clonedDoc.querySelector(".print-area") as HTMLElement | null;
-          if (clonedPrint) {
-            clonedPrint.style.setProperty("background-color", "#ffffff", "important");
-            clonedPrint.style.setProperty("box-shadow", "none", "important");
-          }
-
-          // 3) Sanitize styles which may use `lab()` color functions by checking
-          // computed styles and replacing any 'lab' occurrences with safe rgb values.
-          const allEls = clonedDoc.querySelectorAll<HTMLElement>("*");
-          allEls.forEach((el) => {
-            // remove visual effects with inline style override
-            el.style.setProperty("box-shadow", "none", "important");
-            el.style.setProperty("filter", "none", "important");
-            el.style.setProperty("backdrop-filter", "none", "important");
-
-            // check computed style values for problematic 'lab(...)' colors
-            const view = clonedDoc.defaultView;
-            if (view) {
-              const cs = view.getComputedStyle(el);
-              ["color", "background-color", "border-top-color", "border-color"].forEach((prop) => {
-                const val = cs.getPropertyValue(prop);
-                if (val && val.includes("lab")) {
-                  // replace with safe rgb values
-                  const replacement = prop === "background-color" ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)";
-                  el.style.setProperty(prop, replacement, "important");
-                }
-              });
+            // 2) Ensure the cloned print-area element has an inline white background
+            const clonedPrint = clonedDoc.querySelector(
+              ".print-area",
+            ) as HTMLElement | null;
+            if (clonedPrint) {
+              clonedPrint.style.setProperty(
+                "background-color",
+                "#ffffff",
+                "important",
+              );
+              clonedPrint.style.setProperty("box-shadow", "none", "important");
             }
 
-            // Also sanitize inline style declarations that might contain 'lab'
-            const inlineProps = ["color", "background-color", "border-color"];
-            inlineProps.forEach((p) => {
-              const v = el.style.getPropertyValue(p);
-              if (v && v.includes("lab")) {
-                const replacement = p === "background-color" ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)";
-                el.style.setProperty(p, replacement, "important");
+            // 3) Sanitize styles which may use `lab()` color functions by checking
+            // computed styles and replacing any 'lab' occurrences with safe rgb values.
+            const allEls = clonedDoc.querySelectorAll<HTMLElement>("*");
+            allEls.forEach((el) => {
+              // remove visual effects with inline style override
+              el.style.setProperty("box-shadow", "none", "important");
+              el.style.setProperty("filter", "none", "important");
+              el.style.setProperty("backdrop-filter", "none", "important");
+
+              // check computed style values for problematic 'lab(...)' colors
+              const view = clonedDoc.defaultView;
+              if (view) {
+                const cs = view.getComputedStyle(el);
+                [
+                  "color",
+                  "background-color",
+                  "border-top-color",
+                  "border-color",
+                ].forEach((prop) => {
+                  const val = cs.getPropertyValue(prop);
+                  if (val && val.includes("lab")) {
+                    // replace with safe rgb values
+                    const replacement =
+                      prop === "background-color"
+                        ? "rgb(255, 255, 255)"
+                        : "rgb(0, 0, 0)";
+                    el.style.setProperty(prop, replacement, "important");
+                  }
+                });
               }
+
+              // Also sanitize inline style declarations that might contain 'lab'
+              const inlineProps = ["color", "background-color", "border-color"];
+              inlineProps.forEach((p) => {
+                const v = el.style.getPropertyValue(p);
+                if (v && v.includes("lab")) {
+                  const replacement =
+                    p === "background-color"
+                      ? "rgb(255, 255, 255)"
+                      : "rgb(0, 0, 0)";
+                  el.style.setProperty(p, replacement, "important");
+                }
+              });
             });
-          });
-        } catch (e) {
-          // don't block capture if sanitation fails — fallback still exists via html2canvas backgroundColor
-          // but log so you can debug if needed
-          console.warn("onclone sanitation failed:", e);
-        }
-      },
-    });
+          } catch (e) {
+            // don't block capture if sanitation fails — fallback still exists via html2canvas backgroundColor
+            // but log so you can debug if needed
+            console.warn("onclone sanitation failed:", e);
+          }
+        },
+      });
 
-    // Use JPEG quality <= 1.0 (1.25 is invalid)
-    const imgData = canvas.toDataURL("image/jpeg", 0.95);
+      // Use JPEG quality <= 1.0 (1.25 is invalid)
+      const imgData = canvas.toDataURL("image/jpeg", 0.95);
 
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
 
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    let heightLeft = imgHeight;
-    let position = 0;
+      let heightLeft = imgHeight;
+      let position = 0;
 
-    // Add first page
-    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-
-    // Add remaining pages if needed
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
+      // Add first page
       pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
+
+      // Add remaining pages if needed
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      const pdfBlob = pdf.output("blob");
+      const fileSizeMB = pdfBlob.size / 1024 / 1024;
+      console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
+
+      const fileName = `PADI_Divers_Activity_Form_${participantName
+        .replace(/[^a-zA-Z0-9\\s]/g, "")
+        .replace(/\s+/g, "_")
+        .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
+
+      const pdfFile = new File([pdfBlob], fileName, {
+        type: "application/pdf",
+      });
+
+      // Add to booking context
+      dispatch({
+        type: "ADD_DOCUMENT",
+        payload: { file: pdfFile, label: "Divers Activity" },
+      });
+
+      onSubmitSuccess?.();
+    } catch (error: unknown) {
+      console.error("Error generating PDF:", error);
+      alert(
+        `Failed to generate PDF: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
+      );
+    } finally {
+      setIsGeneratingPDF(false);
     }
-
-    const pdfBlob = pdf.output("blob");
-    const fileSizeMB = pdfBlob.size / 1024 / 1024;
-    console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
-
-    const fileName = `PADI_Divers_Activity_Form_${participantName
-      .replace(/[^a-zA-Z0-9\\s]/g, "")
-      .replace(/\s+/g, "_")
-      .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
-
-    const pdfFile = new File([pdfBlob], fileName, {
-      type: "application/pdf",
-    });
-
-    // Add to booking context
-      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Divers Activity" } });
-
-
-    onSubmitSuccess?.();
-  } catch (error: unknown) {
-    console.error("Error generating PDF:", error);
-    alert(
-      `Failed to generate PDF: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`,
-    );
-  } finally {
-    setIsGeneratingPDF(false);
-  }
-};
-
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 py-6">
@@ -491,7 +515,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
             <p className="">- page 1 of 2 -</p> <p className="">© PADI 2021</p>
           </div>
         </div>
-<div className="py-48"></div>
+        <div className="py-48"></div>
         {/* ---------------- Page 2 ---------------- */}
         <div className="mt-12 border-t pt-8">
           <div className="flex items-center pb-4">
@@ -611,7 +635,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
 
         <div className="ml-10">
           <div className="mt-8 w-full space-y-6">
-            <div className="flex  gap-10">
+            <div className="flex gap-10">
               <div className="flex-5 w-full">
                 <label className="block text-center font-semibold mb-1">
                   Participant Signature:
@@ -625,23 +649,20 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                 />
               </div>
               <div className="flex-2">
-                <label className="block  text-sm mb-1">
-                  Date (DD/MM/YYYY):
-                </label>
+                <label className="block text-sm mb-1">Date:</label>
                 <input
-                  type="text"
+                  type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  placeholder="DD/MM/YYYY"
                   className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex  gap-10">
+            <div className="flex gap-10">
               <div className="flex-5 w-full">
                 <div>
-                  <label className="block text-center  text-sm mb-1">
+                  <label className="block text-center text-sm mb-1">
                     Parent/Guardian Signature (if applicable):
                   </label>
                   <input
@@ -649,22 +670,22 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                     value={guardianSignature}
                     onChange={(e) => setGuardianSignature(e.target.value)}
                     placeholder="Parent/Guardian Signature"
-                    className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+                    className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none cursor-pointer"
                   />
                 </div>
               </div>
               <div className="flex-2">
-                <label className="block text-sm mb-1">Date (DD/MM/YYYY):</label>
+                <label className="block text-sm mb-1">Date:</label>
                 <input
-                  type="text"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  placeholder="DD/MM/YYYY"
+                  type="date"
+                  value={guardianDate}
+                  onChange={(e) => setGuardianDate(e.target.value)}
                   className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
                 />
               </div>
             </div>
           </div>
+
           <div className="mt-6 flex gap-5">
             <div className="flex items-center gap-4">
               <p className="font-semibold">Diver Accident Insurance?</p>
