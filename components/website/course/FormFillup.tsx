@@ -187,14 +187,16 @@ export function FormFillup() {
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-xl font-bold mb-4">
-              Thank you for completing your required documents. You are now
-              officially enrolled. Keep an eye out for an email from Scuba Life
-              with more details about your class.
+              You&apos;re all set --your documents are complete and you&apos;re now
+              officially enrolled. 
             </h2>
+            <p className="font-semibold text-xl mb-4">
+              Keep an eye out for an email from Scuba Life with  your class details.
+              If it doesn&apos;t arrive soon. Please check your spam folder just in case.
+            </p>
             <p className="mb-6">
-              Remember if you don&apos;t see one to please check your spam
-              folder. Feel free to reach out at any time with any additional
-              questions.
+              As always,feel free to reach out with any questions.
+              we&apos;re here to help every step of the way.
             </p>
             <div className="flex justify-center gap-4">
               <Button

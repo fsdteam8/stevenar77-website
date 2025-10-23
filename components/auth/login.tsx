@@ -120,7 +120,7 @@ export default function Login() {
         Welcome
       </h2>
       <p className="text-gray-500 mb-6">
-        Access your account to Book Course,Trips And Buy Products.
+        Please login to access your account to book course and/or trips and shop for products!
       </p>
 
       {/* Error Alert */}
