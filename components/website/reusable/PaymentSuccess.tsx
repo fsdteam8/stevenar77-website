@@ -28,17 +28,32 @@ const PaymentSuccess = () => {
           </p>
           <div className="text-center mx-auto mb-6 border p-4 bg-gray-50 rounded-lg leading-8">
             <p className="mb-4 px-4 font-semibold text-gray-700">
-            If you&apos;ve Booked Trip for Multiple People, Be Sure To Send Us
-            <br />
-            <span className="text-primary">Each Participant&apos;s Name , Email, Phone Number And Any Special
-            Requirements at least 7 Days Before </span>The Trip Start Date.
-          </p>
+              If you&apos;ve Booked Trip for Multiple People, Be Sure To Send Us
+              <br />
+              <span className="text-primary">
+                Each Participant&apos;s <span className="text-xl">Name</span> ,{" "}
+                <span className="text-xl">Email</span>,{" "}
+                <span className="text-xl">Phone Number</span> And Any Special
+                Requirements at least 7 Days Before{" "}
+              </span>
+              The Trip Start Date.
+              <br />
+              You can send the details to{" "}
+              <a
+                href="mailto:scubastevenar@gmail.com"
+                className="font-semibold text-2xl text-primary cursor-pointer hover:underline"
+              >
+                scubastevenar@gmail.com
+              </a>
+            </p>
           </div>
           <div className="flex gap-4 justify-center">
             <Button variant="outline" onClick={() => router.push("/")}>
               Back to Home
             </Button>
-            <Button onClick={() => router.push("/account")}>View My Trips</Button>
+            <Button onClick={() => router.push("/account")}>
+              View My Trips
+            </Button>
           </div>
         </CardContent>
       </Card>

@@ -486,23 +486,36 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
         </div>
       </div>
 
-      {/* Image Preview */}
-      <div className="mb-6">
-        <p className="text-sm font-medium text-gray-700 mb-2">
-          Selected Product&apos;s Picture
-        </p>
-        <div className="border-2 border-dashed rounded-lg p-6 text-center">
-          {selectedVariantData?.image?.url && (
-            <Image
-              src={selectedVariantData.image.url}
-              alt={selectedVariant}
-              width={200}
-              height={200}
-              className="mx-auto"
-            />
-          )}
-        </div>
+{/* Image Preview */}
+<div className="mb-6">
+  <p className="text-sm font-medium text-gray-700 mb-2">
+    Selected Product&apos;s Picture
+  </p>
+
+  <div className="border-2 border-dashed rounded-lg text-center max-h-64 overflow-auto p-2">
+    {selectedVariantData?.image?.url ? (
+      <Image
+        src={selectedVariantData.image.url}
+        alt={selectedVariant || "Selected Product"}
+        width={400}
+        height={400}
+        className="mx-auto w-full h-auto rounded-xl object-contain"
+      />
+    ) : (
+      <div className="flex flex-col items-center justify-center h-48 text-gray-400">
+        <Image
+          src="/images/placeholder-image.png" // ✅ এখানে তোমার default image path দাও
+          alt="Default Product"
+          width={150}
+          height={150}
+          className="mx-auto opacity-60"
+        />
+        <p className="text-sm mt-2">No image available</p>
       </div>
+    )}
+  </div>
+</div>
+
 
       {/* Action Buttons */}
       <div className="flex justify-end gap-4 pt-6 border-t">
