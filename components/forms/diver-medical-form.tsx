@@ -16,6 +16,67 @@ interface FormData {
   instructorName: string;
   date: string;
   participantSignature: string;
+  question1: boolean | null;
+  question2: boolean | null;
+  question3: boolean | null;
+  question4: boolean | null;
+  question5: boolean | null;
+  question6: boolean | null;
+  question7: boolean | null;
+  question8: boolean | null;
+  question9: boolean | null;
+  question10: boolean | null;
+  boxA1: boolean | null;
+  boxA2: boolean | null;
+  boxA3: boolean | null;
+  boxA4: boolean | null;
+  boxA5: boolean | null;
+  boxB1: boolean | null;
+  boxB2: boolean | null;
+  boxB3: boolean | null;
+  boxB4: boolean | null;
+  boxC1: boolean | null;
+  boxC2: boolean | null;
+  boxC3: boolean | null;
+  boxC4: boolean | null;
+  boxD1: boolean | null;
+  boxD2: boolean | null;
+  boxD3: boolean | null;
+  boxD4: boolean | null;
+  boxD5: boolean | null;
+  boxE1: boolean | null;
+  boxE2: boolean | null;
+  boxE3: boolean | null;
+  boxE4: boolean | null;
+  boxF1: boolean | null;
+  boxF2: boolean | null;
+  boxF3: boolean | null;
+  boxF4: boolean | null;
+  boxF5: boolean | null;
+  boxG1: boolean | null;
+  boxG2: boolean | null;
+  boxG3: boolean | null;
+  boxG4: boolean | null;
+  boxG5: boolean | null;
+  boxG6: boolean | null;
+  medicalExaminerName: string;
+  medicalExaminerSignature: string;
+  medicalExaminerDate: string;
+  medicalExaminerPhone: string;
+  medicalExaminerClinic: string;
+  medicalExaminerAddress: string;
+  medicalExaminerEmail: string;
+  medicalExaminerCredentials: string;
+  evaluationResult: "approved" | "not-approved" | "";
+}
+
+interface PDFFormData {
+  participantName: string;
+  birthdate: string;
+  facilityName: string;
+  instructorName: string;
+  date: string;
+  participantSignature: string;
   question1: boolean;
   question2: boolean;
   question3: boolean;
@@ -85,58 +146,56 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
   const searchParams = useSearchParams();
   const bookingId = searchParams.get("bookingId");
 
- 
-
   const [formData, setFormData] = useState<FormData>({
     participantName: "",
     birthdate: "",
-    facilityName: "",
+    facilityName: " ",
     instructorName: "",
     date: "",
     participantSignature: "",
-    question1: false,
-    question2: false,
-    question3: false,
-    question4: false,
-    question5: false,
-    question6: false,
-    question7: false,
-    question8: false,
-    question9: false,
-    question10: false,
-    boxA1: false,
-    boxA2: false,
-    boxA3: false,
-    boxA4: false,
-    boxA5: false,
-    boxB1: false,
-    boxB2: false,
-    boxB3: false,
-    boxB4: false,
-    boxC1: false,
-    boxC2: false,
-    boxC3: false,
-    boxC4: false,
-    boxD1: false,
-    boxD2: false,
-    boxD3: false,
-    boxD4: false,
-    boxD5: false,
-    boxE1: false,
-    boxE2: false,
-    boxE3: false,
-    boxE4: false,
-    boxF1: false,
-    boxF2: false,
-    boxF3: false,
-    boxF4: false,
-    boxF5: false,
-    boxG1: false,
-    boxG2: false,
-    boxG3: false,
-    boxG4: false,
-    boxG5: false,
-    boxG6: false,
+    question1: null,
+    question2: null,
+    question3: null,
+    question4: null,
+    question5: null,
+    question6: null,
+    question7: null,
+    question8: null,
+    question9: null,
+    question10: null,
+    boxA1: null,
+    boxA2: null,
+    boxA3: null,
+    boxA4: null,
+    boxA5: null,
+    boxB1: null,
+    boxB2: null,
+    boxB3: null,
+    boxB4: null,
+    boxC1: null,
+    boxC2: null,
+    boxC3: null,
+    boxC4: null,
+    boxD1: null,
+    boxD2: null,
+    boxD3: null,
+    boxD4: null,
+    boxD5: null,
+    boxE1: null,
+    boxE2: null,
+    boxE3: null,
+    boxE4: null,
+    boxF1: null,
+    boxF2: null,
+    boxF3: null,
+    boxF4: null,
+    boxF5: null,
+    boxG1: null,
+    boxG2: null,
+    boxG3: null,
+    boxG4: null,
+    boxG5: null,
+    boxG6: null,
     medicalExaminerName: "",
     medicalExaminerSignature: "",
     medicalExaminerDate: "",
@@ -148,14 +207,182 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
     evaluationResult: "",
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const updateFormData = (field: keyof FormData, value: any) => {
+  const updateFormData = <K extends keyof FormData>(
+    field: K,
+    value: FormData[K]
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const validateForm = (): { isValid: boolean; message: string } => {
+    const missingFields: string[] = [];
+
+    if (formData.question1) {
+      if (
+        !formData.boxA1 &&
+        !formData.boxA2 &&
+        !formData.boxA3 &&
+        !formData.boxA4 &&
+        !formData.boxA5
+      ) {
+        missingFields.push("Box A - Please answer all questions in Box A");
+      }
+    }
+
+    if (formData.question2) {
+      if (
+        !formData.boxB1 &&
+        !formData.boxB2 &&
+        !formData.boxB3 &&
+        !formData.boxB4
+      ) {
+        missingFields.push("Box B - Please answer all questions in Box B");
+      }
+    }
+
+    if (formData.question4) {
+      if (
+        !formData.boxC1 &&
+        !formData.boxC2 &&
+        !formData.boxC3 &&
+        !formData.boxC4
+      ) {
+        missingFields.push("Box C - Please answer all questions in Box C");
+      }
+    }
+
+    if (formData.question6) {
+      if (
+        !formData.boxD1 &&
+        !formData.boxD2 &&
+        !formData.boxD3 &&
+        !formData.boxD4 &&
+        !formData.boxD5
+      ) {
+        missingFields.push("Box D - Please answer all questions in Box D");
+      }
+    }
+
+    if (formData.question7) {
+      if (
+        !formData.boxE1 &&
+        !formData.boxE2 &&
+        !formData.boxE3 &&
+        !formData.boxE4
+      ) {
+        missingFields.push("Box E - Please answer all questions in Box E");
+      }
+    }
+
+    if (formData.question8) {
+      if (
+        !formData.boxF1 &&
+        !formData.boxF2 &&
+        !formData.boxF3 &&
+        !formData.boxF4 &&
+        !formData.boxF5
+      ) {
+        missingFields.push("Box F - Please answer all questions in Box F");
+      }
+    }
+
+    if (formData.question9) {
+      if (
+        !formData.boxG1 &&
+        !formData.boxG2 &&
+        !formData.boxG3 &&
+        !formData.boxG4 &&
+        !formData.boxG5 &&
+        !formData.boxG6
+      ) {
+        missingFields.push("Box G - Please answer all questions in Box G");
+      }
+    }
+
+    if (missingFields.length > 0) {
+      return {
+        isValid: false,
+        message:
+          "Please complete the following required sections:\n\n" +
+          missingFields.join("\n"),
+      };
+    }
+
+    return { isValid: true, message: "" };
+  };
+
+  const convertToPDFFormat = (data: FormData): PDFFormData => {
+    return {
+      participantName: data.participantName,
+      birthdate: data.birthdate,
+      facilityName: data.facilityName,
+      instructorName: data.instructorName,
+      date: data.date,
+      participantSignature: data.participantSignature,
+      question1: data.question1 ?? false,
+      question2: data.question2 ?? false,
+      question3: data.question3 ?? false,
+      question4: data.question4 ?? false,
+      question5: data.question5 ?? false,
+      question6: data.question6 ?? false,
+      question7: data.question7 ?? false,
+      question8: data.question8 ?? false,
+      question9: data.question9 ?? false,
+      question10: data.question10 ?? false,
+      boxA1: data.boxA1 ?? false,
+      boxA2: data.boxA2 ?? false,
+      boxA3: data.boxA3 ?? false,
+      boxA4: data.boxA4 ?? false,
+      boxA5: data.boxA5 ?? false,
+      boxB1: data.boxB1 ?? false,
+      boxB2: data.boxB2 ?? false,
+      boxB3: data.boxB3 ?? false,
+      boxB4: data.boxB4 ?? false,
+      boxC1: data.boxC1 ?? false,
+      boxC2: data.boxC2 ?? false,
+      boxC3: data.boxC3 ?? false,
+      boxC4: data.boxC4 ?? false,
+      boxD1: data.boxD1 ?? false,
+      boxD2: data.boxD2 ?? false,
+      boxD3: data.boxD3 ?? false,
+      boxD4: data.boxD4 ?? false,
+      boxD5: data.boxD5 ?? false,
+      boxE1: data.boxE1 ?? false,
+      boxE2: data.boxE2 ?? false,
+      boxE3: data.boxE3 ?? false,
+      boxE4: data.boxE4 ?? false,
+      boxF1: data.boxF1 ?? false,
+      boxF2: data.boxF2 ?? false,
+      boxF3: data.boxF3 ?? false,
+      boxF4: data.boxF4 ?? false,
+      boxF5: data.boxF5 ?? false,
+      boxG1: data.boxG1 ?? false,
+      boxG2: data.boxG2 ?? false,
+      boxG3: data.boxG3 ?? false,
+      boxG4: data.boxG4 ?? false,
+      boxG5: data.boxG5 ?? false,
+      boxG6: data.boxG6 ?? false,
+      medicalExaminerName: data.medicalExaminerName,
+      medicalExaminerSignature: data.medicalExaminerSignature,
+      medicalExaminerDate: data.medicalExaminerDate,
+      medicalExaminerPhone: data.medicalExaminerPhone,
+      medicalExaminerClinic: data.medicalExaminerClinic,
+      medicalExaminerAddress: data.medicalExaminerAddress,
+      medicalExaminerEmail: data.medicalExaminerEmail,
+      medicalExaminerCredentials: data.medicalExaminerCredentials,
+      evaluationResult: data.evaluationResult,
+    };
   };
 
   const handleExportPDF = async () => {
     try {
       setIsSubmitting(true);
+
+      const validation = validateForm();
+      if (!validation.isValid) {
+        toast.error(validation.message);
+        return;
+      }
 
       if (!bookingId) {
         toast.error("Booking ID not found in URL.");
@@ -167,29 +394,29 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         return;
       }
 
-      console.log("📄 Generating PDF...");
-      const pdfFile = await generatePDF(formData);
-
-      console.log("✅ PDF Generated:", {
-        name: pdfFile.name,
-        size: `${(pdfFile.size / 1024).toFixed(2)} KB`,
-        type: pdfFile.type,
-      });
+      const pdfFormData = convertToPDFFormat(formData);
+      const pdfFile = await generatePDF(pdfFormData);
 
       if (!(pdfFile instanceof File)) {
         throw new Error("Generated file is not a valid File object");
       }
 
       console.log("📤 Starting upload with bookingId:", bookingId);
-      // await uploadMutation.mutateAsync({ id: bookingId, token, documents: pdfFile });
 
-      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Divers Medical" } });
+      dispatch({
+        type: "ADD_DOCUMENT",
+        payload: { file: pdfFile, label: "Divers Medical" },
+      });
       console.log("📋 Document added to booking context");
 
       if (onSubmitSuccess) onSubmitSuccess();
     } catch (error) {
       console.error("❌ [DiverMedicalForm] Error in handleExportPDF:", error);
-      toast.error(error instanceof Error ? `Failed: ${error.message}` : "Failed to submit diver medical form");
+      toast.error(
+        error instanceof Error
+          ? `Failed: ${error.message}`
+          : "Failed to submit diver medical form"
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -197,11 +424,11 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 3;
-  const nextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
+  const nextPage = () =>
+    currentPage < totalPages && setCurrentPage(currentPage + 1);
   const prevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
   const goToPage = (page: number) => setCurrentPage(page);
-  
- 
+
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto p-6">
@@ -210,7 +437,6 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
             className="bg-white p-8 font-sans text-sm"
             style={{ fontFamily: "Arial, sans-serif" }}
           >
-            {/* Page 1 */}
             <div className="flex justify-center items-center gap-4 mb-6 py-4">
               <Image
                 src="/images/medical-form-header.png"
@@ -269,61 +495,61 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                       num: 1,
                       text: "I have had problems with my lungs, breathing, heart and/or blood affecting my normal physical or mental performance.",
                       goTo: "Go to box A",
-                      field: "question1",
+                      field: "question1" as const,
                     },
                     {
                       num: 2,
                       text: "I am over 45 years of age.",
                       goTo: "Go to box B",
-                      field: "question2",
+                      field: "question2" as const,
                     },
                     {
                       num: 3,
                       text: "I struggle to perform moderate exercise (for example, walk 1.6 kilometer/one mile in 14 minutes or swim 200 meters/yards without resting), OR I have been unable to participate in a normal physical activity due to fitness or health reasons within the past 12 months.",
                       asterisk: true,
-                      field: "question3",
+                      field: "question3" as const,
                     },
                     {
                       num: 4,
                       text: "I have had problems with my eyes, ears, or nasal passages/sinuses.",
                       goTo: "Go to box C",
-                      field: "question4",
+                      field: "question4" as const,
                     },
                     {
                       num: 5,
                       text: "I have had surgery within the last 12 months, OR I have ongoing problems related to past surgery.",
                       asterisk: true,
-                      field: "question5",
+                      field: "question5" as const,
                     },
                     {
                       num: 6,
                       text: "I have lost consciousness, had migraine headaches, seizures, stroke, significant head injury, or suffer from persistent neurologic injury or disease.",
                       goTo: "Go to box D",
-                      field: "question6",
+                      field: "question6" as const,
                     },
                     {
                       num: 7,
                       text: "I am currently undergoing treatment (or have required treatment within the last five years) for psychological problems, personality disorder, panic attacks, or an addiction to drugs or alcohol; or, I have been diagnosed with a learning or developmental disability.",
                       goTo: "Go to box E",
-                      field: "question7",
+                      field: "question7" as const,
                     },
                     {
                       num: 8,
                       text: "I have had back problems, hernia, ulcers, or diabetes.",
                       goTo: "Go to box F",
-                      field: "question8",
+                      field: "question8" as const,
                     },
                     {
                       num: 9,
                       text: "I have had stomach or intestine problems, including recent diarrhea.",
                       goTo: "Go to box G",
-                      field: "question9",
+                      field: "question9" as const,
                     },
                     {
                       num: 10,
                       text: "I am taking prescription medications (with the exception of birth control or anti-malarial drugs other than mefloquine (Lariam).",
                       asterisk: true,
-                      field: "question10",
+                      field: "question10" as const,
                     },
                   ].map((q) => (
                     <tr key={q.num} className="border-b border-black">
@@ -342,15 +568,14 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                         <label className="flex items-center justify-center gap-1 cursor-pointer mb-1">
                           <input
                             type="checkbox"
-                            checked={
-                              formData[q.field as keyof FormData] as boolean
-                            }
-                            onChange={(e) =>
-                              updateFormData(
-                                q.field as keyof FormData,
-                                e.target.checked,
-                              )
-                            }
+                            checked={formData[q.field] === true}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                updateFormData(q.field, true);
+                              } else {
+                                updateFormData(q.field, null);
+                              }
+                            }}
                             className="w-4 h-4 border border-black"
                           />
                           <span className="text-sm">
@@ -362,15 +587,14 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                         <label className="flex items-center justify-center gap-1 cursor-pointer">
                           <input
                             type="checkbox"
-                            checked={
-                              !(formData[q.field as keyof FormData] as boolean)
-                            }
-                            onChange={(e) =>
-                              updateFormData(
-                                q.field as keyof FormData,
-                                !e.target.checked,
-                              )
-                            }
+                            checked={formData[q.field] === false}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                updateFormData(q.field, false);
+                              } else {
+                                updateFormData(q.field, null);
+                              }
+                            }}
                             className="w-4 h-4 border border-black"
                           />
                           <span className="text-sm">No</span>
@@ -419,7 +643,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                 <div>
                   <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end">
                     <input
-                      type="text"
+                      type="date"
                       value={formData.date}
                       onChange={(e) => updateFormData("date", e.target.value)}
                       className="w-full border-none outline-none bg-transparent"
@@ -448,7 +672,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                 <div>
                   <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end">
                     <input
-                      type="text"
+                      type="date"
                       value={formData.birthdate}
                       onChange={(e) =>
                         updateFormData("birthdate", e.target.value)
@@ -468,10 +692,8 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                     <input
                       type="text"
                       value={formData.instructorName}
-                      onChange={(e) =>
-                        updateFormData("instructorName", e.target.value)
-                      }
-                      className="w-full border-none outline-none bg-transparent"
+                      readOnly
+                      className="w-full border-none outline-none bg-gray-100 cursor-not-allowed"
                     />
                   </div>
                   <div className="text-xs text-center">
@@ -483,10 +705,8 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                     <input
                       type="text"
                       value={formData.facilityName}
-                      onChange={(e) =>
-                        updateFormData("facilityName", e.target.value)
-                      }
-                      className="w-full border-none outline-none bg-transparent"
+                      readOnly
+                      className="w-full border-none outline-none bg-gray-100 cursor-not-allowed"
                     />
                   </div>
                   <div className="text-xs text-center">
@@ -523,16 +743,13 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
             className="bg-white p-8 font-sans text-sm"
             style={{ fontFamily: "Arial, sans-serif" }}
           >
-            {/* Page 2 */}
             <div className="flex justify-between items-center mb-6">
               <div>
                 <div className="border-b-2 border-black pb-1 mb-1 min-h-[25px] w-64 flex items-end">
                   <input
                     type="text"
                     value={formData.participantName}
-                    onChange={(e) =>
-                      updateFormData("participantName", e.target.value)
-                    }
+                    readOnly
                     className="w-full border-none outline-none bg-transparent"
                   />
                 </div>
@@ -543,9 +760,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                   <input
                     type="text"
                     value={formData.birthdate}
-                    onChange={(e) =>
-                      updateFormData("birthdate", e.target.value)
-                    }
+                    readOnly
                     className="w-full border-none outline-none bg-transparent"
                   />
                 </div>
@@ -559,30 +774,29 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               </h1>
             </div>
 
-            {/* Boxes A-G with detailed questions */}
             {[
               {
                 title: "BOX A – I HAVE/HAVE HAD:",
                 questions: [
                   {
                     text: "Chest surgery, heart surgery, heart valve surgery, an implantable medical device (eg, stent, pacemaker, neurostimulator), pneumothorax, and/or chronic lung disease.",
-                    field: "boxA1",
+                    field: "boxA1" as const,
                   },
                   {
                     text: "Asthma, wheezing, severe allergies, hay fever or congested airways within the last 12 months that limits my physical activity/exercise.",
-                    field: "boxA2",
+                    field: "boxA2" as const,
                   },
                   {
                     text: "A problem or illness involving my heart such as: angina, chest pain on exertion, heart failure, immersion pulmonary edema, heart attack or stroke, OR am taking medication for any heart condition.",
-                    field: "boxA3",
+                    field: "boxA3" as const,
                   },
                   {
                     text: "Recurrent bronchitis and currently coughing within the past 12 months, OR have been diagnosed with emphysema.",
-                    field: "boxA4",
+                    field: "boxA4" as const,
                   },
                   {
                     text: "Symptoms affecting my lungs, breathing, heart and/or blood in the last 30 days that impair my physical or mental performance.",
-                    field: "boxA5",
+                    field: "boxA5" as const,
                   },
                 ],
               },
@@ -591,13 +805,19 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                 questions: [
                   {
                     text: "I currently smoke or inhale nicotine by other means.",
-                    field: "boxB1",
+                    field: "boxB1" as const,
                   },
-                  { text: "I have a high cholesterol level.", field: "boxB2" },
-                  { text: "I have high blood pressure.", field: "boxB3" },
+                  {
+                    text: "I have a high cholesterol level.",
+                    field: "boxB2" as const,
+                  },
+                  {
+                    text: "I have high blood pressure.",
+                    field: "boxB3" as const,
+                  },
                   {
                     text: "I have had a close blood relative die suddenly or of cardiac disease or stroke before the age of 50, OR have a family history of heart disease before age 50 (including abnormal heart rhythms, coronary artery disease or cardiomyopathy).",
-                    field: "boxB4",
+                    field: "boxB4" as const,
                   },
                 ],
               },
@@ -606,19 +826,19 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                 questions: [
                   {
                     text: "Sinus surgery within the last 6 months.",
-                    field: "boxC1",
+                    field: "boxC1" as const,
                   },
                   {
                     text: "Ear disease or ear surgery, hearing loss, or problems with balance.",
-                    field: "boxC2",
+                    field: "boxC2" as const,
                   },
                   {
                     text: "Recurrent sinusitis within the past 12 months.",
-                    field: "boxC3",
+                    field: "boxC3" as const,
                   },
                   {
                     text: "Eye surgery within the past 3 months.",
-                    field: "boxC4",
+                    field: "boxC4" as const,
                   },
                 ],
               },
@@ -627,23 +847,23 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                 questions: [
                   {
                     text: "Head injury with loss of consciousness within the past 5 years.",
-                    field: "boxD1",
+                    field: "boxD1" as const,
                   },
                   {
                     text: "Persistent neurologic injury or disease.",
-                    field: "boxD2",
+                    field: "boxD2" as const,
                   },
                   {
                     text: "Recurring migraine headaches within the past 12 months, or take medications to prevent them.",
-                    field: "boxD3",
+                    field: "boxD3" as const,
                   },
                   {
                     text: "Blackouts or fainting (full/partial loss of consciousness) within the last 5 years.",
-                    field: "boxD4",
+                    field: "boxD4" as const,
                   },
                   {
                     text: "Epilepsy, seizures, or convulsions, OR take medications to prevent them.",
-                    field: "boxD5",
+                    field: "boxD5" as const,
                   },
                 ],
               },
@@ -652,19 +872,19 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                 questions: [
                   {
                     text: "Behavioral health, mental or psychological problems requiring medical/psychiatric treatment.",
-                    field: "boxE1",
+                    field: "boxE1" as const,
                   },
                   {
                     text: "Major depression, suicidal ideation, panic attacks, uncontrolled bipolar disorder requiring medication/psychiatric treatment.",
-                    field: "boxE2",
+                    field: "boxE2" as const,
                   },
                   {
                     text: "Been diagnosed with a mental health condition or a learning/developmental disorder that requires ongoing care or special accommodation.",
-                    field: "boxE3",
+                    field: "boxE3" as const,
                   },
                   {
                     text: "An addiction to drugs or alcohol requiring treatment within the last 5 years.",
-                    field: "boxE4",
+                    field: "boxE4" as const,
                   },
                 ],
               },
@@ -673,23 +893,23 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                 questions: [
                   {
                     text: "Recurrent back problems in the last 6 months that limit my everyday activity.",
-                    field: "boxF1",
+                    field: "boxF1" as const,
                   },
                   {
                     text: "Back or spinal surgery within the last 12 months.",
-                    field: "boxF2",
+                    field: "boxF2" as const,
                   },
                   {
                     text: "Diabetes, either drug or diet controlled, OR gestational diabetes within the last 12 months.",
-                    field: "boxF3",
+                    field: "boxF3" as const,
                   },
                   {
                     text: "An uncorrected hernia that limits my physical abilities.",
-                    field: "boxF4",
+                    field: "boxF4" as const,
                   },
                   {
                     text: "Active or untreated ulcers, problem wounds, or ulcer surgery within the last 6 months.",
-                    field: "boxF5",
+                    field: "boxF5" as const,
                   },
                 ],
               },
@@ -698,27 +918,27 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                 questions: [
                   {
                     text: "Ostomy surgery and do not have medical clearance to swim or engage in physical activity.",
-                    field: "boxG1",
+                    field: "boxG1" as const,
                   },
                   {
                     text: "Dehydration requiring medical intervention within the last 7 days.",
-                    field: "boxG2",
+                    field: "boxG2" as const,
                   },
                   {
                     text: "Active or untreated stomach or intestinal ulcers or ulcer surgery within the last 6 months.",
-                    field: "boxG3",
+                    field: "boxG3" as const,
                   },
                   {
                     text: "Frequent heartburn, regurgitation, or gastroesophageal reflux disease (GERD).",
-                    field: "boxG4",
+                    field: "boxG4" as const,
                   },
                   {
                     text: "Active or uncontrolled ulcerative colitis or Crohn's disease.",
-                    field: "boxG5",
+                    field: "boxG5" as const,
                   },
                   {
                     text: "Bariatric surgery within the last 12 months.",
-                    field: "boxG6",
+                    field: "boxG6" as const,
                   },
                 ],
               },
@@ -745,15 +965,14 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                           <label className="flex items-center justify-center gap-1 cursor-pointer">
                             <input
                               type="checkbox"
-                              checked={
-                                formData[q.field as keyof FormData] as boolean
-                              }
-                              onChange={(e) =>
-                                updateFormData(
-                                  q.field as keyof FormData,
-                                  e.target.checked,
-                                )
-                              }
+                              checked={formData[q.field] === true}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  updateFormData(q.field, true);
+                                } else {
+                                  updateFormData(q.field, null);
+                                }
+                              }}
                               className="w-4 h-4 border border-black"
                             />
                             <span className="text-sm">Yes *</span>
@@ -763,17 +982,14 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                           <label className="flex items-center justify-center gap-1 cursor-pointer">
                             <input
                               type="checkbox"
-                              checked={
-                                !(formData[
-                                  q.field as keyof FormData
-                                ] as boolean)
-                              }
-                              onChange={(e) =>
-                                updateFormData(
-                                  q.field as keyof FormData,
-                                  !e.target.checked,
-                                )
-                              }
+                              checked={formData[q.field] === false}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  updateFormData(q.field, false);
+                                } else {
+                                  updateFormData(q.field, null);
+                                }
+                              }}
                               className="w-4 h-4 border border-black"
                             />
                             <span className="text-sm">No</span>
@@ -801,16 +1017,13 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
             className="bg-white p-8 font-sans text-sm"
             style={{ fontFamily: "Arial, sans-serif" }}
           >
-            {/* Page 3 */}
             <div className="flex justify-between items-center mb-6">
               <div>
                 <div className="border-b-2 border-black pb-1 mb-1 min-h-[25px] w-64 flex items-end">
                   <input
                     type="text"
                     value={formData.participantName}
-                    onChange={(e) =>
-                      updateFormData("participantName", e.target.value)
-                    }
+                    readOnly
                     className="w-full border-none outline-none bg-transparent"
                   />
                 </div>
@@ -821,9 +1034,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                   <input
                     type="text"
                     value={formData.birthdate}
-                    onChange={(e) =>
-                      updateFormData("birthdate", e.target.value)
-                    }
+                    readOnly
                     className="w-full border-none outline-none bg-transparent"
                   />
                 </div>
@@ -851,14 +1062,11 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
             <div className="mb-6">
               <h2 className="font-bold text-lg mb-4">Evaluation Result</h2>
               <div className="space-y-3 mb-6">
-                <label className="flex items-start gap-3 cursor-pointer">
+                <label className="flex items-start gap-3 cursor-not-allowed opacity-60">
                   <input
                     type="checkbox"
                     checked={formData.evaluationResult === "approved"}
-                    onChange={(e) => {
-                      if (e.target.checked)
-                        updateFormData("evaluationResult", "approved");
-                    }}
+                    disabled
                     className="w-4 h-4 border border-black mt-1"
                   />
                   <div>
@@ -867,14 +1075,11 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                     freediving.
                   </div>
                 </label>
-                <label className="flex items-start gap-3 cursor-pointer">
+                <label className="flex items-start gap-3 cursor-not-allowed opacity-60">
                   <input
                     type="checkbox"
                     checked={formData.evaluationResult === "not-approved"}
-                    onChange={(e) => {
-                      if (e.target.checked)
-                        updateFormData("evaluationResult", "not-approved");
-                    }}
+                    disabled
                     className="w-4 h-4 border border-black mt-1"
                   />
                   <div>
@@ -888,14 +1093,12 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
             <div className="grid grid-cols-2 gap-8 mb-6">
               <div>
-                <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end">
+                <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end bg-gray-100">
                   <input
                     type="text"
                     value={formData.medicalExaminerSignature}
-                    onChange={(e) =>
-                      updateFormData("medicalExaminerSignature", e.target.value)
-                    }
-                    className="w-full border-none outline-none bg-transparent"
+                    readOnly
+                    className="w-full border-none outline-none bg-transparent cursor-not-allowed"
                   />
                 </div>
                 <div className="text-xs text-center">
@@ -904,14 +1107,12 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                 </div>
               </div>
               <div>
-                <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end">
+                <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end bg-gray-100">
                   <input
                     type="text"
                     value={formData.medicalExaminerDate}
-                    onChange={(e) =>
-                      updateFormData("medicalExaminerDate", e.target.value)
-                    }
-                    className="w-full border-none outline-none bg-transparent"
+                    readOnly
+                    className="w-full border-none outline-none bg-transparent cursor-not-allowed"
                   />
                 </div>
                 <div className="text-xs text-center">Date (dd/mm/yyyy)</div>
@@ -921,27 +1122,28 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
             {[
               {
                 label: "Medical Examiner's Name (Print)",
-                field: "medicalExaminerName",
+                field: "medicalExaminerName" as const,
               },
               {
                 label: "Clinical Degrees/Credentials",
-                field: "medicalExaminerCredentials",
+                field: "medicalExaminerCredentials" as const,
               },
-              { label: "Clinic/Hospital", field: "medicalExaminerClinic" },
-              { label: "Address", field: "medicalExaminerAddress" },
+              {
+                label: "Clinic/Hospital",
+                field: "medicalExaminerClinic" as const,
+              },
+              {
+                label: "Address",
+                field: "medicalExaminerAddress" as const,
+              },
             ].map((item, index) => (
               <div key={index} className="mb-6">
-                <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end">
+                <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end bg-gray-100">
                   <input
                     type="text"
-                    value={formData[item.field as keyof FormData] as string}
-                    onChange={(e) =>
-                      updateFormData(
-                        item.field as keyof FormData,
-                        e.target.value,
-                      )
-                    }
-                    className="w-full border-none outline-none bg-transparent"
+                    value={formData[item.field]}
+                    readOnly
+                    className="w-full border-none outline-none bg-transparent cursor-not-allowed"
                   />
                 </div>
                 <div className="text-xs text-center">{item.label}</div>
@@ -950,27 +1152,23 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
             <div className="grid grid-cols-2 gap-8 mb-6">
               <div>
-                <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end">
+                <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end bg-gray-100">
                   <input
                     type="text"
                     value={formData.medicalExaminerPhone}
-                    onChange={(e) =>
-                      updateFormData("medicalExaminerPhone", e.target.value)
-                    }
-                    className="w-full border-none outline-none bg-transparent"
+                    readOnly
+                    className="w-full border-none outline-none bg-transparent cursor-not-allowed"
                   />
                 </div>
                 <div className="text-xs text-center">Phone</div>
               </div>
               <div>
-                <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end">
+                <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end bg-gray-100">
                   <input
                     type="text"
                     value={formData.medicalExaminerEmail}
-                    onChange={(e) =>
-                      updateFormData("medicalExaminerEmail", e.target.value)
-                    }
-                    className="w-full border-none outline-none bg-transparent"
+                    readOnly
+                    className="w-full border-none outline-none bg-transparent cursor-not-allowed"
                   />
                 </div>
                 <div className="text-xs text-center">Email</div>
@@ -1054,10 +1252,10 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
           <Button
             onClick={handleExportPDF}
+            disabled={isSubmitting}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
           >
-            {/* Export PDF */}
-            Submit Form
+            {isSubmitting ? "Submitting..." : "Submit Form"}
           </Button>
         </div>
       </div>
@@ -1065,4 +1263,4 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
   );
 };
 
-export default DiverMedicalForm;
+export default DiverMedicalForm; 
