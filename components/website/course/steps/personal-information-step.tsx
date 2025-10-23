@@ -278,24 +278,32 @@ export function PersonalInformationStep() {
     setTouchedFields((prev) => new Set(prev).add(field));
   };
 
-  // const handleChange = (field: PersonalInfoKeys, value: string) => {
-  //   markFieldAsTouched(field);
-  //   dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
-  // };
+// const handleChange = (field: PersonalInfoKeys, value: string) => {
+//   markFieldAsTouched(field);
+//   dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
+// };
 
-  const handleChange = (field: PersonalInfoKeys, value: string) => {
-    markFieldAsTouched(field);
+const handleChange = (
+  field: PersonalInfoKeys,
+  value: string | number | undefined,
+) => {
+  markFieldAsTouched(field);
 
-    if (field === "age") {
-      const numericValue = value === "" ? 0 : Number(value);
-      dispatch({
-        type: "SET_PERSONAL_INFO",
-        payload: { [field]: numericValue },
-      });
-    } else {
-      dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
-    }
-  };
+  if (field === "age" || field === "shoeSize" || field === "weight") {
+    const numericValue =
+      value === "" || value === undefined ? undefined : Number(value);
+    dispatch({
+      type: "SET_PERSONAL_INFO",
+      payload: { [field]: numericValue },
+    });
+  } else {
+    dispatch({
+      type: "SET_PERSONAL_INFO",
+      payload: { [field]: String(value ?? "") },
+    });
+  }
+};
+
 
   const handleHeightChange = (type: "feet" | "inches", value: string) => {
     const numValue = value.replace(/\D/g, "");
@@ -530,7 +538,7 @@ export function PersonalInformationStep() {
             max={120}
             placeholder="Enter your age"
             value={state.personalInfo.age || ""}
-            onChange={(e) => handleChange("age", e.target.value)}
+            onChange={(e) => handleChange("age", Number(e.target.value))}
             onBlur={() => markFieldAsTouched("age")}
             className={
               hasError("age") ? "border-red-500 focus-visible:ring-red-500" : ""

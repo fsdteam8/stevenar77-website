@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
@@ -7,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { type BookingState, useBooking } from "./booking-context";
 import { DocumentUploadStep } from "./steps/document-upload-step";
 import { updateCourseFormBooking } from "@/lib/courseformbookingupdate";
+import { ArrowDownToDot, ChevronDown, MoveRight } from "lucide-react";
 
 type FormConfig = { label: string };
 
@@ -108,7 +108,9 @@ export function FormFillup() {
 
       try {
         const formData = new FormData();
-        state.documents.forEach((doc) => formData.append("medicalDocuments", doc.file));
+        state.documents.forEach((doc) =>
+          formData.append("medicalDocuments", doc.file),
+        );
         formData.append(
           "submittedForms",
           JSON.stringify(state.documents.map((d) => d.label)),
@@ -131,7 +133,7 @@ export function FormFillup() {
   const goHome = () => (window.location.href = "/");
 
   return (
-    <Card className="p-6 mt-6">
+    <Card className="p-3 mt-2">
       {/* Validation Errors */}
       {showValidation && validationErrors.length > 0 && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -144,26 +146,35 @@ export function FormFillup() {
       )}
 
       <div className="flex items-center justify-center mb-8">
-        <div className="text-2xl max-w-2xl font-semibold text-center p-5">
+        {/* <div className="text-2xl max-w-2xl font-semibold text-center p-5">
           <p className="text-gray-600">
             <span className="text-primary">Thank you for Your Payment!</span>{" "}
             You&apos;re officially on your way to{" "}
             <span className="text-primary">Scuba Life Adventure</span>.
           </p>
-        </div>
+        </div> */}
       </div>
 
       {CurrentStepComponent && <CurrentStepComponent />}
 
-      <div className="flex justify-end mt-8">
-        <Button
-          onClick={handleSubmit}
-          disabled={!canSubmit || submitting}
-          className="px-8 py-2 bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {submitting ? "Submitting..." : "Submit"}
-        </Button>
-      </div>
+<div className="flex flex-col items-center mt-4">
+  {/* Arrow + Text above the button */}
+  {canSubmit && !submitting && (
+    <div className="mb-2 flex flex-col items-center text-[#0694a2] animate-bounce">
+      <span className="mt-1 mb-4 text-lg font-medium">Press The Submit Button</span>
+      {/* <ChevronDown  /> */}
+      <ArrowDownToDot size={35}/>
+    </div>
+  )}
+
+  <Button
+    onClick={handleSubmit}
+    disabled={!canSubmit || submitting}
+    className="px-8 py-2 bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    {submitting ? "Submitting..." : "Submit"}
+  </Button>
+</div>
 
       {/* ✅ Dismissable Thank You Modal */}
       {showThankYouModal && (
@@ -176,15 +187,21 @@ export function FormFillup() {
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-xl font-bold mb-4">
-              Thank you for Choosing Scuba Life!
+              Thank you for completing your required documents. You are now
+              officially enrolled. Keep an eye out for an email from Scuba Life
+              with more details about your class.
             </h2>
-            <p className="mb-6">You&apos;re officially on your way to adventure.</p>
+            <p className="mb-6">
+              Remember if you don&apos;t see one to please check your spam
+              folder. Feel free to reach out at any time with any additional
+              questions.
+            </p>
             <div className="flex justify-center gap-4">
-              <Button onClick={goHome} className="bg-blue-600 text-white px-6 py-2">
-                Go to Home
-              </Button>
-              <Button onClick={closeModal} className="bg-gray-300 text-black px-6 py-2">
-                Close
+              <Button
+                onClick={goHome}
+                className="bg-blue-600 text-white px-6 py-2"
+              >
+                Okay
               </Button>
             </div>
           </div>

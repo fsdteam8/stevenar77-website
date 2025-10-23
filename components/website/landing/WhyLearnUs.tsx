@@ -33,7 +33,7 @@ const WhyLearnUs = () => {
           descriptionClassName=""
         />
         <WhyLearn
-          title="Lifetime Community & Adventure"
+          title="Community & Adventure"
           description="Join a passionate community of divers and enjoy exclusive dive trips and events."
           icon={<Users size={24} color="#3B82F6" />}
           className="rounded-lg "

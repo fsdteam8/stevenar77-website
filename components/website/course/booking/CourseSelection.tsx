@@ -38,7 +38,7 @@ export function CourseSelection(courseData: courseprops) {
             {/* <span className="bg-[#0694a2] text-white px-2 py-1 rounded text-xs">
               BEST DEAL
             </span> */}
-            <span>⏱️ {courseData?.courseData?.courseData?.duration} Days</span>
+            {/* <span>⏱️ {courseData?.courseData?.courseData?.duration} Days</span> */}
             <span className="flex items-center gap-1">
               👥 Age: {data?.minAge ?? "N/A"} 
               {data?.maxAge && data.maxAge > 0 ? - data.maxAge : ""}

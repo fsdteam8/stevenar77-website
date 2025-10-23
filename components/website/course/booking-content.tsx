@@ -18,7 +18,9 @@ export function BookingContent(courseData: coursData) {
         <PricingSelection courseData={courseData} />
       )}
       {/* <ParticipantsSelect /> */}
-      <DateTimePicker />
+      <div className="hidden">
+        <DateTimePicker />
+      </div>
     </div>
   );
 }

@@ -165,7 +165,7 @@ export function MultiStepForm() {
     <Card className="p-6 mt-6">
       {/* Validation Error Alert */}
       <div className="text-center font-bold text-2xl text-gray-700 mb-6">
-        Course Booking For Single Person
+      <span className="text-primary">  {state.course.name}</span> -Individual Booking
       </div>
       {showValidation && validationErrors.length > 0 && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
