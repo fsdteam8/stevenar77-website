@@ -51,9 +51,9 @@ const PaymentSuccess = () => {
             <Button variant="outline" onClick={() => router.push("/")}>
               Back to Home
             </Button>
-            <Button onClick={() => router.push("/account")}>
+            {/* <Button onClick={() => router.push("/account")}>
               View My Trips
-            </Button>
+            </Button> */}
           </div>
         </CardContent>
       </Card>
