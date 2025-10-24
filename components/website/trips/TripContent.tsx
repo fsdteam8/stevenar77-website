@@ -64,20 +64,21 @@ export function TripContent({ trip }: TripContentProps) {
             Your Selected Trip
           </h2>
 
-          <div className="flex items-center gap-4 p-4 border-2 border-[#0694a2] rounded-lg bg-blue-50">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 p-4 border-2 border-[#0694a2] rounded-lg bg-blue-50">
             <Image
               src={trip.images[0]?.url || "/images/default.png"}
               alt={trip.title}
               width={80}
               height={64}
-              className="w-20 h-16 rounded object-cover"
+              className="w-20 h-16 rounded object-cover mb-3 sm:mb-0"
             />
 
             <div className="flex-1">
               <h3 className="font-semibold text-[#343a40]">{trip.title}</h3>
             </div>
 
-            <div className="text-right">
+            {/* Price - will move below on mobile */}
+            <div className="text-right sm:text-right mt-3 sm:mt-0">
               <div className="text-2xl font-bold text-[#343a40]">
                 $
                 {trip.price.toLocaleString("en-US", {
