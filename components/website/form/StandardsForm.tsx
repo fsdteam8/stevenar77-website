@@ -3,11 +3,13 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState, useRef } from "react";
-import { useBooking } from "../course/booking-context"; // ✅ Add this
+import { useBooking } from "../course/booking-context";
+import { toast } from "sonner";
 
 interface StandardsFormProps {
-  onSubmitSuccess?: () => void; // optional callback
+  onSubmitSuccess?: () => void;
 }
+
 const loadHTML2Canvas = async () => {
   const { default: html2canvas } = await import("html2canvas");
   return html2canvas;
@@ -18,9 +20,8 @@ const loadJsPDF = async () => {
   return jsPDF;
 };
 
-// const StandardsForm = () => {
 const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
-  const { dispatch } = useBooking(); // ✅ Add this
+  const { dispatch } = useBooking();
 
   const [participantName, setParticipantName] = useState("");
   const [participantSignature, setParticipantSignature] = useState("");
@@ -29,12 +30,46 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
   const [guardianDate, setGuardianDate] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  const formRef = useRef<HTMLDivElement>(null); // ✅ Add this
+  // Track which fields have errors
+  const [errors, setErrors] = useState({
+    participantName: false,
+    participantSignature: false,
+    participantDate: false,
+  });
+
+  const formRef = useRef<HTMLDivElement>(null);
 
   const handleExportPDF = async () => {
-    if (!participantName || !participantSignature || !participantDate) {
-      alert(
-        "Please fill in required fields: Participant Name, Signature, and Date",
+    // Reset errors
+    const newErrors = {
+      participantName: false,
+      participantSignature: false,
+      participantDate: false,
+    };
+
+    const missingFields: string[] = [];
+
+    // Validate required fields
+    if (!participantName.trim()) {
+      newErrors.participantName = true;
+      missingFields.push("Participant Name");
+    }
+
+    if (!participantSignature.trim()) {
+      newErrors.participantSignature = true;
+      missingFields.push("Participant Signature");
+    }
+
+    if (!participantDate) {
+      newErrors.participantDate = true;
+      missingFields.push("Date");
+    }
+
+    // If there are errors, show them and return
+    if (missingFields.length > 0) {
+      setErrors(newErrors);
+      toast.error(
+        `Please fill in the following required fields: ${missingFields.join(", ")}`
       );
       return;
     }
@@ -48,13 +83,12 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
       const html2canvas = await loadHTML2Canvas();
 
       const canvas = await html2canvas(formRef.current, {
-        scale: 1, // ✅ Reduced from 2
+        scale: 1,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
         ignoreElements: (element) => {
-          // Skip buttons and non-printable elements
           return (
             element.classList.contains("no-print") ||
             !!(
@@ -101,14 +135,14 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.75); // ✅ JPEG at 75%
+      const imgData = canvas.toDataURL("image/jpeg", 0.75);
       const jsPDF = await loadJsPDF();
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
       const imgProps = pdf.getImageProperties(imgData);
       const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
 
-      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight); // ✅ JPEG format
+      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);
 
       const pdfBlob = pdf.output("blob");
       const fileSizeMB = pdfBlob.size / 1024 / 1024;
@@ -124,17 +158,17 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
         type: "application/pdf",
       });
 
-      // ✅ Add to booking context instead of downloading
-      // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
-      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Standards Form" } });
+      dispatch({
+        type: "ADD_DOCUMENT",
+        payload: { file: pdfFile, label: "Standards Form" },
+      });
 
+      toast.success("PDF generated successfully!");
       onSubmitSuccess?.();
-
-      // alert("PDF created and added to your booking successfully!");
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
-      alert(
-        `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`,
+      toast.error(
+        `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     } finally {
       setIsGeneratingPDF(false);
@@ -145,7 +179,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
     <div className="min-h-screen bg-background py-4 px-4">
       {/* Form Content - Professional PADI Design */}
       <div
-        ref={formRef} // ✅ Add ref
+        ref={formRef}
         className="print-area mx-auto bg-card shadow-xl rounded-lg overflow-hidden"
       >
         {/* Header with Logo and Title */}
@@ -192,9 +226,14 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
             <input
               type="text"
               value={participantName}
-              onChange={(e) => setParticipantName(e.target.value)}
+              onChange={(e) => {
+                setParticipantName(e.target.value);
+                if (errors.participantName && e.target.value.trim()) {
+                  setErrors({ ...errors, participantName: false });
+                }
+              }}
               placeholder="Print Name"
-              className="border-0 border-b-2  h-8 border-black bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm focus:outline-none focus:border-blue-600"
+              className={`border-0 border-b-2 h-8 ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm focus:outline-none focus:border-blue-600`}
             />
             <span className="text-sm">
               , understand that as a diver I should:
@@ -304,9 +343,14 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
                 <input
                   type="text"
                   value={participantSignature}
-                  onChange={(e) => setParticipantSignature(e.target.value)}
+                  onChange={(e) => {
+                    setParticipantSignature(e.target.value);
+                    if (errors.participantSignature && e.target.value.trim()) {
+                      setErrors({ ...errors, participantSignature: false });
+                    }
+                  }}
                   placeholder="Type your signature here"
-                  className="border-0 border-b-2  h-8 border-black bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2"
+                  className={`border-0 border-b-2 h-8 ${errors.participantSignature ? "border-red-500 bg-red-50" : "border-black"} bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2`}
                   style={{ fontFamily: "cursive" }}
                 />
                 <p className="text-xs mt-2 font-medium">
@@ -317,8 +361,13 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
                 <input
                   type="date"
                   value={participantDate}
-                  onChange={(e) => setParticipantDate(e.target.value)}
-                  className="border-0 border-b-2  h-8 border-black bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1"
+                  onChange={(e) => {
+                    setParticipantDate(e.target.value);
+                    if (errors.participantDate && e.target.value) {
+                      setErrors({ ...errors, participantDate: false });
+                    }
+                  }}
+                  className={`border-0 border-b-2 h-8 ${errors.participantDate ? "border-red-500 bg-red-50" : "border-black"} bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1`}
                 />
                 <p className="text-xs mt-2 text-center font-medium">
                   Date (Day/Month/Year)
@@ -333,7 +382,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
                   value={guardianSignature}
                   onChange={(e) => setGuardianSignature(e.target.value)}
                   placeholder="Type guardian signature here (if applicable)"
-                  className="border-0 border-b-2  h-8 border-black bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2"
+                  className="border-0 border-b-2 h-8 border-black bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2"
                   style={{ fontFamily: "cursive" }}
                 />
                 <p className="text-xs mt-2 font-medium">
@@ -345,7 +394,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
                   type="date"
                   value={guardianDate}
                   onChange={(e) => setGuardianDate(e.target.value)}
-                  className="border-0 border-b-2  h-8 border-black bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1"
+                  className="border-0 border-b-2 h-8 border-black bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1"
                 />
                 <p className="text-xs mt-2 text-center font-medium">
                   Date (Day/Month/Year)
