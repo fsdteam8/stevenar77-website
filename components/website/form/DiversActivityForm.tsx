@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
-import { useBooking } from "../course/booking-context"; // ✅ Add this
+import { useBooking } from "../course/booking-context";
+import { toast } from "sonner";
 
 interface DiversActivityFormProps {
   onSubmitSuccess?: () => void;
@@ -14,11 +15,10 @@ const loadHTML2Canvas = async () => {
   return html2canvas;
 };
 
-// const DiversActivityForm = () => {
 const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
   onSubmitSuccess,
 }) => {
-  const { dispatch } = useBooking(); // ✅ Add this
+  const { dispatch } = useBooking();
 
   const [participantName, setParticipantName] = useState("");
   const [policyNumber, setPolicyNumber] = useState("");
@@ -28,155 +28,61 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
   const [guardianDate, setGuardianDate] = useState("");
   const [date, setDate] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
-  
+
+  // Track which fields have errors
+  const [errors, setErrors] = useState({
+    participantName: false,
+    signature: false,
+    date: false,
+    hasInsurance: false,
+    policyNumber: false,
+  });
 
   const formRef = useRef<HTMLDivElement>(null);
 
-  // const handlePrint = async () => {
-  //   if (!participantName || !signature || !date) {
-  //     alert(
-  //       "Please fill in required fields: Participant Name, Signature, Date",
-  //     );
-  //     return;
-  //   }
-
-  //   if (hasInsurance === null) {
-  //     alert("Please select whether you have Diver Accident Insurance");
-  //     return;
-  //   }
-
-  //   if (hasInsurance && !policyNumber.trim()) {
-  //     alert(
-  //       "Please enter your Policy Number since you have Diver Accident Insurance",
-  //     );
-  //     return;
-  //   }
-
-  //   setIsGeneratingPDF(true);
-
-  //   try {
-  //     if (!formRef.current) throw new Error("Form reference not found");
-
-  //     console.log("Generating PDF...");
-  //     const html2canvas = await loadHTML2Canvas();
-
-  //     const canvas = await html2canvas(formRef.current, {
-  //       scale: 1,
-  //       useCORS: true,
-  //       allowTaint: true,
-  //       backgroundColor: "#ffffff",
-  //       logging: false,
-  //       ignoreElements: (el: Element): boolean => {
-  //         const isNoPrint = el.classList.contains("no-print");
-  //         const isExternalImg =
-  //           el.tagName === "IMG" &&
-  //           !!el.getAttribute("src")?.startsWith("http");
-  //         return isNoPrint || isExternalImg;
-  //       },
-
-  //       onclone: (clonedDoc) => {
-  //         // ✅ Clean unsupported CSS color functions
-  //         const allEls = clonedDoc.querySelectorAll("*");
-  //         allEls.forEach((el) => {
-  //           const htmlEl = el as HTMLElement;
-  //           if (htmlEl.style) {
-  //             const props = ["color", "backgroundColor", "borderColor"];
-  //             props.forEach((prop) => {
-  //               const val = htmlEl.style.getPropertyValue(prop);
-  //               if (val && val.includes("lab")) {
-  //                 htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
-  //               }
-  //             });
-  //             if (!htmlEl.style.color || htmlEl.style.color.includes("lab"))
-  //               htmlEl.style.color = "rgb(0, 0, 0)";
-  //             if (
-  //               htmlEl.tagName !== "INPUT" &&
-  //               (!htmlEl.style.backgroundColor ||
-  //                 htmlEl.style.backgroundColor.includes("lab"))
-  //             )
-  //               htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-  //             if (
-  //               !htmlEl.style.borderColor ||
-  //               htmlEl.style.borderColor.includes("lab")
-  //             )
-  //               htmlEl.style.borderColor = "rgb(0, 0, 0)";
-
-  //             htmlEl.style.removeProperty("filter");
-  //             htmlEl.style.removeProperty("backdrop-filter");
-  //             htmlEl.style.removeProperty("box-shadow");
-  //           }
-  //         });
-  //       },
-  //     });
-
-  //     const imgData = canvas.toDataURL("image/jpeg", 1.25);
-  //     const pdf = new jsPDF("p", "mm", "a4");
-  //     const pageWidth = pdf.internal.pageSize.getWidth();
-  //     const pageHeight = pdf.internal.pageSize.getHeight();
-
-  //     const imgWidth = pageWidth;
-  //     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-  //     let heightLeft = imgHeight;
-  //     let position = 0;
-
-  //     // ✅ Add first page
-  //     pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-  //     heightLeft -= pageHeight;
-
-  //     // ✅ Add remaining pages if needed
-  //     while (heightLeft > 0) {
-  //       position = heightLeft - imgHeight;
-  //       pdf.addPage();
-  //       pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-  //       heightLeft -= pageHeight;
-  //     }
-
-  //     const pdfBlob = pdf.output("blob");
-  //     const fileSizeMB = pdfBlob.size / 1024 / 1024;
-  //     console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
-
-  //     const fileName = `PADI_Divers_Activity_Form_${participantName
-  //       .replace(/[^a-zA-Z0-9\s]/g, "")
-  //       .replace(/\s+/g, "_")
-  //       .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
-
-  //     const pdfFile = new File([pdfBlob], fileName, {
-  //       type: "application/pdf",
-  //     });
-
-  //     // ✅ Add to booking context
-  //     dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
-
-  //     onSubmitSuccess?.();
-  //   } catch (error: unknown) {
-  //     console.error("Error generating PDF:", error);
-  //     alert(
-  //       `Failed to generate PDF: ${
-  //         error instanceof Error ? error.message : "Unknown error"
-  //       }`,
-  //     );
-  //   } finally {
-  //     setIsGeneratingPDF(false);
-  //   }
-  // };
-
   const handlePrint = async () => {
-    if (!participantName || !signature || !date) {
-      alert(
-        "Please fill in required fields: Participant Name, Signature, Date",
-      );
-      return;
+    // Reset errors
+    const newErrors = {
+      participantName: false,
+      signature: false,
+      date: false,
+      hasInsurance: false,
+      policyNumber: false,
+    };
+
+    const missingFields: string[] = [];
+
+    // Validate required fields
+    if (!participantName.trim()) {
+      newErrors.participantName = true;
+      missingFields.push("Participant Name");
+    }
+
+    if (!signature.trim()) {
+      newErrors.signature = true;
+      missingFields.push("Signature");
+    }
+
+    if (!date) {
+      newErrors.date = true;
+      missingFields.push("Date");
     }
 
     if (hasInsurance === null) {
-      alert("Please select whether you have Diver Accident Insurance");
-      return;
+      newErrors.hasInsurance = true;
+      missingFields.push("Diver Accident Insurance");
     }
 
     if (hasInsurance && !policyNumber.trim()) {
-      alert(
-        "Please enter your Policy Number since you have Diver Accident Insurance",
+      newErrors.policyNumber = true;
+      missingFields.push("Policy Number");
+    }
+
+    // If there are errors, show them and return
+    if (missingFields.length > 0) {
+      setErrors(newErrors);
+      toast.error(
+        `Please fill in the following required fields: ${missingFields.join(", ")}`,
       );
       return;
     }
@@ -203,26 +109,17 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
           return isNoPrint || isExternalImg;
         },
 
-        // IMPORTANT: inject styles into the *cloned* document so the capture
-        // renders with a white background and no shadows/filters.
         onclone: (clonedDoc: Document) => {
           try {
-            // 1) Inject a stylesheet to force white background and remove visual effects
             const styleTag = clonedDoc.createElement("style");
             styleTag.innerHTML = `
-            /* Force page and print-area background white */
             html, body { background-color: #ffffff !important; }
             .print-area { background-color: #ffffff !important; }
-
-            /* Remove shadows/filters that create gray artifacts */
             * { box-shadow: none !important; filter: none !important; -webkit-filter: none !important; backdrop-filter: none !important; }
-
-            /* Hide non-printing helpers */
             .no-print { display: none !important; }
           `;
             clonedDoc.head?.appendChild(styleTag);
 
-            // 2) Ensure the cloned print-area element has an inline white background
             const clonedPrint = clonedDoc.querySelector(
               ".print-area",
             ) as HTMLElement | null;
@@ -235,16 +132,12 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               clonedPrint.style.setProperty("box-shadow", "none", "important");
             }
 
-            // 3) Sanitize styles which may use `lab()` color functions by checking
-            // computed styles and replacing any 'lab' occurrences with safe rgb values.
             const allEls = clonedDoc.querySelectorAll<HTMLElement>("*");
             allEls.forEach((el) => {
-              // remove visual effects with inline style override
               el.style.setProperty("box-shadow", "none", "important");
               el.style.setProperty("filter", "none", "important");
               el.style.setProperty("backdrop-filter", "none", "important");
 
-              // check computed style values for problematic 'lab(...)' colors
               const view = clonedDoc.defaultView;
               if (view) {
                 const cs = view.getComputedStyle(el);
@@ -256,7 +149,6 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                 ].forEach((prop) => {
                   const val = cs.getPropertyValue(prop);
                   if (val && val.includes("lab")) {
-                    // replace with safe rgb values
                     const replacement =
                       prop === "background-color"
                         ? "rgb(255, 255, 255)"
@@ -266,7 +158,6 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                 });
               }
 
-              // Also sanitize inline style declarations that might contain 'lab'
               const inlineProps = ["color", "background-color", "border-color"];
               inlineProps.forEach((p) => {
                 const v = el.style.getPropertyValue(p);
@@ -280,14 +171,11 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               });
             });
           } catch (e) {
-            // don't block capture if sanitation fails — fallback still exists via html2canvas backgroundColor
-            // but log so you can debug if needed
             console.warn("onclone sanitation failed:", e);
           }
         },
       });
 
-      // Use JPEG quality <= 1.0 (1.25 is invalid)
       const imgData = canvas.toDataURL("image/jpeg", 0.95);
 
       const pdf = new jsPDF("p", "mm", "a4");
@@ -300,11 +188,9 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
       let heightLeft = imgHeight;
       let position = 0;
 
-      // Add first page
       pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
 
-      // Add remaining pages if needed
       while (heightLeft > 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
@@ -325,16 +211,16 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
         type: "application/pdf",
       });
 
-      // Add to booking context
       dispatch({
         type: "ADD_DOCUMENT",
         payload: { file: pdfFile, label: "Divers Activity" },
       });
 
+      toast.success("PDF generated successfully!");
       onSubmitSuccess?.();
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
-      alert(
+      toast.error(
         `Failed to generate PDF: ${
           error instanceof Error ? error.message : "Unknown error"
         }`,
@@ -428,9 +314,14 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               <input
                 type="text"
                 value={participantName}
-                onChange={(e) => setParticipantName(e.target.value)}
+                onChange={(e) => {
+                  setParticipantName(e.target.value);
+                  if (errors.participantName && e.target.value.trim()) {
+                    setErrors({ ...errors, participantName: false });
+                  }
+                }}
                 placeholder="Participant Name"
-                className="border-b border-black w-46 h-8 px-1 bg-transparent focus:outline-none"
+                className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-8 px-1 bg-transparent focus:outline-none`}
               />{" "}
               hereby affirm that I am a certified scuba diver trained in safe
               dive practices, or a student diver under the control and
@@ -613,9 +504,14 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               <input
                 type="text"
                 value={participantName}
-                onChange={(e) => setParticipantName(e.target.value)}
+                onChange={(e) => {
+                  setParticipantName(e.target.value);
+                  if (errors.participantName && e.target.value.trim()) {
+                    setErrors({ ...errors, participantName: false });
+                  }
+                }}
                 placeholder="Participant Name"
-                className="border-b border-black w-50 h-8 px-1 bg-transparent focus:outline-none"
+                className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-50 h-8 px-1 bg-transparent focus:outline-none`}
               />{" "}
               , BY THIS INSTRUMENT, AGREE TO EXEMPT AND RELEASE THE RELEASED
               PARTIES DEFINED ABOVE FROM ALL LIABILITY OR RESPONSIBILITY
@@ -643,9 +539,15 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                 <input
                   type="text"
                   value={signature}
-                  onChange={(e) => setSignature(e.target.value)}
+                  onChange={(e) => {
+                    setSignature(e.target.value);
+                    if (errors.signature && e.target.value.trim()) {
+                      setErrors({ ...errors, signature: false });
+                    }
+                  }}
                   placeholder="Signature"
-                  className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+                  className={`border-b ${errors.signature ? "border-red-500 bg-red-50" : "border-black"} w-full text-xl  h-8 px-1 bg-transparent focus:outline-none`}
+                  style={{ fontFamily: "cursive" }}
                 />
               </div>
               <div className="flex-2">
@@ -653,8 +555,13 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                 <input
                   type="date"
                   value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+                  onChange={(e) => {
+                    setDate(e.target.value);
+                    if (errors.date && e.target.value) {
+                      setErrors({ ...errors, date: false });
+                    }
+                  }}
+                  className={`border-b ${errors.date ? "border-red-500 bg-red-50" : "border-black"} w-full h-8 px-1 bg-transparent focus:outline-none`}
                 />
               </div>
             </div>
@@ -687,7 +594,9 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
           </div>
 
           <div className="mt-6 flex gap-5">
-            <div className="flex items-center gap-4">
+            <div
+              className={`flex items-center gap-4 ${errors.hasInsurance ? "p-2 bg-red-50 rounded" : ""}`}
+            >
               <p className="font-semibold">Diver Accident Insurance?</p>
               <label className="flex items-center gap-1">
                 <input
@@ -695,7 +604,12 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                   name="insurance"
                   value="yes"
                   checked={hasInsurance === true}
-                  onChange={() => setHasInsurance(true)}
+                  onChange={() => {
+                    setHasInsurance(true);
+                    if (errors.hasInsurance) {
+                      setErrors({ ...errors, hasInsurance: false });
+                    }
+                  }}
                   className="w-4 h-4"
                 />
                 <span>Yes</span>
@@ -709,6 +623,13 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                   onChange={() => {
                     setHasInsurance(false);
                     setPolicyNumber("");
+                    if (errors.hasInsurance) {
+                      setErrors({
+                        ...errors,
+                        hasInsurance: false,
+                        policyNumber: false,
+                      });
+                    }
                   }}
                   className="w-4 h-4"
                 />
@@ -724,10 +645,15 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               <input
                 type="text"
                 value={policyNumber}
-                onChange={(e) => setPolicyNumber(e.target.value)}
+                onChange={(e) => {
+                  setPolicyNumber(e.target.value);
+                  if (errors.policyNumber && e.target.value.trim()) {
+                    setErrors({ ...errors, policyNumber: false });
+                  }
+                }}
                 placeholder={hasInsurance ? "Enter policy number" : "N/A"}
                 disabled={!hasInsurance}
-                className={`border-b border-black w-48 h-8 px-1 bg-transparent focus:outline-none ${
+                className={`border-b ${errors.policyNumber ? "border-red-500 bg-red-50" : "border-black"} w-48 h-8 px-1 bg-transparent focus:outline-none ${
                   !hasInsurance ? "text-gray-400 cursor-not-allowed" : ""
                 }`}
               />
@@ -741,10 +667,10 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
         <button
           onClick={handlePrint}
           disabled={isGeneratingPDF}
-          className={`font-bold py-3 px-6 rounded-lg transition duration-200 w-full ${
+          className={`font-bold py-3 px-6 rounded-lg transition duration-200 w-full cursor-pointer ${
             isGeneratingPDF
               ? "bg-gray-400 cursor-not-allowed text-gray-700"
-              : "bg-blue-600 hover:bg-blue-700 text-white"
+              : "bg-primary hover:bg-teal-500 text-white"
           }`}
         >
           {isGeneratingPDF ? "Generating PDF..." : "Submit Form"}
