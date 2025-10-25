@@ -4,11 +4,10 @@ import Image from "next/image";
 import { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
 import { useBooking } from "../course/booking-context";
-// import {logo} from "@/public/images/pdf-logo.png"
+import { toast } from "sonner";
 
-interface PadiLiabilityFormProps{
-  onSubmitSuccess?: () => void; // optional callback
-
+interface PadiLiabilityFormProps {
+  onSubmitSuccess?: () => void;
 }
 
 const loadHTML2Canvas = async () => {
@@ -16,29 +15,62 @@ const loadHTML2Canvas = async () => {
   return html2canvas;
 };
 
-// export default function PadiLiabilityForm() {
-const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }) => {
+const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
+  onSubmitSuccess,
+}) => {
   const [participantName, setParticipantName] = useState("");
   const [signature, setSignature] = useState("");
   const [guardianSignature, setGuardianSignature] = useState("");
   const [date, setDate] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
+  // Track which fields have errors
+  const [errors, setErrors] = useState({
+    participantName: false,
+    signature: false,
+    date: false,
+  });
+
   const formRef = useRef<HTMLDivElement>(null);
 
   const { dispatch } = useBooking();
 
   const handlePrint = async () => {
-    if (!participantName || !signature || !date) {
-      alert(
-        "Please fill in required fields: Participant Name, Signature, Date",
+    // Reset errors
+    const newErrors = {
+      participantName: false,
+      signature: false,
+      date: false,
+    };
+
+    const missingFields: string[] = [];
+
+    // Validate required fields
+    if (!participantName.trim()) {
+      newErrors.participantName = true;
+      missingFields.push("Participant Name");
+    }
+
+    if (!signature.trim()) {
+      newErrors.signature = true;
+      missingFields.push("Signature");
+    }
+
+    if (!date.trim()) {
+      newErrors.date = true;
+      missingFields.push("Date");
+    }
+
+    // If there are errors, show them and return
+    if (missingFields.length > 0) {
+      setErrors(newErrors);
+      toast.error(
+        `Please fill in the following required fields: ${missingFields.join(", ")}`,
       );
       return;
     }
 
     setIsGeneratingPDF(true);
-
-
 
     try {
       if (!formRef.current) throw new Error("Form reference not found");
@@ -47,7 +79,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }
       const html2canvas = await loadHTML2Canvas();
 
       const canvas = await html2canvas(formRef.current, {
-        scale: 1, // Reduced from 2 to keep file size down
+        scale: 1,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
@@ -96,7 +128,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.75); // JPEG at 75% quality
+      const imgData = canvas.toDataURL("image/jpeg", 0.75);
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
       const imgProps = pdf.getImageProperties(imgData);
@@ -118,17 +150,16 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }
         type: "application/pdf",
       });
 
-      // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
-      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Continuing Education" } });
+      dispatch({
+        type: "ADD_DOCUMENT",
+        payload: { file: pdfFile, label: "Continuing Education" },
+      });
 
-
-      // alert("PDF created and added to your booking successfully!");
-    onSubmitSuccess?.(); // ✅ add this right after successful dispatch
-    
-
+      toast.success("PDF generated successfully!");
+      onSubmitSuccess?.();
     } catch (error) {
       console.error("Error generating PDF:", error);
-      alert(
+      toast.error(
         `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     } finally {
@@ -149,7 +180,6 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }
             <div className="mr-6 flex-shrink-0">
               <Image
                 src={"/images/pdf-logo.png"}
-                // src={logo}
                 alt="Padi logo"
                 width={200}
                 height={200}
@@ -194,9 +224,14 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }
                 <input
                   type="text"
                   value={participantName}
-                  onChange={(e) => setParticipantName(e.target.value)}
+                  onChange={(e) => {
+                    setParticipantName(e.target.value);
+                    if (errors.participantName && e.target.value.trim()) {
+                      setErrors({ ...errors, participantName: false });
+                    }
+                  }}
                   placeholder="Participant Name"
-                  className="border-b border-black w-46 h-8 px-1 bg-transparent focus:outline-none"
+                  className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-8 px-1 bg-transparent focus:outline-none`}
                 />{" "}
                 understand that as a diver I should:
               </p>
@@ -347,9 +382,14 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }
                 <input
                   type="text"
                   value={participantName}
-                  onChange={(e) => setParticipantName(e.target.value)}
+                  onChange={(e) => {
+                    setParticipantName(e.target.value);
+                    if (errors.participantName && e.target.value.trim()) {
+                      setErrors({ ...errors, participantName: false });
+                    }
+                  }}
                   placeholder="Participant Name"
-                  className="border-b border-black w-46 h-8 px-1"
+                  className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-8 px-1`}
                 />{" "}
                 hereby affirm that I am aware that skin and scuba diving have
                 inherent risks which may result in serious injury or death. I
@@ -469,9 +509,14 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }
             <input
               type="text"
               value={participantName}
-              onChange={(e) => setParticipantName(e.target.value)}
+              onChange={(e) => {
+                setParticipantName(e.target.value);
+                if (errors.participantName && e.target.value.trim()) {
+                  setErrors({ ...errors, participantName: false });
+                }
+              }}
               placeholder="Participant Name"
-              className="border-b border-black w-46 h-8 px-1 bg-transparent focus:outline-none"
+              className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-8 px-1 bg-transparent focus:outline-none`}
             />{" "}
             HAVE COMPLETED THE ATTACHED DIVER MEDICAL FORM (10346) AND I AFFIRM
             IT IS MY RESPONSIBILITY TO INFORM MY INSTRUCTOR OF ANY AND ALL
@@ -486,9 +531,14 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }
             <input
               type="text"
               value={participantName}
-              onChange={(e) => setParticipantName(e.target.value)}
+              onChange={(e) => {
+                setParticipantName(e.target.value);
+                if (errors.participantName && e.target.value.trim()) {
+                  setErrors({ ...errors, participantName: false });
+                }
+              }}
               placeholder="Participant Name"
-              className="border-b border-black w-46 h-8 px-1 bg-transparent focus:outline-none"
+              className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-8 px-1 bg-transparent focus:outline-none`}
             />{" "}
             BY THIS INSTRUMENT AGREE TO EXEMPT AND RELEASE MY INSTRUCTORS,
             DIVEMASTERS, THE FACILITY WHICH OFFERS THE PROGRAMS AND PADI
@@ -516,19 +566,29 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }
                 <input
                   type="text"
                   value={signature}
-                  onChange={(e) => setSignature(e.target.value)}
+                  onChange={(e) => {
+                    setSignature(e.target.value);
+                    if (errors.signature && e.target.value.trim()) {
+                      setErrors({ ...errors, signature: false });
+                    }
+                  }}
                   placeholder="Signature"
-                  className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+                  className={`border-b ${errors.signature ? "border-red-500 bg-red-50" : "border-black"} w-full h-8 px-1 bg-transparent focus:outline-none`}
                 />
               </div>
               <div className="flex-2">
                 <label className="block text-sm mb-1">Date (DD/MM/YYYY):</label>
                 <input
-                  type="text"
+                  type="date"
                   value={date}
-                  onChange={(e) => setDate(e.target.value)}
+                  onChange={(e) => {
+                    setDate(e.target.value);
+                    if (errors.date && e.target.value.trim()) {
+                      setErrors({ ...errors, date: false });
+                    }
+                  }}
                   placeholder="DD/MM/YYYY"
-                  className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+                  className={`border-b ${errors.date ? "border-red-500 bg-red-50" : "border-black"} w-full h-8 px-1 bg-transparent focus:outline-none`}
                 />
               </div>
             </div>
@@ -551,11 +611,16 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({ onSubmitSuccess }
               <div className="flex-2">
                 <label className="block text-sm mb-1">Date (DD/MM/YYYY):</label>
                 <input
-                  type="text"
+                  type="date"
                   value={date}
-                  onChange={(e) => setDate(e.target.value)}
+                  onChange={(e) => {
+                    setDate(e.target.value);
+                    if (errors.date && e.target.value.trim()) {
+                      setErrors({ ...errors, date: false });
+                    }
+                  }}
                   placeholder="DD/MM/YYYY"
-                  className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+                  className={`border-b ${errors.date ? "border-red-500 bg-red-50" : "border-black"} w-full h-8 px-1 bg-transparent focus:outline-none`}
                 />
               </div>
             </div>

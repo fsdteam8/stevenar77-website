@@ -4,11 +4,8 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
-import { useBooking } from "../course/booking-context"; //  Add this
-// import { quickreview } from "@/lib/quickreview";
-// import { useMutation } from "@tanstack/react-query";
+import { useBooking } from "../course/booking-context";
 import { toast } from "sonner";
-// import { useSession } from "next-auth/react";
 
 const loadHTML2Canvas = async () => {
   const { default: html2canvas } = await import("html2canvas");
@@ -19,12 +16,10 @@ interface EnrichedAirFormProps {
   onSubmitSuccess?: () => void;
 }
 
-// const EnrichedAirForm = () => {
-
 const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
   onSubmitSuccess,
 }) => {
-  const { dispatch } = useBooking(); // ✅ Add this
+  const { dispatch } = useBooking();
 
   const [participantName, setParticipantName] = useState("");
   const [participantSignature, setParticipantSignature] = useState("");
@@ -36,18 +31,42 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
   const [policyNumber, setPolicyNumber] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  const formRef = useRef<HTMLDivElement>(null); // ✅ Add this
+  // Validation states
+  const [errors, setErrors] = useState({
+    participantName: false,
+    participantSignature: false,
+    participantDate: false,
+    storeResort: false,
+  });
+
+  const formRef = useRef<HTMLDivElement>(null);
+
+  const validateForm = () => {
+    const newErrors = {
+      participantName: !participantName.trim(),
+      participantSignature: !participantSignature.trim(),
+      participantDate: !participantDate,
+      storeResort: !storeResort.trim(),
+    };
+
+    setErrors(newErrors);
+
+    const emptyFields = [];
+    if (newErrors.participantName) emptyFields.push("Participant Name");
+    if (newErrors.storeResort) emptyFields.push("Store/Resort");
+    if (newErrors.participantSignature) emptyFields.push("Participant Signature");
+    if (newErrors.participantDate) emptyFields.push("Date");
+
+    if (emptyFields.length > 0) {
+      toast.error(`Please fill in: ${emptyFields.join(", ")}`);
+      return false;
+    }
+
+    return true;
+  };
 
   const handleExportPDF = async () => {
-    if (
-      !participantName ||
-      !participantSignature ||
-      !participantDate ||
-      !storeResort
-    ) {
-      alert(
-        "Please fill in required fields: Participant Name, Store/Resort, Signature, and Date",
-      );
+    if (!validateForm()) {
       return;
     }
 
@@ -60,7 +79,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
       const html2canvas = await loadHTML2Canvas();
 
       const canvas = await html2canvas(formRef.current, {
-        scale: 1, // ✅ Reduced from 2
+        scale: 1,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
@@ -112,13 +131,13 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.75); // ✅ JPEG at 75%
+      const imgData = canvas.toDataURL("image/jpeg", 0.75);
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
       const imgProps = pdf.getImageProperties(imgData);
       const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
 
-      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight); // ✅ JPEG format
+      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);
 
       const pdfBlob = pdf.output("blob");
       const fileSizeMB = pdfBlob.size / 1024 / 1024;
@@ -134,15 +153,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
         type: "application/pdf",
       });
 
-      //  Add to booking context
-      // handelmutaion.mutate({
-      //   id: id,
-      //   token: token,
-      //   documents: pdfFile,
-      // });
-
-      // alert("PDF created and added to your booking successfully!");
       dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Enriched Training" } });
+      toast.success("Form submitted successfully!");
       onSubmitSuccess?.();
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
@@ -152,11 +164,18 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
     }
   };
 
+  // Clear error when user starts typing
+  const handleFieldChange = (field: keyof typeof errors, value: string) => {
+    if (errors[field] && value.trim()) {
+      setErrors(prev => ({ ...prev, [field]: false }));
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background py-4 px-4">
       {/* Form Content */}
       <div
-        ref={formRef} // ✅ Add ref
+        ref={formRef}
         className="print-area max-w-4xl mx-auto bg-card shadow-xl rounded-lg overflow-hidden"
       >
         {/* Header with Logo and Title */}
@@ -196,16 +215,24 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
           {/* Store/Resort Field */}
           <div className="mb-6">
             <label className="block text-sm font-medium mb-2">
-              Store/Resort:
+              Store/Resort: <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={storeResort}
-              onChange={(e) => setStoreResort(e.target.value)}
+              onChange={(e) => {
+                setStoreResort(e.target.value);
+                handleFieldChange("storeResort", e.target.value);
+              }}
               placeholder="Enter store/resort name"
-              className="border-0 border-b-2 border-black bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1"
+              className={`border-0 border-b-2 ${
+                errors.storeResort ? "border-red-500" : "border-black"
+              } bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1`}
               required
             />
+            {errors.storeResort && (
+              <p className="text-red-500 text-xs mt-1">This field is required</p>
+            )}
           </div>
 
           {/* Non-Agency Disclosure */}
@@ -253,9 +280,14 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               <input
                 type="text"
                 value={participantName}
-                onChange={(e) => setParticipantName(e.target.value)}
+                onChange={(e) => {
+                  setParticipantName(e.target.value);
+                  handleFieldChange("participantName", e.target.value);
+                }}
                 placeholder="Participant Name"
-                className="border-0 border-b-2 border-black bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm focus:outline-none focus:border-blue-600"
+                className={`border-0 border-b-2 ${
+                  errors.participantName ? "border-red-500" : "border-black"
+                } bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm focus:outline-none focus:border-blue-600`}
                 required
               />
               <span className="text-sm">
@@ -398,14 +430,22 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               <input
                 type="text"
                 value={participantName}
-                onChange={(e) => setParticipantName(e.target.value)}
+                onChange={(e) => {
+                  setParticipantName(e.target.value);
+                  handleFieldChange("participantName", e.target.value);
+                }}
                 placeholder="Participant Name (PLEASE PRINT)"
-                className="border-0 border-b-2 border-black bg-transparent w-full text-lg focus:outline-none focus:border-blue-600 pb-2"
+                className={`border-0 border-b-2 ${
+                  errors.participantName ? "border-red-500" : "border-black"
+                } bg-transparent w-full text-lg focus:outline-none focus:border-blue-600 pb-2`}
                 required
               />
               <p className="text-xs mt-2 font-medium">
-                Participant Name (PLEASE PRINT)
+                Participant Name (PLEASE PRINT) <span className="text-red-500">*</span>
               </p>
+              {errors.participantName && (
+                <p className="text-red-500 text-xs mt-1">This field is required</p>
+              )}
             </div>
 
             {/* Participant Signature and Date */}
@@ -414,27 +454,43 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 <input
                   type="text"
                   value={participantSignature}
-                  onChange={(e) => setParticipantSignature(e.target.value)}
+                  onChange={(e) => {
+                    setParticipantSignature(e.target.value);
+                    handleFieldChange("participantSignature", e.target.value);
+                  }}
                   placeholder="Type your signature here"
-                  className="border-0 border-b-2 border-black bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2"
+                  className={`border-0 border-b-2 ${
+                    errors.participantSignature ? "border-red-500" : "border-black"
+                  } bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2`}
                   style={{ fontFamily: "cursive" }}
                   required
                 />
                 <p className="text-xs mt-2 font-medium">
-                  Participant Signature
+                  Participant Signature <span className="text-red-500">*</span>
                 </p>
+                {errors.participantSignature && (
+                  <p className="text-red-500 text-xs mt-1">This field is required</p>
+                )}
               </div>
               <div>
                 <input
                   type="date"
                   value={participantDate}
-                  onChange={(e) => setParticipantDate(e.target.value)}
-                  className="border-0 border-b-2 border-black bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1"
+                  onChange={(e) => {
+                    setParticipantDate(e.target.value);
+                    handleFieldChange("participantDate", e.target.value);
+                  }}
+                  className={`border-0 border-b-2 ${
+                    errors.participantDate ? "border-red-500" : "border-black"
+                  } bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1`}
                   required
                 />
                 <p className="text-xs mt-2 text-center font-medium">
-                  Date (Day/Month/Year)
+                  Date (Day/Month/Year) <span className="text-red-500">*</span>
                 </p>
+                {errors.participantDate && (
+                  <p className="text-red-500 text-xs mt-1 text-center">This field is required</p>
+                )}
               </div>
             </div>
 
