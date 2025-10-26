@@ -26,12 +26,11 @@ const formSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   message: z.string().min(1, "Message is required"),
- 
 });
 
 export default function GetInTouch() {
   const contactMutation = useContact();
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,22 +44,22 @@ export default function GetInTouch() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-  const {  ...payload } = values; // exclude "agree" before sending
+    const { ...payload } = values; // exclude "agree" before sending
 
-  setLoading(true); 
+    setLoading(true);
 
-  contactMutation.mutate(payload, {
-    onSuccess: (res) => {
-      toast.success(res.message || "Message sent successfully!");
-      form.reset();
-      setLoading(false); // stop loading
-    },
-    onError: (err) => {
-      toast.error(err.message || "Something went wrong. Please try again.");
-      setLoading(false); // stop loading
-    },
-  });
-}
+    contactMutation.mutate(payload, {
+      onSuccess: (res) => {
+        toast.success(res.message || "Message sent successfully!");
+        form.reset();
+        setLoading(false); // stop loading
+      },
+      onError: (err) => {
+        toast.error(err.message || "Something went wrong. Please try again.");
+        setLoading(false); // stop loading
+      },
+    });
+  }
 
   return (
     <div className="bg-[#FFFEFD] py-2 md:py-32">
@@ -74,7 +73,7 @@ export default function GetInTouch() {
             Contact Us
           </h2>
           <p className="text-[#6C757D] text-sm pt-2 md:text-base mb-6">
-            We might be diving, but we&apos;ll surface soon and get back to you!
+            We might be diving, but we’ll surface soon and get back to you!
           </p>
 
           <Form {...form}>
@@ -176,7 +175,6 @@ export default function GetInTouch() {
               />
 
               {/* Agree Checkbox */}
-            
 
               {/* Submit */}
               <Button

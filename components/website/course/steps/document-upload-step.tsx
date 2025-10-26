@@ -153,10 +153,10 @@ export function DocumentUploadStep() {
       </h2> */}
       <div className="flex gap-4 mb-6 justify-center flex-wrap">
         <p className="text-[#6c757d] text-center text-xl px-3 max-w-xl mb-6">
-        {" "}
-        Please complete all the required Documents below to Secure your spot in
-        the class.
-      </p>
+          {" "}
+          Please complete all required documents below to lock in your spot and
+          get ready to dive in!
+        </p>
       </div>
 
       {/* ✅ Render Form Buttons */}
