@@ -22,12 +22,12 @@ const ProductPaymentSuccess = () => {
   
           <CardContent>
             <p className="text-gray-600 mb-6">
-              Thank you for your Buying Our Product. 
+              Thank you for your purchase.
             </p>
             
             <div className="flex gap-4 justify-center">
               <Button variant="outline" onClick={() => router.push("/")}>
-                Back to Home
+                back to home
               </Button>
               {/* <Button onClick={() => router.push("/account")}>View My Orders</Button> */}
             </div>
