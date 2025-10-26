@@ -67,8 +67,7 @@ const FormFillUpPage = () => {
               </p> */}
 
             <h1 className="text-2xl  font-semibold text-center py-20 max-w-6xl mx-auto">
-              <span className="text-primary">Thanks for your payment!</span> --You&apos;re officially on your way to your next
-              Scuba Life adventure.
+              <span className="text-primary">Thanks for your payment!</span>— you’re officially on your way to your next Scuba Life adventure!
               {/* <span className="text-primary"> Please complete all the required documents
               below to secure your spot in the class.</span> */}
             </h1>
