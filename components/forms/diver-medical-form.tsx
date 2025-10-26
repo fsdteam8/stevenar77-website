@@ -242,6 +242,27 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
   const validateForm = (): { isValid: boolean; message: string } => {
     const missingFields: string[] = [];
 
+    // Check required participant fields
+    if (!formData.participantSignature?.trim()) {
+      missingFields.push("Participant Signature");
+    }
+    if (!formData.date) {
+      missingFields.push("Date (dd/mm/yyyy),");
+    }
+    if (!formData.participantName?.trim()) {
+      missingFields.push("Participant Name,");
+    }
+    if (!formData.birthdate) {
+      missingFields.push("Birthdate (dd/mm/yyyy)");
+    }
+
+    if (missingFields.length > 0) {
+      return {
+        isValid: false,
+        message: "Please complete the following required fields:\n\n" + missingFields.join("\n"),
+      };
+    }
+
     if (formData.question1) {
       if (
         formData.boxA1 === null &&
@@ -405,31 +426,18 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
       const validation = validateForm();
       if (!validation.isValid) {
-        const requiredBoxes = getRequiredBoxes();
-        if (requiredBoxes.length > 0) {
-          const questions = requiredBoxes.map(b => b.question).join(" & ");
-          const boxes = requiredBoxes.map(b => b.box).join(" & ");
-          const boxText = requiredBoxes.length === 1 ? "Box" : "Boxes";
-          const questionText = requiredBoxes.length === 1 ? "question" : "questions";
-          
-          toast.error(
-            `Since you answered "Yes" to ${questionText} ${questions}, you'll need to complete all the questions in ${boxText} ${boxes} on page 2 before this document can be submitted.`,
-            {
-              duration: 6000,
-              style: {
-                background: '#FEE2E2',
-                border: '2px solid #EF4444',
-                color: '#7F1D1D',
-                fontSize: '14px',
-                fontWeight: '600',
-                padding: '16px',
-                borderRadius: '8px',
-              },
-            }
-          );
-        } else {
-          toast.error(validation.message);
-        }
+        toast.error(validation.message, {
+          duration: 6000,
+          style: {
+            background: '#FEE2E2',
+            border: '2px solid #EF4444',
+            color: '#7F1D1D',
+            fontSize: '14px',
+            fontWeight: '600',
+            padding: '16px',
+            borderRadius: '8px',
+          },
+        });
         return;
       }
 
@@ -674,7 +682,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
               <div className="grid grid-cols-2 gap-8 mb-4">
                 <div>
-                  <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end">
+                  <div className={`border-b-2 pb-1 mb-1 min-h-[30px] flex items-end ${!formData.participantSignature?.trim() ? 'border-red-500 bg-red-50' : 'border-black'}`}>
                     <input
                       type="text"
                       value={formData.participantSignature}
@@ -686,11 +694,11 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                   </div>
                   <div className="text-xs text-center">
                     Participant Signature (or, if a minor, participant&apos;s
-                    parent/guardian signature required)
+                    parent/guardian signature required) <span className="text-red-500">*</span>
                   </div>
                 </div>
                 <div>
-                  <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end">
+                  <div className={`border-b-2 pb-1 mb-1 min-h-[30px] flex items-end ${!formData.date ? 'border-red-500 bg-red-50' : 'border-black'}`}>
                     <input
                       type="date"
                       value={formData.date}
@@ -698,13 +706,13 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                       className="w-full border-none outline-none bg-transparent"
                     />
                   </div>
-                  <div className="text-xs text-center">Date (dd/mm/yyyy)</div>
+                  <div className="text-xs text-center">Date (dd/mm/yyyy) <span className="text-red-500">*</span></div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-8 mb-4">
                 <div>
-                  <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end">
+                  <div className={`border-b-2 pb-1 mb-1 min-h-[30px] flex items-end ${!formData.participantName?.trim() ? 'border-red-500 bg-red-50' : 'border-black'}`}>
                     <input
                       type="text"
                       value={formData.participantName}
@@ -715,11 +723,11 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                     />
                   </div>
                   <div className="text-xs text-center">
-                    Participant Name (Print)
+                    Participant Name (Print) <span className="text-red-500">*</span>
                   </div>
                 </div>
                 <div>
-                  <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end">
+                  <div className={`border-b-2 pb-1 mb-1 min-h-[30px] flex items-end ${!formData.birthdate ? 'border-red-500 bg-red-50' : 'border-black'}`}>
                     <input
                       type="date"
                       value={formData.birthdate}
@@ -730,7 +738,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                     />
                   </div>
                   <div className="text-xs text-center">
-                    Birthdate (dd/mm/yyyy)
+                    Birthdate (dd/mm/yyyy) <span className="text-red-500">*</span>
                   </div>
                 </div>
               </div>
