@@ -24,32 +24,31 @@ const PaymentSuccess = () => {
         <CardContent>
           <p className="text-gray-600 mb-6">
             Thank you for your booking! A confirmation email has been sent to
-            your inbox with all the details of your trip.
+            your inbox with all the details for your upcoming Scuba Life adventure.
           </p>
           <div className="text-center mx-auto mb-6 border p-4 bg-gray-50 rounded-lg leading-8">
             <p className="mb-4 px-4 font-semibold text-gray-700">
-              If you&apos;ve Booked Trip for Multiple People, Be Sure To Send Us
+              If you&apos;ve booked a trip for multiple people, please send us each
               <br />
               <span className="text-primary">
-                Each Participant&apos;s <span className="text-xl">Name</span> ,{" "}
-                <span className="text-xl">Email</span>,{" "}
-                <span className="text-xl">Phone Number</span> And Any Special
-                Requirements at least 7 Days Before{" "}
+                each participant&apos;s name,{" "} email,{" "} phone Number and any special
+                requirements ASAP.{" "}
               </span>
-              The Trip Start Date.
               <br />
               You can send the details to{" "}
               <a
                 href="mailto:scubastevenar@gmail.com"
-                className="font-semibold text-2xl text-primary cursor-pointer hover:underline"
+                className="font-semibold text-xl text-primary cursor-pointer hover:underline"
               >
                 scubastevenar@gmail.com
               </a>
+              <br />
+              Can&apos;t wait to dive in with you - adventure&apos;s just around the corner!🌊
             </p>
           </div>
           <div className="flex gap-4 justify-center">
-            <Button variant="outline" onClick={() => router.push("/")}>
-              Back to Home
+            <Button variant="outline" className="bg-primary text-white" onClick={() => router.push("/")}>
+              Ok
             </Button>
             {/* <Button onClick={() => router.push("/account")}>
               View My Trips
