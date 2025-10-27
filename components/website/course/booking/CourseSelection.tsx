@@ -44,7 +44,10 @@ export function CourseSelection(courseData: courseprops) {
         {/* Price Section */}
         <div className="text-right mt-3 sm:mt-0">
           <div className="text-2xl font-bold text-[#343a40]">
-            $ {state.course.price}
+            $ {state.course.price.toLocaleString("en-US",{
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
           </div>
           <div className="text-sm text-[#6c757d]">Per Person</div>
         </div>
