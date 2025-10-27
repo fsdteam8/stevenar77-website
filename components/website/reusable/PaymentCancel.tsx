@@ -8,7 +8,7 @@ const PaymentCancelPage = () => {
         title="Payment Cancelled"
         titleColor="text-red-600"
         message="Your payment was not completed. You can try again or return to browse Trips."
-        buttonText="Go Back to Trips"
+        buttonText="Back to Trips"
         buttonRoute="/trips"
       />
     </div>
