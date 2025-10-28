@@ -495,7 +495,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               </div>
               <div>
                 <input
-                  type="date"
+                  type="text"
                   value={participantDate}
                   onChange={(e) => {
                     setParticipantDate(e.target.value);
@@ -534,7 +534,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               </div>
               <div>
                 <input
-                  type="date"
+                  type="text"
                   value={guardianDate}
                   onChange={(e) => setGuardianDate(e.target.value)}
                   className="border-0 border-b-2 border-black bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1 "
