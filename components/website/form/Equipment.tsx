@@ -1,4 +1,3 @@
-
 "use client";
 
 import type React from "react";
@@ -72,7 +71,7 @@ const FormInput: React.FC<{
       value={mask ? "•".repeat(value.length) : value}
       onChange={onChange}
       placeholder={placeholder}
-      className={`border-0 border-b border-black bg-transparent outline-none focus:border-blue-500 ${className} ${
+      className={`border-0 border-b border-black bg-transparent outline-none h-12 focus:border-blue-500 ${className} ${
         error ? "border-red-500" : ""
       }`}
       style={{ width }}
@@ -87,9 +86,17 @@ export default function PadiForm({
 }: {
   onSubmitSuccess?: () => void;
 }) {
-    const { dispatch } = useBooking();
+  const { dispatch } = useBooking();
   const printRef = useRef<HTMLDivElement>(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${month}-${day}-${year}`;
+  };
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -101,13 +108,20 @@ export default function PadiForm({
     localPhone: "",
     state: "",
     signature: "",
-    participantDate: "",
+    participantDate: getCurrentDate(),
     guardianSignature: "",
-    guardianDate: "",
+    guardianDate: getCurrentDate(),
     renter: "",
   });
 
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<FormErrors>({
+    name: "Name is required",
+    address: "Address is required",
+    phoneHome: "Home phone number is required",
+    email: "Email is required",
+    signature: "Signature is required",
+    renter: "Renter name is required",
+  });
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,22 +156,22 @@ export default function PadiForm({
     // Required fields validation
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
-      errorMessages.push("• Name is required");
+      errorMessages.push("Name is required,");
     }
 
     if (!formData.address.trim()) {
       newErrors.address = "Address is required";
-      errorMessages.push("• Address is required");
+      errorMessages.push("Address is required,");
     }
 
     if (!formData.phoneHome.trim()) {
       newErrors.phoneHome = "Home phone number is required";
-      errorMessages.push("• Home phone number is required");
+      errorMessages.push("Home phone number is required,");
     }
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
-      errorMessages.push("• Email is required");
+      errorMessages.push("Email is required,");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Invalid email format";
       errorMessages.push("• Valid email address is required");
@@ -165,12 +179,12 @@ export default function PadiForm({
 
     if (!formData.signature.trim()) {
       newErrors.signature = "Signature is required";
-      errorMessages.push("• Signature is required");
+      errorMessages.push("Signature is required,");
     }
 
     if (!formData.renter.trim()) {
       newErrors.renter = "Renter name is required";
-      errorMessages.push("• Renter name is required");
+      errorMessages.push("Renter name is required,");
     }
 
     setErrors(newErrors);
@@ -205,7 +219,7 @@ export default function PadiForm({
       const jsPDF = await loadJsPDF();
 
       const canvas = await html2canvas(printRef.current, {
-        scale: 2,
+        scale: 1,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
@@ -349,10 +363,10 @@ export default function PadiForm({
                     <input
                       type="text"
                       name="name"
-                      placeholder="Fill up Your Name"
+                      // placeholder="Fill up Your Name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className={`w-full border-0 border-b ${errors.name ? "border-red-500" : "border-black"} bg-transparent outline-none`}
+                      className={`w-full border-0 h-12 border-b ${errors.name ? "border-red-500" : "border-black"} bg-transparent outline-none`}
                     />
                     {errors.name && (
                       <span className="text-red-500 text-[10px]">
@@ -369,10 +383,10 @@ export default function PadiForm({
                     <input
                       type="text"
                       name="address"
-                      placeholder="Fill up Your Address"
+                      // placeholder="Fill up Your Address"
                       value={formData.address}
                       onChange={handleInputChange}
-                      className={`w-full border-0 border-b ${errors.address ? "border-red-500" : "border-black"} bg-transparent outline-none mb-1`}
+                      className={`w-full border-0 h-12 border-b ${errors.address ? "border-red-500" : "border-black"} bg-transparent outline-none mb-1`}
                     />
                     {errors.address && (
                       <span className="text-red-500 text-[10px]">
@@ -384,7 +398,7 @@ export default function PadiForm({
                       name="address2"
                       value={formData.address2}
                       onChange={handleInputChange}
-                      className="w-full border-0 border-b border-black bg-transparent outline-none"
+                      className="w-full border-0 border-b h-12 border-black bg-transparent outline-none"
                     />
                   </div>
                 </div>
@@ -397,7 +411,7 @@ export default function PadiForm({
                     name="phoneHomeArea"
                     value={formData.phoneHomeArea}
                     onChange={handleInputChange}
-                    className="w-8 border-0 border-b border-black bg-transparent outline-none text-center"
+                    className="w-8 border-0 border-b h-12 border-black bg-transparent outline-none text-center"
                     maxLength={3}
                   />
                   <span>)</span>
@@ -407,8 +421,8 @@ export default function PadiForm({
                       name="phoneHome"
                       value={formData.phoneHome}
                       onChange={handleInputChange}
-                      className={`w-full border-0 border-b ${errors.phoneHome ? "border-red-500" : "border-black"} bg-transparent outline-none`}
-                      placeholder="Your Phone Number"
+                      className={`w-full border-0 h-12 border-b ${errors.phoneHome ? "border-red-500" : "border-black"} bg-transparent outline-none`}
+                      // placeholder="Your Phone Number"
                     />
                     {errors.phoneHome && (
                       <span className="text-red-500 text-[10px]">
@@ -418,28 +432,6 @@ export default function PadiForm({
                   </div>
                 </div>
 
-                {/* Phone Work */}
-                <div className="flex items-center">
-                  <span className="w-20">Phone Work (</span>
-                  <input
-                    type="text"
-                    name="phoneWorkArea"
-                    value={formData.phoneWorkArea}
-                    onChange={handleInputChange}
-                    className="w-8 border-0 border-b border-black bg-transparent outline-none text-center"
-                    maxLength={3}
-                  />
-                  <span>)</span>
-                  <input
-                    type="text"
-                    name="phoneWork"
-                    value={formData.phoneWork}
-                    onChange={handleInputChange}
-                    className="flex-1 ml-1 border-0 border-b border-black bg-transparent outline-none"
-                    placeholder="Your Phone Number"
-                  />
-                </div>
-
                 {/* Email */}
                 <div className="flex items-center">
                   <span className="w-20">Email Address</span>
@@ -447,10 +439,10 @@ export default function PadiForm({
                     <input
                       type="email"
                       name="email"
-                      placeholder="example@gmail.com"
+                      // placeholder="example@gmail.com"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full border-0 border-b ${errors.email ? "border-red-500" : "border-black"} bg-transparent outline-none`}
+                      className={`w-full border-0 h-12 border-b ${errors.email ? "border-red-500" : "border-black"} bg-transparent outline-none`}
                     />
                     {errors.email && (
                       <span className="text-red-500 text-[10px]">
@@ -487,7 +479,7 @@ export default function PadiForm({
                   <span className="font-semibold">Signature*</span>
                   <input
                     type="text"
-                    className="w-full border-0 border-b border-black bg-transparent outline-none"
+                    className="w-full border-0 h-12 border-b border-black bg-transparent outline-none"
                     disabled
                     style={{ minHeight: "25px", fontFamily: "cursive" }}
                   />
@@ -648,7 +640,7 @@ export default function PadiForm({
 
             <div className="text-right text-xs">- page 1 of 2 -</div>
           </div>
-          <div className="py-48"></div>
+          <div className="py-40"></div>
           {/* Page 2 */}
           <div className="mt-12">
             <div className="text-center mb-4">
@@ -678,7 +670,7 @@ export default function PadiForm({
                   name="renter"
                   value={formData.renter}
                   onChange={handleInputChange}
-                  className={`border-0 border-b ${errors.renter ? "border-red-500" : "border-black"} bg-transparent outline-none w-32`}
+                  className={`border-0 border-b h-12 ${errors.renter ? "border-red-500" : "border-black"} bg-transparent outline-none w-32`}
                   placeholder="rentor"
                 />
                 {errors.renter && (
@@ -733,7 +725,7 @@ export default function PadiForm({
                 Liability Release and Assumption of Risk Agreement
               </div>
 
-              <p>
+              <p className="text-xs">
                 I understand and agree that{" "}
                 <span className="border-full underline border-gray-900 text-xl font-bold px-2">
                   Scuba Life & their instructors
@@ -748,7 +740,7 @@ export default function PadiForm({
                 Parties, whether passive or active.
               </p>
 
-              <p>
+              <p className="text-xs">
                 I hereby acknowledge receipt of the equipment designated in this
                 form, and, if any of this equipment is to be used for scuba
                 diving I affirm I am a certified scuba diver or student diver in
@@ -756,7 +748,7 @@ export default function PadiForm({
                 certified scuba instructor.
               </p>
 
-              <p>
+              <p className="text-xs">
                 I affirm it is my responsibility to inspect all of the equipment
                 and acknowledge it is in good working condition. I affirm that
                 it is my responsibility to check both the quality and quantity
@@ -767,7 +759,7 @@ export default function PadiForm({
                 that may not be functioning properly.
               </p>
 
-              <p>
+              <p className="text-xs">
                 I understand that skin diving and scuba diving are physically
                 strenuous activities, that I will be exerting myself during
                 these activities, and that if I am injured as a result of heart
@@ -776,7 +768,7 @@ export default function PadiForm({
                 will not hold the Released Parties responsible for the same.
               </p>
 
-              <p>
+              <p className="text-xs">
                 I agree to reimburse the Dive Center/Resort for the loss or
                 breakage of any and all equipment at the current replacement
                 value and to also pay for damages incurred while transporting
@@ -784,7 +776,7 @@ export default function PadiForm({
                 condition and to pay a cleaning fee if not returned cleaned.
               </p>
 
-              <p>
+              <p className="text-xs">
                 I further state that I am of lawful age and legally competent to
                 sign this liability release, or that I have acquired the written
                 consent of my parent or guardian. I understand the terms herein
@@ -797,7 +789,7 @@ export default function PadiForm({
                 the unenforceable provision had never been contained herein.
               </p>
 
-              <p>
+              <p className="text-xs">
                 I understand and agree that I am not only giving up my right to
                 sue the Released Parties but also any rights my heirs, assigns,
                 and beneficiaries may have to sue the Released Parties resulting
@@ -814,7 +806,7 @@ export default function PadiForm({
                   name="renter"
                   value={formData.renter}
                   onChange={handleInputChange}
-                  className={`border-0 border-b ${errors.renter ? "border-red-500" : "border-black"} bg-transparent outline-none w-64`}
+                  className={`border-0 border-b h-12 ${errors.renter ? "border-red-500" : "border-black"} bg-transparent outline-none w-64`}
                   placeholder="rentor"
                 />
                 {errors.renter && (
@@ -848,8 +840,8 @@ export default function PadiForm({
                     name="signature"
                     value={formData.signature}
                     onChange={handleInputChange}
-                    className={`w-full border-0 border-b ${errors.signature ? "border-red-500" : "border-black"} bg-transparent outline-none`}
-                    style={{ minHeight: "25px", fontFamily: "cursive" }}
+                    className={`w-full border-0 h-12 border-b ${errors.signature ? "border-red-500" : "border-black"} bg-transparent outline-none text-xl`}
+                    style={{ fontFamily: "cursive" }}
                   />
                   <div className="mt-1">Participant&apos;s Signature</div>
                   {errors.signature && (
@@ -860,13 +852,13 @@ export default function PadiForm({
                 </div>
                 <div>
                   <input
-                    type="date"
+                    type="text"
                     name="participantDate"
                     value={formData.participantDate}
                     onChange={handleInputChange}
-                    className="w-full border-0 border-b border-black bg-transparent outline-none"
+                    className="w-full border-0 border-b h-12 border-black bg-transparent outline-none cursor-not-allowed"
                   />
-                  <div className="mt-1">Date (day/month/year)</div>
+                  <div className="mt-1">Date (MM/DD/YYYY)</div>
                 </div>
               </div>
               <div className="w-64">
@@ -876,7 +868,7 @@ export default function PadiForm({
                     name="guardianSignature"
                     value={formData.guardianSignature}
                     onChange={handleInputChange}
-                    className="w-full border-0 border-b border-black bg-transparent outline-none"
+                    className="w-full border-0 border-b h-12 border-black bg-transparent outline-none"
                     style={{ minHeight: "25px", fontFamily: "cursive" }}
                   />
                   <div className="mt-1">
@@ -885,13 +877,13 @@ export default function PadiForm({
                 </div>
                 <div>
                   <input
-                    type="date"
+                    type="text"
                     name="guardianDate"
                     value={formData.guardianDate}
                     onChange={handleInputChange}
-                    className="w-full border-0 border-b border-black bg-transparent outline-none"
+                    className="w-full border-0 h-12 border-b border-black bg-transparent outline-none cursor-not-allowed"
                   />
-                  <div className="mt-1">Date (day/month/year)</div>
+                  <div className="mt-1">Date (MM/DD/YYYY)</div>
                 </div>
               </div>
             </div>
@@ -905,7 +897,7 @@ export default function PadiForm({
           className={`w-full mb-4 no-print ${
             isGeneratingPDF
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700"
+              : "bg-primary"
           }`}
         >
           {isGeneratingPDF ? "Generating PDF..." : "Submit Form"}

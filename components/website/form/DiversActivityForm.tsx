@@ -20,22 +20,31 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
 }) => {
   const { dispatch } = useBooking();
 
+  // Get current date in YYYY-MM-DD format
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const [participantName, setParticipantName] = useState("");
   const [policyNumber, setPolicyNumber] = useState("");
   const [hasInsurance, setHasInsurance] = useState<boolean | null>(null);
   const [signature, setSignature] = useState("");
   const [guardianSignature, setGuardianSignature] = useState("");
-  const [guardianDate, setGuardianDate] = useState("");
-  const [date, setDate] = useState("");
+  const [guardianDate, setGuardianDate] = useState(getCurrentDate());
+  const [date, setDate] = useState(getCurrentDate());
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  // Track which fields have errors
+  // Track which fields have errors - initialize as true to show red highlights
   const [errors, setErrors] = useState({
-    participantName: false,
-    signature: false,
-    date: false,
-    hasInsurance: false,
-    policyNumber: false,
+    participantName: true,
+    signature: true,
+    date: false, // Date is auto-filled, so no error
+    hasInsurance: true,
+    policyNumber: false, // Only required if hasInsurance is true
   });
 
   const formRef = useRef<HTMLDivElement>(null);
@@ -176,7 +185,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.95);
+      const imgData = canvas.toDataURL("image/jpeg", 0.60);
 
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
@@ -555,13 +564,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                 <input
                   type="date"
                   value={date}
-                  onChange={(e) => {
-                    setDate(e.target.value);
-                    if (errors.date && e.target.value) {
-                      setErrors({ ...errors, date: false });
-                    }
-                  }}
-                  className={`border-b ${errors.date ? "border-red-500 bg-red-50" : "border-black"} w-full h-8 px-1 bg-transparent focus:outline-none`}
+                  readOnly
+                  className="border-b border-black w-full h-8 px-1 bg-gray-100 focus:outline-none "
                 />
               </div>
             </div>
@@ -586,8 +590,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                 <input
                   type="date"
                   value={guardianDate}
-                  onChange={(e) => setGuardianDate(e.target.value)}
-                  className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+                  readOnly
+                  className="border-b border-black w-full h-8 px-1 bg-gray-100 focus:outline-none "
                 />
               </div>
             </div>
@@ -654,7 +658,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                 placeholder={hasInsurance ? "Enter policy number" : "N/A"}
                 disabled={!hasInsurance}
                 className={`border-b ${errors.policyNumber ? "border-red-500 bg-red-50" : "border-black"} w-48 h-8 px-1 bg-transparent focus:outline-none ${
-                  !hasInsurance ? "text-gray-400 cursor-not-allowed" : ""
+                  !hasInsurance ? "text-gray-400 " : ""
                 }`}
               />
             </div>
@@ -669,7 +673,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
           disabled={isGeneratingPDF}
           className={`font-bold py-3 px-6 rounded-lg transition duration-200 w-full cursor-pointer ${
             isGeneratingPDF
-              ? "bg-gray-400 cursor-not-allowed text-gray-700"
+              ? "bg-gray-400  text-gray-700"
               : "bg-primary hover:bg-teal-500 text-white"
           }`}
         >

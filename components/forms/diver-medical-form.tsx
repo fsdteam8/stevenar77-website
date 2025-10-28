@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -146,12 +147,21 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
   const searchParams = useSearchParams();
   const bookingId = searchParams.get("bookingId");
 
+  // Get current date in mm/dd/yyyy format
+  const getCurrentDate = () => {
+    const today = new Date();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const year = today.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
+
   const [formData, setFormData] = useState<FormData>({
     participantName: "",
     birthdate: "",
     facilityName: " ",
     instructorName: "",
-    date: "",
+    date: getCurrentDate(),
     participantSignature: "",
     question1: null,
     question2: null,
@@ -242,18 +252,35 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
   const validateForm = (): { isValid: boolean; message: string } => {
     const missingFields: string[] = [];
 
+    // Check that all 10 questions have been answered (either Yes or No)
+    const unansweredQuestions: number[] = [];
+    if (formData.question1 === null) unansweredQuestions.push(1);
+    if (formData.question2 === null) unansweredQuestions.push(2);
+    if (formData.question3 === null) unansweredQuestions.push(3);
+    if (formData.question4 === null) unansweredQuestions.push(4);
+    if (formData.question5 === null) unansweredQuestions.push(5);
+    if (formData.question6 === null) unansweredQuestions.push(6);
+    if (formData.question7 === null) unansweredQuestions.push(7);
+    if (formData.question8 === null) unansweredQuestions.push(8);
+    if (formData.question9 === null) unansweredQuestions.push(9);
+    if (formData.question10 === null) unansweredQuestions.push(10);
+
+    if (unansweredQuestions.length > 0) {
+      return {
+        isValid: false,
+        message: `Please answer the following question(s) with either "Yes" or "No":\n\nQuestion ${unansweredQuestions.join(", ")}`,
+      };
+    }
+
     // Check required participant fields
     if (!formData.participantSignature?.trim()) {
       missingFields.push("Participant Signature");
     }
-    if (!formData.date) {
-      missingFields.push("Date (dd/mm/yyyy),");
-    }
     if (!formData.participantName?.trim()) {
-      missingFields.push("Participant Name,");
+      missingFields.push("Participant Name");
     }
     if (!formData.birthdate) {
-      missingFields.push("Birthdate (dd/mm/yyyy)");
+      missingFields.push("Birthdate (mm/dd/yyyy)");
     }
 
     if (missingFields.length > 0) {
@@ -271,7 +298,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxA4 === null &&
         formData.boxA5 === null
       ) {
-        missingFields.push("Box A - Please answer all questions in Box A");
+        missingFields.push("Box A,");
       }
     }
 
@@ -282,7 +309,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxB3 === null &&
         formData.boxB4 === null
       ) {
-        missingFields.push("Box B - Please answer all questions in Box B");
+        missingFields.push("Box B,");
       }
     }
 
@@ -293,7 +320,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxC3 === null &&
         formData.boxC4 === null
       ) {
-        missingFields.push("Box C - Please answer all questions in Box C");
+        missingFields.push("Box C,");
       }
     }
 
@@ -305,7 +332,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxD4 === null &&
         formData.boxD5 === null
       ) {
-        missingFields.push("Box D - Please answer all questions in Box D");
+        missingFields.push("Box D,");
       }
     }
 
@@ -316,7 +343,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxE3 === null &&
         formData.boxE4 === null
       ) {
-        missingFields.push("Box E - Please answer all questions in Box E");
+        missingFields.push("Box E,");
       }
     }
 
@@ -328,7 +355,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxF4 === null &&
         formData.boxF5 === null
       ) {
-        missingFields.push("Box F - Please answer all questions in Box F");
+        missingFields.push("Box F,");
       }
     }
 
@@ -341,7 +368,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxG5 === null &&
         formData.boxG6 === null
       ) {
-        missingFields.push("Box G - Please answer all questions in Box G");
+        missingFields.push("Box G,");
       }
     }
 
@@ -690,6 +717,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                         updateFormData("participantSignature", e.target.value)
                       }
                       className="w-full border-none outline-none bg-transparent"
+                      placeholder="Type your full name"
                     />
                   </div>
                   <div className="text-xs text-center">
@@ -698,15 +726,15 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                   </div>
                 </div>
                 <div>
-                  <div className={`border-b-2 pb-1 mb-1 min-h-[30px] flex items-end ${!formData.date ? 'border-red-500 bg-red-50' : 'border-black'}`}>
+                  <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end bg-gray-100">
                     <input
-                      type="date"
+                      type="text"
                       value={formData.date}
-                      onChange={(e) => updateFormData("date", e.target.value)}
-                      className="w-full border-none outline-none bg-transparent"
+                      readOnly
+                      className="w-full border-none outline-none bg-transparent cursor-not-allowed text-gray-700"
                     />
                   </div>
-                  <div className="text-xs text-center">Date (dd/mm/yyyy) <span className="text-red-500">*</span></div>
+                  <div className="text-xs text-center">Date (mm/dd/yyyy)</div>
                 </div>
               </div>
 
@@ -738,7 +766,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                     />
                   </div>
                   <div className="text-xs text-center">
-                    Birthdate (dd/mm/yyyy) <span className="text-red-500">*</span>
+                    Birthdate (mm/dd/yyyy) <span className="text-red-500">*</span>
                   </div>
                 </div>
               </div>
@@ -824,13 +852,13 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               <div>
                 <div className="border-b-2 border-black pb-1 mb-1 min-h-[25px] w-48 flex items-end">
                   <input
-                    type="text"
+                    type="date"
                     value={formData.birthdate}
                     readOnly
                     className="w-full border-none outline-none bg-transparent"
                   />
                 </div>
-                <div className="text-xs">Birthdate Date (dd/mm/yyyy)</div>
+                <div className="text-xs">Birthdate Date (mm/dd/yyyy)</div>
               </div>
             </div>
 
@@ -840,267 +868,288 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               </h1>
             </div>
 
-            {[
-              {
-                title: "BOX A – I HAVE/HAVE HAD:",
-                boxLetter: "A",
-                questions: [
-                  {
-                    text: "Chest surgery, heart surgery, heart valve surgery, an implantable medical device (eg, stent, pacemaker, neurostimulator), pneumothorax, and/or chronic lung disease.",
-                    field: "boxA1" as const,
-                  },
-                  {
-                    text: "Asthma, wheezing, severe allergies, hay fever or congested airways within the last 12 months that limits my physical activity/exercise.",
-                    field: "boxA2" as const,
-                  },
-                  {
-                    text: "A problem or illness involving my heart such as: angina, chest pain on exertion, heart failure, immersion pulmonary edema, heart attack or stroke, OR am taking medication for any heart condition.",
-                    field: "boxA3" as const,
-                  },
-                  {
-                    text: "Recurrent bronchitis and currently coughing within the past 12 months, OR have been diagnosed with emphysema.",
-                    field: "boxA4" as const,
-                  },
-                  {
-                    text: "Symptoms affecting my lungs, breathing, heart and/or blood in the last 30 days that impair my physical or mental performance.",
-                    field: "boxA5" as const,
-                  },
-                ],
-              },
-              {
-                title: "BOX B – I AM OVER 45 YEARS OF AGE AND:",
-                boxLetter: "B",
-                questions: [
-                  {
-                    text: "I currently smoke or inhale nicotine by other means.",
-                    field: "boxB1" as const,
-                  },
-                  {
-                    text: "I have a high cholesterol level.",
-                    field: "boxB2" as const,
-                  },
-                  {
-                    text: "I have high blood pressure.",
-                    field: "boxB3" as const,
-                  },
-                  {
-                    text: "I have had a close blood relative die suddenly or of cardiac disease or stroke before the age of 50, OR have a family history of heart disease before age 50 (including abnormal heart rhythms, coronary artery disease or cardiomyopathy).",
-                    field: "boxB4" as const,
-                  },
-                ],
-              },
-              {
-                title: "BOX C – I HAVE/HAVE HAD:",
-                boxLetter: "C",
-                questions: [
-                  {
-                    text: "Sinus surgery within the last 6 months.",
-                    field: "boxC1" as const,
-                  },
-                  {
-                    text: "Ear disease or ear surgery, hearing loss, or problems with balance.",
-                    field: "boxC2" as const,
-                  },
-                  {
-                    text: "Recurrent sinusitis within the past 12 months.",
-                    field: "boxC3" as const,
-                  },
-                  {
-                    text: "Eye surgery within the past 3 months.",
-                    field: "boxC4" as const,
-                  },
-                ],
-              },
-              {
-                title: "BOX D – I HAVE/HAVE HAD:",
-                boxLetter: "D",
-                questions: [
-                  {
-                    text: "Head injury with loss of consciousness within the past 5 years.",
-                    field: "boxD1" as const,
-                  },
-                  {
-                    text: "Persistent neurologic injury or disease.",
-                    field: "boxD2" as const,
-                  },
-                  {
-                    text: "Recurring migraine headaches within the past 12 months, or take medications to prevent them.",
-                    field: "boxD3" as const,
-                  },
-                  {
-                    text: "Blackouts or fainting (full/partial loss of consciousness) within the last 5 years.",
-                    field: "boxD4" as const,
-                  },
-                  {
-                    text: "Epilepsy, seizures, or convulsions, OR take medications to prevent them.",
-                    field: "boxD5" as const,
-                  },
-                ],
-              },
-              {
-                title: "BOX E – I HAVE/HAVE HAD:",
-                boxLetter: "E",
-                questions: [
-                  {
-                    text: "Behavioral health, mental or psychological problems requiring medical/psychiatric treatment.",
-                    field: "boxE1" as const,
-                  },
-                  {
-                    text: "Major depression, suicidal ideation, panic attacks, uncontrolled bipolar disorder requiring medication/psychiatric treatment.",
-                    field: "boxE2" as const,
-                  },
-                  {
-                    text: "Been diagnosed with a mental health condition or a learning/developmental disorder that requires ongoing care or special accommodation.",
-                    field: "boxE3" as const,
-                  },
-                  {
-                    text: "An addiction to drugs or alcohol requiring treatment within the last 5 years.",
-                    field: "boxE4" as const,
-                  },
-                ],
-              },
-              {
-                title: "BOX F – I HAVE/HAVE HAD:",
-                boxLetter: "F",
-                questions: [
-                  {
-                    text: "Recurrent back problems in the last 6 months that limit my everyday activity.",
-                    field: "boxF1" as const,
-                  },
-                  {
-                    text: "Back or spinal surgery within the last 12 months.",
-                    field: "boxF2" as const,
-                  },
-                  {
-                    text: "Diabetes, either drug or diet controlled, OR gestational diabetes within the last 12 months.",
-                    field: "boxF3" as const,
-                  },
-                  {
-                    text: "An uncorrected hernia that limits my physical abilities.",
-                    field: "boxF4" as const,
-                  },
-                  {
-                    text: "Active or untreated ulcers, problem wounds, or ulcer surgery within the last 6 months.",
-                    field: "boxF5" as const,
-                  },
-                ],
-              },
-              {
-                title: "BOX G – I HAVE HAD:",
-                boxLetter: "G",
-                questions: [
-                  {
-                    text: "Ostomy surgery and do not have medical clearance to swim or engage in physical activity.",
-                    field: "boxG1" as const,
-                  },
-                  {
-                    text: "Dehydration requiring medical intervention within the last 7 days.",
-                    field: "boxG2" as const,
-                  },
-                  {
-                    text: "Active or untreated stomach or intestinal ulcers or ulcer surgery within the last 6 months.",
-                    field: "boxG3" as const,
-                  },
-                  {
-                    text: "Frequent heartburn, regurgitation, or gastroesophageal reflux disease (GERD).",
-                    field: "boxG4" as const,
-                  },
-                  {
-                    text: "Active or uncontrolled ulcerative colitis or Crohn's disease.",
-                    field: "boxG5" as const,
-                  },
-                  {
-                    text: "Bariatric surgery within the last 12 months.",
-                    field: "boxG6" as const,
-                  },
-                ],
-              },
-            ].map((box, boxIndex) => {
+            {(() => {
               const requiredBoxes = getRequiredBoxes();
-              const isRequired = requiredBoxes.some(
-                (rb) => rb.box === box.boxLetter
-              );
+              const allBoxes = [
+                {
+                  title: "BOX A – I HAVE/HAVE HAD:",
+                  boxLetter: "A",
+                  questions: [
+                    {
+                      text: "Chest surgery, heart surgery, heart valve surgery, an implantable medical device (eg, stent, pacemaker, neurostimulator), pneumothorax, and/or chronic lung disease.",
+                      field: "boxA1" as const,
+                    },
+                    {
+                      text: "Asthma, wheezing, severe allergies, hay fever or congested airways within the last 12 months that limits my physical activity/exercise.",
+                      field: "boxA2" as const,
+                    },
+                    {
+                      text: "A problem or illness involving my heart such as: angina, chest pain on exertion, heart failure, immersion pulmonary edema, heart attack or stroke, OR am taking medication for any heart condition.",
+                      field: "boxA3" as const,
+                    },
+                    {
+                      text: "Recurrent bronchitis and currently coughing within the past 12 months, OR have been diagnosed with emphysema.",
+                      field: "boxA4" as const,
+                    },
+                    {
+                      text: "Symptoms affecting my lungs, breathing, heart and/or blood in the last 30 days that impair my physical or mental performance.",
+                      field: "boxA5" as const,
+                    },
+                  ],
+                },
+                {
+                  title: "BOX B – I AM OVER 45 YEARS OF AGE AND:",
+                  boxLetter: "B",
+                  questions: [
+                    {
+                      text: "I currently smoke or inhale nicotine by other means.",
+                      field: "boxB1" as const,
+                    },
+                    {
+                      text: "I have a high cholesterol level.",
+                      field: "boxB2" as const,
+                    },
+                    {
+                      text: "I have high blood pressure.",
+                      field: "boxB3" as const,
+                    },
+                    {
+                      text: "I have had a close blood relative die suddenly or of cardiac disease or stroke before the age of 50, OR have a family history of heart disease before age 50 (including abnormal heart rhythms, coronary artery disease or cardiomyopathy).",
+                      field: "boxB4" as const,
+                    },
+                  ],
+                },
+                {
+                  title: "BOX C – I HAVE/HAVE HAD:",
+                  boxLetter: "C",
+                  questions: [
+                    {
+                      text: "Sinus surgery within the last 6 months.",
+                      field: "boxC1" as const,
+                    },
+                    {
+                      text: "Ear disease or ear surgery, hearing loss, or problems with balance.",
+                      field: "boxC2" as const,
+                    },
+                    {
+                      text: "Recurrent sinusitis within the past 12 months.",
+                      field: "boxC3" as const,
+                    },
+                    {
+                      text: "Eye surgery within the past 3 months.",
+                      field: "boxC4" as const,
+                    },
+                  ],
+                },
+                {
+                  title: "BOX D – I HAVE/HAVE HAD:",
+                  boxLetter: "D",
+                  questions: [
+                    {
+                      text: "Head injury with loss of consciousness within the past 5 years.",
+                      field: "boxD1" as const,
+                    },
+                    {
+                      text: "Persistent neurologic injury or disease.",
+                      field: "boxD2" as const,
+                    },
+                    {
+                      text: "Recurring migraine headaches within the past 12 months, or take medications to prevent them.",
+                      field: "boxD3" as const,
+                    },
+                    {
+                      text: "Blackouts or fainting (full/partial loss of consciousness) within the last 5 years.",
+                      field: "boxD4" as const,
+                    },
+                    {
+                      text: "Epilepsy, seizures, or convulsions, OR take medications to prevent them.",
+                      field: "boxD5" as const,
+                    },
+                  ],
+                },
+                {
+                  title: "BOX E – I HAVE/HAVE HAD:",
+                  boxLetter: "E",
+                  questions: [
+                    {
+                      text: "Behavioral health, mental or psychological problems requiring medical/psychiatric treatment.",
+                      field: "boxE1" as const,
+                    },
+                    {
+                      text: "Major depression, suicidal ideation, panic attacks, uncontrolled bipolar disorder requiring medication/psychiatric treatment.",
+                      field: "boxE2" as const,
+                    },
+                    {
+                      text: "Been diagnosed with a mental health condition or a learning/developmental disorder that requires ongoing care or special accommodation.",
+                      field: "boxE3" as const,
+                    },
+                    {
+                      text: "An addiction to drugs or alcohol requiring treatment within the last 5 years.",
+                      field: "boxE4" as const,
+                    },
+                  ],
+                },
+                {
+                  title: "BOX F – I HAVE/HAVE HAD:",
+                  boxLetter: "F",
+                  questions: [
+                    {
+                      text: "Recurrent back problems in the last 6 months that limit my everyday activity.",
+                      field: "boxF1" as const,
+                    },
+                    {
+                      text: "Back or spinal surgery within the last 12 months.",
+                      field: "boxF2" as const,
+                    },
+                    {
+                      text: "Diabetes, either drug or diet controlled, OR gestational diabetes within the last 12 months.",
+                      field: "boxF3" as const,
+                    },
+                    {
+                      text: "An uncorrected hernia that limits my physical abilities.",
+                      field: "boxF4" as const,
+                    },
+                    {
+                      text: "Active or untreated ulcers, problem wounds, or ulcer surgery within the last 6 months.",
+                      field: "boxF5" as const,
+                    },
+                  ],
+                },
+                {
+                  title: "BOX G – I HAVE HAD:",
+                  boxLetter: "G",
+                  questions: [
+                    {
+                      text: "Ostomy surgery and do not have medical clearance to swim or engage in physical activity.",
+                      field: "boxG1" as const,
+                    },
+                    {
+                      text: "Dehydration requiring medical intervention within the last 7 days.",
+                      field: "boxG2" as const,
+                    },
+                    {
+                      text: "Active or untreated stomach or intestinal ulcers or ulcer surgery within the last 6 months.",
+                      field: "boxG3" as const,
+                    },
+                    {
+                      text: "Frequent heartburn, regurgitation, or gastroesophageal reflux disease (GERD).",
+                      field: "boxG4" as const,
+                    },
+                    {
+                      text: "Active or uncontrolled ulcerative colitis or Crohn's disease.",
+                      field: "boxG5" as const,
+                    },
+                    {
+                      text: "Bariatric surgery within the last 12 months.",
+                      field: "boxG6" as const,
+                    },
+                  ],
+                },
+              ];
 
-              return (
-                <div
-                  key={boxIndex}
-                  className={`border-2 mb-4 transition-all ${
-                    isRequired
-                      ? "border-red-500 bg-pink-50 shadow-lg"
-                      : "border-black"
-                  }`}
-                >
+              // Sort boxes: required boxes first (in order they appear), then remaining boxes
+              const sortedBoxes = [...allBoxes].sort((a, b) => {
+                const aIsRequired = requiredBoxes.some(rb => rb.box === a.boxLetter);
+                const bIsRequired = requiredBoxes.some(rb => rb.box === b.boxLetter);
+                
+                if (aIsRequired && !bIsRequired) return -1;
+                if (!aIsRequired && bIsRequired) return 1;
+                
+                if (aIsRequired && bIsRequired) {
+                  const aIndex = requiredBoxes.findIndex(rb => rb.box === a.boxLetter);
+                  const bIndex = requiredBoxes.findIndex(rb => rb.box === b.boxLetter);
+                  return aIndex - bIndex;
+                }
+                
+                return 0;
+              });
+
+              return sortedBoxes.map((box, boxIndex) => {
+                const isRequired = requiredBoxes.some(
+                  (rb) => rb.box === box.boxLetter
+                );
+
+                return (
                   <div
-                    className={`p-2 border-b-2 ${
+                    key={boxIndex}
+                    className={`border-2 mb-4 transition-all ${
                       isRequired
-                        ? "bg-pink-200 border-pink-500"
-                        : "bg-gray-100 border-black"
+                        ? "border-red-500 bg-pink-50 shadow-lg"
+                        : "border-black"
                     }`}
                   >
-                    <h3 className="font-bold flex items-center justify-between">
-                      {box.title}
-                      {isRequired && (
-                        <span className="text-pink-700 text-sm font-bold">
-                          ⚠️ REQUIRED - Please complete all questions
-                        </span>
-                      )}
-                    </h3>
+                    <div
+                      className={`p-2 border-b-2 ${
+                        isRequired
+                          ? "bg-pink-200 border-pink-500"
+                          : "bg-gray-100 border-black"
+                      }`}
+                    >
+                      <h3 className="font-bold flex items-center justify-between">
+                        {box.title}
+                        {isRequired && (
+                          <span className="text-pink-700 text-sm font-bold">
+                            ⚠️ REQUIRED - Select at least one option
+                          </span>
+                        )}
+                      </h3>
+                    </div>
+                    <table className="w-full border-collapse">
+                      <tbody>
+                        {box.questions.map((q, qIndex) => (
+                          <tr
+                            key={qIndex}
+                            className={
+                              qIndex < box.questions.length - 1
+                                ? "border-b border-black"
+                                : ""
+                            }
+                          >
+                            <td className="border-r border-black p-2 text-justify align-top">
+                              {q.text}
+                            </td>
+                            <td className="border-r border-black p-2 w-16 text-center align-top">
+                              <label className="flex items-center justify-center gap-1 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={formData[q.field] === true}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      updateFormData(q.field, true);
+                                    } else {
+                                      updateFormData(q.field, null);
+                                    }
+                                  }}
+                                  className="w-4 h-4 border border-black"
+                                />
+                                <span className="text-sm">Yes *</span>
+                              </label>
+                            </td>
+                            <td className="p-2 w-16 text-center align-top">
+                              <label className="flex items-center justify-center gap-1 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={formData[q.field] === false}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      updateFormData(q.field, false);
+                                    } else {
+                                      updateFormData(q.field, null);
+                                    }
+                                  }}
+                                  className="w-4 h-4 border border-black"
+                                />
+                                <span className="text-sm">No</span>
+                              </label>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                  <table className="w-full border-collapse">
-                    <tbody>
-                      {box.questions.map((q, qIndex) => (
-                        <tr
-                          key={qIndex}
-                          className={
-                            qIndex < box.questions.length - 1
-                              ? "border-b border-black"
-                              : ""
-                          }
-                        >
-                          <td className="border-r border-black p-2 text-justify align-top">
-                            {q.text}
-                          </td>
-                          <td className="border-r border-black p-2 w-16 text-center align-top">
-                            <label className="flex items-center justify-center gap-1 cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={formData[q.field] === true}
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    updateFormData(q.field, true);
-                                  } else {
-                                    updateFormData(q.field, null);
-                                  }
-                                }}
-                                className="w-4 h-4 border border-black"
-                              />
-                              <span className="text-sm">Yes *</span>
-                            </label>
-                          </td>
-                          <td className="p-2 w-16 text-center align-top">
-                            <label className="flex items-center justify-center gap-1 cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={formData[q.field] === false}
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    updateFormData(q.field, false);
-                                  } else {
-                                    updateFormData(q.field, null);
-                                  }
-                                }}
-                                className="w-4 h-4 border border-black"
-                              />
-                              <span className="text-sm">No</span>
-                            </label>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              );
-            })}
+                );
+              })
+            })()}
 
             <div className="flex justify-between items-center text-xs mt-6">
               <span>
@@ -1132,13 +1181,13 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               <div>
                 <div className="border-b-2 border-black pb-1 mb-1 min-h-[25px] w-48 flex items-end">
                   <input
-                    type="text"
+                    type="date"
                     value={formData.birthdate}
                     readOnly
                     className="w-full border-none outline-none bg-transparent"
                   />
                 </div>
-                <div className="text-xs">Birthdate Date (dd/mm/yyyy)</div>
+                <div className="text-xs">Birthdate Date (mm/dd/yyyy)</div>
               </div>
             </div>
 
@@ -1215,7 +1264,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                     className="w-full border-none outline-none bg-transparent cursor-not-allowed"
                   />
                 </div>
-                <div className="text-xs text-center">Date (dd/mm/yyyy)</div>
+                <div className="text-xs text-center">Date (mm/dd/yyyy)</div>
               </div>
             </div>
 
@@ -1353,7 +1402,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
           <Button
             onClick={handleExportPDF}
             disabled={isSubmitting}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
+            className="bg-primary text-white px-6 py-2"
           >
             {isSubmitting ? "Submitting..." : "Submit Form"}
           </Button>
