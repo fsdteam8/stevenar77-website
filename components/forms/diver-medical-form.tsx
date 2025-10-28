@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -251,6 +252,26 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
   const validateForm = (): { isValid: boolean; message: string } => {
     const missingFields: string[] = [];
 
+    // Check that all 10 questions have been answered (either Yes or No)
+    const unansweredQuestions: number[] = [];
+    if (formData.question1 === null) unansweredQuestions.push(1);
+    if (formData.question2 === null) unansweredQuestions.push(2);
+    if (formData.question3 === null) unansweredQuestions.push(3);
+    if (formData.question4 === null) unansweredQuestions.push(4);
+    if (formData.question5 === null) unansweredQuestions.push(5);
+    if (formData.question6 === null) unansweredQuestions.push(6);
+    if (formData.question7 === null) unansweredQuestions.push(7);
+    if (formData.question8 === null) unansweredQuestions.push(8);
+    if (formData.question9 === null) unansweredQuestions.push(9);
+    if (formData.question10 === null) unansweredQuestions.push(10);
+
+    if (unansweredQuestions.length > 0) {
+      return {
+        isValid: false,
+        message: `Please answer the following question(s) with either "Yes" or "No":\n\nQuestion ${unansweredQuestions.join(", ")}`,
+      };
+    }
+
     // Check required participant fields
     if (!formData.participantSignature?.trim()) {
       missingFields.push("Participant Signature");
@@ -277,7 +298,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxA4 === null &&
         formData.boxA5 === null
       ) {
-        missingFields.push("Box A - At least one item must be selected");
+        missingFields.push("Box A,");
       }
     }
 
@@ -288,7 +309,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxB3 === null &&
         formData.boxB4 === null
       ) {
-        missingFields.push("Box B - At least one item must be selected");
+        missingFields.push("Box B,");
       }
     }
 
@@ -299,7 +320,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxC3 === null &&
         formData.boxC4 === null
       ) {
-        missingFields.push("Box C - At least one item must be selected");
+        missingFields.push("Box C,");
       }
     }
 
@@ -311,7 +332,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxD4 === null &&
         formData.boxD5 === null
       ) {
-        missingFields.push("Box D - At least one item must be selected");
+        missingFields.push("Box D,");
       }
     }
 
@@ -322,7 +343,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxE3 === null &&
         formData.boxE4 === null
       ) {
-        missingFields.push("Box E - At least one item must be selected");
+        missingFields.push("Box E,");
       }
     }
 
@@ -334,7 +355,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxF4 === null &&
         formData.boxF5 === null
       ) {
-        missingFields.push("Box F - At least one item must be selected");
+        missingFields.push("Box F,");
       }
     }
 
@@ -347,7 +368,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         formData.boxG5 === null &&
         formData.boxG6 === null
       ) {
-        missingFields.push("Box G - At least one item must be selected");
+        missingFields.push("Box G,");
       }
     }
 
@@ -696,6 +717,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                         updateFormData("participantSignature", e.target.value)
                       }
                       className="w-full border-none outline-none bg-transparent"
+                      placeholder="Type your full name"
                     />
                   </div>
                   <div className="text-xs text-center">
@@ -830,7 +852,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               <div>
                 <div className="border-b-2 border-black pb-1 mb-1 min-h-[25px] w-48 flex items-end">
                   <input
-                    type="text"
+                    type="date"
                     value={formData.birthdate}
                     readOnly
                     className="w-full border-none outline-none bg-transparent"
@@ -1159,7 +1181,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               <div>
                 <div className="border-b-2 border-black pb-1 mb-1 min-h-[25px] w-48 flex items-end">
                   <input
-                    type="text"
+                    type="date"
                     value={formData.birthdate}
                     readOnly
                     className="w-full border-none outline-none bg-transparent"
@@ -1380,11 +1402,11 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
           <Button
             onClick={handleExportPDF}
             disabled={isSubmitting}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
+            className="bg-primary text-white px-6 py-2"
           >
             {isSubmitting ? "Submitting..." : "Submit Form"}
           </Button>
-        </div> 
+        </div>
       </div>
     </div>
   );

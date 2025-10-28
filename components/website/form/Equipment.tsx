@@ -897,7 +897,7 @@ export default function PadiForm({
           className={`w-full mb-4 no-print ${
             isGeneratingPDF
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700"
+              : "bg-primary"
           }`}
         >
           {isGeneratingPDF ? "Generating PDF..." : "Submit Form"}
