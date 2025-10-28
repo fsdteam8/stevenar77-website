@@ -185,7 +185,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.95);
+      const imgData = canvas.toDataURL("image/jpeg", 0.60);
 
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();

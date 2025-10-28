@@ -89,7 +89,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
       const html2canvas = await loadHTML2Canvas();
 
       const canvas = await html2canvas(formRef.current, {
-        scale: 1,
+        scale: 0.75,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
@@ -241,7 +241,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
                     }
                   }}
                   placeholder="Participant Name"
-                  className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-8 px-1 bg-transparent focus:outline-none`}
+                  className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-12 px-1 bg-transparent focus:outline-none`}
                 />{" "}
                 understand that as a diver I should:
               </p>
@@ -399,7 +399,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
                     }
                   }}
                   placeholder="Participant Name"
-                  className={`border-b ${errors.participantName ? "border-red-500 " : "border-black"} w-46 h-8 px-1`}
+                  className={`border-b ${errors.participantName ? "border-red-500 " : "border-black"} w-46 h-12 px-1`}
                 />{" "}
                 hereby affirm that I am aware that skin and scuba diving have
                 inherent risks which may result in serious injury or death. I
@@ -526,7 +526,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
                 }
               }}
               placeholder="Participant Name"
-              className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-8 px-1 bg-transparent focus:outline-none`}
+              className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-12 px-1 bg-transparent focus:outline-none`}
             />{" "}
             HAVE COMPLETED THE ATTACHED DIVER MEDICAL FORM (10346) AND I AFFIRM
             IT IS MY RESPONSIBILITY TO INFORM MY INSTRUCTOR OF ANY AND ALL
@@ -548,7 +548,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
                 }
               }}
               placeholder="Participant Name"
-              className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-8 px-1 bg-transparent focus:outline-none`}
+              className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-12 px-1 bg-transparent focus:outline-none`}
             />{" "}
             BY THIS INSTRUMENT AGREE TO EXEMPT AND RELEASE MY INSTRUCTORS,
             DIVEMASTERS, THE FACILITY WHICH OFFERS THE PROGRAMS AND PADI
