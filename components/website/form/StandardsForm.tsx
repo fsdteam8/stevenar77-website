@@ -23,18 +23,27 @@ const loadJsPDF = async () => {
 const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
   const { dispatch } = useBooking();
 
+  // Get current date in YYYY-MM-DD format
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   const [participantName, setParticipantName] = useState("");
   const [participantSignature, setParticipantSignature] = useState("");
-  const [participantDate, setParticipantDate] = useState("");
+  const [participantDate] = useState(getCurrentDate());
   const [guardianSignature, setGuardianSignature] = useState("");
-  const [guardianDate, setGuardianDate] = useState("");
+  const [guardianDate] = useState(getCurrentDate());
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  // Track which fields have errors
+  // Track which fields have errors - initialize required fields as true
   const [errors, setErrors] = useState({
-    participantName: false,
-    participantSignature: false,
-    participantDate: false,
+    participantName: true,
+    participantSignature: true,
+    participantDate: false, // Date is auto-filled, so no error
   });
 
   const formRef = useRef<HTMLDivElement>(null);
@@ -69,7 +78,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
     if (missingFields.length > 0) {
       setErrors(newErrors);
       toast.error(
-        `Please fill in the following required fields: ${missingFields.join(", ")}`
+        `Please fill in the following required fields: ${missingFields.join(", ")}`,
       );
       return;
     }
@@ -168,7 +177,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
       toast.error(
-        `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     } finally {
       setIsGeneratingPDF(false);
@@ -361,16 +370,12 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
                 <input
                   type="date"
                   value={participantDate}
-                  onChange={(e) => {
-                    setParticipantDate(e.target.value);
-                    if (errors.participantDate && e.target.value) {
-                      setErrors({ ...errors, participantDate: false });
-                    }
-                  }}
-                  className={`border-0 border-b-2 h-8 ${errors.participantDate ? "border-red-500 bg-red-50" : "border-black"} bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1`}
+                  readOnly
+                  // disabled
+                  className="border-0 border-b-2 h-8 border-black bg-gray-100 w-full text-sm focus:outline-none pb-1"
                 />
                 <p className="text-xs mt-2 text-center font-medium">
-                  Date (Day/Month/Year)
+                  Date (Month/Day/Year)
                 </p>
               </div>
             </div>
@@ -393,11 +398,12 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
                 <input
                   type="date"
                   value={guardianDate}
-                  onChange={(e) => setGuardianDate(e.target.value)}
-                  className="border-0 border-b-2 h-8 border-black bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1"
+                  readOnly
+                  // disabled
+                  className="border-0 border-b-2 h-8 border-black bg-gray-100 w-full text-sm focus:outline-none pb-1"
                 />
                 <p className="text-xs mt-2 text-center font-medium">
-                  Date (Day/Month/Year)
+                  Date (Month/Day/Year)
                 </p>
               </div>
             </div>

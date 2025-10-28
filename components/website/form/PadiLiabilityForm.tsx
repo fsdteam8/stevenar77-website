@@ -18,16 +18,26 @@ const loadHTML2Canvas = async () => {
 const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
   onSubmitSuccess,
 }) => {
+  // Get current date in YYYY-MM-DD format
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${month}/${day}/${year}`;  
+  };
+
   const [participantName, setParticipantName] = useState("");
   const [signature, setSignature] = useState("");
   const [guardianSignature, setGuardianSignature] = useState("");
-  const [date, setDate] = useState("");
+  const [date] = useState(getCurrentDate());
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  // Track which fields have errors
+  // Track which fields have errors - initialize as true to show red on load
+  // Date is not in errors since it's auto-filled
   const [errors, setErrors] = useState({
-    participantName: false,
-    signature: false,
+    participantName: true,
+    signature: true,
     date: false,
   });
 
@@ -389,7 +399,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
                     }
                   }}
                   placeholder="Participant Name"
-                  className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-8 px-1`}
+                  className={`border-b ${errors.participantName ? "border-red-500 " : "border-black"} w-46 h-8 px-1`}
                 />{" "}
                 hereby affirm that I am aware that skin and scuba diving have
                 inherent risks which may result in serious injury or death. I
@@ -573,21 +583,22 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
                     }
                   }}
                   placeholder="Signature"
-                  className={`border-b ${errors.signature ? "border-red-500 bg-red-50" : "border-black"} w-full h-8 px-1 bg-transparent focus:outline-none`}
+                  className={`border-b ${errors.signature ? "border-red-500 bg-red-50" : "border-black"} w-full h-8 px-1 bg-transparent focus:outline-none text-xl`}
+                  style={{ fontFamily: "cursive" }}
                 />
               </div>
               <div className="flex-2">
-                <label className="block text-sm mb-1">Date (DD/MM/YYYY):</label>
+                <label className="block text-sm mb-1">Date (MM/DD/YYYY):</label>
                 <input
-                  type="date"
+                  type="text"
                   value={date}
                   onChange={(e) => {
-                    setDate(e.target.value);
+                    // setDate(e.target.value);
                     if (errors.date && e.target.value.trim()) {
                       setErrors({ ...errors, date: false });
                     }
                   }}
-                  placeholder="DD/MM/YYYY"
+                  placeholder="MM/DD/YYYY"
                   className={`border-b ${errors.date ? "border-red-500 bg-red-50" : "border-black"} w-full h-8 px-1 bg-transparent focus:outline-none`}
                 />
               </div>
@@ -604,23 +615,23 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
                     value={guardianSignature}
                     onChange={(e) => setGuardianSignature(e.target.value)}
                     placeholder="Parent/Guardian Signature"
-                    className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none"
+                    className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none text-xl"
                   />
                 </div>
               </div>
               <div className="flex-2">
                 <label className="block text-sm mb-1">Date (DD/MM/YYYY):</label>
                 <input
-                  type="date"
+                  type="text"
                   value={date}
                   onChange={(e) => {
-                    setDate(e.target.value);
+                    // setDate(e.target.value);
                     if (errors.date && e.target.value.trim()) {
                       setErrors({ ...errors, date: false });
                     }
                   }}
                   placeholder="DD/MM/YYYY"
-                  className={`border-b ${errors.date ? "border-red-500 bg-red-50" : "border-black"} w-full h-8 px-1 bg-transparent focus:outline-none`}
+                  className={`border-b ${errors.date ? "border-red-500 bg-red-50" : "border-black"} w-full h-8 px-1 bg-transparent focus:outline-none `}
                 />
               </div>
             </div>

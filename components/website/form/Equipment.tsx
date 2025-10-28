@@ -1,4 +1,3 @@
-
 "use client";
 
 import type React from "react";
@@ -87,9 +86,17 @@ export default function PadiForm({
 }: {
   onSubmitSuccess?: () => void;
 }) {
-    const { dispatch } = useBooking();
+  const { dispatch } = useBooking();
   const printRef = useRef<HTMLDivElement>(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${month}-${day}-${year}`;
+  };
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -101,13 +108,20 @@ export default function PadiForm({
     localPhone: "",
     state: "",
     signature: "",
-    participantDate: "",
+    participantDate: getCurrentDate(),
     guardianSignature: "",
-    guardianDate: "",
+    guardianDate: getCurrentDate(),
     renter: "",
   });
 
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<FormErrors>({
+    name: "Name is required",
+    address: "Address is required",
+    phoneHome: "Home phone number is required",
+    email: "Email is required",
+    signature: "Signature is required",
+    renter: "Renter name is required",
+  });
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,22 +156,22 @@ export default function PadiForm({
     // Required fields validation
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
-      errorMessages.push("• Name is required");
+      errorMessages.push("Name is required,");
     }
 
     if (!formData.address.trim()) {
       newErrors.address = "Address is required";
-      errorMessages.push("• Address is required");
+      errorMessages.push("Address is required,");
     }
 
     if (!formData.phoneHome.trim()) {
       newErrors.phoneHome = "Home phone number is required";
-      errorMessages.push("• Home phone number is required");
+      errorMessages.push("Home phone number is required,");
     }
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
-      errorMessages.push("• Email is required");
+      errorMessages.push("Email is required,");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Invalid email format";
       errorMessages.push("• Valid email address is required");
@@ -165,12 +179,12 @@ export default function PadiForm({
 
     if (!formData.signature.trim()) {
       newErrors.signature = "Signature is required";
-      errorMessages.push("• Signature is required");
+      errorMessages.push("Signature is required,");
     }
 
     if (!formData.renter.trim()) {
       newErrors.renter = "Renter name is required";
-      errorMessages.push("• Renter name is required");
+      errorMessages.push("Renter name is required,");
     }
 
     setErrors(newErrors);
@@ -349,7 +363,7 @@ export default function PadiForm({
                     <input
                       type="text"
                       name="name"
-                      placeholder="Fill up Your Name"
+                      // placeholder="Fill up Your Name"
                       value={formData.name}
                       onChange={handleInputChange}
                       className={`w-full border-0 border-b ${errors.name ? "border-red-500" : "border-black"} bg-transparent outline-none`}
@@ -369,7 +383,7 @@ export default function PadiForm({
                     <input
                       type="text"
                       name="address"
-                      placeholder="Fill up Your Address"
+                      // placeholder="Fill up Your Address"
                       value={formData.address}
                       onChange={handleInputChange}
                       className={`w-full border-0 border-b ${errors.address ? "border-red-500" : "border-black"} bg-transparent outline-none mb-1`}
@@ -408,7 +422,7 @@ export default function PadiForm({
                       value={formData.phoneHome}
                       onChange={handleInputChange}
                       className={`w-full border-0 border-b ${errors.phoneHome ? "border-red-500" : "border-black"} bg-transparent outline-none`}
-                      placeholder="Your Phone Number"
+                      // placeholder="Your Phone Number"
                     />
                     {errors.phoneHome && (
                       <span className="text-red-500 text-[10px]">
@@ -418,28 +432,6 @@ export default function PadiForm({
                   </div>
                 </div>
 
-                {/* Phone Work */}
-                <div className="flex items-center">
-                  <span className="w-20">Phone Work (</span>
-                  <input
-                    type="text"
-                    name="phoneWorkArea"
-                    value={formData.phoneWorkArea}
-                    onChange={handleInputChange}
-                    className="w-8 border-0 border-b border-black bg-transparent outline-none text-center"
-                    maxLength={3}
-                  />
-                  <span>)</span>
-                  <input
-                    type="text"
-                    name="phoneWork"
-                    value={formData.phoneWork}
-                    onChange={handleInputChange}
-                    className="flex-1 ml-1 border-0 border-b border-black bg-transparent outline-none"
-                    placeholder="Your Phone Number"
-                  />
-                </div>
-
                 {/* Email */}
                 <div className="flex items-center">
                   <span className="w-20">Email Address</span>
@@ -447,7 +439,7 @@ export default function PadiForm({
                     <input
                       type="email"
                       name="email"
-                      placeholder="example@gmail.com"
+                      // placeholder="example@gmail.com"
                       value={formData.email}
                       onChange={handleInputChange}
                       className={`w-full border-0 border-b ${errors.email ? "border-red-500" : "border-black"} bg-transparent outline-none`}
@@ -848,8 +840,8 @@ export default function PadiForm({
                     name="signature"
                     value={formData.signature}
                     onChange={handleInputChange}
-                    className={`w-full border-0 border-b ${errors.signature ? "border-red-500" : "border-black"} bg-transparent outline-none`}
-                    style={{ minHeight: "25px", fontFamily: "cursive" }}
+                    className={`w-full border-0 border-b ${errors.signature ? "border-red-500" : "border-black"} bg-transparent outline-none text-xl`}
+                    style={{ fontFamily: "cursive" }}
                   />
                   <div className="mt-1">Participant&apos;s Signature</div>
                   {errors.signature && (
@@ -860,13 +852,13 @@ export default function PadiForm({
                 </div>
                 <div>
                   <input
-                    type="date"
+                    type="text"
                     name="participantDate"
                     value={formData.participantDate}
                     onChange={handleInputChange}
-                    className="w-full border-0 border-b border-black bg-transparent outline-none"
+                    className="w-full border-0 border-b border-black bg-transparent outline-none cursor-not-allowed"
                   />
-                  <div className="mt-1">Date (day/month/year)</div>
+                  <div className="mt-1">Date (MM/DD/YYYY)</div>
                 </div>
               </div>
               <div className="w-64">
@@ -885,13 +877,13 @@ export default function PadiForm({
                 </div>
                 <div>
                   <input
-                    type="date"
+                    type="text"
                     name="guardianDate"
                     value={formData.guardianDate}
                     onChange={handleInputChange}
-                    className="w-full border-0 border-b border-black bg-transparent outline-none"
+                    className="w-full border-0 border-b border-black bg-transparent outline-none cursor-not-allowed"
                   />
-                  <div className="mt-1">Date (day/month/year)</div>
+                  <div className="mt-1">Date (MM/DD/YYYY)</div>
                 </div>
               </div>
             </div>
