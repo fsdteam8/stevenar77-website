@@ -77,7 +77,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
     if (missingFields.length > 0) {
       setErrors(newErrors);
       toast.error(
-        `Please fill in the following required fields: ${missingFields.join(", ")}`,
+        `Please fill in the following required fields: ${missingFields.join(", ")}`
       );
       return;
     }
@@ -176,7 +176,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
       toast.error(
-        `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     } finally {
       setIsGeneratingPDF(false);

@@ -89,7 +89,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
       const html2canvas = await loadHTML2Canvas();
 
       const canvas = await html2canvas(formRef.current, {
-        scale: 1,
+        scale: 0.75,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",

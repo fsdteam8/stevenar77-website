@@ -189,16 +189,16 @@ export function FormFillup() {
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-xl font-bold mb-4">
-              You’re all set — your documents are complete and you’re officially
+              You&apos;re all set — your documents are complete and you&apos;re officially
               enrolled!
             </h2>
             <p className="font-semibold text-xl mb-4">
               Keep an eye out for an email from Scuba Life with your class
-              details. If it doesn’t arrive soon, please check your spam folder
+              details. If it doesn&apos;t arrive soon, please check your spam folder
               just in case.
             </p>
             <p className="mb-6">
-              As always, feel free to reach out with any questions — we’re here
+              As always, feel free to reach out with any questions — we&apos;re here
               to help every step of the way.
             </p>
             <div className="flex justify-center gap-4">
@@ -206,7 +206,7 @@ export function FormFillup() {
                 onClick={goHome}
                 className="bg-primary text-white px-6 py-2"
               >
-                back to home
+                OK
               </Button>
             </div>
           </div>
