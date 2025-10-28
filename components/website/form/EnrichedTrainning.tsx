@@ -21,13 +21,12 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
 }) => {
   const { dispatch } = useBooking();
 
-  // Get current date in YYYY-MM-DD format
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+    return `${month}-${day}-${year}`;
   };
 
   const [participantName, setParticipantName] = useState("");
@@ -40,12 +39,12 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
   const [policyNumber, setPolicyNumber] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  // Validation states - initialize required fields as true to show red highlights
+  // Validation states
   const [errors, setErrors] = useState({
-    participantName: true,
-    participantSignature: true,
-    participantDate: false, // Date is auto-filled
-    storeResort: true,
+    participantName: false,
+    participantSignature: false,
+    participantDate: false,
+    storeResort: false,
   });
 
   const formRef = useRef<HTMLDivElement>(null);
@@ -239,8 +238,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               }}
               placeholder="Enter store/resort name"
               className={`border-0 border-b-2 ${
-                errors.storeResort ? "border-red-500 bg-red-50" : "border-black"
-              } bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1`}
+                errors.storeResort ? "border-red-500" : "border-black"
+              } bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1 border-red-500`}
               required
             />
             {errors.storeResort && (
@@ -301,10 +300,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 }}
                 placeholder="Participant Name"
                 className={`border-0 border-b-2 ${
-                  errors.participantName
-                    ? "border-red-500 bg-red-50"
-                    : "border-black"
-                } bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm focus:outline-none focus:border-blue-600`}
+                  errors.participantName ? "border-red-500" : "border-black"
+                } bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm focus:outline-none focus:border-blue-600 border-red-500`}
                 required
               />
               <span className="text-sm">
@@ -453,10 +450,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 }}
                 placeholder="Participant Name (PLEASE PRINT)"
                 className={`border-0 border-b-2 ${
-                  errors.participantName
-                    ? "border-red-500 bg-red-50"
-                    : "border-black"
-                } bg-transparent w-full text-lg focus:outline-none focus:border-blue-600 pb-2`}
+                  errors.participantName ? "border-red-500" : "border-black"
+                } bg-transparent w-full text-lg focus:outline-none focus:border-blue-600 pb-2 border-red-500`}
                 required
               />
               <p className="text-xs mt-2 font-medium">
@@ -483,9 +478,9 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                   placeholder="Type your signature here"
                   className={`border-0 border-b-2 ${
                     errors.participantSignature
-                      ? "border-red-500 bg-red-50"
+                      ? "border-red-500"
                       : "border-black"
-                  } bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2`}
+                  } bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2 border-red-500`}
                   style={{ fontFamily: "cursive" }}
                   required
                 />
@@ -502,12 +497,23 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 <input
                   type="date"
                   value={participantDate}
-                  readOnly
-                  className="border-0 border-b-2 border-black bg-gray-100 w-full text-sm focus:outline-none pb-1 cursor-not-allowed"
+                  onChange={(e) => {
+                    setParticipantDate(e.target.value);
+                    handleFieldChange("participantDate", e.target.value);
+                  }}
+                  className={`border-0 border-b-2 ${
+                    errors.participantDate ? "border-red-500" : "border-black"
+                  } bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1 border-red-500`}
+                  required
                 />
                 <p className="text-xs mt-2 text-center font-medium">
-                  Date (Month/Day/Year)
+                  Date (Day/Month/Year) <span className="text-red-500">*</span>
                 </p>
+                {errors.participantDate && (
+                  <p className="text-red-500 text-xs mt-1 text-center">
+                    This field is required
+                  </p>
+                )}
               </div>
             </div>
 
@@ -530,11 +536,11 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 <input
                   type="date"
                   value={guardianDate}
-                  readOnly
-                  className="border-0 border-b-2 border-black bg-gray-100 w-full text-sm focus:outline-none pb-1 cursor-not-allowed"
+                  onChange={(e) => setGuardianDate(e.target.value)}
+                  className="border-0 border-b-2 border-black bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1 "
                 />
                 <p className="text-xs mt-2 text-center font-medium">
-                  Date (Month/Day/Year)
+                  Date (Day/Month/Year)
                 </p>
               </div>
             </div>

@@ -23,27 +23,26 @@ const loadJsPDF = async () => {
 const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
   const { dispatch } = useBooking();
 
-  // Get current date in YYYY-MM-DD format
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+    return `${month}-${day}-${year}`;
   };
 
   const [participantName, setParticipantName] = useState("");
   const [participantSignature, setParticipantSignature] = useState("");
-  const [participantDate] = useState(getCurrentDate());
+  const [participantDate, setParticipantDate] = useState(getCurrentDate());
   const [guardianSignature, setGuardianSignature] = useState("");
-  const [guardianDate] = useState(getCurrentDate());
+  const [guardianDate, setGuardianDate] = useState(getCurrentDate());
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  // Track which fields have errors - initialize required fields as true
+  // Track which fields have errors
   const [errors, setErrors] = useState({
-    participantName: true,
-    participantSignature: true,
-    participantDate: false, // Date is auto-filled, so no error
+    participantName: false,
+    participantSignature: false,
+    participantDate: false,
   });
 
   const formRef = useRef<HTMLDivElement>(null);
@@ -242,7 +241,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
                 }
               }}
               placeholder="Print Name"
-              className={`border-0 border-b-2 h-8 ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm focus:outline-none focus:border-blue-600`}
+              className={`border-0 border-b-2 h-12 border-red-500 ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm focus:outline-none focus:border-blue-600`}
             />
             <span className="text-sm">
               , understand that as a diver I should:
@@ -359,7 +358,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
                     }
                   }}
                   placeholder="Type your signature here"
-                  className={`border-0 border-b-2 h-8 ${errors.participantSignature ? "border-red-500 bg-red-50" : "border-black"} bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2`}
+                  className={`border-0 border-b-2 h-12 border-red-500 ${errors.participantSignature ? "border-red-500 bg-red-50" : "border-black"} bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2`}
                   style={{ fontFamily: "cursive" }}
                 />
                 <p className="text-xs mt-2 font-medium">
@@ -368,14 +367,18 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
               </div>
               <div>
                 <input
-                  type="date"
+                  type="text"
                   value={participantDate}
-                  readOnly
-                  // disabled
-                  className="border-0 border-b-2 h-8 border-black bg-gray-100 w-full text-sm focus:outline-none pb-1"
+                  onChange={(e) => {
+                    setParticipantDate(e.target.value);
+                    if (errors.participantDate && e.target.value) {
+                      setErrors({ ...errors, participantDate: false });
+                    }
+                  }}
+                  className={`border-0 border-b-2 h-12 border-red-500 ${errors.participantDate ? "border-red-500 bg-red-50" : "border-black"} bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1 cursor-not-allowed`}
                 />
                 <p className="text-xs mt-2 text-center font-medium">
-                  Date (Month/Day/Year)
+                  Date (Day/Month/Year)
                 </p>
               </div>
             </div>
@@ -387,7 +390,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
                   value={guardianSignature}
                   onChange={(e) => setGuardianSignature(e.target.value)}
                   placeholder="Type guardian signature here (if applicable)"
-                  className="border-0 border-b-2 h-8 border-black bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2"
+                  className="border-0 border-b-2 h-12 border-black bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2"
                   style={{ fontFamily: "cursive" }}
                 />
                 <p className="text-xs mt-2 font-medium">
@@ -396,14 +399,13 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
               </div>
               <div>
                 <input
-                  type="date"
+                  type="text"
                   value={guardianDate}
-                  readOnly
-                  // disabled
-                  className="border-0 border-b-2 h-8 border-black bg-gray-100 w-full text-sm focus:outline-none pb-1"
+                  onChange={(e) => setGuardianDate(e.target.value)}
+                  className="border-0 border-b-2 h-12 border-black bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1 cursor-not-allowed"
                 />
                 <p className="text-xs mt-2 text-center font-medium">
-                  Date (Month/Day/Year)
+                  Date (Day/Month/Year)
                 </p>
               </div>
             </div>
