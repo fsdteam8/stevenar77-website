@@ -210,7 +210,7 @@ export default function CreateAccount() {
                     <a href="/privacy" className="text-[#0694A2] underline">
                       Privacy Policy
                     </a> */}
-                    <p>I agree to Register as an User in the Scuba-life website</p>
+                    <p>I agree to join the Scuba Life community as a registered website user</p>
                   </FormLabel>
                   <FormMessage />
                 </FormItem>

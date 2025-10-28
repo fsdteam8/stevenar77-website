@@ -21,31 +21,22 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
 }) => {
   const { dispatch } = useBooking();
 
-  // Get current date in YYYY-MM-DD format
-  const getCurrentDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
   const [participantName, setParticipantName] = useState("");
   const [participantSignature, setParticipantSignature] = useState("");
-  const [participantDate, setParticipantDate] = useState(getCurrentDate());
+  const [participantDate, setParticipantDate] = useState("");
   const [guardianSignature, setGuardianSignature] = useState("");
-  const [guardianDate, setGuardianDate] = useState(getCurrentDate());
+  const [guardianDate, setGuardianDate] = useState("");
   const [storeResort, setStoreResort] = useState("");
   const [hasInsurance, setHasInsurance] = useState("");
   const [policyNumber, setPolicyNumber] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  // Validation states - initialize required fields as true to show red highlights
+  // Validation states
   const [errors, setErrors] = useState({
-    participantName: true,
-    participantSignature: true,
-    participantDate: false, // Date is auto-filled
-    storeResort: true,
+    participantName: false,
+    participantSignature: false,
+    participantDate: false,
+    storeResort: false,
   });
 
   const formRef = useRef<HTMLDivElement>(null);
@@ -63,8 +54,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
     const emptyFields = [];
     if (newErrors.participantName) emptyFields.push("Participant Name");
     if (newErrors.storeResort) emptyFields.push("Store/Resort");
-    if (newErrors.participantSignature)
-      emptyFields.push("Participant Signature");
+    if (newErrors.participantSignature) emptyFields.push("Participant Signature");
     if (newErrors.participantDate) emptyFields.push("Date");
 
     if (emptyFields.length > 0) {
@@ -163,10 +153,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
         type: "application/pdf",
       });
 
-      dispatch({
-        type: "ADD_DOCUMENT",
-        payload: { file: pdfFile, label: "Enriched Training" },
-      });
+      dispatch({ type: "ADD_DOCUMENT", payload: { file: pdfFile, label: "Enriched Training" } });
       toast.success("Form submitted successfully!");
       onSubmitSuccess?.();
     } catch (error: unknown) {
@@ -180,7 +167,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
   // Clear error when user starts typing
   const handleFieldChange = (field: keyof typeof errors, value: string) => {
     if (errors[field] && value.trim()) {
-      setErrors((prev) => ({ ...prev, [field]: false }));
+      setErrors(prev => ({ ...prev, [field]: false }));
     }
   };
 
@@ -239,14 +226,12 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               }}
               placeholder="Enter store/resort name"
               className={`border-0 border-b-2 ${
-                errors.storeResort ? "border-red-500 bg-red-50" : "border-black"
+                errors.storeResort ? "border-red-500" : "border-black"
               } bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1`}
               required
             />
             {errors.storeResort && (
-              <p className="text-red-500 text-xs mt-1">
-                This field is required
-              </p>
+              <p className="text-red-500 text-xs mt-1">This field is required</p>
             )}
           </div>
 
@@ -301,9 +286,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 }}
                 placeholder="Participant Name"
                 className={`border-0 border-b-2 ${
-                  errors.participantName
-                    ? "border-red-500 bg-red-50"
-                    : "border-black"
+                  errors.participantName ? "border-red-500" : "border-black"
                 } bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm focus:outline-none focus:border-blue-600`}
                 required
               />
@@ -453,20 +436,15 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 }}
                 placeholder="Participant Name (PLEASE PRINT)"
                 className={`border-0 border-b-2 ${
-                  errors.participantName
-                    ? "border-red-500 bg-red-50"
-                    : "border-black"
+                  errors.participantName ? "border-red-500" : "border-black"
                 } bg-transparent w-full text-lg focus:outline-none focus:border-blue-600 pb-2`}
                 required
               />
               <p className="text-xs mt-2 font-medium">
-                Participant Name (PLEASE PRINT){" "}
-                <span className="text-red-500">*</span>
+                Participant Name (PLEASE PRINT) <span className="text-red-500">*</span>
               </p>
               {errors.participantName && (
-                <p className="text-red-500 text-xs mt-1">
-                  This field is required
-                </p>
+                <p className="text-red-500 text-xs mt-1">This field is required</p>
               )}
             </div>
 
@@ -482,9 +460,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                   }}
                   placeholder="Type your signature here"
                   className={`border-0 border-b-2 ${
-                    errors.participantSignature
-                      ? "border-red-500 bg-red-50"
-                      : "border-black"
+                    errors.participantSignature ? "border-red-500" : "border-black"
                   } bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2`}
                   style={{ fontFamily: "cursive" }}
                   required
@@ -493,21 +469,28 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                   Participant Signature <span className="text-red-500">*</span>
                 </p>
                 {errors.participantSignature && (
-                  <p className="text-red-500 text-xs mt-1">
-                    This field is required
-                  </p>
+                  <p className="text-red-500 text-xs mt-1">This field is required</p>
                 )}
               </div>
               <div>
                 <input
                   type="date"
                   value={participantDate}
-                  readOnly
-                  className="border-0 border-b-2 border-black bg-gray-100 w-full text-sm focus:outline-none pb-1 cursor-not-allowed"
+                  onChange={(e) => {
+                    setParticipantDate(e.target.value);
+                    handleFieldChange("participantDate", e.target.value);
+                  }}
+                  className={`border-0 border-b-2 ${
+                    errors.participantDate ? "border-red-500" : "border-black"
+                  } bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1`}
+                  required
                 />
                 <p className="text-xs mt-2 text-center font-medium">
-                  Date (Month/Day/Year)
+                  Date (Day/Month/Year) <span className="text-red-500">*</span>
                 </p>
+                {errors.participantDate && (
+                  <p className="text-red-500 text-xs mt-1 text-center">This field is required</p>
+                )}
               </div>
             </div>
 
@@ -530,11 +513,11 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 <input
                   type="date"
                   value={guardianDate}
-                  readOnly
-                  className="border-0 border-b-2 border-black bg-gray-100 w-full text-sm focus:outline-none pb-1 cursor-not-allowed"
+                  onChange={(e) => setGuardianDate(e.target.value)}
+                  className="border-0 border-b-2 border-black bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1"
                 />
                 <p className="text-xs mt-2 text-center font-medium">
-                  Date (Month/Day/Year)
+                  Date (Day/Month/Year)
                 </p>
               </div>
             </div>
