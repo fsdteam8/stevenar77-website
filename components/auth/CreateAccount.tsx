@@ -75,12 +75,15 @@ export default function CreateAccount() {
       // }
       // console.log(res)
 
+      
+
       toast.success("Account created successfully!");
       form.reset();
       router.push( `/verify-otp?token=${token}&mode=register`);
     } catch (error) {
-      console.error("Registration failed:", error);
-      toast.error("Something went wrong. Please try again.");
+      console.error("Registration failed Mail already exist:", error);
+      toast.error( "Registration failed This mail may already be registered.");
+      // toast.error("Something went wrong. Please try again.");
     }
   };
 
