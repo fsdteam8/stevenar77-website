@@ -10,7 +10,7 @@ interface coursData {
 }
 
 export function BookingContent(courseData: coursData) {
-  console.log("co");
+  // console.log("co");
   return (
     <div className="space-y-6">
       <CourseSelection courseData={courseData} />

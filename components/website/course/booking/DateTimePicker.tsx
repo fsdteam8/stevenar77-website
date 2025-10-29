@@ -9,7 +9,7 @@ export function DateTimePicker() {
   const { state, dispatch } = useBooking();
   const searchParams = useSearchParams();
 
-  console.log("this is state", state)
+  // console.log("this is state", state)
 
   const rawSchedule = searchParams.get("schedule");
 
@@ -29,8 +29,8 @@ export function DateTimePicker() {
       const parsedDates = Array.isArray(parsed.dates) ? parsed.dates : [parsed.dates];
       dispatch({ type: "SET_DATE", payload: parsedDates });
 
-      console.log("🗓️ Schedule ID:", parsed._id);
-      console.log("🗓️ Parsed Dates from URL:", parsedDates);
+      // console.log("🗓️ Schedule ID:", parsed._id);
+      // console.log("🗓️ Parsed Dates from URL:", parsedDates);
     } catch (err) {
       console.error("❌ Error parsing URL schedule:", err);
     }

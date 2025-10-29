@@ -9,31 +9,31 @@ export async function diverMedicalForm(
   file: File
 ) {
   try {
-    console.log("📦 API function called:", {
-      id,
-      tokenExists: !!token,
-      file: {
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        isFile: file instanceof File
-      }
-    });
+    // console.log("📦 API function called:", {
+    //   id,
+    //   tokenExists: !!token,
+    //   file: {
+    //     name: file.name,
+    //     size: file.size,
+    //     type: file.type,
+    //     isFile: file instanceof File
+    //   }
+    // });
 
     const formData = new FormData();
     formData.append("documents", file, file.name);
 
     // Verify FormData
-    console.log("📋 FormData entries:");
+    // console.log("📋 FormData entries:");
     for (const [key, value] of formData.entries()) {
       if (value instanceof File) {
-        console.log(`  ${key}:`, value.name, `(${value.size} bytes)`);
+        // console.log(`  ${key}:`, value.name, `(${value.size} bytes)`);
       } else {
-        console.log(`  ${key}:`, value);
+        // console.log(`  ${key}:`, value);
       }
     }
 
-    console.log("🌐 Sending PATCH to:", `/class/bookings/${id}/submit-form`);
+    // console.log("🌐 Sending PATCH to:", `/class/bookings/${id}/submit-form`);
 
     const res = await api.patch(
       `/class/bookings/${id}/submit-form`,

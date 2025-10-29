@@ -233,7 +233,7 @@ const QuickReview: React.FC<QuickReviewProps> = () => {
       token: string;
     }) => quickreview(id, token, documents),
     onSuccess: (data) => {
-      console.log("Upload successful:", data);
+      // console.log("Upload successful:", data);
       toast.success("PDF uploaded successfully!");
     },
     onError: (error) => {
@@ -253,7 +253,7 @@ const QuickReview: React.FC<QuickReviewProps> = () => {
     try {
       if (!formRef.current) throw new Error("Form reference not found");
 
-      console.log("Generating PDF...");
+      // console.log("Generating PDF...");
       const html2canvas = await loadHTML2Canvas();
 
       const canvas = await html2canvas(formRef.current, {
@@ -321,7 +321,7 @@ const QuickReview: React.FC<QuickReviewProps> = () => {
       const pdfBlob = pdf.output("blob");
       const fileSizeMB = pdfBlob.size / 1024 / 1024;
 
-      console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
+      // console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
 
       const fileName = `PADI_Quick_Review_${studentName
         .replace(/[^a-zA-Z0-9\s]/g, "")
@@ -331,7 +331,7 @@ const QuickReview: React.FC<QuickReviewProps> = () => {
       const pdfFile = new File([pdfBlob], fileName, {
         type: "application/pdf",
       });
-      console.log("pdf file ", pdfFile);
+      // console.log("pdf file ", pdfFile);
 
       // api mutation
       handelmutaion.mutate({

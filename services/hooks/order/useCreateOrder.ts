@@ -20,7 +20,7 @@ export const useCreateOrder = () => {
       formData.append("color", color); 
       if (image) formData.append("image", image);  
 
-      console.log(formData)
+      // console.log(formData)
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/order/create`,

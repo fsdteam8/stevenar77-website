@@ -50,7 +50,7 @@ export function CourseCard({
   imageUrl,
   isHighlighted = false,
 }: CourseCardProps) {
-  console.log(imageUrl);
+  // console.log(imageUrl);
   return (
     <div
       className={cn(

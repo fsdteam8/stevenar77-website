@@ -213,7 +213,7 @@ export default function PadiForm({
     setIsGeneratingPDF(true);
 
     try {
-      console.log("🧾 Generating PDF...");
+      // console.log("🧾 Generating PDF...");
 
       const html2canvas = await loadHTML2Canvas();
       const jsPDF = await loadJsPDF();
@@ -279,7 +279,7 @@ export default function PadiForm({
       const imgWidth = pageWidth;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      console.log("🖼️ Image dimensions:", { imgWidth, imgHeight, pageHeight });
+      // console.log("🖼️ Image dimensions:", { imgWidth, imgHeight, pageHeight });
 
       let heightLeft = imgHeight;
       let position = 0;

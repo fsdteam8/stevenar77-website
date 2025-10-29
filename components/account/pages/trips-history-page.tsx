@@ -67,7 +67,7 @@ export function TripsHistoryPage() {
         </div>
       </div>
     );
-    console.log(trips);
+    // console.log(trips);
 
   return (
     <div className="container mx-auto px-2 sm:px-0">

@@ -1,417 +1,3 @@
-// "use client";
-
-// import { useState, useEffect } from "react";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-// import { Calendar } from "@/components/ui/calendar";
-// import {
-//   Popover,
-//   PopoverContent,
-//   PopoverTrigger,
-// } from "@/components/ui/popover";
-// import { Button } from "@/components/ui/button";
-// import { CalendarIcon } from "lucide-react";
-// import { format } from "date-fns";
-// import { cn } from "@/lib/utils";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-// import { useBooking } from "../booking-context";
-
-// type PersonalInfoKeys =
-//   | "name"
-//   | "email"
-//   | "phone"
-//   // | "dateOfBirth"
-//   | "age"
-//   | "address"
-//   | "city"
-//   | "state"
-//   | "postalCode"
-//   // | "emergencyName"
-//   // | "emergencyPhoneNumber"
-//   | "gender"
-//   | "shoeSize"
-//   | "hight"
-//   | "weight";
-
-// export function PersonalInformationStep() {
-//   const { state, dispatch } = useBooking();
-//   const [errors, setErrors] = useState<Record<string, string>>({});
-//   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
-
-//   // const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(() => {
-//   //   if (state.personalInfo.dateOfBirth) {
-//   //     const [month, day, year] = state.personalInfo.dateOfBirth
-//   //       .split("/")
-//   //       .map(Number);
-//   //     return new Date(year, month - 1, day);
-//   //   }
-//   //   return undefined;
-//   // });
-
-//   const [heightFeet, setHeightFeet] = useState<string>(() => {
-//     const match = state.personalInfo.hight?.match(/^(\d+)'/);
-//     return match ? match[1] : "";
-//   });
-
-//   const [heightInches, setHeightInches] = useState<string>(() => {
-//     const match = state.personalInfo.hight?.match(/'(\d+)"$/);
-//     return match ? match[1] : "";
-//   });
-
-//   const requiredFields: PersonalInfoKeys[] = [
-//     "name",
-//     "email",
-//     "phone",
-//     // "dateOfBirth",
-//     "age",
-//     "address",
-//     "city",
-//     "state",
-//     "postalCode",
-//     // "emergencyName",
-//     // "emergencyPhoneNumber",
-//     "gender",
-//     "shoeSize",
-//     "hight",
-//     "weight",
-//   ];
-
-//   const [age, setAge] = useState<string>(
-//   state.personalInfo?.age !== undefined ? String(state.personalInfo.age) : ""
-// );
-
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   const validateField = (field: PersonalInfoKeys, rawValue: any): string => {
-//     const value = String(rawValue ?? "").trim();
-
-//     if (!value) {
-//       return "This field is required";
-//     }
-
-//     switch (field) {
-//       case "name":
-//         if (value.length < 2) {
-//           return "Name must be at least 2 characters";
-//         }
-//         if (!/^[a-zA-Z\s'-]+$/.test(value)) {
-//           return "Name can only contain letters, spaces, hyphens, and apostrophes";
-//         }
-//         break;
-
-//       case "email":
-//         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//         if (!emailRegex.test(value)) {
-//           return "Please enter a valid email address";
-//         }
-//         break;
-
-//       case "phone":
-//         const phoneDigits = value.replace(/\D/g, "");
-//         if (phoneDigits.length < 10) {
-//           return "Phone number must be at least 10 digits";
-//         }
-//         if (phoneDigits.length > 15) {
-//           return "Phone number is too long";
-//         }
-//         break;
-
-//       // case "emergencyPhoneNumber":
-//       //   const emergencyDigits = value.replace(/\D/g, "");
-//       //   if (emergencyDigits.length < 10) {
-//       //     return "Emergency phone must be at least 10 digits";
-//       //   }
-//       //   if (emergencyDigits.length > 15) {
-//       //     return "Emergency phone is too long";
-//       //   }
-//       //   break;
-
-//       // case "emergencyName":
-//       //   if (value.length < 2) {
-//       //     return "Emergency contact name must be at least 2 characters";
-//       //   }
-//       //   if (!/^[a-zA-Z\s'-]+$/.test(value)) {
-//       //     return "Emergency name can only contain letters, spaces, hyphens, and apostrophes";
-//       //   }
-//       //   break;
-
-//       // case "dateOfBirth":
-//       //   const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
-//       //   if (!dateRegex.test(value)) {
-//       //     return "Please use MM/DD/YYYY format";
-//       //   }
-
-//       //   const [month, day, year] = value.split("/").map(Number);
-//       //   const date = new Date(year, month - 1, day);
-
-//       //   if (
-//       //     date.getFullYear() !== year ||
-//       //     date.getMonth() !== month - 1 ||
-//       //     date.getDate() !== day
-//       //   ) {
-//       //     return "Please enter a valid date";
-//       //   }
-
-//       //   const minAge = new Date();
-//       //   minAge.setFullYear(minAge.getFullYear() - 5);
-//       //   if (date > minAge) {
-//       //     return "Must be at least 5 years old";
-//       //   }
-
-//       //   const maxAge = new Date();
-//       //   maxAge.setFullYear(maxAge.getFullYear() - 120);
-//       //   if (date < maxAge) {
-//       //     return "Please enter a valid birth date";
-//       //   }
-//       //   break;
-//       case "age":
-//         const ageNum = Number(rawValue);
-//         if (isNaN(ageNum) || ageNum < 1 || ageNum > 120) {
-//           return "Please enter a valid age";
-//         }
-//         break;
-
-//       case "address":
-//         if (value.length < 5) {
-//           return "Please enter a complete address";
-//         }
-//         break;
-
-//       case "city":
-//         if (value.length < 2) {
-//           return "Please enter a valid city name";
-//         }
-//         if (!/^[a-zA-Z\s'-]+$/.test(value)) {
-//           return "City name can only contain letters and spaces";
-//         }
-//         break;
-
-//       case "state":
-//         if (value.length < 2) {
-//           return "Please enter a valid state name";
-//         }
-//         if (!/^[a-zA-Z\s'-]+$/.test(value)) {
-//           return "State name can only contain letters and spaces";
-//         }
-//         break;
-
-//       case "postalCode":
-//         if (!/^[A-Za-z0-9\s-]{3,10}$/.test(value)) {
-//           return "Please enter a valid postal code";
-//         }
-//         break;
-
-//       case "shoeSize":
-//         const shoeSize = Number.parseFloat(value);
-//         if (isNaN(shoeSize)) {
-//           return "Please enter a valid shoe size";
-//         }
-//         if (shoeSize < 1 || shoeSize > 20) {
-//           return "Shoe size must be between 1 and 20";
-//         }
-//         break;
-
-//       case "hight":
-//         const hightMatch = value.match(/^(\d+)'(\d+)"$/);
-//         if (!hightMatch) {
-//           return "Please enter both feet and inches";
-//         }
-
-//         const feet = Number.parseInt(hightMatch[1], 10);
-//         const inches = Number.parseInt(hightMatch[2], 10);
-
-//         if (isNaN(feet) || feet < 3 || feet > 8) {
-//           return "Feet must be between 3 and 8";
-//         }
-
-//         if (isNaN(inches) || inches < 0 || inches > 11) {
-//           return "Inches must be between 0 and 11";
-//         }
-//         break;
-
-//       case "weight":
-//         const weightMatch = value.match(
-//           /^(\d+\.?\d*)\s?(lbs?|kgs?|kg|pounds?|kilograms?)?$/i,
-//         );
-//         if (!weightMatch) {
-//           return "Please enter a valid weight (e.g., 50lbs )";
-//         }
-
-//         const weightValue = Number.parseFloat(weightMatch[1]);
-//         if (isNaN(weightValue) || weightValue < 20 || weightValue > 500) {
-//           return "Weight must be between 20 and 500";
-//         }
-//         break;
-
-//       case "gender":
-//         if (!["male", "female", "others"].includes(value.toLowerCase())) {
-//           return "Please select a valid gender";
-//         }
-//         break;
-//     }
-
-//     return "";
-//   };
-
-//   useEffect(() => {
-//     const newErrors: Record<string, string> = {};
-
-//     requiredFields.forEach((field) => {
-//       const value = state.personalInfo[field] || "";
-//       const error = validateField(field, value);
-//       if (error) {
-//         newErrors[field] = error;
-//       }
-//     });
-
-//     setErrors(newErrors);
-//   }, [state.personalInfo]);
-
-//   const markFieldAsTouched = (field: string) => {
-//     setTouchedFields((prev) => new Set(prev).add(field));
-//   };
-
-// // const handleChange = (field: PersonalInfoKeys, value: string) => {
-// //   markFieldAsTouched(field);
-// //   dispatch({ type: "SET_PERSONAL_INFO", payload: { [field]: value } });
-// // };
-
-// const handleChange = (
-//   field: PersonalInfoKeys,
-//   value: string | number | undefined,
-// ) => {
-//   markFieldAsTouched(field);
-
-//   if (field === "age" || field === "shoeSize" || field === "weight") {
-//     const numericValue =
-//       value === "" || value === undefined ? undefined : Number(value);
-//     dispatch({
-//       type: "SET_PERSONAL_INFO",
-//       payload: { [field]: numericValue },
-//     });
-//   } else {
-//     dispatch({
-//       type: "SET_PERSONAL_INFO",
-//       payload: { [field]: String(value ?? "") },
-//     });
-//   }
-// };
-
-//   const handleHeightChange = (type: "feet" | "inches", value: string) => {
-//     const numValue = value.replace(/\D/g, "");
-//     markFieldAsTouched("hight");
-
-//     if (type === "feet") {
-//       setHeightFeet(numValue);
-//       if (numValue && heightInches) {
-//         dispatch({
-//           type: "SET_PERSONAL_INFO",
-//           payload: { hight: `${numValue}'${heightInches}"` },
-//         });
-//       } else if (numValue) {
-//         dispatch({
-//           type: "SET_PERSONAL_INFO",
-//           payload: { hight: `${numValue}'0"` },
-//         });
-//       }
-//     } else {
-//       setHeightInches(numValue);
-//       if (heightFeet && numValue) {
-//         dispatch({
-//           type: "SET_PERSONAL_INFO",
-//           payload: { hight: `${heightFeet}'${numValue}"` },
-//         });
-//       } else if (heightFeet) {
-//         dispatch({
-//           type: "SET_PERSONAL_INFO",
-//           payload: { hight: `${heightFeet}'0"` },
-//         });
-//       }
-//     }
-//   };
-
-//   // const handleDateChange = (date: Date | undefined) => {
-//   //   markFieldAsTouched("dateOfBirth");
-//   //   setDateOfBirth(date);
-//   //   if (date) {
-//   //     const formattedDate = format(date, "MM/dd/yyyy");
-//   //     dispatch({
-//   //       type: "SET_PERSONAL_INFO",
-//   //       payload: { dateOfBirth: formattedDate },
-//   //     });
-//   //   } else {
-//   //     dispatch({ type: "SET_PERSONAL_INFO", payload: { dateOfBirth: "" } });
-//   //   }
-//   // };
-
-//   const hasError = (field: PersonalInfoKeys): boolean => {
-//     return touchedFields.has(field) && !!errors[field];
-//   };
-
-//   const getErrorMessage = (field: PersonalInfoKeys): string => {
-//     return touchedFields.has(field) ? errors[field] || "" : "";
-//   };
-
-//   useEffect(() => {
-//     const handleValidationTrigger = () => {
-//       // Mark all required fields as touched to show all errors
-//       setTouchedFields(new Set(requiredFields));
-//     };
-
-//     const handleResetValidation = () => {
-//       // Reset touched fields when navigating back
-//       setTouchedFields(new Set());
-//     };
-
-//     window.addEventListener("trigger-validation", handleValidationTrigger);
-//     window.addEventListener("reset-validation", handleResetValidation);
-
-//     return () => {
-//       window.removeEventListener("trigger-validation", handleValidationTrigger);
-//       window.removeEventListener("reset-validation", handleResetValidation);
-//     };
-//   }, []);
-
-//   return (
-//     <div>
-//       <h2 className="text-2xl font-semibold mb-6 text-[#343a40]">
-//         Personal Information
-//       </h2>
-
-//       <div className="grid md:grid-cols-2 gap-6">
-//         <div className="space-y-2">
-//           <Label
-//             htmlFor="name"
-//             className={hasError("name") ? "text-red-600" : ""}
-//           >
-//             Name <span className="text-red-500">*</span>
-//           </Label>
-//           <Input
-//             id="name"
-//             placeholder="Full Name Here"
-//             value={state.personalInfo.name}
-//             onChange={(e) => handleChange("name", e.target.value)}
-//             onBlur={() => markFieldAsTouched("name")}
-//             className={
-//               hasError("name")
-//                 ? "border-red-500 focus-visible:ring-red-500"
-//                 : ""
-//             }
-//             aria-invalid={hasError("name")}
-//             aria-describedby={hasError("name") ? "name-error" : undefined}
-//           />
-//           {hasError("name") && (
-//             <p id="name-error" className="text-sm text-red-600">
-//               {getErrorMessage("name")}
-//             </p>
-//           )}
-//         </div>
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -438,6 +24,8 @@ import { useBooking } from "../booking-context";
 
 type PersonalInfoKeys =
   | "name"
+  | "firstName"
+  | "lastName"
   | "email"
   | "phone"
   | "age"
@@ -476,7 +64,9 @@ export function PersonalInformationStep() {
   });
 
   const requiredFields: PersonalInfoKeys[] = [
-    "name",
+    // "name",
+    "firstName",
+    "lastName",
     "email",
     "phone",
     "age",
@@ -498,11 +88,31 @@ export function PersonalInformationStep() {
     const value = String(rawValue ?? "").trim();
     if (!value) return "This field is required";
     switch (field) {
-      case "name":
-        if (value.length < 2) return "Name must be at least 2 characters";
+      case "firstName":
+        if (value.length < 2)
+          return `${
+            field === "firstName" ? "First" : "Last"
+          } name must be at least 2 characters`;
         if (!/^[a-zA-Z\s'-]+$/.test(value))
-          return "Name can only contain letters, spaces, hyphens, and apostrophes";
+          return `${
+            field === "firstName" ? "First" : "Last"
+          } name can only contain letters, spaces, hyphens, and apostrophes`;
         break;
+      case "lastName":
+        if (value.length < 2)
+          return `${
+            field === "lastName" ? "First" : "Last"
+          } name must be at least 2 characters`;
+        if (!/^[a-zA-Z\s'-]+$/.test(value))
+          return `${
+            field === "lastName" ? "First" : "Last"
+          } name can only contain letters, spaces, hyphens, and apostrophes`;
+        break;
+      // case "name":
+      //   if (value.length < 2) return "Name must be at least 2 characters";
+      //   if (!/^[a-zA-Z\s'-]+$/.test(value))
+      //     return "Name can only contain letters, spaces, hyphens, and apostrophes";
+      //   break;
       case "email":
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value))
@@ -603,6 +213,15 @@ export function PersonalInformationStep() {
     }
   };
 
+  useEffect(() => {
+  const full = [firstName, lastName].filter(Boolean).join(" ");
+  dispatch({
+    type: "SET_PERSONAL_INFO",
+    payload: { name: full, firstName, lastName }, // add firstName & lastName
+  });
+}, [firstName, lastName, dispatch]);
+
+
   const handleHeightChange = (type: "feet" | "inches", value: string) => {
     const numValue = value.replace(/\D/g, "");
     markFieldAsTouched("hight");
@@ -668,7 +287,7 @@ export function PersonalInformationStep() {
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* ✅ First Name */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label
             htmlFor="firstName"
             className={hasError("name") ? "text-red-600" : ""}
@@ -687,10 +306,37 @@ export function PersonalInformationStep() {
                 : ""
             }
           />
+        </div> */}
+        {/* ✅ First Name */}
+        <div className="space-y-2">
+          <Label
+            htmlFor="firstName"
+            className={hasError("firstName") ? "text-red-600" : ""} // name → firstName
+          >
+            First Name <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="firstName"
+            placeholder="First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            onBlur={() => markFieldAsTouched("firstName")} // name → firstName
+            className={
+              hasError("firstName")
+                ? ""
+                : " focus-visible:ring-red-500"
+            }
+            required
+          />
+          {hasError("firstName") && (
+            <p id="firstName-error" className="text-sm text-red-600">
+              {getErrorMessage("firstName")}
+            </p>
+          )}
         </div>
 
         {/* ✅ Last Name */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label
             htmlFor="lastName"
             className={hasError("name") ? "text-red-600" : ""}
@@ -712,6 +358,33 @@ export function PersonalInformationStep() {
           {hasError("name") && (
             <p id="name-error" className="text-sm text-red-600">
               {getErrorMessage("name")}
+            </p>
+          )}
+        </div> */}
+
+        {/* ✅ Last Name */}
+        <div className="space-y-2">
+          <Label
+            htmlFor="lastName"
+            className={hasError("lastName") ? "text-red-600" : ""} // name → lastName
+          >
+            Last Name <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="lastName"
+            placeholder="Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            onBlur={() => markFieldAsTouched("lastName")} // name → lastName
+            className={
+              hasError("lastName")
+                ? "border-red-500 focus-visible:ring-red-500"
+                : ""
+            }
+          />
+          {hasError("lastName") && (
+            <p id="lastName-error" className="text-sm text-red-600">
+              {getErrorMessage("lastName")}
             </p>
           )}
         </div>

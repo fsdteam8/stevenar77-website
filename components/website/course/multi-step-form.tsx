@@ -118,7 +118,7 @@ export function MultiStepForm() {
   // Check if current step is valid
   const isCurrentStepValid = validateStep(state.currentStep, state);
 
-  console.log("this is state", state);
+  // console.log("this is state", state);
 
   const handleNext = () => {
     // Trigger validation display in child component
@@ -142,7 +142,7 @@ export function MultiStepForm() {
       setShowValidation(false);
 
       if (isLastStep && validation.isValid) {
-        console.log("Form completed!", state);
+        // console.log("Form completed!", state);
       } else if (state.currentStep < steps.length - 1 && validation.isValid) {
         dispatch({ type: "SET_STEP", payload: state.currentStep + 1 }); // Only advances if valid
       }
