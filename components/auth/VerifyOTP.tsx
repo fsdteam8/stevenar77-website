@@ -8,14 +8,15 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useSearchParams, useRouter } from "next/navigation";
+import { resendOTP } from "@/lib/api";
 
 export default function VerifyOTP() {
   const [email, setEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const [otpValue, setOtpValue] = useState<string[]>(Array(6).fill(""));
   const [timeLeft, setTimeLeft] = useState(60);
+  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const router = useRouter();
 
   const searchParams = useSearchParams();
   const token = encodeURIComponent(searchParams.get("token") || "");
@@ -43,7 +44,7 @@ export default function VerifyOTP() {
   // Handle OTP input change
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    index: number,
+    index: number
   ) => {
     const val = e.target.value.replace(/\D/, "");
     if (!val) return;
@@ -56,7 +57,7 @@ export default function VerifyOTP() {
   // Handle backspace
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    index: number,
+    index: number
   ) => {
     if (e.key === "Backspace") {
       e.preventDefault();
@@ -66,7 +67,6 @@ export default function VerifyOTP() {
       if (index > 0) inputRefs.current[index - 1]?.focus();
     }
   };
- 
 
   // Submit OTP
   const onSubmit = async () => {
@@ -104,8 +104,33 @@ export default function VerifyOTP() {
       } else {
         router.push(`/reset-password?token=${token}`);
       }
-    } catch (error)  {
+    } catch (error) {
       toast.error(`${error}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Resend OTP
+  const handleResend = async () => {
+    if (timeLeft > 0) return;
+    if (!token) return toast.error("Token not found. Please try again.");
+
+    try {
+      setLoading(true);
+      const res = await resendOTP(token);
+
+      console.log(res);
+
+      if (res?.success) {
+        toast.success(res.message || "OTP resent successfully!");
+        setTimeLeft(60);
+      } else {
+        toast.error(res?.message || "Failed to resend OTP");
+      }
+    } catch (error) {
+      console.error("Resend OTP error:", error);
+      toast.error("Something went wrong while resending OTP");
     } finally {
       setLoading(false);
     }
@@ -117,7 +142,8 @@ export default function VerifyOTP() {
         Enter OTP
       </h1>
       <p className="text-gray-500 mb-6">
-        We&apos;ve sent a 6-digit code to your email- If no mail in the Inbox Check Junk/Spam Mail:{" "}
+        We&apos;ve sent a 6-digit code to your email. If no mail in the Inbox,
+        please check Junk/Spam Mail:{" "}
         <span className="font-semibold text-[#131313]">{email}</span>
       </p>
 
@@ -162,11 +188,13 @@ export default function VerifyOTP() {
             <div>
               Didn’t get a code?{" "}
               <button
+                type="button"  
+                onClick={handleResend}
                 disabled={timeLeft > 0}
-                className={`${
+                className={`font-medium text-[#0694A2] cursor-pointer ${
                   timeLeft > 0
-                    ? "text-[#0694A2] cursor-not-allowed"
-                    : "text-[#0694A2] hover:underline cursor-pointer"
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:underline"
                 }`}
               >
                 Resend
