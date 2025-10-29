@@ -31,7 +31,7 @@ const PaymentSuccess = () => {
               If you&apos;ve booked a trip for multiple people, please send us each
               <br />
               <span className="text-primary">
-                each participant&apos;s name,{" "} email,{" "} phone Number and any special
+                each participant&apos;s name,{" "} email,{" "} phone number and any special
                 requirements ASAP.{" "}
               </span>
               <br />
