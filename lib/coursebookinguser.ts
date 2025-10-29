@@ -36,7 +36,7 @@ export const api = {
     const session = await getSession();
 
 
-    console.log("Session in postFormData:", formData);
+    // console.log("Session in postFormData:", formData);
 
     const response = await fetch(`${API_BASE_URL}/class/bookings`, {
       method: 'POST',

@@ -14,7 +14,7 @@ export default function Trips() {
   const { data: trips, isLoading, isError, error } = useTrips();
   // const router = useRouter();
 
-  console.log(trips)
+  // console.log(trips)
 
   if (isLoading)
     return (

@@ -55,25 +55,25 @@ export const mapBookingStateToPayload = (
   }
 
   // ✅ Return full payload
-  console.log("==== DEBUG BOOKING PAYLOAD ====");
-  console.log("Personal Info:", state.personalInfo);
-  console.log(
-    "Age value:",
-    state.personalInfo.age,
-    "Type:",
-    typeof state.personalInfo.age,
-  );
-  console.log("Final Payload Preview:", {
-    Username: state.personalInfo.name,
-    email: state.personalInfo.email,
-    phoneNumber: state.personalInfo.phone,
-    age: state.personalInfo.age,
-    gender: state.personalInfo.gender,
-    shoeSize: state.personalInfo.shoeSize,
-    hight: state.personalInfo.hight,
-    weight: state.personalInfo.weight,
-  });
-  console.log("================================");
+  // console.log("==== DEBUG BOOKING PAYLOAD ====");
+  // console.log("Personal Info:", state.personalInfo);
+  // console.log(
+  //   "Age value:",
+  //   state.personalInfo.age,
+  //   "Type:",
+  //   typeof state.personalInfo.age,
+  // );
+  // console.log("Final Payload Preview:", {
+  //   Username: state.personalInfo.name,
+  //   email: state.personalInfo.email,
+  //   phoneNumber: state.personalInfo.phone,
+  //   age: state.personalInfo.age,
+  //   gender: state.personalInfo.gender,
+  //   shoeSize: state.personalInfo.shoeSize,
+  //   hight: state.personalInfo.hight,
+  //   weight: state.personalInfo.weight,
+  // });
+  // console.log("================================");
 
   return {
     classId,

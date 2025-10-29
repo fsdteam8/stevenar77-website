@@ -76,7 +76,7 @@ export const fetchSocial = async () => {
     return res.data;
     // console.log('1',res.data)
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     throw new Error("Failed to fetch social data");
   }
 };

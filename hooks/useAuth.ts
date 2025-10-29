@@ -43,7 +43,7 @@ export const useAuth = () => {
       return response;
     } catch  {
       setError("Failed to send reset email");
-      console.log("Failed to send reset email");
+      // console.log("Failed to send reset email");
     } finally {
       setLoading(false);
     }

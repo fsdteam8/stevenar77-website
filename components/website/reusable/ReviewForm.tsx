@@ -75,7 +75,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   //   const maxCount = Math.max(...reviewStats.breakdown.map((b) => b.count));
   //   return (count / maxCount) * 100;
   // };
-  console.log("hello");
+  // console.log("hello");
   return (
     <div className="container mx-auto">
       <div className="sm:max-w-7xl max-w-xl border rounded-md mx-auto p-6 bg-white">

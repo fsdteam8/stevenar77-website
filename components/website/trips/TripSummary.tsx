@@ -22,7 +22,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
   const searchParams = useSearchParams();
   const quantity = Number(searchParams.get("q")) || 1;
 
-  console.log(quantity);
+  // console.log(quantity);
 
   // Split full name into first and last
   const [firstName, lastName] = state.personalInfo.name.split(" ");

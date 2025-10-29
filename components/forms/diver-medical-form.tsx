@@ -485,13 +485,13 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         throw new Error("Generated file is not a valid File object");
       }
 
-      console.log("📤 Starting upload with bookingId:", bookingId);
+      // console.log("📤 Starting upload with bookingId:", bookingId);
 
       dispatch({
         type: "ADD_DOCUMENT",
         payload: { file: pdfFile, label: "Divers Medical" },
       });
-      console.log("📋 Document added to booking context");
+      // console.log("📋 Document added to booking context");
 
       if (onSubmitSuccess) onSubmitSuccess();
     } catch (error) {

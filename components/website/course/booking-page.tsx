@@ -19,7 +19,7 @@ export function BookingPage() {
     ? JSON.parse(decodeURIComponent(scheduleParam))
     : null;
 
-  console.log(schedule);
+  // console.log(schedule);
 
   useEffect(() => {
     if (params.id) {

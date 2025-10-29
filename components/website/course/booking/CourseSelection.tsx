@@ -12,7 +12,7 @@ interface courseprops {
 export function CourseSelection(courseData: courseprops) {
   const { state } = useBooking();
 
-  console.log("age is here", courseData.courseData.courseData.duration);
+  // console.log("age is here", courseData.courseData.courseData.duration);
   const data = courseData?.courseData?.courseData;
   return (
     <Card className="p-6">
