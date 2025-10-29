@@ -80,3 +80,18 @@ export const fetchSocial = async () => {
     throw new Error("Failed to fetch social data");
   }
 };
+
+// OTP Resend
+export const resendOTP = async (token: string) => {
+  try {
+    const res = await api.post("/auth/resend-forgot-otp", {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error("Failed to resend OTP:", error);
+    throw error;
+  }
+};
