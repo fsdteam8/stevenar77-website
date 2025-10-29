@@ -43,7 +43,7 @@ const PaymentSuccess = () => {
                 scubastevenar@gmail.com
               </a>
               <br />
-              Can&apos;t wait to dive in with you - adventure&apos;s just around the corner!🌊
+              Can&apos;t wait to dive in with you - adventure&apos;s just around the corner!
             </p>
           </div>
           <div className="flex gap-4 justify-center">
