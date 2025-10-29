@@ -50,7 +50,7 @@ const CourseDetails = () => {
   const courseId = params?.id as string;
   const { data: course, isLoading, isError, error } = useCourse(courseId);
 
-  console.log("this is courses data", course?.price);
+  // console.log("this is courses data", course?.price);
 
   // const [selectedPriceIndex, setSelectedPriceIndex] = useState(0);
   const [openSet, setOpenSet] = useState<number | null>(0);

@@ -39,7 +39,7 @@ export const ProfilePage = () => {
     phone: "",
     dateOfBirth: "",
   });
-  console.log('userdata',user)
+  // console.log('userdata',user)
   // Populate form data when user loads
   useEffect(() => {
     if (user) {

@@ -165,7 +165,7 @@ export function BookingSummary({}: BookingSummaryProps) {
         scheduleId, // guaranteed to be string here
       };
 
-      console.log("✅ Final booking payload:", bookingPayload);
+      // console.log("✅ Final booking payload:", bookingPayload);
 
       await createBookingMutation.mutateAsync(bookingPayload);
     } catch (error) {

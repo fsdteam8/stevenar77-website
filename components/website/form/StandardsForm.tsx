@@ -87,7 +87,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
     try {
       if (!formRef.current) throw new Error("Form reference not found");
 
-      console.log("Generating PDF from form...");
+      // console.log("Generating PDF from form...");
       const html2canvas = await loadHTML2Canvas();
 
       const canvas = await html2canvas(formRef.current, {
@@ -155,7 +155,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({ onSubmitSuccess }) => {
       const pdfBlob = pdf.output("blob");
       const fileSizeMB = pdfBlob.size / 1024 / 1024;
 
-      console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
+      // console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
 
       const fileName = `PADI_Standards_Form_${participantName
         .replace(/[^a-zA-Z0-9\s]/g, "")

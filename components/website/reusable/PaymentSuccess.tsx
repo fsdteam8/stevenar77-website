@@ -31,7 +31,7 @@ const PaymentSuccess = () => {
               If you&apos;ve booked a trip for multiple people, please send us each
               <br />
               <span className="text-primary">
-                each participant&apos;s name,{" "} email,{" "} phone Number and any special
+                each participant&apos;s name,{" "} email,{" "} phone number and any special
                 requirements ASAP.{" "}
               </span>
               <br />
@@ -43,7 +43,7 @@ const PaymentSuccess = () => {
                 scubastevenar@gmail.com
               </a>
               <br />
-              Can&apos;t wait to dive in with you - adventure&apos;s just around the corner!🌊
+              Can&apos;t wait to dive in with you - adventure&apos;s just around the corner!
             </p>
           </div>
           <div className="flex gap-4 justify-center">
