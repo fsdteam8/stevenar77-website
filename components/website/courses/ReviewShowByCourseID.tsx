@@ -8,9 +8,10 @@ interface Props {
   courseId: string;
 }
 
+
 const ReviewShowByCourseID: React.FC<Props> = ({ courseId }) => {
   const { data, isLoading, isError, error } = useReviewsByCourse(courseId);
-
+console.log("review data",data)
   if (isLoading) {
     return (
       <p className="px-3 py-6 bg-gray-50 font-semibold text-gray-700 text-center text-sm">
