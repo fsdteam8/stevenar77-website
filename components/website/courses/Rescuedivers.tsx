@@ -154,7 +154,7 @@ const CourseDetails = () => {
                   className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
                 >
                   {/* Header */}
-                  <button
+                  <div
                     onClick={() => toggleSet(setIndex)}
                     className="w-full px-6 py-5 hover:bg-gray-50 transition-colors"
                   >
@@ -164,10 +164,10 @@ const CourseDetails = () => {
                       <div className="flex gap-4">
                         <div className="flex-1 text-left">
                           <h4 className="text-[18px] font-semibold text-gray-900 mb-2">
-                            {scheduleSet.title}
+                            {scheduleSet?.title}
                           </h4>
                           <p className="text-sm text-gray-600 leading-relaxed border rounded-md px-2 bg-blue-50 p-1">
-                            {scheduleSet.description}
+                            {scheduleSet?.description}
                           </p>
                         </div>
 
@@ -198,14 +198,14 @@ const CourseDetails = () => {
                           scheduleSet.participents <= 2 && (
                             <div className="flex items-center gap-2 px-4 py-2 bg-red-50 border border-red-200 rounded-lg animate-pulse">
                               <div className="text-base font-semibold text-red-700">
-                                Only {scheduleSet.participents} spot
-                                {scheduleSet.participents > 1 ? "s" : ""} left
+                                Only {scheduleSet?.participents} spot
+                                {scheduleSet?.participents > 1 ? "s" : ""} left
                               </div>
                             </div>
                           )}
 
                         {/* Conditional Button */}
-                        {scheduleSet.participents > 0 ? (
+                        {scheduleSet?.participents > 0 ? (
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -225,7 +225,7 @@ const CourseDetails = () => {
                         )}
                       </div>
                     </div>
-                  </button>
+                  </div>
 
                   {/* Collapsible Content */}
                   <div
@@ -236,7 +236,7 @@ const CourseDetails = () => {
                     }`}
                   >
                     <div className="px-6 pb-6 space-y-3 bg-gray-50">
-                      {scheduleSet.sets.map(
+                      {scheduleSet?.sets.map(
                         (scheduleItem: ScheduleDate, itemIndex: number) => {
                           return (
                             <div

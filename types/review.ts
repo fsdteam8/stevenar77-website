@@ -3,6 +3,9 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
+  image: {
+    url: string;
+  };
 }
 
 interface Facility {
@@ -13,9 +16,17 @@ interface Facility {
 
 export interface Review {
   _id: string;
-  userId: User | null;       // user may be null
+  userId: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    image: {
+      url: string;
+    };
+  };
   facility?: Facility | null; // facility is optional
-  productId?: string;         // optional now
+  productId?: string; // optional now
   star: number;
   comment: string;
   createdAt: string;
