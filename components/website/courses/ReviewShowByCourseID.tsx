@@ -53,6 +53,7 @@ const ReviewShowByCourseID: React.FC<Props> = ({ courseId }) => {
                   firstName: review?.userId.firstName || "Jhon",
                   lastName: review?.userId.lastName || "",
                   email: review?.userId.email || "",
+                  image: review?.userId?.image ?? { url: "" },
                 },
                 star: review?.star,
                 comment: review?.comment,
