@@ -24,7 +24,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
-    return `${month}/${day}/${year}`;  
+    return `${month}/${day}/${year}`;
   };
 
   const [participantName, setParticipantName] = useState("");
@@ -583,7 +583,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
                     }
                   }}
                   placeholder="Signature"
-                  className={`border-b ${errors.signature ? "border-red-500 bg-red-50" : "border-black"} w-full h-12 px-1 bg-transparent focus:outline-none text-xl`}
+                  className={`border-b ${errors.signature ? "border-red-500 bg-red-50" : "border-black"} w-full h-12 px-1 bg-transparent focus:outline-none text-xl italic`}
                   style={{ fontFamily: "cursive" }}
                 />
               </div>
@@ -615,7 +615,8 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
                     value={guardianSignature}
                     onChange={(e) => setGuardianSignature(e.target.value)}
                     placeholder="Parent/Guardian Signature"
-                    className="border-b border-black w-full h-12 px-1 bg-transparent focus:outline-none text-xl"
+                    className="border-b border-black w-full h-12 px-1 bg-transparent focus:outline-none text-xl italic"
+                    style={{ fontFamily: "cursive" }}
                   />
                 </div>
               </div>

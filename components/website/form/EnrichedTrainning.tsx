@@ -480,7 +480,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                     errors.participantSignature
                       ? "border-red-500"
                       : "border-black"
-                  } bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2 border-red-500`}
+                  } bg-transparent w-full text-lg font-cursive focus:outline-none focus:border-blue-600 pb-2 border-red-500 italic`}
                   style={{ fontFamily: "cursive" }}
                   required
                 />
