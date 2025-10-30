@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -290,95 +289,184 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       };
     }
 
+    // Validate Box A - ALL questions must be answered if question1 is Yes
     if (formData.question1) {
-      if (
-        formData.boxA1 === null &&
-        formData.boxA2 === null &&
-        formData.boxA3 === null &&
-        formData.boxA4 === null &&
-        formData.boxA5 === null
-      ) {
-        missingFields.push("Box A,");
+      const unansweredA: string[] = [];
+      if (formData.boxA1 === null) unansweredA.push("A1");
+      if (formData.boxA2 === null) unansweredA.push("A2");
+      if (formData.boxA3 === null) unansweredA.push("A3");
+      if (formData.boxA4 === null) unansweredA.push("A4");
+      if (formData.boxA5 === null) unansweredA.push("A5");
+
+      if (unansweredA.length > 0) {
+        return {
+          isValid: false,
+          message: `Box A is required. Please answer ALL questions in Box A (${unansweredA.join(", ")})`,
+        };
+      }
+
+      // Check if at least one Yes in Box A
+      const hasYesInA = formData.boxA1 || formData.boxA2 || formData.boxA3 || formData.boxA4 || formData.boxA5;
+      if (!hasYesInA) {
+        return {
+          isValid: false,
+          message: "Box A: At least one question must be answered 'Yes'",
+        };
       }
     }
 
+    // Validate Box B - ALL questions must be answered if question2 is Yes
     if (formData.question2) {
-      if (
-        formData.boxB1 === null &&
-        formData.boxB2 === null &&
-        formData.boxB3 === null &&
-        formData.boxB4 === null
-      ) {
-        missingFields.push("Box B,");
+      const unansweredB: string[] = [];
+      if (formData.boxB1 === null) unansweredB.push("B1");
+      if (formData.boxB2 === null) unansweredB.push("B2");
+      if (formData.boxB3 === null) unansweredB.push("B3");
+      if (formData.boxB4 === null) unansweredB.push("B4");
+
+      if (unansweredB.length > 0) {
+        return {
+          isValid: false,
+          message: `Box B is required. Please answer ALL questions in Box B (${unansweredB.join(", ")})`,
+        };
+      }
+
+      // Check if at least one Yes in Box B
+      const hasYesInB = formData.boxB1 || formData.boxB2 || formData.boxB3 || formData.boxB4;
+      if (!hasYesInB) {
+        return {
+          isValid: false,
+          message: "Box B: At least one question must be answered 'Yes'",
+        };
       }
     }
 
+    // Validate Box C - ALL questions must be answered if question4 is Yes
     if (formData.question4) {
-      if (
-        formData.boxC1 === null &&
-        formData.boxC2 === null &&
-        formData.boxC3 === null &&
-        formData.boxC4 === null
-      ) {
-        missingFields.push("Box C,");
+      const unansweredC: string[] = [];
+      if (formData.boxC1 === null) unansweredC.push("C1");
+      if (formData.boxC2 === null) unansweredC.push("C2");
+      if (formData.boxC3 === null) unansweredC.push("C3");
+      if (formData.boxC4 === null) unansweredC.push("C4");
+
+      if (unansweredC.length > 0) {
+        return {
+          isValid: false,
+          message: `Box C is required. Please answer ALL questions in Box C (${unansweredC.join(", ")})`,
+        };
+      }
+
+      // Check if at least one Yes in Box C
+      const hasYesInC = formData.boxC1 || formData.boxC2 || formData.boxC3 || formData.boxC4;
+      if (!hasYesInC) {
+        return {
+          isValid: false,
+          message: "Box C: At least one question must be answered 'Yes'",
+        };
       }
     }
 
+    // Validate Box D - ALL questions must be answered if question6 is Yes
     if (formData.question6) {
-      if (
-        formData.boxD1 === null &&
-        formData.boxD2 === null &&
-        formData.boxD3 === null &&
-        formData.boxD4 === null &&
-        formData.boxD5 === null
-      ) {
-        missingFields.push("Box D,");
+      const unansweredD: string[] = [];
+      if (formData.boxD1 === null) unansweredD.push("D1");
+      if (formData.boxD2 === null) unansweredD.push("D2");
+      if (formData.boxD3 === null) unansweredD.push("D3");
+      if (formData.boxD4 === null) unansweredD.push("D4");
+      if (formData.boxD5 === null) unansweredD.push("D5");
+
+      if (unansweredD.length > 0) {
+        return {
+          isValid: false,
+          message: `Box D is required. Please answer ALL questions in Box D (${unansweredD.join(", ")})`,
+        };
+      }
+
+      // Check if at least one Yes in Box D
+      const hasYesInD = formData.boxD1 || formData.boxD2 || formData.boxD3 || formData.boxD4 || formData.boxD5;
+      if (!hasYesInD) {
+        return {
+          isValid: false,
+          message: "Box D: At least one question must be answered 'Yes'",
+        };
       }
     }
 
+    // Validate Box E - ALL questions must be answered if question7 is Yes
     if (formData.question7) {
-      if (
-        formData.boxE1 === null &&
-        formData.boxE2 === null &&
-        formData.boxE3 === null &&
-        formData.boxE4 === null
-      ) {
-        missingFields.push("Box E,");
+      const unansweredE: string[] = [];
+      if (formData.boxE1 === null) unansweredE.push("E1");
+      if (formData.boxE2 === null) unansweredE.push("E2");
+      if (formData.boxE3 === null) unansweredE.push("E3");
+      if (formData.boxE4 === null) unansweredE.push("E4");
+
+      if (unansweredE.length > 0) {
+        return {
+          isValid: false,
+          message: `Box E is required. Please answer ALL questions in Box E (${unansweredE.join(", ")})`,
+        };
+      }
+
+      // Check if at least one Yes in Box E
+      const hasYesInE = formData.boxE1 || formData.boxE2 || formData.boxE3 || formData.boxE4;
+      if (!hasYesInE) {
+        return {
+          isValid: false,
+          message: "Box E: At least one question must be answered 'Yes'",
+        };
       }
     }
 
+    // Validate Box F - ALL questions must be answered if question8 is Yes
     if (formData.question8) {
-      if (
-        formData.boxF1 === null &&
-        formData.boxF2 === null &&
-        formData.boxF3 === null &&
-        formData.boxF4 === null &&
-        formData.boxF5 === null
-      ) {
-        missingFields.push("Box F,");
+      const unansweredF: string[] = [];
+      if (formData.boxF1 === null) unansweredF.push("F1");
+      if (formData.boxF2 === null) unansweredF.push("F2");
+      if (formData.boxF3 === null) unansweredF.push("F3");
+      if (formData.boxF4 === null) unansweredF.push("F4");
+      if (formData.boxF5 === null) unansweredF.push("F5");
+
+      if (unansweredF.length > 0) {
+        return {
+          isValid: false,
+          message: `Box F is required. Please answer ALL questions in Box F (${unansweredF.join(", ")})`,
+        };
+      }
+
+      // Check if at least one Yes in Box F
+      const hasYesInF = formData.boxF1 || formData.boxF2 || formData.boxF3 || formData.boxF4 || formData.boxF5;
+      if (!hasYesInF) {
+        return {
+          isValid: false,
+          message: "Box F: At least one question must be answered 'Yes'",
+        };
       }
     }
 
+    // Validate Box G - ALL questions must be answered if question9 is Yes
     if (formData.question9) {
-      if (
-        formData.boxG1 === null &&
-        formData.boxG2 === null &&
-        formData.boxG3 === null &&
-        formData.boxG4 === null &&
-        formData.boxG5 === null &&
-        formData.boxG6 === null
-      ) {
-        missingFields.push("Box G,");
-      }
-    }
+      const unansweredG: string[] = [];
+      if (formData.boxG1 === null) unansweredG.push("G1");
+      if (formData.boxG2 === null) unansweredG.push("G2");
+      if (formData.boxG3 === null) unansweredG.push("G3");
+      if (formData.boxG4 === null) unansweredG.push("G4");
+      if (formData.boxG5 === null) unansweredG.push("G5");
+      if (formData.boxG6 === null) unansweredG.push("G6");
 
-    if (missingFields.length > 0) {
-      return {
-        isValid: false,
-        message:
-          "Please complete the following required sections:\n\n" +
-          missingFields.join("\n"),
-      };
+      if (unansweredG.length > 0) {
+        return {
+          isValid: false,
+          message: `Box G is required. Please answer ALL questions in Box G (${unansweredG.join(", ")})`,
+        };
+      }
+
+      // Check if at least one Yes in Box G
+      const hasYesInG = formData.boxG1 || formData.boxG2 || formData.boxG3 || formData.boxG4 || formData.boxG5 || formData.boxG6;
+      if (!hasYesInG) {
+        return {
+          isValid: false,
+          message: "Box G: At least one question must be answered 'Yes'",
+        };
+      }
     }
 
     return { isValid: true, message: "" };
@@ -1089,7 +1177,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                         {box.title}
                         {isRequired && (
                           <span className="text-pink-700 text-sm font-bold">
-                            ⚠️ REQUIRED - Select at least one option
+                            ⚠️ REQUIRED - Answer ALL questions
                           </span>
                         )}
                       </h3>

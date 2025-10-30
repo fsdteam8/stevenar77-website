@@ -24,8 +24,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
@@ -185,7 +185,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.60);
+      const imgData = canvas.toDataURL("image/jpeg", 0.6);
 
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
@@ -542,7 +542,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
           <div className="mt-8 w-full space-y-6">
             <div className="flex gap-10">
               <div className="flex-5 w-full">
-                <label className="block text-center font-semibold mb-1">
+                <label className="block  font-semibold mb-1">
                   Participant Signature:
                 </label>
                 <input
@@ -555,7 +555,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                     }
                   }}
                   placeholder="Signature"
-                  className={`border-b ${errors.signature ? "border-red-500 bg-red-50" : "border-black"} w-full text-xl  h-8 px-1 bg-transparent focus:outline-none`}
+                  className={`border-b ${errors.signature ? "border-red-500 bg-red-50" : "border-black"} w-full text-xl  h-8 px-1 bg-transparent focus:outline-none italic`}
                   style={{ fontFamily: "cursive" }}
                 />
               </div>
@@ -573,7 +573,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
             <div className="flex gap-10">
               <div className="flex-5 w-full">
                 <div>
-                  <label className="block text-center text-sm mb-1">
+                  <label className="block text-sm mb-1">
                     Parent/Guardian Signature (if applicable):
                   </label>
                   <input
@@ -581,7 +581,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                     value={guardianSignature}
                     onChange={(e) => setGuardianSignature(e.target.value)}
                     placeholder="Parent/Guardian Signature"
-                    className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none cursor-pointer"
+                    className="border-b border-black w-full h-8 px-1 bg-transparent focus:outline-none cursor-pointer italic"
+                    style={{ fontFamily: "cursive" }}
                   />
                 </div>
               </div>

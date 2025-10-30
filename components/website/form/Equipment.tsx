@@ -840,7 +840,7 @@ export default function PadiForm({
                     name="signature"
                     value={formData.signature}
                     onChange={handleInputChange}
-                    className={`w-full border-0 h-12 border-b ${errors.signature ? "border-red-500" : "border-black"} bg-transparent outline-none text-xl`}
+                    className={`w-full border-0 h-12 border-b ${errors.signature ? "border-red-500" : "border-black"} bg-transparent outline-none text-xl italic`}
                     style={{ fontFamily: "cursive" }}
                   />
                   <div className="mt-1">Participant&apos;s Signature</div>
