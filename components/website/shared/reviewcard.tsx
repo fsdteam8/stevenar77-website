@@ -13,8 +13,9 @@ export function ReviewCard({ review }: ReviewCardProps) {
   // Concatenate first and last name
   const fullName = `${review.userId?.firstName} ${review.userId?.lastName}`;
   
+  console.log(review)
   // Use facility address or fallback to facility name
-  const location = review?.facility?.address || review?.facility?.name;
+  // const location = review?.facility?.address || review?.facility?.name;
   
   return (
     <Card className="w-full h-full overflow-hidden bg-white shadow-xs hover:shadow-sm transition-shadow duration-300">
@@ -25,19 +26,19 @@ export function ReviewCard({ review }: ReviewCardProps) {
             <div className="flex items-center space-x-1">
               <Image
                 // src={ {} ||'/images/profile-mini.jpg'}
-                src={review?.userId?.email || '/images/profile-mini.jpg'}
+                src={review?.userId?.image?.url || '/images/profile-mini.jpg'}
                 alt="profile image"
-                className="rounded-full"
-                width={50}
-                height={50}
+                width={70}
+                height={70}
+                className="aspect-square rounded-full object-cover"
               />
               <div className="">
                 <h3 className="font-semibold text-base sm:text-lg text-gray-900 leading-tight">
                   {fullName}
                 </h3>
-                <p className="flex flex-row text-sm text-gray-600">
+                {/* <p className="flex flex-row text-sm text-gray-600">
                   {location}, {review?.facility?.address}
-                </p>
+                </p> */}
               </div>
             </div>
             <div className="flex items-center gap-2">

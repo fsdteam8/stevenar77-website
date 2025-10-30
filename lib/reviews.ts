@@ -32,6 +32,9 @@ export interface ReviewByCourse {
     firstName?: string;
     lastName?: string;
     email?: string;
+    image: {
+      url: string;
+    }
   };
   classId: string;
   star: number;
