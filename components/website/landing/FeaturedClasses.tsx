@@ -188,7 +188,7 @@ const FeaturedClasses: React.FC = () => {
                       <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
                       <span>{course.rating.toFixed(1)}</span>
                       <span className="text-[#68706A] font-normal text-[12px] leading-[150%]">
-                        ({course.reviews} reviews)
+                        {/* ({course.reviews} reviews) */}
                       </span>
                     </div>
                   </div>
