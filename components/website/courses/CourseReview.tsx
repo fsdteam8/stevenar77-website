@@ -17,17 +17,23 @@ import { useRouter } from "next/navigation"; // ✅ fixed import
 import { useSession } from "next-auth/react";
 
 interface CourseReviewProps {
-  userId: string;
+  // userId: string;
   classId: string;
 }
 
-const CourseReview: React.FC<CourseReviewProps> = ({ userId, classId }) => {
+
+
+const CourseReview: React.FC<CourseReviewProps> = ({  classId }) => {
   const { mutate, isPending, isError, isSuccess, error } = useSubmitReview();
   // const { data, isLoading } = useReviewsByCourse(classId);
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const router = useRouter();
   const { status } = useSession();
   const isLoggedIn = status === "authenticated";
+
+  const userID = useSession();
+  const userId = userID?.data?.user?.id as string;
+  console.log("cudlinkpung",userID);
 
   const handleReviewSubmit = (reviewData: {
     rating: number;
