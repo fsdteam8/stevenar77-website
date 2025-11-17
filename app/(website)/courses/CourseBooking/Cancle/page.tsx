@@ -1,3 +1,4 @@
+// app/(website)/courses/CourseBooking/Cancle/page.tsx
 import PaymentCard from "@/components/website/reusable/PaymentCard";
 import React from "react";
 
