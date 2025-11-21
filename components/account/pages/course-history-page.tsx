@@ -36,7 +36,7 @@ export function CourseHistoryPage() {
   );
 
   // Only show "paid" bookings
-  const paidBookings = bookings.filter((b) => b.status === "paid");
+  const paidBookings = bookings.filter((b) => b.status === "pending");
 
   // Map API bookings to CourseCardData
   const mappedBookings: CourseCardData[] = paidBookings.map((b) => {
