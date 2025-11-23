@@ -26,6 +26,7 @@ const ProductReview: React.FC<ProductReviewProps> = ({ userId, productId }) => {
       productId: productId,
       star: reviewData.rating,
       comment: reviewData.description,
+      purchaseDate: new Date().toISOString(), // Assuming current date as purchase date
     });
   };
 

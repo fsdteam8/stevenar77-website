@@ -29,6 +29,7 @@ export interface Review {
   productId?: string; // optional now
   star: number;
   comment: string;
+  purchaseDate?: string; // optional now
   createdAt: string;
   updatedAt: string;
   __v: number;

@@ -4,6 +4,7 @@ export interface SubmitReviewPayload {
   classId: string;
   star: number;
   comment: string;
+  purchaseDate: string;
 }
 
 export interface Review {
@@ -12,6 +13,7 @@ export interface Review {
   classId: string;
   star: number;
   comment: string;
+  purchaseDate: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -39,6 +41,7 @@ export interface ReviewByCourse {
   classId: string;
   star: number;
   comment: string;
+  purchaseDate: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -61,6 +64,7 @@ export interface SubmitProductReviewPayload {
   productId: string;
   star: number;
   comment: string;
+  purchaseDate: string; 
 }
 
 export interface ProductReview {
@@ -69,6 +73,7 @@ export interface ProductReview {
   productId: string;
   star: number;
   comment: string;
+  purchaseDate: string; 
   createdAt: string;
   updatedAt: string;
   __v: number;
