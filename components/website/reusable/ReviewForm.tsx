@@ -384,7 +384,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               {/* Purchase Date */}
               <div>
                 <div className="block text-sm font-medium text-gray-700 mb-2">
-                  Purchase Date (Month & Year)
+                  Course Purchase At (Month & Year) 
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
