@@ -50,7 +50,7 @@ const ProductCarousel = () => {
     (index: number) => {
       api?.scrollTo(index);
     },
-    [api]
+    [api],
   );
 
   if (isLoading) {
@@ -64,9 +64,7 @@ const ProductCarousel = () => {
   }
   if (isError) {
     return (
-      <p className="text-center text-red-500 py-10">
-        Failed to load products.
-      </p>
+      <p className="text-center text-red-500 py-10">Failed to load products.</p>
     );
   }
 
@@ -87,38 +85,37 @@ const ProductCarousel = () => {
         opts={{ align: "start", loop: false }}
       >
         <CarouselContent className="-ml-2 md:-ml-4">
-  {products
-    .filter((product) => product._id) // ✅ Only admin products have _id
-    .map((product) => (
-      <CarouselItem
-        key={product._id}
-        className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
-      >
-        <div className="h-[450px] sm:h-[500px] lg:h-[550px] flex flex-col">
-          <ShopProductCard
-
-            image={product.previewUrl || "/images/default-product.jpg"}
-            title={product.title}
-            description={
-              product.shortDescription
-                ? product.shortDescription.replace(/<[^>]*>?/gm, "").slice(0, 100) + "..."
-                : ""
-            }
-            rating={product?.averageRating || 0}
-            reviews={product?.totalReviews || 0}
-            price={product.price || 0}
-            onSeeMore={() => router.push(`/shop/${product._id}`)}
-            onBookNow={() =>
-              router.push(`/checkout?productId=${product._id}&qty=1`)
-
-            }
-            id={product._id}
-          />
-        </div>
-      </CarouselItem>
-    ))}
-</CarouselContent>
-
+          {products
+            .filter((product) => product._id)
+            .map((product) => (
+              <CarouselItem
+                key={product._id}
+                className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+              >
+                <div className="h-[450px] sm:h-[500px] lg:h-[550px] flex flex-col">
+                  <ShopProductCard
+                    image={product.previewUrl || "/images/default-product.jpg"}
+                    title={product.title}
+                    description={
+                      product.shortDescription
+                        ? product.shortDescription
+                            .replace(/<[^>]*>?/gm, "")
+                            .slice(0, 100) + "..."
+                        : ""
+                    }
+                    rating={product?.averageRating || 0}
+                    reviews={product?.totalReviews || 0}
+                    price={product.price || 0}
+                    onSeeMore={() => router.push(`/shop/${product._id}`)}
+                    onBookNow={() =>
+                      router.push(`/checkout?productId=${product._id}&qty=1`)
+                    }
+                    id={product._id}
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+        </CarouselContent>
       </Carousel>
 
       {/* Bottom Controls */}

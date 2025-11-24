@@ -4,7 +4,7 @@ import CourseReview from "@/components/website/courses/CourseReview";
 // import Hero from "@/components/website/shared/Hero";
 import React from "react";
 import ReviewShowByCourseID from "@/components/website/courses/ReviewShowByCourseID";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 
 // ✅ Page receives params from Next.js routing
 interface PageProps {

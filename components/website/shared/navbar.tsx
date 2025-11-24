@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CircleUserRound, LogOut, Menu, X } from "lucide-react";
+import { CircleUserRound, LogOut, Menu, ShoppingCart, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +25,7 @@ import {
 import { useSession, signOut } from "next-auth/react";
 import { useMyProfile } from "@/services/hooks/user/useMyProfile";
 import logo from "@/public/images/logo.png";
+import { useCart } from "@/hooks/useCart";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -33,6 +34,8 @@ const Navbar = () => {
 
   const { data: session, status } = useSession();
   const { user, loading } = useMyProfile();
+  const userId = session?.user?.id;
+  const { data: cartData, isLoading, error } = useCart(userId);
 
   const [isOpen, setIsOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
@@ -119,7 +122,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center">
             {/* <Image src="/images/logo.png" alt="logo" width={64} height={64} /> */}
-            <Image src={logo} alt="logo"  width={64} height={64} />
+            <Image src={logo} alt="logo" width={64} height={64} />
           </Link>
 
           {/* Desktop Navigation */}
@@ -144,7 +147,18 @@ const Navbar = () => {
           </div>
 
           {/* Right Section */}
-          <div className="  flex items-center gap-4">
+          <div className="flex items-center gap-4">
+            <div className="cursor-pointer relative">
+              <Link href="/cart">
+                <ShoppingCart size={24} />
+                {cartData?.data?.length > 0 && (
+                  <span className="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
+                    {cartData.data.length}
+                  </span>
+                )}
+              </Link>
+            </div>
+
             <div className="hidden md:flex ">
               {status === "loading" || loading ? (
                 <LoadingPlaceholder />

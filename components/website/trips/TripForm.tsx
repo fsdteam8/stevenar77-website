@@ -1,9 +1,18 @@
+// TripForm.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import {
   Form,
   FormControl,
@@ -13,13 +22,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useTripBooking } from "../course/steps/TripBookingContext";
+import { useTripBooking as useTripBookingContext } from "../course/steps/TripBookingContext";
+import { useSession } from "next-auth/react";
+import { Trip } from "@/services/hooks/trip/useTrip";
+import { useTripBooking } from "@/hooks/useTripBooking";
+import { toast } from "sonner";
 
-// ✅ Validation schema (generic phone, not US only)
-const tripSchema = z.object({
+// Schema for one participant
+const participantSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   phone: z
@@ -30,134 +43,349 @@ const tripSchema = z.object({
   email: z.string().email("Invalid email"),
 });
 
+const tripSchema = z.object({
+  participants: z.number().min(1, "At least 1 participant required"),
+  participantDetails: z.array(participantSchema),
+});
+
 type TripFormValues = z.infer<typeof tripSchema>;
 
-export function TripForm() {
-  const { state, dispatch } = useTripBooking();
-  const [isSaved, setIsSaved] = useState(false); // ✅ track if form is saved
+interface TripFormProps {
+  trip: Trip;
+}
 
+export function TripForm({ trip }: TripFormProps) {
+  const { state, dispatch } = useTripBookingContext();
+  const { mutate: bookTrip } = useTripBooking();
+  const [tripsBookings, setTripsBookings] = useState(false);
+
+  const [isSaved, setIsSaved] = useState(false);
+
+  const { data: session } = useSession();
+  const userId = session?.user?.id as string | undefined;
+
+  const searchParams = useSearchParams();
+  const queryParticipants =
+    Number(searchParams.get("q")) || state.participants || 1;
+
+  const itemId =
+    typeof window !== "undefined"
+      ? window.location.pathname.split("/").pop()
+      : "";
+
+  // Form setup
   const form = useForm<TripFormValues>({
     resolver: zodResolver(tripSchema),
     defaultValues: {
-      firstName: state.personalInfo.name.split(" ")[0] || "",
-      lastName: state.personalInfo.name.split(" ")[1] || "",
-      phone: state.personalInfo.phone || "",
-      email: state.personalInfo.email || "",
+      participants: queryParticipants,
+      participantDetails: Array.from({ length: queryParticipants }, () => ({
+        firstName: "",
+        lastName: "",
+        phone: "",
+        email: "",
+      })),
     },
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "participantDetails",
+  });
+
+  // Adjust inputs when participant count changes
+  useEffect(() => {
+    const count = form.getValues("participants");
+    const currentLength = fields.length;
+
+    if (count > currentLength) {
+      for (let i = currentLength; i < count; i++) {
+        append({ firstName: "", lastName: "", phone: "", email: "" });
+      }
+    } else if (count < currentLength) {
+      for (let i = currentLength; i > count; i--) {
+        remove(i - 1);
+      }
+    }
+  }, [form.watch("participants")]);
+
+  // SUBMIT HANDLER
   const onSubmit = async (values: TripFormValues) => {
-    // Simulate async operation (optional)
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    dispatch({
-      type: "SET_PERSONAL_INFO",
-      payload: {
-        name: `${values.firstName} ${values.lastName}`,
-        phone: values.phone,
-        email: values.email,
+    dispatch({ type: "SET_PARTICIPANTS", payload: values.participants });
+
+    const tripPrice = trip.price || 0;
+    const totalParticipants = values.participants;
+    const totalPrice = tripPrice * totalParticipants;
+
+    const payload = {
+      userId: userId,
+      itemId: itemId,
+      type: "trip" as const,
+      price: totalPrice,
+      participants: values.participantDetails.map((p) => ({
+        firstName: p.firstName,
+        lastName: p.lastName,
+        email: p.email,
+        mobile: Number(p.phone),
+      })),
+    };
+
+    // console.log("Payload to send:", payload);
+
+    // Send to API
+    bookTrip(payload, {
+      onSuccess: (res) => {
+        toast.success("Trip added to cart successfully!");
+        setTripsBookings(true);
+        // console.log("Trip booking successful!", res);
+        setIsSaved(true);
+      },
+      onError: (err) => {
+        toast.error("Failed to add trip to cart!");
+        // console.error("Trip booking failed:", err);
       },
     });
-
-    setIsSaved(true); // ✅ mark as saved permanently
   };
 
+  const participantOptions = Array.from(
+    { length: trip.maximumCapacity || 50 },
+    (_, i) => i + 1,
+  );
+
+  if (tripsBookings) {
+    const totalParticipants = form.getValues("participants");
+    const tripPrice = trip.price || 0;
+    const totalPrice = totalParticipants * tripPrice;
+
+    return (
+      <Card className="p-10 bg-white shadow-lg rounded-2xl text-center">
+        <div className="flex flex-col items-center space-y-4">
+          {/* Success Icon */}
+          <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+            <svg
+              className="w-10 h-10 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+
+          {/* Title */}
+          <h2 className="text-3xl font-bold text-gray-800">
+            Booking Added to Cart!
+          </h2>
+
+          {/* Trip Info */}
+          <div className="text-gray-600 text-lg">
+            <p className="font-semibold text-gray-800">{trip.title}</p>
+            <p>
+              <span className="font-semibold">{totalParticipants}</span>{" "}
+              participant{totalParticipants > 1 ? "s" : ""}
+            </p>
+            <p className="text-xl font-bold text-primary mt-2">
+              Total: {totalPrice.toLocaleString()} BDT
+            </p>
+          </div>
+
+          <div className="w-full mt-8">
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">
+              Participant Details
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {form.getValues("participantDetails").map((p, i) => (
+                <div
+                  key={i}
+                  className="p-5 border border-gray-200 rounded-2xl bg-gray-50 shadow-sm hover:shadow-md transition"
+                >
+                  <h4 className="text-lg font-bold text-gray-800 mb-3 border-b pb-2">
+                    Participant {i + 1}
+                  </h4>
+
+                  <div className="space-y-2 text-gray-700 text-sm">
+                    <p>
+                      <span className="font-semibold">First Name:</span>{" "}
+                      {p.firstName || "-"}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Last Name:</span>{" "}
+                      {p.lastName || "-"}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Email:</span>{" "}
+                      {p.email || "-"}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Phone:</span>{" "}
+                      {p.phone || "-"}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Button */}
+          <div className="flex justify-center gap-4">
+            <Button
+              className="mt-8 w-full bg-primary text-white text-lg py-3 rounded-xl hover:bg-primary/80"
+              onClick={() => (window.location.href = "/trips")}
+            >
+              Back Home
+            </Button>
+            <Button
+              className="mt-8 w-full bg-primary text-white text-lg py-3 rounded-xl hover:bg-primary/80"
+              onClick={() => (window.location.href = "/cart")}
+            >
+              Go to Cart
+            </Button>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
   return (
-    <Card className="p-6">
-      <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
+    <Card className="p-8 bg-white shadow-md rounded-2xl">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">
         Your Information
       </h2>
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="grid md:grid-cols-2 gap-4"
-        >
-          {/* First Name */}
+        <form onSubmit={form.handleSubmit(onSubmit)} className="gap-6">
+          {/* Participant count selector */}
           <FormField
             control={form.control}
-            name="firstName"
+            name="participants"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>First Name *</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter Your First Name" {...field} />
-                </FormControl>
+              <FormItem className="mb-6">
+                <FormLabel className="text-lg font-semibold text-gray-700">
+                  Number of Participants *
+                </FormLabel>
                 <FormMessage />
+                <FormControl>
+                  <Select
+                    value={field.value.toString()}
+                    onValueChange={(value) => {
+                      const num = Number(value);
+                      field.onChange(num);
+                      dispatch({ type: "SET_PARTICIPANTS", payload: num });
+                    }}
+                  >
+                    <SelectTrigger className="w-full border border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 hover:border-gray-400 transition">
+                      <SelectValue placeholder="Select participants" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-lg border border-gray-200 shadow-lg">
+                      {participantOptions.map((num) => (
+                        <SelectItem key={num} value={num.toString()}>
+                          {num} {num === 1 ? "participant" : "participants"}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
               </FormItem>
             )}
           />
 
-          {/* Last Name */}
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Last Name *</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter Your Last Name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Dynamic participant forms */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {fields.map((field, index) => (
+              <div
+                key={field.id}
+                className="p-6 border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-shadow grid md:grid-cols-2 gap-6"
+              >
+                <h3 className="md:col-span-2 text-lg font-bold text-gray-800 mb-4 border-b pb-2">
+                  Participant {index + 1}
+                </h3>
 
-          {/* Phone */}
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number *</FormLabel>
-                <FormControl>
-                  <Input type="tel" placeholder="1234567890" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                <FormField
+                  control={form.control}
+                  name={`participantDetails.${index}.firstName`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name *</FormLabel>
+                      <FormControl>
+                        <Input placeholder="John" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          {/* Email */}
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email *</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="example@example.com"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                <FormField
+                  control={form.control}
+                  name={`participantDetails.${index}.lastName`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name *</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Doe" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          {/* Submit button full width */}
-          <div className="md:col-span-2 mt-4">
+                <FormField
+                  control={form.control}
+                  name={`participantDetails.${index}.phone`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone *</FormLabel>
+                      <FormControl>
+                        <Input placeholder="xxxxxxxx" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`participantDetails.${index}.email`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email *</FormLabel>
+                      <FormControl>
+                        <Input placeholder="example@email.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Submit button */}
+          <div className="md:col-span-2 mt-6">
             <Button
               type="submit"
-              className={`w-full ${isSaved ? "bg-gray-400 cursor-no-drop" : ""}`}
+              className={`w-full py-3 text-lg font-semibold transition ${
+                isSaved
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-primary hover:bg-primary/80 text-white"
+              }`}
               disabled={isSaved || form.formState.isSubmitting}
             >
               {isSaved
-                ? "Saved"
+                ? "Add to Cart"
                 : form.formState.isSubmitting
-                ? "Saving..."
-                : "Save & Continue"}
+                  ? "Saving..."
+                  : "Add to Cart"}
             </Button>
           </div>
         </form>
       </Form>
-
-      <p className="text-xs text-[#6c757d] mt-4">
-        * Required fields - All information must be completed before proceeding
-        to payment.
-      </p>
     </Card>
   );
 }

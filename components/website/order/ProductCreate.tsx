@@ -1,326 +1,20 @@
-// /* eslint-disable @typescript-eslint/no-explicit-any */
-// "use client";
-// import React, { useState, useRef, useEffect } from "react";
-// import { Upload, X } from "lucide-react";
-// import Image from "next/image";
-// import { useCreateOrder } from "@/services/hooks/order/useCreateOrder";
-// import { toast } from "sonner";
-// import { Button } from "@/components/ui/button";
-// import { useProductDetails } from "@/services/hooks/product/useProductDetails";
-
-// interface ProductCreateProps {
-//   productId: string;
-//   onClose?: () => void;
-// }
-
-// interface ProductVariant {
-//   _id: string;
-//   title: string;
-//   price: number;
-//   quantity?: number;
-//   image?: { url: string };
-// }
-
-// const ProductCreate: React.FC<ProductCreateProps> = ({
-//   productId,
-//   onClose,
-// }) => {
-//   const [selectedVariant, setSelectedVariant] = useState<string>("");
-//   const [quantity, setQuantity] = useState<number | "">("");
-//   // const [images, setImages] = useState<File[]>([]);
-//   // const fileInputRef = useRef<HTMLInputElement>(null);
-
-//   const [images, setImages] = useState<File[]>([]);
-//   const fileInputRef = useRef<HTMLInputElement>(null);
-
-//   const { mutate: createOrder, isPending } = useCreateOrder();
-//   const { data, isLoading, error } = useProductDetails(productId);
-
-//   // Auto-select first variant when product data loads
-//   // useEffect(() => {
-//   //   if (data?.data?.variants?.length) {
-//   //     setSelectedVariant(data?.data?.variants[0]?.title);
-//   //   }
-//   // }, [data]);
-
-//   useEffect(() => {
-//   if (data?.data?.variants?.length) {
-//     const firstVariant = data.data.variants[0];
-//     setSelectedVariant(firstVariant.title);
-
-//     // Convert variant image URL to File and set in images
-//     const loadImage = async () => {
-//       if (firstVariant?.image?.url) {
-//         const file = await urlToFile(firstVariant?.image?.url, "variant-image");
-//         setImages([file]);
-//       }
-//     };
-
-//     loadImage();
-//   }
-// }, [data]);
-
-//   const selectedVariantData = data?.data?.variants?.find(
-//     (v) => v.title === selectedVariant,
-//   );
-
-//   // console.log(data);
-//   // console.log(data?.data.variants[0]?.image);
-
-//   const urlToFile = async (url: string, filename: string): Promise<File> => {
-//   const res = await fetch(url);
-//   const blob = await res.blob();
-//   const extension = blob.type.split("/")[1] || "jpg";
-//   return new File([blob], `${filename}.${extension}`, { type: blob.type });
-// };
-
-//   // Handle file selection
-//   const handleFiles = (files: FileList) => {
-//     const newFiles = Array.from(files).filter((file) => {
-//       const validTypes = ["image/jpeg", "image/png", "image/jpg"];
-//       const maxSize = 10 * 1024 * 1024; // 10MB
-//       return validTypes.includes(file.type) && file.size <= maxSize;
-//     });
-//     setImages(newFiles);
-//   };
-
-//   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     if (e.target.files) handleFiles(e.target.files);
-//   };
-
-//   const removeImage = (index: number) => {
-//     setImages((prev) => prev.filter((_, i) => i !== index));
-//   };
-
-//   const handleCancel = () => {
-//     setSelectedVariant(data?.data?.variants?.[0]?.title || "");
-//     setQuantity("");
-//     setImages([]);
-//     onClose?.();
-//   };
-
-//   // const handleSubmit = () => {
-//   //   if (!selectedVariant) {
-//   //     toast.error("Please select a variant");
-//   //     return;
-//   //   }
-//   //   if (!quantity || quantity < 1) {
-//   //     toast.error("Please enter a valid quantity");
-//   //     return;
-//   //   }
-
-//   //   const file = images[0];
-
-//   //   // Build payload for backend
-//   //   createOrder(
-//   //     {
-//   //       productId,
-//   //       color: selectedVariant,
-//   //       quantity: Number(quantity),
-//   //       image: file,
-//   //     },
-
-//   //     {
-//   //       onSuccess: (response: any) => {
-//   //         handleCancel();
-//   //         toast.success("Order placed successfully!");
-
-//   //         // Redirect to Stripe session
-//   //         const sessionUrl = response?.data?.sessionUrl;
-//   //         if (sessionUrl) {
-//   //           window.location.href = sessionUrl;
-//   //         }
-//   //       },
-//   //       onError: () => toast.error("Failed to place order. Try again."),
-//   //     },
-//   //   );
-//   // };
-// const handleSubmit = async () => {
-//   if (!selectedVariant) {
-//     toast.error("Please select a variant");
-//     return;
-//   }
-
-//   if (!quantity || quantity < 1) {
-//     toast.error("Please enter a valid quantity");
-//     return;
-//   }
-
-//   const imageUrl = selectedVariantData?.image?.url;
-
-//   if (!imageUrl) {
-//     toast.error("No image found for selected variant.");
-//     return;
-//   }
-
-//   try {
-//     // Fetch the image as a Blob (binary)
-//     const response = await fetch(imageUrl);
-//     if (!response.ok) throw new Error("Failed to fetch image");
-
-//     const blob = await response.blob();
-
-//     // Here you send the blob (binary data) directly to your backend
-//     // Assuming createOrder accepts image as Blob or binary data
-//     createOrder(
-//       {
-//         productId,
-//         color: selectedVariant,
-//         quantity: Number(quantity),
-//         image: blob, // send raw binary blob
-//       },
-//       {
-//         onSuccess: (response: any) => {
-//           handleCancel();
-//           toast.success("Order placed successfully!");
-
-//           const sessionUrl = response?.data?.sessionUrl;
-//           if (sessionUrl) {
-//             window.location.href = sessionUrl;
-//           }
-//         },
-//         onError: () => toast.error("Failed to place order. Try again."),
-//       }
-//     );
-//   } catch (error) {
-//     toast.error("Failed to process image for upload.");
-//     console.error(error);
-//   }
-// };
-
-//   if (isLoading) return <p>Loading...</p>;
-//   if (error) return <p>Error loading product.</p>;
-
-//   return (
-//     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
-//       {/* Variant + Quantity */}
-//       <div className="mb-6">
-//         <div className="flex  gap-2">
-//           <div className="">
-//             <p className="text-sm font-medium text-gray-700 mb-2">
-//               Select Color & Quantity
-//             </p>
-//           </div>
-//           <div className="">
-//             {/* Available Quantity Display */}
-//             {selectedVariantData?.quantity !== undefined && (
-//               <span className="text-sm text-gray-500">
-//                 In stock: <strong>{selectedVariantData?.quantity}</strong>
-//               </span>
-//             )}
-//           </div>
-//         </div>
-//         {/* <div className="flex gap-4 items-center">
-//           <div className="border-2 rounded-md">
-//             <select
-//               value={selectedVariant}
-//               onChange={(e) => setSelectedVariant(e.target.value)}
-//             >
-//               {data?.data?.variants?.map((v: any, i: number) => (
-//                 <option key={i} value={v.title}>
-//                   {v.title}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-
-//           <input
-//             type="number"
-//             min={1}
-//             placeholder="Qty"
-//             value={quantity}
-//             onChange={(e) => setQuantity(Number(e.target.value) || "")}
-//             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-//           />
-//         </div> */}
-//         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-//           <div className="flex items-center gap-2">
-//             <div className="border-2 rounded-md">
-//               <select
-//                 value={selectedVariant}
-//                 onChange={(e) => setSelectedVariant(e.target.value)}
-//                 className="px-2 py-1"
-//               >
-//                 {data?.data?.variants?.map((v: any, i: number) => (
-//                   <option key={i} value={v.title}>
-//                     {v.title}
-//                   </option>
-//                 ))}
-//               </select>
-//             </div>
-//           </div>
-
-//           <input
-//             type="number"
-//             min={1}
-//             max={selectedVariantData?.quantity || undefined}
-//             placeholder="Qty"
-//             value={quantity}
-//             onChange={(e) => setQuantity(Number(e.target.value) || "")}
-//             className="w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-//           />
-//         </div>
-//       </div>
-
-//       {/* Image Upload */}
-//       <div className="mb-6">
-//         <p className="text-sm font-medium text-gray-700 mb-2">
-//           Selected Product&apos;s Picture
-//         </p>
-//         <div className="border-2 border-dashed rounded-lg p-6 text-center">
-//           {/* Show variant image if selected */}
-//           {selectedVariantData?.image?.url && (
-//             <Image
-//               src={selectedVariantData?.image?.url}
-//               alt={selectedVariant}
-//               width={200}
-//               height={200}
-//               className="mx-auto"
-//             />
-//           )}
-//         </div>
-//       </div>
-
-//       {/* Action Buttons */}
-//       <div className="flex justify-end gap-4 pt-6 border-t">
-//         <Button
-//           type="button"
-//           onClick={handleCancel}
-//           className="px-6 py-2 border border-gray-300 bg-transparent text-teal-700 rounded-md hover:bg-teal-200 transition"
-//         >
-//           Cancel
-//         </Button>
-//         <Button
-//           type="button"
-//           onClick={handleSubmit}
-//           disabled={isPending}
-//           className="px-6 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition"
-//         >
-//           {isPending ? "Placing Order..." : "Confirm Order"}
-//         </Button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProductCreate;
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useCreateOrder } from "@/services/hooks/order/useCreateOrder";
 import { useProductDetails } from "@/services/hooks/product/useProductDetails";
 import { toast } from "sonner";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useTripBooking } from "@/hooks/useTripBooking";
+import { Card } from "@/components/ui/card";
 
 interface ProductCreateProps {
   productId: string;
   onClose?: () => void;
 }
 
-// Updated variant type
 interface ProductVariant {
   _id: string;
   title: string;
@@ -336,16 +30,18 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
   const [selectedVariant, setSelectedVariant] = useState<string>("");
   const [quantity, setQuantity] = useState<number | "">("");
   const [, setImages] = useState<File[]>([]);
-  // const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const { mutate: createOrder, isPending } = useCreateOrder();
   const { data, isLoading, error } = useProductDetails(productId);
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
 
-  // Get selected variant data
+  const { mutate: bookTrip } = useTripBooking();
+
+  // Success modal state
+  const [productBookingSuccess, setProductBookingSuccess] = useState(false);
+
   const selectedVariantData: ProductVariant | undefined =
     data?.data?.variants?.find((v) => v.title === selectedVariant);
 
-  // Convert URL to File
   const urlToFile = async (url: string, filename: string): Promise<File> => {
     const res = await fetch(url);
     const blob = await res.blob();
@@ -353,7 +49,6 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
     return new File([blob], `${filename}.${extension}`, { type: blob.type });
   };
 
-  // Auto-select first variant and load its image
   useEffect(() => {
     if (data?.data?.variants?.length) {
       const firstVariant = data.data.variants[0];
@@ -367,23 +62,6 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
     }
   }, [data]);
 
-  // const handleFiles = (files: FileList) => {
-  //   const validFiles = Array.from(files).filter((file) => {
-  //     const validTypes = ["image/jpeg", "image/png", "image/jpg"];
-  //     const maxSize = 10 * 1024 * 1024; // 10MB
-  //     return validTypes.includes(file.type) && file.size <= maxSize;
-  //   });
-  //   setImages(validFiles);
-  // };
-
-  // const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files) handleFiles(e.target.files);
-  // };
-
-  // const removeImage = (index: number) => {
-  //   setImages((prev) => prev.filter((_, i) => i !== index));
-  // };
-
   const handleCancel = () => {
     setSelectedVariant(data?.data?.variants?.[0]?.title || "");
     setQuantity("");
@@ -391,62 +69,117 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
     onClose?.();
   };
 
-  const handleSubmit = async () => {
-    if (!selectedVariant) {
-      toast.error("Please select a variant");
-      return;
-    }
+  const totalPrice =
+    Number(quantity) * (selectedVariantData?.price || data?.data?.price || 0);
 
-    if (!quantity || quantity < 1) {
-      toast.error("Please enter a valid quantity");
-      return;
-    }
+  const handleSubmit = async () => {
+    if (!selectedVariant) return toast.error("Please select a variant");
+    if (!quantity || quantity < 1) return toast.error("Enter valid quantity");
 
     const imageUrl = selectedVariantData?.image?.url;
+    if (!imageUrl) return toast.error("No image found for selected variant.");
 
-    if (!imageUrl) {
-      toast.error("No image found for selected variant.");
-      return;
-    }
+    const payload = {
+      userId: userId,
+      itemId: productId,
+      type: "product" as const,
+      price: totalPrice,
+      quantity: Number(quantity),
+      color: selectedVariant,
+      images: [imageUrl],
+    };
 
-    try {
-      const response = await fetch(imageUrl);
-      if (!response.ok) throw new Error("Failed to fetch image");
-
-      const blob = await response.blob();
-      const file = new File([blob], `${selectedVariant}.jpg`, {
-        type: blob.type,
-      });
-
-      createOrder(
-        {
-          productId,
-          color: selectedVariant,
-          quantity: Number(quantity),
-          image: file,
-        },
-        {
-          onSuccess: (res: any) => {
-            handleCancel();
-            toast.success("Order placed successfully!");
-            const sessionUrl = res?.data?.sessionUrl;
-            if (sessionUrl) window.location.href = sessionUrl;
-          },
-          onError: () => toast.error("Failed to place order. Try again."),
-        },
-      );
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to process image for upload.");
-    }
+    bookTrip(payload, {
+      onSuccess: () => {
+        toast.success("Product added to cart!");
+        setProductBookingSuccess(true);
+      },
+      onError: () => {
+        toast.error("Failed to add product!");
+      },
+    });
   };
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading product.</p>;
 
+  // 🔥 SUCCESS MODAL LIKE YOUR TRIP DESIGN
+  if (productBookingSuccess) {
+    return (
+      <Card className="p-10 bg-white shadow-lg rounded-2xl text-center">
+        <div className="flex flex-col items-center space-y-4">
+          {/* Success Tick */}
+          <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+            <svg
+              className="w-10 h-10 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+
+          <h2 className="text-3xl font-bold text-gray-800">
+            Added to Cart Successfully!
+          </h2>
+
+          {/* Product Info */}
+          <div className="text-gray-600 text-lg">
+            <p className="font-semibold text-gray-800">{data?.data?.title}</p>
+
+            <p className="mt-1">
+              Color: <span className="font-semibold">{selectedVariant}</span>
+            </p>
+
+            <p>
+              Quantity: <span className="font-semibold">{quantity}</span>
+            </p>
+
+            <p className="mt-2 text-xl font-bold text-primary">
+              Total: ${totalPrice.toLocaleString()}
+            </p>
+          </div>
+
+          {/* Image */}
+          <div className="mt-4">
+            <Image
+              src={selectedVariantData?.image?.url || "/images/placeholder.png"}
+              alt="Product"
+              width={300}
+              height={300}
+              className="rounded-xl shadow-md"
+            />
+          </div>
+
+          {/* Buttons */}
+          <div className="flex justify-center gap-4 mt-6">
+            <Button
+              className="bg-primary text-white text-lg py-3 rounded-xl hover:bg-primary/80"
+              onClick={() => (window.location.href = "/")}
+            >
+              Back Home
+            </Button>
+
+            <Button
+              className="bg-primary text-white text-lg py-3 rounded-xl hover:bg-primary/80"
+              onClick={() => (window.location.href = "/cart")}
+            >
+              Go to Cart
+            </Button>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
-      {/* Variant + Quantity */}
       <div className="mb-6">
         <div className="flex gap-2 items-center mb-2">
           <p className="text-sm font-medium text-gray-700">
@@ -460,20 +193,20 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-          <div className="flex items-center gap-2">
-            <select
-              value={selectedVariant}
-              onChange={(e) => setSelectedVariant(e.target.value)}
-              className="px-2 py-1 border rounded-md"
-            >
-              {data?.data?.variants?.map((v: ProductVariant) => (
-                <option key={v._id} value={v.title}>
-                  {v.title}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* Variant dropdown */}
+          <select
+            value={selectedVariant}
+            onChange={(e) => setSelectedVariant(e.target.value)}
+            className="px-2 py-1 border rounded-md"
+          >
+            {data?.data?.variants?.map((v: ProductVariant) => (
+              <option key={v._id} value={v.title}>
+                {v.title}
+              </option>
+            ))}
+          </select>
 
+          {/* Quantity Input */}
           <input
             type="number"
             min={1}
@@ -481,58 +214,47 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
             placeholder="Qty"
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value) || "")}
-            className="w-1/4 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+            className="w-1/4 px-3 py-2 border rounded-md"
           />
         </div>
       </div>
 
-{/* Image Preview */}
-<div className="mb-6">
-  <p className="text-sm font-medium text-gray-700 mb-2">
-    Selected Product&apos;s Picture
-  </p>
+      {/* Show Image */}
+      <div className="mb-6">
+        <p className="text-sm font-medium text-gray-700 mb-2">
+          Selected Product&apos;s Picture
+        </p>
 
-  <div className="border-2 border-dashed rounded-lg text-center max-h-64 overflow-auto p-2">
-    {selectedVariantData?.image?.url ? (
-      <Image
-        src={selectedVariantData.image.url}
-        alt={selectedVariant || "Selected Product"}
-        width={400}
-        height={400}
-        className="mx-auto w-full h-auto rounded-xl object-contain"
-      />
-    ) : (
-      <div className="flex flex-col items-center justify-center h-48 text-gray-400">
-        <Image
-          src="/images/placeholder-image.png" // ✅ এখানে তোমার default image path দাও
-          alt="Default Product"
-          width={150}
-          height={150}
-          className="mx-auto opacity-60"
-        />
-        <p className="text-sm mt-2">No image available</p>
+        <div className="border-2 border-dashed rounded-lg p-2 text-center max-h-64 overflow-auto">
+          {selectedVariantData?.image?.url ? (
+            <Image
+              src={selectedVariantData.image.url}
+              alt={selectedVariant}
+              width={400}
+              height={400}
+              className="mx-auto rounded-xl object-contain"
+            />
+          ) : (
+            <p>No Image Available</p>
+          )}
+        </div>
       </div>
-    )}
-  </div>
-</div>
 
-
-      {/* Action Buttons */}
+      {/* Buttons */}
       <div className="flex justify-end gap-4 pt-6 border-t">
         <Button
           type="button"
           onClick={handleCancel}
-          className="px-6 py-2 border border-gray-300 bg-transparent text-teal-700 rounded-md hover:bg-teal-200 transition"
+          className="px-6 py-2 border bg-transparent text-teal-700 rounded-md"
         >
           Cancel
         </Button>
         <Button
           type="button"
           onClick={handleSubmit}
-          disabled={isPending}
-          className="px-6 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition"
+          className="px-6 py-2 bg-teal-600 text-white rounded-md"
         >
-          {isPending ? "Placing Order..." : "Confirm Order"}
+          Add to cart
         </Button>
       </div>
     </div>

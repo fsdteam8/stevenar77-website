@@ -121,7 +121,7 @@ export default function UserMessaging() {
     };
     try {
       if (socket && socket.connected) socket.emit("sendMessage", payload);
-      // ❌ এখানে setMessages আর করব না (duplicate fix)
+
       setInput("");
     } catch (err) {
       console.error("Error sending message:", err);
@@ -171,7 +171,7 @@ export default function UserMessaging() {
   return (
     <div className="flex flex-col h-[70vh] max-w-2xl mx-auto my-6 border rounded-2xl shadow bg-white">
       {/* Header */}
-      <div className="p-4 border-b flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-2xl shadow">
+      <div className="p-4 border-b flex items-center gap-3 bg-gradient-to-r from-primary to-secondary text-white rounded-t-2xl shadow">
         <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-bold">
           A
         </div>
@@ -223,7 +223,7 @@ export default function UserMessaging() {
           placeholder="Type your message..."
         />
         <button
-          className="w-11 h-11 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 shadow cursor-pointer"
+          className="w-11 h-11 flex items-center justify-center rounded-full bg-primary text-white hover:bg-blue-700 shadow cursor-pointer"
           onClick={sendMessage}
         >
           <FiSend size={18} />

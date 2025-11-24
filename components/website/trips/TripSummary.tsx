@@ -1,9 +1,13 @@
+// TripSummary.tsx
 "use client";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useTripCheckout } from "@/services/hooks/trip/useTripCheckout";
+import {
+  useTripCheckout,
+  CheckoutRequest,
+} from "@/services/hooks/trip/useTripCheckout";
 import { useState } from "react";
 import { useTripBooking } from "../course/steps/TripBookingContext";
 import { Trip } from "@/services/hooks/trip/useTrip";
@@ -18,7 +22,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
   const checkout = useTripCheckout(state.tripId);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // ✅ Get quantity from URL (e.g. ?quantity=3)
+  // Get quantity from URL (e.g. ?quantity=3)
   const searchParams = useSearchParams();
   const quantity = Number(searchParams.get("q")) || 1;
 
@@ -47,7 +51,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
     setIsProcessing(true);
 
     try {
-      const checkoutData = {
+      const checkoutData: CheckoutRequest = {
         participants: [
           {
             firstName: firstName || "",
@@ -94,7 +98,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
         </div>
 
         {/* User Info */}
-        <div className="border-t pt-4 space-y-2 text-sm text-[#6c757d]">
+        {/* <div className="border-t pt-4 space-y-2 text-sm text-[#6c757d]">
           <p>
             <span className="font-medium">First Name:</span>{" "}
             {firstName || <span className="text-red-500 italic">Required</span>}
@@ -115,7 +119,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
               <span className="text-red-500 italic">Required</span>
             )}
           </p>
-        </div>
+        </div> */}
 
         {/* Pricing */}
         <div className="border-t pt-4 space-y-2">
@@ -163,7 +167,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
           {/* <p className="text-xs text-[#6c757d]">Free Cancellation up to 24h</p> */}
         </div>
 
-        <Button
+        {/* <Button
           onClick={handleProceedToPayment}
           disabled={!isFormValid() || isProcessing || checkout.isPending}
           className="w-full bg-[#0694a2] hover:bg-[#0694a2]/90 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
@@ -176,7 +180,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
           ) : (
             "Proceed to Payment"
           )}
-        </Button>
+        </Button> */}
 
         {checkout.isError && (
           <div className="text-red-500 text-sm text-center mt-2">
