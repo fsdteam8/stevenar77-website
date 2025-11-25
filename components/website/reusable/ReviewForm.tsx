@@ -231,7 +231,6 @@
 //               Based on {reviewStats.totalReviews.toLocaleString()} reviews
 //             </p>
 
-          
 //             <div className="space-y-3">
 //               {reviewStats.breakdown.map((item) => (
 //                 <div key={item.stars} className="flex items-center gap-3">
@@ -288,14 +287,13 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   isSubmitting = false,
   submitStatus = null,
 }) => {
-
   const [purchaseMonth, setPurchaseMonth] = useState("");
   const [purchaseYear, setPurchaseYear] = useState("");
 
   const [rating, setRating] = useState<number>(initialData.rating ?? 0);
   const [hoveredRating, setHoveredRating] = useState<number>(0);
   const [description, setDescription] = useState<string>(
-    initialData.description ?? ""
+    initialData.description ?? "",
   );
 
   const handleSubmit = async () => {
@@ -319,7 +317,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
     const purchaseDateStr = isValid
       ? new Date(
-          Date.UTC(Number(purchaseYear), Number(purchaseMonth) - 1, 1)
+          Date.UTC(Number(purchaseYear), Number(purchaseMonth) - 1, 1),
         ).toISOString()
       : "";
 
@@ -342,17 +340,21 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   }, [submitStatus]);
 
   return (
-    <div className="container mx-auto">
-      <div className="sm:max-w-7xl max-w-xl border rounded-md mx-auto p-6 bg-white">
+    <div className="container mx-auto px-2">
+      <div className="sm:max-w-7xl max-w-xl border rounded-md mx-auto p-6   sm:px-6 bg-white">
         <div className="grid grid-cols-1 gap-8">
-          
           <div>
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">
               Reviews
             </h2>
 
             <div className="space-y-6">
-
+              <div className="">
+                <p>
+                  Tell us about your class! Your review helps future divers
+                  choose their next adventure.
+                </p>
+              </div>
               {/* Star Rating */}
               <div>
                 <div className="block text-sm font-medium text-gray-700 mb-3">
@@ -382,9 +384,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               </div>
 
               {/* Purchase Date */}
-              <div>
-                <div className="block text-sm font-medium text-gray-700 mb-2">
-                  Course Purchase At (Month & Year) 
+              <div className="sm:flex gap-4 justify-start items-center">
+                <div className="block text-base font-medium text-gray-700 mb-2">
+                  Please select the month and year you took your class
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -393,9 +395,25 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                     onChange={(e) => setPurchaseMonth(e.target.value)}
                     className="border rounded-md px-3 py-2"
                   >
+                    {/* <option value="">Select Month</option> */}
                     <option value="">Select Month</option>
-                    {["01","02","03","04","05","06","07","08","09","10","11","12"].map((m) => (
-                      <option key={m} value={m}>{m}</option>
+                    {[
+                      { code: "01", name: "January" },
+                      { code: "02", name: "February" },
+                      { code: "03", name: "March" },
+                      { code: "04", name: "April" },
+                      { code: "05", name: "May" },
+                      { code: "06", name: "June" },
+                      { code: "07", name: "July" },
+                      { code: "08", name: "August" },
+                      { code: "09", name: "September" },
+                      { code: "10", name: "October" },
+                      { code: "11", name: "November" },
+                      { code: "12", name: "December" },
+                    ].map((m) => (
+                      <option key={m.code} value={m.code}>
+                        {m.name}
+                      </option>
                     ))}
                   </select>
 
@@ -406,7 +424,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                   >
                     <option value="">Select Year</option>
                     {Array.from({ length: 20 }, (_, i) => 2025 - i).map((y) => (
-                      <option key={y} value={y}>{y}</option>
+                      <option key={y} value={y}>
+                        {y}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -415,7 +435,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               {/* Description */}
               <div>
                 <div className="block text-sm font-medium text-gray-700 mb-2">
-                  Description
+                  Your Review 
                 </div>
 
                 <textarea
@@ -438,10 +458,8 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               >
                 {isSubmitting ? "Submitting..." : "Submit Review"}
               </div>
-
             </div>
           </div>
-
         </div>
       </div>
     </div>
