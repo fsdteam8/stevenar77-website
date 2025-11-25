@@ -36,7 +36,7 @@ export function CourseHistoryPage() {
   );
 
   // Only show "paid" bookings
-  const paidBookings = bookings.filter((b) => b.status === "paid");
+  const paidBookings = bookings.filter((b) => b.status === "pending");
 
   // Map API bookings to CourseCardData
   const mappedBookings: CourseCardData[] = paidBookings.map((b) => {
@@ -50,7 +50,9 @@ export function CourseHistoryPage() {
       courseIncludes?: string[];
     };
     const cls: ClassData =
-      typeof b.classId === "object" && b.classId !== null ? (b.classId as ClassData) : {};
+      typeof b.classId === "object" && b.classId !== null
+        ? (b.classId as ClassData)
+        : {};
 
     return {
       id: b._id,
@@ -103,7 +105,9 @@ export function CourseHistoryPage() {
     return (
       <div className="container mx-auto px-2 sm:px-0">
         <div className="p-6 bg-white rounded-lg shadow text-center">
-          <p className="text-gray-600 text-lg">You haven&apos;t Paid For any Course yet.</p>
+          <p className="text-gray-600 text-lg">
+            You haven&apos;t Paid For any Course yet.
+          </p>
         </div>
       </div>
     );

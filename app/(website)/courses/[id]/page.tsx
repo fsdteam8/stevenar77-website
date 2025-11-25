@@ -1,4 +1,3 @@
-
 import Rescuedivers from "@/components/website/courses/Rescuedivers";
 import CourseReview from "@/components/website/courses/CourseReview";
 // import Hero from "@/components/website/shared/Hero";
@@ -33,7 +32,7 @@ export default function Page({ params }: PageProps) {
 
       <ReviewShowByCourseID courseId={classId} />
 
-      <CourseReview  classId={classId} />
+      <CourseReview classId={classId} />
     </div>
   );
 }

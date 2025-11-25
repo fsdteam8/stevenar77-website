@@ -1,92 +1,92 @@
-"use client";
-import React from "react";
-// import { BookingContent } from "./booking-content";
-// import { BookingSummary } from "./booking-summary";
-// import { MultiStepForm } from "./multi-step-form";
-import { BookingProvider } from "./booking-context";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { fetchCourseById, CourseDetail } from "@/lib/course";
-import { FillupSummary } from "./fillupSummery";
-import { FormContent } from "./FormContent";
-// import { DocumentUploadStep } from "./steps/document-upload-step";
-import { FormFillup } from "./FormFillup";
+// "use client";
+// import React from "react";
+// // import { BookingContent } from "./booking-content";
+// // import { BookingSummary } from "./booking-summary";
+// // import { MultiStepForm } from "./multi-step-form";
+// // import { BookingProvider } from "./booking-context";
+// import { useParams } from "next/navigation";
+// import { useEffect, useState } from "react";
+// import { fetchCourseById, CourseDetail } from "@/lib/course";
+// import { FillupSummary } from "./fillupSummery";
+// import { FormContent } from "./FormContent";
+// // import { DocumentUploadStep } from "./steps/document-upload-step";
+// import { FormFillup } from "./FormFillup";
 
-const FormFillUpPage = () => {
-  const params = useParams<{ id: string }>();
-  const [course, setCourse] = useState<CourseDetail | null>(null);
-  const [loading, setLoading] = useState(true);
+// const FormFillUpPage = () => {
+//   const params = useParams<{ id: string }>();
+//   const [course, setCourse] = useState<CourseDetail | null>(null);
+//   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (params.id) {
-      fetchCourseById(params.id)
-        .then((data) => setCourse(data))
-        .catch((err) => console.error("Error fetching course:", err))
-        .finally(() => setLoading(false));
-    }
-  }, [params.id]);
+//   useEffect(() => {
+//     if (params.id) {
+//       fetchCourseById(params.id)
+//         .then((data) => setCourse(data))
+//         .catch((err) => console.error("Error fetching course:", err))
+//         .finally(() => setLoading(false));
+//     }
+//   }, [params.id]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-lg text-gray-600">Loading course...</p>
-      </div>
-    );
-  }
+//   if (loading) {
+//     return (
+//       <div className="flex items-center justify-center min-h-screen">
+//         <p className="text-lg text-gray-600">Loading course...</p>
+//       </div>
+//     );
+//   }
 
-  if (!course) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-lg text-red-500">Course not found</p>
-      </div>
-    );
-  }
+//   if (!course) {
+//     return (
+//       <div className="flex items-center justify-center min-h-screen">
+//         <p className="text-lg text-red-500">Course not found</p>
+//       </div>
+//     );
+//   }
 
-  // Map API course to the shape expected by BookingContext
-  const initialCourse = {
-    id: course._id,
-    name: course.title,
-    price: course.price[0] || 0,
-    age: undefined, // use a number or undefined to match BookingProviderProps
-    image: course.image?.url,
-    duration: course.duration,
-    classDates: course.classDates || [],
-    formTitle: course.formTitle || [], // ✅ include this
-  };
+//   // Map API course to the shape expected by BookingContext
+//   const initialCourse = {
+//     id: course._id,
+//     name: course.title,
+//     price: course.price[0] || 0,
+//     age: undefined, // use a number or undefined to match BookingProviderProps
+//     image: course.image?.url,
+//     duration: course.duration,
+//     classDates: course.classDates || [],
+//     formTitle: course.formTitle || [], // ✅ include this
+//   };
 
-  return (
-    <BookingProvider initialCourse={initialCourse}>
-      <div className="min-h-screen bg-[#f8f9fa]">
-        <main className="container mx-auto px-4 py-8">
-          <div className="text-center  mb-8">
-            {/* <h1 className="text-3xl font-bold text-[#343a40] mb-2">
-              Book Your Course
-            </h1>
-            <p className="text-[#6c757d]">
-              Complete your booking in just a few steps
-              </p> */}
+//   return (
+//     <BookingProvider initialCourse={initialCourse}>
+//       <div className="min-h-screen bg-[#f8f9fa]">
+//         <main className="container mx-auto px-4 py-8">
+//           <div className="text-center  mb-8">
+//             {/* <h1 className="text-3xl font-bold text-[#343a40] mb-2">
+//               Book Your Course
+//             </h1>
+//             <p className="text-[#6c757d]">
+//               Complete your booking in just a few steps
+//               </p> */}
 
-            <h1 className="text-2xl  font-semibold text-center py-20 max-w-6xl mx-auto">
-              <span className="text-primary">Thanks for your payment!</span>— you’re officially on your way to your next Scuba Life adventure!
-              {/* <span className="text-primary"> Please complete all the required documents
-              below to secure your spot in the class.</span> */}
-            </h1>
-            <FormFillup />
-          </div>
+//             <h1 className="text-2xl  font-semibold text-center py-20 max-w-6xl mx-auto">
+//               <span className="text-primary">Thanks for your payment!</span>— you’re officially on your way to your next Scuba Life adventure!
+//               {/* <span className="text-primary"> Please complete all the required documents
+//               below to secure your spot in the class.</span> */}
+//             </h1>
+//             <FormFillup />
+//           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              {/* <FormContent courseData={course} /> */}
-              {/* <DocumentUploadStep /> */}
-            </div>
-            <div className="lg:col-span-1">
-              {/* <FillupSummary courseData={course} /> */}
-            </div>
-          </div>
-        </main>
-      </div>
-    </BookingProvider>
-  );
-};
+//           <div className="grid lg:grid-cols-3 gap-8">
+//             <div className="lg:col-span-2">
+//               {/* <FormContent courseData={course} /> */}
+//               {/* <DocumentUploadStep /> */}
+//             </div>
+//             <div className="lg:col-span-1">
+//               {/* <FillupSummary courseData={course} /> */}
+//             </div>
+//           </div>
+//         </main>
+//       </div>
+//     </BookingProvider>
+//   );
+// };
 
-export default FormFillUpPage;
+// export default FormFillUpPage;

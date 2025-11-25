@@ -1,167 +1,167 @@
-import type { BookingState, BookingAction } from "./booking-types";
+// import type { BookingState, BookingAction } from "./booking-types";
 
-export function createInitialState(initialCourse?: {
-  id: string;
-  name: string;
-  price: number;
-  age: number | undefined;
-  image?: string;
-  classDates?: string[];
-  formTitle?: string[];
-}): BookingState {
-  let courseId = initialCourse?.id || "";
+// export function createInitialState(initialCourse?: {
+//   id: string;
+//   name: string;
+//   price: number;
+//   age: number | undefined;
+//   image?: string;
+//   classDates?: string[];
+//   formTitle?: string[];
+// }): BookingState {
+//   let courseId = initialCourse?.id || "";
 
-  // fallback: extract from URL if no id passed
-  if (!courseId && typeof window !== "undefined") {
-    const parts = window.location.pathname.split("/");
-    courseId = parts[3] || "";
-  }
+//   // fallback: extract from URL if no id passed
+//   if (!courseId && typeof window !== "undefined") {
+//     const parts = window.location.pathname.split("/");
+//     courseId = parts[3] || "";
+//   }
 
-  return {
-    submittedForms: [],
-    currentStep: 0,
-    course: {
-      _id: courseId,
-      name: initialCourse?.name || "Open Water Diver",
-      price: initialCourse?.price ?? 450,
-      duration: "3-4 dives",
-      age: initialCourse?.age ,
-      image: initialCourse?.image,
-      classDates: initialCourse?.classDates,
-      formTitle: initialCourse?.formTitle || [],
-    },
-    pricing: undefined,
-    addOns: [],
-    participants: 1,
-    selectedDate: null,
-    selectedTime: { label: "", iso: null },
-    addOnSelected: false,
-    selectedPricing: undefined,
-    selectedPriceIndex: 0,
-    personalInfo: {
-      username: "",
-      email: "",
-      phoneNumber: "",
-      age: 0,
-      // dateOfBirth: "",
-      address: "",
-      city: "",
-      state: "",
-      postalCode: "",
-      emergencyName: "",
-      emergencyPhoneNumber: "",
-      courseName: initialCourse?.name || "",
-      shoeSize: "",
-      // high: 0, 
-      weight: "",
-      gender: "male",
-      name: "",
-      phone: "",
-      hight: "",
-    },
-    // medicalHistory: {},
-    // activityQuestions: {
-    //   swimmingLevel: "",
-    //   divingExperience: "",
-    //   lastPhysicalExam: "",
-    //   fitnessLevel: "",
-    //   physicalApproval: false,
-    //   canSwim200m: false,
-    //   claustrophobia: false,
-    //   panicAttacks: false,
-    // },
-    // liabilityAgreement: {
-    //   releaseOfLiability: false,
-    //   medicalFitness: false,
-    //   equipmentTraining: false,
-    // },
-    documents: [],
-    // signature: "",
-    // agreed: false,
-  };
-}
+//   return {
+//     submittedForms: [],
+//     currentStep: 0,
+//     course: {
+//       _id: courseId,
+//       name: initialCourse?.name || "Open Water Diver",
+//       price: initialCourse?.price ?? 450,
+//       duration: "3-4 dives",
+//       age: initialCourse?.age ,
+//       image: initialCourse?.image,
+//       classDates: initialCourse?.classDates,
+//       formTitle: initialCourse?.formTitle || [],
+//     },
+//     pricing: undefined,
+//     addOns: [],
+//     participants: 1,
+//     selectedDate: null,
+//     selectedTime: { label: "", iso: null },
+//     addOnSelected: false,
+//     selectedPricing: undefined,
+//     selectedPriceIndex: 0,
+//     personalInfo: {
+//       username: "",
+//       email: "",
+//       phoneNumber: "",
+//       age: 0,
+//       // dateOfBirth: "",
+//       address: "",
+//       city: "",
+//       state: "",
+//       postalCode: "",
+//       emergencyName: "",
+//       emergencyPhoneNumber: "",
+//       courseName: initialCourse?.name || "",
+//       shoeSize: "",
+//       // high: 0,
+//       weight: "",
+//       gender: "male",
+//       name: "",
+//       phone: "",
+//       hight: "",
+//     },
+//     // medicalHistory: {},
+//     // activityQuestions: {
+//     //   swimmingLevel: "",
+//     //   divingExperience: "",
+//     //   lastPhysicalExam: "",
+//     //   fitnessLevel: "",
+//     //   physicalApproval: false,
+//     //   canSwim200m: false,
+//     //   claustrophobia: false,
+//     //   panicAttacks: false,
+//     // },
+//     // liabilityAgreement: {
+//     //   releaseOfLiability: false,
+//     //   medicalFitness: false,
+//     //   equipmentTraining: false,
+//     // },
+//     documents: [],
+//     // signature: "",
+//     // agreed: false,
+//   };
+// }
 
-export function bookingReducer(
-  state: BookingState,
-  action: BookingAction,
-): BookingState {
-  switch (action.type) {
-    case "SET_STEP":
-      return { ...state, currentStep: action.payload };
-    case "SET_COURSE":
-      return { ...state, course: action.payload };
-    case "SET_PARTICIPANTS":
-      return { ...state, participants: action.payload };
-    case "SET_DATE":
-      return { ...state, selectedDate: action.payload };
-    case "SET_TIME":
-      return { ...state, selectedTime: action.payload };
-    case "SET_PERSONAL_INFO":
-      return {
-        ...state,
-        personalInfo: { ...state.personalInfo, ...action.payload },
-      };
-    // case "SET_MEDICAL_HISTORY":
-    //   return { ...state, medicalHistory: action.payload };
-    // case "SET_ACTIVITY_QUESTIONS":
-    //   return {
-    //     ...state,
-    //     activityQuestions: { ...state.activityQuestions, ...action.payload },
-    //   };
-    // case "SET_LIABILITY_AGREEMENT":
-    //   return {
-    //     ...state,
-    //     liabilityAgreement: { ...state.liabilityAgreement, ...action.payload },
-    //   };
-    case "SET_DOCUMENTS":
-      return {
-        ...state,
-        documents: Array.isArray(action.payload)
-          ? action.payload
-          : [action.payload],
-      };
+// export function bookingReducer(
+//   state: BookingState,
+//   action: BookingAction,
+// ): BookingState {
+//   switch (action.type) {
+//     case "SET_STEP":
+//       return { ...state, currentStep: action.payload };
+//     case "SET_COURSE":
+//       return { ...state, course: action.payload };
+//     case "SET_PARTICIPANTS":
+//       return { ...state, participants: action.payload };
+//     case "SET_DATE":
+//       return { ...state, selectedDate: action.payload };
+//     case "SET_TIME":
+//       return { ...state, selectedTime: action.payload };
+//     case "SET_PERSONAL_INFO":
+//       return {
+//         ...state,
+//         personalInfo: { ...state.personalInfo, ...action.payload },
+//       };
+//     // case "SET_MEDICAL_HISTORY":
+//     //   return { ...state, medicalHistory: action.payload };
+//     // case "SET_ACTIVITY_QUESTIONS":
+//     //   return {
+//     //     ...state,
+//     //     activityQuestions: { ...state.activityQuestions, ...action.payload },
+//     //   };
+//     // case "SET_LIABILITY_AGREEMENT":
+//     //   return {
+//     //     ...state,
+//     //     liabilityAgreement: { ...state.liabilityAgreement, ...action.payload },
+//     //   };
+//     case "SET_DOCUMENTS":
+//       return {
+//         ...state,
+//         documents: Array.isArray(action.payload)
+//           ? action.payload
+//           : [action.payload],
+//       };
 
-    case "ADD_DOCUMENT":
-      return {
-        ...state,
-        documents: [...state.documents, action.payload],
-      };
+//     case "ADD_DOCUMENT":
+//       return {
+//         ...state,
+//         documents: [...state.documents, action.payload],
+//       };
 
-    // case "SET_SIGNATURE":
-    //   return { ...state, signature: action.payload };
-    // case "SET_AGREED": // ✅ add this
-    //   return { ...state, agreed: action.payload };
-    case "SET_PRICING":
-      return { ...state, pricing: action.payload };
-    case "TOGGLE_ADDON":
-      const existingIndex = state.addOns.findIndex(
-        (addon) => addon.id === action.payload.id,
-      );
-      if (existingIndex >= 0) {
-        // Remove addon if already selected
-        return {
-          ...state,
-          addOns: state.addOns.filter(
-            (addon) => addon.id !== action.payload.id,
-          ),
-        };
-      } else {
-        // Add addon if not selected
-        return {
-          ...state,
-          addOns: [...state.addOns, action.payload],
-        };
-      }
-    case "SET_PRICE_INDEX":
-      return { ...state, selectedPriceIndex: action.payload };
-    case "MARK_FORM_SUBMITTED":
-      const formId = action.payload;
-      if (state.submittedForms.includes(formId)) return state;
-      return { ...state, submittedForms: [...state.submittedForms, formId] };
-    case "RESET_SUBMITTED_FORMS":
-      return { ...state, submittedForms: [] };
+//     // case "SET_SIGNATURE":
+//     //   return { ...state, signature: action.payload };
+//     // case "SET_AGREED": // ✅ add this
+//     //   return { ...state, agreed: action.payload };
+//     case "SET_PRICING":
+//       return { ...state, pricing: action.payload };
+//     case "TOGGLE_ADDON":
+//       const existingIndex = state.addOns.findIndex(
+//         (addon) => addon.id === action.payload.id,
+//       );
+//       if (existingIndex >= 0) {
+//         // Remove addon if already selected
+//         return {
+//           ...state,
+//           addOns: state.addOns.filter(
+//             (addon) => addon.id !== action.payload.id,
+//           ),
+//         };
+//       } else {
+//         // Add addon if not selected
+//         return {
+//           ...state,
+//           addOns: [...state.addOns, action.payload],
+//         };
+//       }
+//     case "SET_PRICE_INDEX":
+//       return { ...state, selectedPriceIndex: action.payload };
+//     case "MARK_FORM_SUBMITTED":
+//       const formId = action.payload;
+//       if (state.submittedForms.includes(formId)) return state;
+//       return { ...state, submittedForms: [...state.submittedForms, formId] };
+//     case "RESET_SUBMITTED_FORMS":
+//       return { ...state, submittedForms: [] };
 
-    default:
-      return state;
-  }
-}
+//     default:
+//       return state;
+//   }
+// }

@@ -38,6 +38,7 @@ const CourseReview: React.FC<CourseReviewProps> = ({  classId }) => {
   const handleReviewSubmit = (reviewData: {
     rating: number;
     description: string;
+    purchaseDate: string;
   }) => {
     const redirectPath = `/courses/${classId}`;
     //  Then check login
@@ -46,6 +47,8 @@ const CourseReview: React.FC<CourseReviewProps> = ({  classId }) => {
       setShowLoginModal(true);
       return;
     }
+
+    
 
     //  Validate first
     if (reviewData.rating === 0) {
@@ -64,6 +67,7 @@ const CourseReview: React.FC<CourseReviewProps> = ({  classId }) => {
         classId,
         star: reviewData.rating,
         comment: reviewData.description,
+        purchaseDate: reviewData.purchaseDate
       },
       {
         onSuccess: () => {

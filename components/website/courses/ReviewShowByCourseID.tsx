@@ -8,10 +8,9 @@ interface Props {
   courseId: string;
 }
 
-
 const ReviewShowByCourseID: React.FC<Props> = ({ courseId }) => {
   const { data, isLoading, isError, error } = useReviewsByCourse(courseId);
-console.log("review data",data)
+  console.log("review data", data);
   if (isLoading) {
     return (
       <p className="px-3 py-6 bg-gray-50 font-semibold text-gray-700 text-center text-sm">
@@ -34,7 +33,10 @@ console.log("review data",data)
         No reviews available for this course yet.
       </p>
     );
+
   }
+
+  console.log("no signi", data);
 
   return (
     <div className="bg-[#F8F9FA] py-10">
@@ -48,19 +50,20 @@ console.log("review data",data)
             <ReviewCard
               key={review?._id}
               review={{
-                _id: review?._id,
+                _id: review?._id || "unknown",
                 userId: {
-                  _id: review?.userId._id,
-                  firstName: review?.userId.firstName || "Jhon",
-                  lastName: review?.userId.lastName || "",
-                  email: review?.userId.email || "",
-                  image: review?.userId?.image ?? { url: "" },
+                  _id: review?.userId?._id || "unknown",
+                  firstName: review?.userId?.firstName || "Jhon",
+                  lastName: review?.userId?.lastName || "",
+                  email: review?.userId?.email || "",
+                  image: review?.userId?.image || { url: "" },
                 },
-                star: review?.star,
-                comment: review?.comment,
-                createdAt: review?.createdAt,
-                updatedAt: review?.updatedAt,
-                __v: review?.__v,
+                star: review?.star || 0,
+                comment: review?.comment || "",
+                createdAt: review?.createdAt || "",
+                updatedAt: review?.updatedAt || "",
+                purchaseDate: review?.purchaseDate || "", // ✅ added here
+                __v: review?.__v || 0,
               }}
             />
           ))}
