@@ -7,7 +7,10 @@ import { useParams } from "next/navigation";
 import { TripForm } from "./TripForm";
 import { TripSummary } from "./TripSummary";
 import { useTrip } from "@/services/hooks/trip/useTrip";
-import { TripBookingProvider, useTripBooking } from "../course/steps/TripBookingContext";
+import {
+  TripBookingProvider,
+  useTripBooking,
+} from "../course/steps/TripBookingContext";
 import { TripContent } from "./TripContent";
 import AuthModal from "../reusable/AuthModal";
 import { useSession } from "@/hooks/useSession";
@@ -33,8 +36,9 @@ function TripBookingContent() {
           name: trip.title,
           price: trip.price,
           duration: `${Math.ceil(
-            (new Date(trip.endDate).getTime() - new Date(trip.startDate).getTime()) /
-              (1000 * 3600 * 24)
+            (new Date(trip.endDate).getTime() -
+              new Date(trip.startDate).getTime()) /
+              (1000 * 3600 * 24),
           )} days`,
           age: "10+",
         },
@@ -73,14 +77,16 @@ function TripBookingContent() {
     <div className="min-h-screen bg-[#f8f9fa]">
       <main className="container mx-auto px-4 py-8 relative">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-[#343a40] mb-2">Book Your Trip</h1>
+          <h1 className="text-3xl font-bold text-[#343a40] mb-2">
+            Book Your Trip
+          </h1>
           {/* <p className="text-[#6c757d]">Complete your booking in just a few steps</p> */}
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <TripContent trip={trip} />
-            <TripForm />
+            <TripForm trip={trip} />
           </div>
           <div className="lg:col-span-1">
             <TripSummary trip={trip} />

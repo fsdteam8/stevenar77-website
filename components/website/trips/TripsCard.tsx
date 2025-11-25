@@ -55,14 +55,14 @@ export default function TripsCard({
   };
 
   return (
-    <div className="container mx-auto my-16 md:my-32">
+    <div className="container mx-auto my-16 md:my-10">
       <div
-        className={`grid grid-cols-1 md:grid-cols-12 items-center gap-6 ${
+        className={`grid grid-cols-1 md:grid-cols-12   gap-6 ${
           reverse ? "md:[direction:rtl]" : ""
         }`}
       >
         {/* ✅ Image */}
-        <div className="md:col-span-5 flex justify-center">
+        <div className="md:col-span-6 flex justify-center md:sticky md:top-24 md:h-fit mt-6">
           <Image
             src={image}
             alt={title}
@@ -74,7 +74,7 @@ export default function TripsCard({
 
         {/* ✅ Content */}
         <div
-          className={`md:col-span-7 p-4 ${reverse ? "md:[direction:ltr]" : ""}`}
+          className={`md:col-span-6 p-4 ${reverse ? "md:[direction:ltr]" : ""}`}
         >
           {/* Title */}
           <h1 className="text-[#27303F] text-2xl font-semibold">{title}</h1>
@@ -108,7 +108,7 @@ export default function TripsCard({
               </Button>
             </div>
 
-            {/* ✅ Total Price */}
+            {/* Total Price */}
             {/* <span className="ml-4 text-lg font-semibold text-gray-800">
               Total: ${totalPrice.toFixed(2)}
             </span> */}
@@ -131,7 +131,7 @@ export default function TripsCard({
           </div>
         </div>
 
-        {/* ✅ Login Required Modal */}
+        {/* Login Required Modal */}
         <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
           <DialogContent className="!max-w-xl">
             <DialogHeader>

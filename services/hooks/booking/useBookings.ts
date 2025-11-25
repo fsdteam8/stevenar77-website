@@ -6,7 +6,6 @@ export const useMyBookings = () => {
   return useQuery<Booking[], Error>({
     queryKey: ["myBookings"],
     queryFn: fetchMyBookings,
-    staleTime: 1000 * 60, // 1 minute cache
-    retry: 1,
+    staleTime: 1000 * 60, // 1 minute cache    retry: 1,
   });
 };

@@ -1,3 +1,4 @@
+import { ProceedToPaymentData, TripBookingData } from "@/types/cart";
 import axiosInstance from "./axiosInstance";
 
 const api = axiosInstance;
@@ -75,7 +76,7 @@ export const fetchSocial = async () => {
     // console.log('res',res)
     return res.data;
     // console.log('1',res.data)
-  } catch (error) {
+  } catch {
     // console.log(error)
     throw new Error("Failed to fetch social data");
   }
@@ -84,14 +85,73 @@ export const fetchSocial = async () => {
 // OTP Resend
 export const resendOTP = async (token: string) => {
   try {
-    const res = await api.post("/auth/resend-forgot-otp", {}, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const res = await api.post(
+      "/auth/resend-forgot-otp",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     return res.data;
   } catch (error) {
     console.error("Failed to resend OTP:", error);
+    throw error;
+  }
+};
+
+// get single course
+export const getSingleCourse = async (courseId: string) => {
+  try {
+    const res = await api.get(`/class/${courseId}`);
+    return res.data;
+  } catch (error) {
+    console.error("Failed to fetch single course:", error);
+    throw error;
+  }
+};
+
+// get cart
+export const getCart = async (userId: string) => {
+  try {
+    const res = await api.get(`/cart/pending/${userId}`);
+    return res.data;
+  } catch (error) {
+    console.error("Failed to fetch cart:", error);
+    throw error;
+  }
+};
+
+// delete cart
+export const deleteCart = async (cartId: string) => {
+  try {
+    const res = await api.delete(`/cart/delete/${cartId}`);
+    return res.data;
+  } catch (error) {
+    console.error("Failed to delete cart:", error);
+    throw error;
+  }
+};
+
+// Proceed to Payment cart checkout
+export const proceedToPayment = async (data: ProceedToPaymentData) => {
+  try {
+    const res = await api.post(`/cart/checkout`, data);
+    return res.data;
+  } catch (error) {
+    console.error("Failed to proceed to payment:", error);
+    throw error;
+  }
+};
+
+// Trip Booking
+export const tripBooking = async (data: TripBookingData) => {
+  try {
+    const res = await api.post(`/cart/create`, data);
+    return res.data;
+  } catch (error) {
+    console.error("Failed to proceed to payment:", error);
     throw error;
   }
 };
