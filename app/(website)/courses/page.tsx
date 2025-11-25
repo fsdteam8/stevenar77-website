@@ -1,10 +1,10 @@
-"use client"
-import CourseFeatured from '@/components/website/course/CourseFeatured'
-import WhyLearnUs from '@/components/website/landing/WhyLearnUs'
+"use client";
+import CourseFeatured from "@/components/website/course/CourseFeatured";
+import WhyLearnUs from "@/components/website/landing/WhyLearnUs";
 // import Familyreviews from '@/components/website/landing/Familyreviews'
-import StillHaveQuestion from '@/components/website/reusable/stillHaveQuestion'
+import StillHaveQuestion from "@/components/website/reusable/stillHaveQuestion";
 // import Hero from '@/components/website/shared/Hero'
-import React from 'react'
+import React from "react";
 
 const page = () => {
   return (
@@ -20,7 +20,7 @@ const page = () => {
       {/* <Familyreviews /> */}
       <StillHaveQuestion />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

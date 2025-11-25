@@ -21,6 +21,7 @@ interface Course {
   price: number;
   duration: string;
   age: string;
+  maximumCapacity?: number;
 }
 
 interface BookingState {
@@ -60,8 +61,14 @@ type BookingAction =
   | { type: "SET_TIME"; payload: string }
   | { type: "SET_PERSONAL_INFO"; payload: Partial<PersonalInfo> }
   | { type: "SET_MEDICAL_HISTORY"; payload: Record<string, boolean> }
-  | { type: "SET_ACTIVITY_QUESTIONS"; payload: Partial<BookingState["activityQuestions"]> }
-  | { type: "SET_LIABILITY_AGREEMENT"; payload: Partial<BookingState["liabilityAgreement"]> }
+  | {
+      type: "SET_ACTIVITY_QUESTIONS";
+      payload: Partial<BookingState["activityQuestions"]>;
+    }
+  | {
+      type: "SET_LIABILITY_AGREEMENT";
+      payload: Partial<BookingState["liabilityAgreement"]>;
+    }
   | { type: "SET_DOCUMENTS"; payload: File[] }
   | { type: "SET_SIGNATURE"; payload: string };
 
@@ -73,7 +80,8 @@ const initialState: BookingState = {
     name: "Open Water Diver Trip",
     price: 299,
     duration: "3-4 days",
-    age: "10+"
+    age: "10+",
+    maximumCapacity: 50,
   },
   participants: 1,
   selectedDate: null,
@@ -88,7 +96,7 @@ const initialState: BookingState = {
     state: "",
     postalCode: "",
     emergencyContact: "",
-    courseName: ""
+    courseName: "",
   },
   medicalHistory: {},
   activityQuestions: {
@@ -99,18 +107,21 @@ const initialState: BookingState = {
     physicalApproval: false,
     canSwim200m: false,
     claustrophobia: false,
-    panicAttacks: false
+    panicAttacks: false,
   },
   liabilityAgreement: {
     releaseOfLiability: false,
     medicalFitness: false,
-    equipmentTraining: false
+    equipmentTraining: false,
   },
   documents: [],
-  signature: ""
+  signature: "",
 };
 
-function bookingReducer(state: BookingState, action: BookingAction): BookingState {
+function bookingReducer(
+  state: BookingState,
+  action: BookingAction,
+): BookingState {
   switch (action.type) {
     case "SET_STEP":
       return { ...state, currentStep: action.payload };
@@ -127,14 +138,20 @@ function bookingReducer(state: BookingState, action: BookingAction): BookingStat
     case "SET_PERSONAL_INFO":
       return {
         ...state,
-        personalInfo: { ...state.personalInfo, ...action.payload }
+        personalInfo: { ...state.personalInfo, ...action.payload },
       };
     case "SET_MEDICAL_HISTORY":
       return { ...state, medicalHistory: action.payload };
     case "SET_ACTIVITY_QUESTIONS":
-      return { ...state, activityQuestions: { ...state.activityQuestions, ...action.payload } };
+      return {
+        ...state,
+        activityQuestions: { ...state.activityQuestions, ...action.payload },
+      };
     case "SET_LIABILITY_AGREEMENT":
-      return { ...state, liabilityAgreement: { ...state.liabilityAgreement, ...action.payload } };
+      return {
+        ...state,
+        liabilityAgreement: { ...state.liabilityAgreement, ...action.payload },
+      };
     case "SET_DOCUMENTS":
       return { ...state, documents: action.payload };
     case "SET_SIGNATURE":
@@ -149,7 +166,9 @@ interface BookingContextType {
   dispatch: React.Dispatch<BookingAction>;
 }
 
-const TripBookingContext = createContext<BookingContextType | undefined>(undefined);
+const TripBookingContext = createContext<BookingContextType | undefined>(
+  undefined,
+);
 
 export function TripBookingProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(bookingReducer, initialState);
