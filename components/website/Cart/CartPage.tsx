@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { CartItem, ProceedToPaymentPayload } from "@/types/cart";
+import Link from "next/link";
 
 export default function CartPage() {
   const { data: session, status } = useSession();
@@ -73,6 +74,30 @@ export default function CartPage() {
     }
     return 1;
   };
+
+  // Save course items with formTitle to localStorage
+  // Save course items with extra details to localStorage
+  React.useEffect(() => {
+    if (!cartItems || cartItems.length === 0) return;
+
+    const courseItems = cartItems
+      .filter((item) => item.type === "course")
+      .map((item) => ({
+        cartId: item._id,
+        itemId: item.itemId,
+        bookingId: item.bookingId,
+        formTitle: item.details?.formTitle || [],
+        title: item.details?.title || "No title",
+        Username: item.details?.Username || "",
+        email: item.details?.email || "",
+      }));
+
+    const dataToStore = {
+      course: courseItems,
+    };
+
+    localStorage.setItem("courseFormTitles", JSON.stringify(dataToStore));
+  }, [cartItems]);
 
   if (status === "loading")
     return (
@@ -188,7 +213,16 @@ export default function CartPage() {
         </div>
       )}
 
-      <div className="text-center mt-8">
+      <div className="flex justify-center gap-4 text-center mt-8">
+        <Link href="/">
+          {" "}
+          <button
+            // onClick={handleProceedToPayment}
+            className="inline-block px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary/80 cursor-pointer"
+          >
+            Continue Shopping
+          </button>
+        </Link>
         <button
           onClick={handleProceedToPayment}
           className="inline-block px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary/80 cursor-pointer"

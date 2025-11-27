@@ -1,6 +1,6 @@
 // import { BookingProvider } from "@/components/website/course/booking-context";
 // import { TripBookingProvider } from "@/components/website/course/steps/TripBookingContext";
-// import PadiLiabilityForm from "@/components/website/form/PadiLiabilityForm";
+import PadiLiabilityForm from "@/components/website/form/PadiLiabilityForm";
 import React, { Suspense } from "react";
 
 const page = () => {
@@ -8,7 +8,7 @@ const page = () => {
     <div>
       {/* <TripBookingProvider> */}
       <Suspense>
-        {/* <PadiLiabilityForm /> */}This is continue eduction{" "}
+        <PadiLiabilityForm />
       </Suspense>
       {/* </BookingProvider> */}
       {/* <StandardsForm /> */}

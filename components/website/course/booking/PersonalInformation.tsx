@@ -192,7 +192,7 @@ export default function PersonalInformation({
           <Input
             type="number"
             {...register("shoeSize")}
-            placeholder="e.g., 8.5"
+            placeholder="e.g., 8"
           />
           {errors.shoeSize && (
             <p className="text-red-600 text-sm my-2">This field is required</p>

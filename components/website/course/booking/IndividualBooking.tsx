@@ -136,12 +136,12 @@ export default function IndividualBooking() {
 
     const totalPrice = Number(course.price) + addOnTotal;
 
-    const username = `${formData.firstName}${formData.lastName}`
+    const Username = `${formData.firstName}${formData.lastName}`
       .replace(/\s+/g, "")
       .toLowerCase();
 
     const payload = {
-      username,
+      Username,
       email: formData.email,
       phoneNumber: formData.phone,
       age: Number(formData.age),
@@ -192,7 +192,9 @@ export default function IndividualBooking() {
     // 🔥 CALL API
     bookCourse(formDataToSend)
       .then(() => {
-        toast.success("Cart added successfully! 🎉");
+        toast.success(
+          "You're almost there! Your selected course has been successfully added to your cart.",
+        );
         setBookingComplete(true);
       })
       .catch((err) => {
@@ -232,11 +234,10 @@ export default function IndividualBooking() {
           Booking
         </h1>
         <p className="text-lg text-gray-700 mb-8">
-          <span className="font-bold">
-            Thanks for providing all the necessary details
-          </span>{" "}
-          — you’re all set to confirm your booking and make your Scuba Life
-          adventure official!
+          If you&lsquo;d like to book another course, reserve a trip, or pick up
+          some gear, just choose the appropriate option below. Once you&apos;re
+          ready, complete your checkout to make your Scuba Life adventure
+          officially locked in!
         </p>
 
         {/* Mini Cart Summary */}
