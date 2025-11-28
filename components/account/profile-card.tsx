@@ -61,12 +61,13 @@ export function ProfileCard({
         <div className="flex flex-col items-center">
           <div className="relative group">
             <Avatar
-              className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-white mb-4 cursor-pointer"
+              className="w-20 h-20 sm:w-24 sm:h-24 border-4  border-white mb-4 cursor-pointer"
               onClick={isEditing ? handleImageUpload : undefined}
             >
               <AvatarImage
                 src={previewUrl || avatarUrl || "/placeholder.svg"}
                 alt={name}
+                className="object-cover"
               />
               <AvatarFallback className="text-lg sm:text-xl font-semibold bg-[#68706a] text-white">
                 {name
@@ -77,7 +78,7 @@ export function ProfileCard({
             </Avatar>
             {isEditing && (
               <div
-                className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer mb-4"
+                className="absolute inset-0 object-cover bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer mb-4"
                 onClick={handleImageUpload}
               >
                 <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
@@ -90,7 +91,7 @@ export function ProfileCard({
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="hidden"
+            className="hidden object-cover"
           />
 
           <h3 className="text-lg sm:text-xl font-semibold text-[#364039] mb-1 text-center">

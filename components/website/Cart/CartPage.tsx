@@ -37,6 +37,8 @@ export default function CartPage() {
       userId,
     };
 
+    console.log(payload);
+
     proceedToPaymentMutation.mutate(payload, {
       onSuccess: (res) => {
         toast.success("Redirecting to payment...");
