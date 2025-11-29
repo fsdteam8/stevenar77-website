@@ -4,6 +4,7 @@ import type React from "react";
 import { useRef, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useFormStore } from "@/store/formStore";
 // import { useBooking } from "../course/booking-context";
 
 const loadHTML2Canvas = async () => {
@@ -81,12 +82,19 @@ const FormInput: React.FC<{
   </div>
 );
 
-export default function PadiForm({
-  onSubmitSuccess,
-}: {
+interface PadiFormProps {
+  cartId?: string;
+  formTitle?: string;
   onSubmitSuccess?: () => void;
-}) {
+}
+
+export default function PadiForm({
+  cartId,
+  formTitle,
+  onSubmitSuccess,
+}: PadiFormProps) {
   // const { dispatch } = useBooking();
+  const store = useFormStore();
   const printRef = useRef<HTMLDivElement>(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
@@ -234,40 +242,70 @@ export default function PadiForm({
           );
         },
         onclone: (clonedDoc) => {
-          const allEls = clonedDoc.querySelectorAll("*");
-          allEls.forEach((el) => {
-            const htmlEl = el as HTMLElement;
-            if (htmlEl.style) {
-              const props = ["color", "backgroundColor", "borderColor"];
-              props.forEach((prop) => {
-                const value = htmlEl.style.getPropertyValue(prop);
-                if (value && value.includes("lab")) {
-                  htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
+          try {
+            const allEls = clonedDoc.querySelectorAll("*");
+            allEls.forEach((el) => {
+              const htmlEl = el as HTMLElement;
+              if (htmlEl.style) {
+                // Check computed styles for lab colors
+                const computedStyle =
+                  clonedDoc.defaultView?.getComputedStyle(htmlEl);
+                if (computedStyle) {
+                  const colorProps = [
+                    "color",
+                    "backgroundColor",
+                    "borderColor",
+                    "borderTopColor",
+                  ];
+                  colorProps.forEach((prop) => {
+                    const computedValue = computedStyle.getPropertyValue(prop);
+                    if (computedValue && computedValue.includes("lab")) {
+                      const replacement = prop.includes("background")
+                        ? "rgb(255, 255, 255)"
+                        : "rgb(0, 0, 0)";
+                      htmlEl.style.setProperty(prop, replacement, "important");
+                    }
+                  });
                 }
-              });
 
-              if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
-                htmlEl.style.color = "rgb(0, 0, 0)";
-              }
-              if (
-                htmlEl.tagName !== "INPUT" &&
-                (!htmlEl.style.backgroundColor ||
-                  htmlEl.style.backgroundColor.includes("lab"))
-              ) {
-                htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-              }
-              if (
-                !htmlEl.style.borderColor ||
-                htmlEl.style.borderColor.includes("lab")
-              ) {
-                htmlEl.style.borderColor = "rgb(0, 0, 0)";
-              }
+                // Check inline styles
+                const props = ["color", "backgroundColor", "borderColor"];
+                props.forEach((prop) => {
+                  const value = htmlEl.style.getPropertyValue(prop);
+                  if (value && value.includes("lab")) {
+                    const replacement =
+                      prop === "backgroundColor"
+                        ? "rgb(255, 255, 255)"
+                        : "rgb(0, 0, 0)";
+                    htmlEl.style.setProperty(prop, replacement, "important");
+                  }
+                });
 
-              htmlEl.style.removeProperty("filter");
-              htmlEl.style.removeProperty("backdrop-filter");
-              htmlEl.style.removeProperty("box-shadow");
-            }
-          });
+                if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
+                  htmlEl.style.color = "rgb(0, 0, 0)";
+                }
+                if (
+                  htmlEl.tagName !== "INPUT" &&
+                  (!htmlEl.style.backgroundColor ||
+                    htmlEl.style.backgroundColor.includes("lab"))
+                ) {
+                  htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
+                }
+                if (
+                  !htmlEl.style.borderColor ||
+                  htmlEl.style.borderColor.includes("lab")
+                ) {
+                  htmlEl.style.borderColor = "rgb(0, 0, 0)";
+                }
+
+                htmlEl.style.removeProperty("filter");
+                htmlEl.style.removeProperty("backdrop-filter");
+                htmlEl.style.removeProperty("box-shadow");
+              }
+            });
+          } catch (e) {
+            console.warn("Color sanitization warning:", e);
+          }
         },
       });
 
@@ -308,14 +346,12 @@ export default function PadiForm({
         type: "application/pdf",
       });
 
-      // Dispatch to booking context (uncomment when using with booking context)
-      // dispatch({
-      //   type: "ADD_DOCUMENT",
-      //   payload: { file: pdfFile, label: "Equipment Rental" },
-      // });
+      // Save to store
+      if (cartId && formTitle) {
+        store.setFormCompleted(cartId, formTitle, pdfFile);
+      }
 
-      // toast.success("PDF generated successfully!");
-
+      toast.success("PDF generated successfully!");
       if (onSubmitSuccess) onSubmitSuccess();
     } catch (error) {
       console.error("❌ PDF generation error:", error);

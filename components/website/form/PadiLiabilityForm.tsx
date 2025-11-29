@@ -3,10 +3,12 @@
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
-// import { useBooking } from "../course/booking-context";
 import { toast } from "sonner";
+import { useFormStore } from "@/store/formStore";
 
 interface PadiLiabilityFormProps {
+  cartId: string;
+  formTitle: string;
   onSubmitSuccess?: () => void;
 }
 
@@ -15,10 +17,13 @@ const loadHTML2Canvas = async () => {
   return html2canvas;
 };
 
-const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
+export default function PadiLiabilityForm({
+  cartId,
+  formTitle,
   onSubmitSuccess,
-}) => {
-  // Get current date in YYYY-MM-DD format
+}: PadiLiabilityFormProps) {
+  const store = useFormStore();
+
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -33,8 +38,6 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
   const [date] = useState(getCurrentDate());
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  // Track which fields have errors - initialize as true to show red on load
-  // Date is not in errors since it's auto-filled
   const [errors, setErrors] = useState({
     participantName: true,
     signature: true,
@@ -43,37 +46,21 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
 
   const formRef = useRef<HTMLDivElement>(null);
 
-  // const { dispatch } = useBooking();
-
   const handlePrint = async () => {
     // Reset errors
     const newErrors = {
-      participantName: false,
-      signature: false,
-      date: false,
+      participantName: !participantName.trim(),
+      signature: !signature.trim(),
+      date: !date.trim(),
     };
 
-    const missingFields: string[] = [];
+    setErrors(newErrors);
 
-    // Validate required fields
-    if (!participantName.trim()) {
-      newErrors.participantName = true;
-      missingFields.push("Participant Name");
-    }
+    const missingFields = Object.entries(newErrors)
+      .filter(([_, value]) => value)
+      .map(([key]) => key);
 
-    if (!signature.trim()) {
-      newErrors.signature = true;
-      missingFields.push("Signature");
-    }
-
-    if (!date.trim()) {
-      newErrors.date = true;
-      missingFields.push("Date");
-    }
-
-    // If there are errors, show them and return
     if (missingFields.length > 0) {
-      setErrors(newErrors);
       toast.error(
         `Please fill in the following required fields: ${missingFields.join(", ")}`,
       );
@@ -85,74 +72,115 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
     try {
       if (!formRef.current) throw new Error("Form reference not found");
 
-      // console.log("Generating PDF...");
       const html2canvas = await loadHTML2Canvas();
 
       const canvas = await html2canvas(formRef.current, {
-        scale: 0.75,
+        scale: 1,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
-        ignoreElements: (element) => {
-          return !!(
-            element.tagName === "IMG" &&
-            element.getAttribute("src")?.startsWith("http")
-          );
+        ignoreElements: (el: Element): boolean => {
+          const isNoPrint = el.classList.contains("no-print");
+          const isExternalImg =
+            el.tagName === "IMG" &&
+            !!el.getAttribute("src")?.startsWith("http");
+          return isNoPrint || isExternalImg;
         },
-        onclone: (clonedDoc) => {
-          const allEls = clonedDoc.querySelectorAll("*");
-          allEls.forEach((el) => {
-            const htmlEl = el as HTMLElement;
-            if (htmlEl.style) {
-              const props = ["color", "backgroundColor", "borderColor"];
-              props.forEach((prop) => {
-                const value = htmlEl.style.getPropertyValue(prop);
-                if (value && value.includes("lab")) {
-                  htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
+        onclone: (clonedDoc: Document) => {
+          try {
+            const allEls = clonedDoc.querySelectorAll("*");
+            allEls.forEach((el) => {
+              const htmlEl = el as HTMLElement;
+              if (htmlEl.style) {
+                // Check computed styles for lab colors
+                const computedStyle =
+                  clonedDoc.defaultView?.getComputedStyle(htmlEl);
+                if (computedStyle) {
+                  const colorProps = [
+                    "color",
+                    "backgroundColor",
+                    "borderColor",
+                    "borderTopColor",
+                  ];
+                  colorProps.forEach((prop) => {
+                    const computedValue = computedStyle.getPropertyValue(prop);
+                    if (computedValue && computedValue.includes("lab")) {
+                      const replacement = prop.includes("background")
+                        ? "rgb(255, 255, 255)"
+                        : "rgb(0, 0, 0)";
+                      htmlEl.style.setProperty(prop, replacement, "important");
+                    }
+                  });
                 }
-              });
 
-              if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
-                htmlEl.style.color = "rgb(0, 0, 0)";
-              }
-              if (
-                htmlEl.tagName !== "INPUT" &&
-                (!htmlEl.style.backgroundColor ||
-                  htmlEl.style.backgroundColor.includes("lab"))
-              ) {
-                htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-              }
-              if (
-                !htmlEl.style.borderColor ||
-                htmlEl.style.borderColor.includes("lab")
-              ) {
-                htmlEl.style.borderColor = "rgb(0, 0, 0)";
-              }
+                // Check inline styles
+                const props = ["color", "backgroundColor", "borderColor"];
+                props.forEach((prop) => {
+                  const value = htmlEl.style.getPropertyValue(prop);
+                  if (value && value.includes("lab")) {
+                    const replacement =
+                      prop === "backgroundColor"
+                        ? "rgb(255, 255, 255)"
+                        : "rgb(0, 0, 0)";
+                    htmlEl.style.setProperty(prop, replacement, "important");
+                  }
+                });
 
-              htmlEl.style.removeProperty("filter");
-              htmlEl.style.removeProperty("backdrop-filter");
-              htmlEl.style.removeProperty("box-shadow");
-            }
-          });
+                // Set defaults
+                if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
+                  htmlEl.style.color = "rgb(0, 0, 0)";
+                }
+                if (
+                  htmlEl.tagName !== "INPUT" &&
+                  (!htmlEl.style.backgroundColor ||
+                    htmlEl.style.backgroundColor.includes("lab"))
+                ) {
+                  htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
+                }
+                if (
+                  !htmlEl.style.borderColor ||
+                  htmlEl.style.borderColor.includes("lab")
+                ) {
+                  htmlEl.style.borderColor = "rgb(0, 0, 0)";
+                }
+
+                htmlEl.style.removeProperty("filter");
+                htmlEl.style.removeProperty("backdrop-filter");
+                htmlEl.style.removeProperty("box-shadow");
+              }
+            });
+          } catch (e) {
+            console.warn("Color sanitization warning:", e);
+          }
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.75);
+      const imgData = canvas.toDataURL("image/jpeg", 0.6);
+
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
+      const pageHeight = pdf.internal.pageSize.getHeight();
 
-      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
 
       const pdfBlob = pdf.output("blob");
-      const fileSizeMB = pdfBlob.size / 1024 / 1024;
-
-      // console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
-
       const fileName = `PADI_Liability_Form_${participantName
-        .replace(/[^a-zA-Z0-9\s]/g, "")
+        .replace(/[^a-zA-Z0-9\\s]/g, "")
         .replace(/\s+/g, "_")
         .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
 
@@ -160,12 +188,17 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
         type: "application/pdf",
       });
 
+      // Save to store
+      store.setFormCompleted(cartId, formTitle, pdfFile);
+
       toast.success("PDF generated successfully!");
       onSubmitSuccess?.();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error generating PDF:", error);
       toast.error(
-        `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to generate PDF: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
       );
     } finally {
       setIsGeneratingPDF(false);
@@ -173,7 +206,7 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6">
+    <div className=" bg-gray-100 py-6">
       {/* Form Content */}
       <div
         ref={formRef}
@@ -655,6 +688,4 @@ const PadiLiabilityForm: React.FC<PadiLiabilityFormProps> = ({
       </div>
     </div>
   );
-};
-
-export default PadiLiabilityForm;
+}

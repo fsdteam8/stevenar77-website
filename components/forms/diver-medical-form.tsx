@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { generatePDF } from "@/lib/forms/medical-form-pdf-generator";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-// import { useBooking } from "../website/course/booking-context";
 import { useSearchParams } from "next/navigation";
+import { useFormStore } from "@/store/formStore";
 
 interface FormData {
   participantName: string;
@@ -132,10 +132,14 @@ interface PDFFormData {
 }
 
 interface DiverMedicalFormProps {
+  cartId?: string;
+  formTitle?: string;
   onSubmitSuccess?: () => void;
 }
 
 const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
+  cartId,
+  formTitle,
   onSubmitSuccess,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -561,6 +565,12 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
     };
   };
 
+  // ... inside component ...
+
+  // ... inside component ...
+
+  const store = useFormStore(); // Initialize store
+
   const handleExportPDF = async () => {
     try {
       setIsSubmitting(true);
@@ -582,15 +592,15 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         return;
       }
 
-      if (!bookingId) {
-        toast.error("Booking ID not found in URL.");
-        return;
-      }
+      // if (!bookingId) {
+      //   toast.error("Booking ID not found in URL.");
+      //   return;
+      // }
 
-      if (!token) {
-        toast.error("Authentication token not found. Please log in again.");
-        return;
-      }
+      // if (!token) {
+      //   toast.error("Authentication token not found. Please log in again.");
+      //   return;
+      // }
 
       const pdfFormData = convertToPDFFormat(formData);
       const pdfFile = await generatePDF(pdfFormData);
@@ -599,13 +609,14 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         throw new Error("Generated file is not a valid File object");
       }
 
-      // console.log("📤 Starting upload with bookingId:", bookingId);
-
-      //   dispatch({
-      //     type: "ADD_DOCUMENT",
-      //     payload: { file: pdfFile, label: "Divers Medical" },
-      //   });
-      // console.log("📋 Document added to booking context");
+      // Save to store if cartId and formTitle are present
+      if (cartId && formTitle) {
+        store.setFormCompleted(cartId, formTitle, pdfFile);
+        toast.success("Form saved successfully!");
+      } else {
+        // Fallback for standalone usage if needed, or just log warning
+        console.warn("Missing cartId or formTitle, cannot save to store.");
+      }
 
       if (onSubmitSuccess) onSubmitSuccess();
     } catch (error) {

@@ -5,8 +5,11 @@ import { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
 // import { useBooking } from "../course/booking-context";
 import { toast } from "sonner";
+import { useFormStore } from "@/store/formStore";
 
 interface DiversActivityFormProps {
+  cartId?: string;
+  formTitle?: string;
   onSubmitSuccess?: () => void;
 }
 
@@ -16,10 +19,10 @@ const loadHTML2Canvas = async () => {
 };
 
 const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
+  cartId,
+  formTitle,
   onSubmitSuccess,
 }) => {
-  // const { dispatch } = useBooking();
-
   // Get current date in YYYY-MM-DD format
   const getCurrentDate = () => {
     const today = new Date();
@@ -43,11 +46,17 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
     participantName: true,
     signature: true,
     date: false, // Date is auto-filled, so no error
-    hasInsurance: true,
+    hasInsurance: false,
     policyNumber: false, // Only required if hasInsurance is true
   });
 
   const formRef = useRef<HTMLDivElement>(null);
+
+  // ... inside component ...
+
+  // ... inside component ...
+
+  const store = useFormStore();
 
   const handlePrint = async () => {
     // Reset errors
@@ -208,9 +217,6 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
       }
 
       const pdfBlob = pdf.output("blob");
-      const fileSizeMB = pdfBlob.size / 1024 / 1024;
-      // console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
-
       const fileName = `PADI_Divers_Activity_Form_${participantName
         .replace(/[^a-zA-Z0-9\\s]/g, "")
         .replace(/\s+/g, "_")
@@ -220,10 +226,10 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
         type: "application/pdf",
       });
 
-      // dispatch({
-      //   type: "ADD_DOCUMENT",
-      //   payload: { file: pdfFile, label: "Divers Activity" },
-      // });
+      // Save to store
+      if (cartId && formTitle) {
+        store.setFormCompleted(cartId, formTitle, pdfFile);
+      }
 
       toast.success("PDF generated successfully!");
       onSubmitSuccess?.();

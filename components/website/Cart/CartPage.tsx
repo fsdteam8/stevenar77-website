@@ -4,7 +4,7 @@ import { useCart, useDeleteCart, useProceedToPayment } from "@/hooks/useCart";
 import React from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { Trash2 } from "lucide-react";
+import { ShoppingCart, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { CartItem, ProceedToPaymentPayload } from "@/types/cart";
 import Link from "next/link";
@@ -58,6 +58,25 @@ export default function CartPage() {
     deleteCartMutation.mutate(cartId, {
       onSuccess: () => {
         toast.success("Cart item deleted successfully");
+
+        // ---- Remove from localStorage ----
+        const stored = localStorage.getItem("courseFormTitles");
+
+        if (stored) {
+          const parsed = JSON.parse(stored);
+
+          // filter out deleted ID
+          const updatedCourse = parsed.course.filter(
+            (item: { cartId: string }) => item.cartId !== cartId,
+          );
+
+          const updatedData = {
+            course: updatedCourse,
+          };
+
+          localStorage.setItem("courseFormTitles", JSON.stringify(updatedData));
+        }
+        // -----------------------------------
       },
       onError: () => {
         toast.error("Failed to delete cart item");
@@ -126,7 +145,25 @@ export default function CartPage() {
       </p>
 
       {cartItems.length === 0 ? (
-        <p className="text-center text-gray-500">Your cart is empty</p>
+        <div className="flex flex-col items-center justify-center py-20 text-center border border-gray-200 rounded-lg">
+          <div className="mb-6">
+            <ShoppingCart className="w-20 h-20 text-gray-400" />
+          </div>
+
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+            Your cart is empty
+          </h2>
+
+          <p className="text-gray-500 mb-6">
+            Looks like you haven’t added anything to your cart yet.
+          </p>
+
+          <Link href="/">
+            <button className="px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary/80 cursor-pointer shadow-md">
+              Continue Shopping
+            </button>
+          </Link>
+        </div>
       ) : (
         <div className="overflow-x-auto shadow-md rounded-lg">
           <table className="min-w-full bg-white border border-gray-200 rounded-lg">
@@ -213,23 +250,22 @@ export default function CartPage() {
         </div>
       )}
 
-      <div className="flex justify-center gap-4 text-center mt-8">
-        <Link href="/">
-          {" "}
+      {cartItems.length > 0 && (
+        <div className="flex justify-center gap-4 text-center mt-8">
+          <Link href="/">
+            <button className="inline-block px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary/80 cursor-pointer">
+              Continue Shopping
+            </button>
+          </Link>
+
           <button
-            // onClick={handleProceedToPayment}
+            onClick={handleProceedToPayment}
             className="inline-block px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary/80 cursor-pointer"
           >
-            Continue Shopping
+            Proceed to Payment
           </button>
-        </Link>
-        <button
-          onClick={handleProceedToPayment}
-          className="inline-block px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary/80 cursor-pointer"
-        >
-          Proceed to Payment
-        </button>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

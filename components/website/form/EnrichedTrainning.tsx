@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { jsPDF } from "jspdf";
-// import { useBooking } from "../course/booking-context";
 import { toast } from "sonner";
+import { useFormStore } from "@/store/formStore";
 
 const loadHTML2Canvas = async () => {
   const { default: html2canvas } = await import("html2canvas");
@@ -13,19 +13,21 @@ const loadHTML2Canvas = async () => {
 };
 
 interface EnrichedAirFormProps {
+  cartId: string;
+  formTitle: string;
   onSubmitSuccess?: () => void;
 }
 
 const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
+  cartId,
+  formTitle,
   onSubmitSuccess,
 }) => {
-  // const { dispatch } = useBooking();
-
   const getCurrentDate = () => {
     const today = new Date();
-    const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
+    const year = today.getFullYear();
     return `${month}-${day}-${year}`;
   };
 
@@ -39,7 +41,6 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
   const [policyNumber, setPolicyNumber] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  // Validation states
   const [errors, setErrors] = useState({
     participantName: false,
     participantSignature: false,
@@ -56,7 +57,6 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
       participantDate: !participantDate,
       storeResort: !storeResort.trim(),
     };
-
     setErrors(newErrors);
 
     const emptyFields = [];
@@ -70,73 +70,89 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
       toast.error(`Please fill in: ${emptyFields.join(", ")}`);
       return false;
     }
-
     return true;
   };
 
+  const store = useFormStore();
+
   const handleExportPDF = async () => {
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsGeneratingPDF(true);
 
     try {
       if (!formRef.current) throw new Error("Form reference not found");
-
-      // console.log("Generating PDF...");
       const html2canvas = await loadHTML2Canvas();
-
       const canvas = await html2canvas(formRef.current, {
         scale: 1,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
-        ignoreElements: (element) => {
-          return (
-            element.classList.contains("no-print") ||
-            !!(
-              element.tagName === "IMG" &&
-              element.getAttribute("src")?.startsWith("http")
-            )
-          );
-        },
+        ignoreElements: (el) =>
+          el.classList.contains("no-print") ||
+          (el.tagName === "IMG" &&
+            (el.getAttribute("src")?.startsWith("http") ?? false)),
         onclone: (clonedDoc) => {
-          const allEls = clonedDoc.querySelectorAll("*");
-          allEls.forEach((el) => {
-            const htmlEl = el as HTMLElement;
-            if (htmlEl.style) {
-              const props = ["color", "backgroundColor", "borderColor"];
-              props.forEach((prop) => {
-                const value = htmlEl.style.getPropertyValue(prop);
-                if (value && value.includes("lab")) {
-                  htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
+          try {
+            clonedDoc.querySelectorAll("*").forEach((el) => {
+              const htmlEl = el as HTMLElement;
+              if (htmlEl.style) {
+                // Check computed styles for lab colors
+                const computedStyle =
+                  clonedDoc.defaultView?.getComputedStyle(htmlEl);
+                if (computedStyle) {
+                  const colorProps = [
+                    "color",
+                    "backgroundColor",
+                    "borderColor",
+                    "borderTopColor",
+                  ];
+                  colorProps.forEach((prop) => {
+                    const computedValue = computedStyle.getPropertyValue(prop);
+                    if (computedValue && computedValue.includes("lab")) {
+                      const replacement = prop.includes("background")
+                        ? "rgb(255, 255, 255)"
+                        : "rgb(0, 0, 0)";
+                      htmlEl.style.setProperty(prop, replacement, "important");
+                    }
+                  });
                 }
-              });
 
-              if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
-                htmlEl.style.color = "rgb(0, 0, 0)";
-              }
-              if (
-                htmlEl.tagName !== "INPUT" &&
-                (!htmlEl.style.backgroundColor ||
-                  htmlEl.style.backgroundColor.includes("lab"))
-              ) {
-                htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-              }
-              if (
-                !htmlEl.style.borderColor ||
-                htmlEl.style.borderColor.includes("lab")
-              ) {
-                htmlEl.style.borderColor = "rgb(0, 0, 0)";
-              }
+                // Check inline styles
+                ["color", "backgroundColor", "borderColor"].forEach((prop) => {
+                  const value = htmlEl.style.getPropertyValue(prop);
+                  if (value && value.includes("lab")) {
+                    const replacement =
+                      prop === "backgroundColor"
+                        ? "rgb(255, 255, 255)"
+                        : "rgb(0, 0, 0)";
+                    htmlEl.style.setProperty(prop, replacement, "important");
+                  }
+                });
 
-              htmlEl.style.removeProperty("filter");
-              htmlEl.style.removeProperty("backdrop-filter");
-              htmlEl.style.removeProperty("box-shadow");
-            }
-          });
+                // Set defaults
+                if (!htmlEl.style.color || htmlEl.style.color.includes("lab"))
+                  htmlEl.style.color = "rgb(0, 0, 0)";
+                if (
+                  htmlEl.tagName !== "INPUT" &&
+                  (!htmlEl.style.backgroundColor ||
+                    htmlEl.style.backgroundColor.includes("lab"))
+                )
+                  htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
+                if (
+                  !htmlEl.style.borderColor ||
+                  htmlEl.style.borderColor.includes("lab")
+                )
+                  htmlEl.style.borderColor = "rgb(0, 0, 0)";
+                htmlEl.style.removeProperty("filter");
+                htmlEl.style.removeProperty("backdrop-filter");
+                htmlEl.style.removeProperty("box-shadow");
+              }
+            });
+          } catch (e) {
+            console.warn("Color sanitization warning:", e);
+          }
         },
       });
 
@@ -149,23 +165,15 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
       pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);
 
       const pdfBlob = pdf.output("blob");
-      const fileSizeMB = pdfBlob.size / 1024 / 1024;
-
-      // console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
-
-      const fileName = `PADI_Enriched_Air_Form_${participantName
-        .replace(/[^a-zA-Z0-9\s]/g, "")
-        .replace(/\s+/g, "_")
-        .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
+      const fileName = `PADI_Enriched_Air_Form_${participantName.replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`;
 
       const pdfFile = new File([pdfBlob], fileName, {
         type: "application/pdf",
       });
 
-      // dispatch({
-      //   type: "ADD_DOCUMENT",
-      //   payload: { file: pdfFile, label: "Enriched Training" },
-      // });
+      // Save to store
+      store.setFormCompleted(cartId, formTitle, pdfFile);
+
       toast.success("Form submitted successfully!");
       onSubmitSuccess?.();
     } catch (error: unknown) {
@@ -176,11 +184,9 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
     }
   };
 
-  // Clear error when user starts typing
   const handleFieldChange = (field: keyof typeof errors, value: string) => {
-    if (errors[field] && value.trim()) {
+    if (errors[field] && value.trim())
       setErrors((prev) => ({ ...prev, [field]: false }));
-    }
   };
 
   return (

@@ -163,7 +163,7 @@ export default function IndividualBooking() {
 
       participant: 1,
 
-      // 🟢 FIXED — guaranteed array
+      //  FIXED — guaranteed array
       classDate: scheduleDates,
 
       courseTitle: course.title,
@@ -177,7 +177,7 @@ export default function IndividualBooking() {
       form: [],
     };
 
-    // console.log("📦 FINAL BOOKING PAYLOAD:", payload);
+    // console.log(" FINAL BOOKING PAYLOAD:", payload);
 
     // Convert payload into FormData
     const formDataToSend = new FormData();

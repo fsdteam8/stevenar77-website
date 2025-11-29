@@ -202,7 +202,7 @@ export default function PersonalInformation({
         {/* HEIGHT FEET */}
         <div>
           <Label className="my-2">Height (Feet) *</Label>
-          <Input {...register("heightFeet")} placeholder="Feet" />
+          <Input type="number" {...register("heightFeet")} placeholder="Feet" />
           {errors.heightFeet && (
             <p className="text-red-600 text-sm my-2">This field is required</p>
           )}
@@ -211,7 +211,11 @@ export default function PersonalInformation({
         {/* HEIGHT INCHES */}
         <div>
           <Label className="my-2">Height (Inches) *</Label>
-          <Input {...register("heightInches")} placeholder="Inches" />
+          <Input
+            type="number"
+            {...register("heightInches")}
+            placeholder="Inches"
+          />
           {errors.heightInches && (
             <p className="text-red-600 text-sm my-2">This field is required</p>
           )}
@@ -220,7 +224,11 @@ export default function PersonalInformation({
         {/* WEIGHT */}
         <div>
           <Label className="my-2">Weight *</Label>
-          <Input {...register("weight")} placeholder="e.g., 50lbs" />
+          <Input
+            type="number"
+            {...register("weight")}
+            placeholder="e.g., 50lbs"
+          />
           {errors.weight && (
             <p className="text-red-600 text-sm my-2">This field is required</p>
           )}
