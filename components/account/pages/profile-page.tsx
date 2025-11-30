@@ -15,10 +15,14 @@ interface FormData {
   firstName: string;
   lastName: string;
   email: string;
-  streetAddress: string;
+  street: string;
   location: string;
   postalCode: string;
   phone: string;
+  age: string;
+  hight: string;
+  weight: string;
+  shoeSize: string;
   dateOfBirth: string;
 }
 
@@ -28,16 +32,22 @@ export const ProfilePage = () => {
   const uploadMutation = useUploadAvatar();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState<string>("/images/profile-mini.jpg");
+  const [avatarUrl, setAvatarUrl] = useState<string>(
+    "/images/profile-mini.jpg",
+  );
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
     email: "",
-    streetAddress: "",
+    street: "",
     location: "",
     postalCode: "",
     phone: "",
     dateOfBirth: "",
+    age: "",
+    hight: "",
+    weight: "",
+    shoeSize: "",
   });
   // console.log('userdata',user)
   // Populate form data when user loads
@@ -47,12 +57,16 @@ export const ProfilePage = () => {
         firstName: user.firstName ?? "",
         lastName: user.lastName ?? "",
         email: user.email ?? "",
-        streetAddress: user.street ?? user.street ?? "",
+        street: user.street ?? user.street ?? "",
         location: user.location ?? "",
         postalCode: user.postalCode ?? "",
         phone: user.phone ?? "",
         // Format dateOfBirth as YYYY-MM-DD for input[type=date]
         dateOfBirth: user.dateOfBirth ? user.dateOfBirth.slice(0, 10) : "",
+        age: user?.age ?? "",
+        hight: user?.hight ?? "",
+        weight: user?.weight ?? "",
+        shoeSize: user?.shoeSize ?? "",
       });
       setAvatarUrl(user.image?.url ?? "/professional-bearded-man.png");
     }
@@ -75,12 +89,14 @@ export const ProfilePage = () => {
     try {
       await updateMutation.mutateAsync({
         ...formData,
-        street: formData.streetAddress, // Map streetAddress to street
+        street: formData.street,
+        streetAddress: formData.street,
+        phoneNumber: formData.phone,
       });
-       toast.success('your profile update successfuly')
+      toast.success("your profile update successfuly");
       setIsEditing(false);
     } catch (err) {
-      toast.error(`Failed to update profile:${err}`)
+      toast.error(`Failed to update profile:${err}`);
       console.error("Failed to update profile:", err);
     }
   };
@@ -89,14 +105,18 @@ export const ProfilePage = () => {
     setIsEditing(false);
     if (user) {
       setFormData({
-        firstName: user.firstName ?? "",
-        lastName: user.lastName ?? "",
-        email: user.email ?? "",
-        streetAddress: user.streetAddress ?? user.location ?? "",
-        location: user.location ?? "",
-        postalCode: user.postalCode ?? "",
-        phone: user.phone ?? "",
-        dateOfBirth: user.dateOfBirth ? user.dateOfBirth.slice(0, 10) : "",
+        firstName: user?.firstName ?? "",
+        lastName: user?.lastName ?? "",
+        email: user?.email ?? "",
+        street: user?.street ?? user?.location ?? "",
+        location: user?.location ?? "",
+        postalCode: user?.postalCode ?? "",
+        phone: user?.phone ?? "",
+        dateOfBirth: user?.dateOfBirth ? user?.dateOfBirth.slice(0, 10) : "",
+        age: user?.age ?? "",
+        hight: user?.hight ?? "",
+        weight: user?.weight ?? "",
+        shoeSize: user?.shoeSize ?? "",
       });
       setAvatarUrl(user.image?.url ?? "/professional-bearded-man.png");
     }
@@ -108,13 +128,20 @@ export const ProfilePage = () => {
       firstName: "First Name",
       lastName: "Last Name",
       email: "Email",
-      streetAddress: "Street Address",
+      street: "Street Address",
       location: "Location",
       postalCode: "Postal Code",
       phone: "Phone",
       dateOfBirth: "Date of Birth",
+      Age: "Age",
+      Height: "Height",
+      Weight: "Weight",
+      ShoeSize: "Shoe Size",
     };
-    return fieldLabels[fieldName] || fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+    return (
+      fieldLabels[fieldName] ||
+      fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
+    );
   };
 
   if (isLoading) {
@@ -156,8 +183,8 @@ export const ProfilePage = () => {
           <p className="text-red-500 text-lg mb-4">
             {error instanceof Error ? error.message : "Failed to load profile"}
           </p>
-          <Button 
-            onClick={() => window.location.reload()} 
+          <Button
+            onClick={() => window.location.reload()}
             className="teal-primary text-white hover:bg-[#0694a2]/90"
           >
             Try Again
@@ -172,10 +199,19 @@ export const ProfilePage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <div className="lg:col-span-1">
           <ProfileCard
-            name={`${formData.firstName} ${formData.lastName}`.trim() || "No Name"}
-            email={formData.email || "No Email"}
-            phone={formData.phone || "No Phone"}
-            location={formData.streetAddress || "No Address"}
+            name={
+              `${formData.firstName} ${formData.lastName}`.trim() ||
+              "No Name Provided"
+            }
+            email={formData.email || "No Email Provided"}
+            phone={formData.phone || "No PhoneNumber Provided"}
+            location={formData.street || "No Address Provided"}
+            street={formData.street || "No Location Provided"}
+            postalCode={formData.postalCode || "No PostalCode Provided"}
+            age={formData.age || "No Age Provided"}
+            height={formData.hight || "No Height Provided"}
+            weight={formData.weight || "No Weight Provided"}
+            shoeSize={formData.shoeSize || "No Shoe Size Provided"}
             avatarUrl={avatarUrl}
             showEditButton={!isEditing}
             onEdit={() => setIsEditing(true)}
@@ -201,12 +237,24 @@ export const ProfilePage = () => {
                   </Label>
                   <Input
                     id={key}
-                    type={key === "dateOfBirth" ? "date" : key === "email" ? "email" : "text"}
+                    type={
+                      key === "dateOfBirth"
+                        ? "date"
+                        : key === "email"
+                          ? "email"
+                          : "text"
+                    }
                     value={value}
-                    onChange={(e) => handleInputChange(key as keyof FormData, e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange(key as keyof FormData, e.target.value)
+                    }
                     disabled={!isEditing}
                     className="mt-1"
-                    placeholder={isEditing ? `Enter your ${formatFieldName(key).toLowerCase()}` : ""}
+                    placeholder={
+                      isEditing
+                        ? `Enter your ${formatFieldName(key).toLowerCase()}`
+                        : ""
+                    }
                   />
                 </div>
               ))}
@@ -214,20 +262,26 @@ export const ProfilePage = () => {
 
             {isEditing && (
               <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4 mt-6 sm:mt-8">
-                <Button 
-                  variant="outline" 
-                  onClick={handleDiscard} 
+                <Button
+                  variant="outline"
+                  onClick={handleDiscard}
                   className="w-full sm:w-auto"
-                  disabled={updateMutation.isPending || uploadMutation.isPending}
+                  disabled={
+                    updateMutation.isPending || uploadMutation.isPending
+                  }
                 >
                   Discard Changes
                 </Button>
                 <Button
                   onClick={handleSave}
                   className="teal-primary text-white hover:bg-[#0694a2]/90 w-full sm:w-auto"
-                  disabled={updateMutation.isPending || uploadMutation.isPending}
+                  disabled={
+                    updateMutation.isPending || uploadMutation.isPending
+                  }
                 >
-                  {updateMutation.isPending || uploadMutation.isPending ? "Saving..." : "Save Changes"}
+                  {updateMutation.isPending || uploadMutation.isPending
+                    ? "Saving..."
+                    : "Save Changes"}
                 </Button>
               </div>
             )}
