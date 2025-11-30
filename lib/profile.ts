@@ -11,6 +11,10 @@ export interface UserProfile {
   isVerified: boolean;
   phone?: string;
   dateOfBirth?: string | null;
+  age?: string | null;
+  hight?: string | null;
+  weight?: string | null;
+  shoeSize?: string | null;
   streetAddress?: string | null;
   location?: string | null;
   postalCode?: string | null;
