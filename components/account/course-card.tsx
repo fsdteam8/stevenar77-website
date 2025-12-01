@@ -85,10 +85,14 @@ export function CourseCard({
           </div>
 
           <p className="text-[#68706a] text-sm mb-3 line-clamp-2">
-            {description}
+            <span
+              dangerouslySetInnerHTML={{
+                __html: description || "N/A",
+              }}
+            ></span>
           </p>
 
-          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-4 text-sm text-[#68706a] mb-3">
+          {/* <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-4 text-sm text-[#68706a] mb-3">
             <div className="flex items-center space-x-1">
               <Calendar className="w-4 h-4" />
               <span className="truncate">{date}</span>
@@ -107,7 +111,7 @@ export function CourseCard({
                 {participants} participant{participants !== 1 ? "s" : ""}
               </span>
             </div>
-          </div>
+          </div> */}
 
           <div className="flex justify-between items-center">
             <span className="text-xl font-bold text-[#364039]">${price}</span>
