@@ -11,8 +11,12 @@ interface ProfileCardProps {
   phone: string;
   location: string;
   avatarUrl?: string;
-  street?:string;
-  postalCode?:string;
+  street?: string;
+  age?: string;
+  height?: string;
+  weight?: string;
+  shoeSize?: string;
+  postalCode?: string;
   onEdit?: () => void;
   showEditButton?: boolean;
   onImageUpload?: (file: File) => void;
@@ -26,6 +30,10 @@ export function ProfileCard({
   location,
   avatarUrl,
   street,
+  age,
+  height,
+  weight,
+  shoeSize,
   postalCode,
   onEdit,
   showEditButton = false,
@@ -54,19 +62,18 @@ export function ProfileCard({
 
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-sm md:h-[calc(100vh-100px)]">
-      <div className="profile-card-bg h-24 sm:h-32 relative">
-        
-      </div>
+      <div className="profile-card-bg h-24 sm:h-32 relative"></div>
       <div className="px-4 sm:px-6 pb-4 sm:pb-6 -mt-12 sm:-mt-16 relative">
         <div className="flex flex-col items-center">
           <div className="relative group">
             <Avatar
-              className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-white mb-4 cursor-pointer"
+              className="w-20 h-20 sm:w-24 sm:h-24 border-4  border-white mb-4 cursor-pointer"
               onClick={isEditing ? handleImageUpload : undefined}
             >
               <AvatarImage
                 src={previewUrl || avatarUrl || "/placeholder.svg"}
                 alt={name}
+                className="object-cover"
               />
               <AvatarFallback className="text-lg sm:text-xl font-semibold bg-[#68706a] text-white">
                 {name
@@ -77,7 +84,7 @@ export function ProfileCard({
             </Avatar>
             {isEditing && (
               <div
-                className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer mb-4"
+                className="absolute inset-0 object-cover bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer mb-4"
                 onClick={handleImageUpload}
               >
                 <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
@@ -90,7 +97,7 @@ export function ProfileCard({
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="hidden"
+            className="hidden object-cover"
           />
 
           <h3 className="text-lg sm:text-xl font-semibold text-[#364039] mb-1 text-center">
@@ -118,24 +125,43 @@ export function ProfileCard({
               <span className="text-[#68706a]">{location}</span>
             </div>
             <div>
-              <span className="font-medium text-[#364039]">StreetAddress: </span>
+              <span className="font-medium text-[#364039]">
+                StreetAddress:{" "}
+              </span>
               <span className="text-[#68706a]">{street}</span>
             </div>
             <div>
-              <span className="font-medium text-[#364039]">Location: </span>
+              <span className="font-medium text-[#364039]">postal Code: </span>
               <span className="text-[#68706a]">{postalCode}</span>
+            </div>
+            <div>
+              <span className="font-medium text-[#364039]">Age: </span>
+              <span className="text-[#68706a]">{age}</span>
+            </div>
+            <div>
+              <span className="font-medium text-[#364039]">Height: </span>
+              <span className="text-[#68706a]">{height}</span>
+            </div>
+            <div>
+              <span className="font-medium text-[#364039]">Weight: </span>
+              <span className="text-[#68706a]">{weight}</span>
+            </div>
+            <div>
+              <span className="font-medium text-[#364039]">Shoe Size: </span>
+              <span className="text-[#68706a]">{shoeSize}</span>
             </div>
           </div>
           <div className="">
             {showEditButton && (
-          <Button
-            size="sm"
-            className=" top-25 sm:top-35 right-35 sm:right-50 bg-primary hover:bg-teal-500 text-white border-white/30"
-            onClick={onEdit}
-          >
-            <Edit className="w-4 h-4" />Edit
-          </Button>
-        )}
+              <Button
+                size="sm"
+                className=" top-25 sm:top-35 right-35 sm:right-50 bg-primary hover:bg-teal-500 text-white border-white/30"
+                onClick={onEdit}
+              >
+                <Edit className="w-4 h-4" />
+                Edit
+              </Button>
+            )}
           </div>
         </div>
       </div>
