@@ -18,7 +18,7 @@ import StandardsForm from "../form/StandardsForm";
 import DiversActivityForm from "../form/DiversActivityForm";
 import DiverMedicalForm from "@/components/forms/diver-medical-form";
 import PadiForm from "../form/Equipment";
-import { CheckCircle2, ArrowDown, FileText } from "lucide-react";
+import { CheckCircle2, ArrowDown, FileText, Loader2 } from "lucide-react";
 import { useCourseFormBookingUpdate } from "@/hooks/useCourseformbookingupdate";
 
 interface CourseFormItem {
@@ -78,7 +78,8 @@ export default function MedicalForm() {
     });
 
     // Append files exactly as Postman does
-    medicalDocuments.forEach((file) => {      formData.append("medicalDocuments", file);
+    medicalDocuments.forEach((file) => {
+      formData.append("medicalDocuments", file);
     });
 
     // Append names exactly as Postman does (as JSON string)
@@ -128,8 +129,6 @@ export default function MedicalForm() {
   const isCartComplete = (cartId: string, requiredTitles: string[]) =>
     store.checkAllFormsComplete(cartId, requiredTitles);
 
-  
-  
   return (
     <div className="p-6 max-w-5xl mx-auto">
       {/* Header */}
@@ -236,7 +235,12 @@ export default function MedicalForm() {
                           : "bg-gray-400 opacity-50 cursor-not-allowed"
                       }`}
                     >
-                      {isSubmitted ? (
+                      {isLoading ? (
+                        <span className="flex items-center gap-2">
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          Submitting...
+                        </span>
+                      ) : isSubmitted ? (
                         <span className="flex items-center gap-2">
                           <CheckCircle2 className="w-5 h-5" />
                           Submitted Successfully
