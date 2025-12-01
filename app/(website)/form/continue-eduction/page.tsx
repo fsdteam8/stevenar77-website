@@ -7,9 +7,7 @@ const page = () => {
   return (
     <div>
       {/* <TripBookingProvider> */}
-      <Suspense>
-        {/* <PadiLiabilityForm /> */}This is continue eduction{" "}
-      </Suspense>
+      <Suspense>{/* <PadiLiabilityForm /> */}</Suspense>
       {/* </BookingProvider> */}
       {/* <StandardsForm /> */}
     </div>
