@@ -114,11 +114,13 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
       const html2canvas = await loadHTML2Canvas();
 
       const canvas = await html2canvas(formRef.current, {
-        scale: 1,
+        scale: 2,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
+        width: formRef.current.scrollWidth,
+        height: formRef.current.scrollHeight,
         ignoreElements: (el: Element): boolean => {
           const isNoPrint = el.classList.contains("no-print");
           const isExternalImg =
@@ -194,7 +196,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.6);
+      const imgData = canvas.toDataURL("image/png", 1.0);
 
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
@@ -206,13 +208,13 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
       let heightLeft = imgHeight;
       let position = 0;
 
-      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
 
       while (heightLeft > 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
-        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
       }
 

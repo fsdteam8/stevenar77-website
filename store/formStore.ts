@@ -10,12 +10,12 @@ interface FormData {
   address?: string;
   gender?: string;
   country?: string;
-  file?: File | Blob; // Added file support
+  file?: File | Blob;
 }
 
 interface FormStore {
   data: Record<string, Record<string, FormData>>;
-  completedForms: Record<string, string[]>; // Track completed forms per cartId
+  completedForms: Record<string, string[]>;
   setFormData: (cartId: string, formTitle: string, formData: FormData) => void;
   setFormCompleted: (
     cartId: string,

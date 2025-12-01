@@ -84,11 +84,13 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
       if (!formRef.current) throw new Error("Form reference not found");
       const html2canvas = await loadHTML2Canvas();
       const canvas = await html2canvas(formRef.current, {
-        scale: 1,
+        scale: 2,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
+        width: formRef.current.scrollWidth,
+        height: formRef.current.scrollHeight,
         ignoreElements: (el) =>
           el.classList.contains("no-print") ||
           (el.tagName === "IMG" &&
@@ -156,13 +158,13 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.75);
+      const imgData = canvas.toDataURL("image/png", 1.0);
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
       const imgProps = pdf.getImageProperties(imgData);
       const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
 
-      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);
+      pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pdfHeight);
 
       const pdfBlob = pdf.output("blob");
       const fileName = `PADI_Enriched_Air_Form_${participantName.replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`;

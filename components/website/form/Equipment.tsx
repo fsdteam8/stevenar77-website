@@ -227,11 +227,13 @@ export default function PadiForm({
       const jsPDF = await loadJsPDF();
 
       const canvas = await html2canvas(printRef.current, {
-        scale: 1,
+        scale: 2,
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
+        width: printRef.current.scrollWidth,
+        height: printRef.current.scrollHeight,
         ignoreElements: (element) => {
           return (
             element.classList.contains("no-print") ||
@@ -309,7 +311,7 @@ export default function PadiForm({
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.75);
+      const imgData = canvas.toDataURL("image/png", 1.0);
       const pdf = new jsPDF("p", "mm", "a4");
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
@@ -322,14 +324,14 @@ export default function PadiForm({
       let heightLeft = imgHeight;
       let position = 0;
 
-      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
 
       // Add extra pages for remaining content
       while (heightLeft > 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
-        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
       }
 
