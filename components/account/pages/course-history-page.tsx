@@ -5,6 +5,32 @@ import { CourseCard } from "../course-card";
 import { Pagination } from "../pagination";
 import { CourseDetailModal } from "@/components/modals/course-detail-modal";
 import { useMyBookings } from "@/services/hooks/booking/useBookings";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// ----------------------
+// Skeleton Loader
+// ----------------------
+function SkeletonCard() {
+  return (
+    <div className="flex gap-4 p-4 bg-white rounded-xl shadow animate-pulse">
+      {/* Image */}
+      <Skeleton className="w-28 h-28 rounded-lg" />
+
+      {/* Content */}
+      <div className="flex-1 space-y-3">
+        <Skeleton className="h-5 w-3/4" />
+        <Skeleton className="h-4 w-1/2" />
+        <Skeleton className="h-4 w-1/3" />
+        <Skeleton className="h-4 w-1/4" />
+
+        <div className="flex gap-3 mt-2">
+          <Skeleton className="h-8 w-20 rounded-md" />
+          <Skeleton className="h-8 w-20 rounded-md" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface CourseCardData {
   id: string;
@@ -96,7 +122,19 @@ export function CourseHistoryPage() {
     setHighlightedCourse(id);
   };
 
-  if (isLoading) return <p className="text-center py-10">Loading...</p>;
+  // ----------------------
+  // Loading State with Skeleton
+  // ----------------------
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-2 sm:px-0 space-y-4 mt-4">
+        {[...Array(5)].map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
+      </div>
+    );
+  }
+
   if (isError)
     return (
       <p className="text-center py-10 text-red-500">Error: {error?.message}</p>
