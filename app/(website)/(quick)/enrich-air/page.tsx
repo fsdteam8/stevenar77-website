@@ -1,4 +1,4 @@
-// import EnrichedAirForm from '@/components/website/form/EnrichedTrainning'
+// import EnrichedAirForm from "@/components/website/form/EnrichedTrainning";
 import React from "react";
 
 const page = () => {

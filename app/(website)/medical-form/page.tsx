@@ -1,5 +1,5 @@
-import MedicalForm from "@/components/forms/medical-form";
 import React from "react";
+import MedicalForm from "@/components/website/MedicalForm/MedicalForm";
 
 export default function page() {
   return (
