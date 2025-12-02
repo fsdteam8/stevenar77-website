@@ -16,6 +16,9 @@ export interface CartDetails {
   title?: string;
   images?: { url: string } | { url: string }[];
   price?: number;
+  formTitle?: string[];
+  Username?: string;
+  email?: string;
 }
 
 export interface Participant {
@@ -32,6 +35,8 @@ export interface CartItem {
   price?: number;
   participants?: Participant[];
   quantity?: number;
+  itemId?: string;
+  bookingId?: string;
 }
 
 export interface ProceedToPaymentPayload {

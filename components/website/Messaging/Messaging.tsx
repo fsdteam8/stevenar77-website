@@ -169,7 +169,7 @@ export default function UserMessaging() {
   }
 
   return (
-    <div className="flex flex-col h-[70vh] max-w-2xl mx-auto my-6 border rounded-2xl shadow bg-white">
+    <div className="flex flex-col h-[70vh] max-w-2xl mx-auto my-6 border rounded-2xl shadow  bg-white">
       {/* Header */}
       <div className="p-4 border-b flex items-center gap-3 bg-gradient-to-r from-primary to-secondary text-white rounded-t-2xl shadow">
         <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-bold">

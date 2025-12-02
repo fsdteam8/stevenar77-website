@@ -1,14 +1,13 @@
 // import { BookingProvider } from "@/components/website/course/booking-context";
-// import PadiForm from "@/components/website/form/Equipment";
+import PadiForm from "@/components/website/form/Equipment";
 import React from "react";
 
 const page = () => {
   return (
     <div>
       {/* <BookingProvider> */}
-      {/* <PadiForm /> */}
+      <PadiForm />
       {/* </BookingProvider> */}
-      this is equipment rental
     </div>
   );
 };

@@ -1,6 +1,6 @@
 // import DiversActivityForm from '@/components/website/form/DiversActivityForm'
 // import { BookingProvider } from "@/components/website/course/booking-context";
-// import DiversActivityForm from "@/components/website/form/DiversActivityForm";
+import DiversActivityForm from "@/components/website/form/DiversActivityForm";
 import React, { Suspense } from "react";
 
 const page = () => {
@@ -8,7 +8,7 @@ const page = () => {
     <div>
       {/* <BookingProvider> */}
       <Suspense>
-        {/* <DiversActivityForm /> */}this is divers activity{" "}
+        <DiversActivityForm />
       </Suspense>
       {/* </BookingProvider> */}
     </div>
