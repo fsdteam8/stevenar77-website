@@ -2,7 +2,9 @@
 import { getSession } from "next-auth/react";
 
 export interface UserProfile {
+  state: string;
   street: string;
+  location?: string | null;
   _id: string;
   firstName: string;
   lastName: string;
@@ -16,7 +18,6 @@ export interface UserProfile {
   weight?: string | null;
   shoeSize?: string | null;
   streetAddress?: string | null;
-  location?: string | null;
   postalCode?: string | null;
   image?: {
     public_id: string;
@@ -48,8 +49,10 @@ export interface UpdateProfilePayload {
   email?: string;
   streetAddress: string;
   street:string;
+  state:string;
   location?: string;
   postalCode?: string;
+  hight?: string;
   phoneNumber?: string;
   dateOfBirth?: string;
 }
