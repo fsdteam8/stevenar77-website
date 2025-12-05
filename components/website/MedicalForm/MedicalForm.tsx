@@ -55,6 +55,8 @@ export default function MedicalForm() {
     }
   }, []);
 
+  
+
   /** ----------- ONLY FILE UPLOAD SUBMIT (ARRAY FORMAT) ----------- **/
   const handleSubmit = async (
     cartId: string | undefined,

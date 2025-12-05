@@ -36,18 +36,18 @@ export default function Success() {
 
         <h1 className="text-2xl font-semibold">Payment Successful!</h1>
         <p className="text-slate-600 mt-2">
-          Thank you! Your trip booking has been completed successfully.
+          {/* Thank you! Your trip booking has been completed successfully. */}
           <br />
           {/* Redirecting in <span className="font-bold">3 seconds...</span> */}
         </p>
 
         <div className="mt-6">
-          <button
+          {/* <button
             onClick={() => router.push("/")}
             className="px-6 py-2 bg-primary hover:bg-primary text-white rounded-lg shadow cursor-pointer"
           >
             Go to Home
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
