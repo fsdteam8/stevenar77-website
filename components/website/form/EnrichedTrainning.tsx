@@ -237,7 +237,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
             <label className="block text-sm font-medium mb-2">
               Store/Resort: <span className="text-red-500">*</span>
             </label>
-            <input
+            Scuba Life
+            {/* <input
               type="text"
               value={storeResort}
               onChange={(e) => {
@@ -254,7 +255,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               <p className="text-red-500 text-xs mt-1">
                 This field is required
               </p>
-            )}
+            )} */}
           </div>
 
           {/* Non-Agency Disclosure */}
@@ -266,7 +267,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               I understand and agree that PADI Members (&quot;Members&quot;),
               including{" "}
               <span className="font-medium">
-                {storeResort || "_________________"}
+                {/* {storeResort || "_________________"} */}
+                Scuba Life
               </span>{" "}
               and/or any individual PADI Instructors and Divemasters associated
               with the program in which I am participating, are licensed to use
@@ -285,7 +287,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               neither I nor my estate shall seek to hold PADI liable for the
               actions, inactions or negligence of{" "}
               <span className="font-medium">
-                {storeResort || "_________________"}
+                {/* {storeResort || "_________________"} */}
+                Scuba Life
               </span>{" "}
               and/or the instructors and divemasters associated with the
               activity.
@@ -341,7 +344,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 I understand and agree that neither my instructor(s), the
                 facility through which I receive my instruction,{" "}
                 <span className="font-medium">
-                  {storeResort || "_________________"}
+                  {/* {storeResort || "_________________"} */}
+                  Scuba Life
                 </span>
                 , nor PADI Americas, Inc., nor its affiliate and subsidiary
                 corporations, nor any of their respective employees, officers,
@@ -427,7 +431,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 , BY THIS INSTRUMENT AGREE TO EXEMPT AND RELEASE MY INSTRUCTORS,
                 THE FACILITY THROUGH WHICH I RECEIVE MY INSTRUCTION,{" "}
                 <span className="underline">
-                  {storeResort || "_________________"}
+                  {/* {storeResort || "_________________"} */}
+                  Scuba Life
                 </span>
                 , AND PADI AMERICAS, INC., AND ALL RELATED ENTITIES AS DEFINED
                 ABOVE, FROM ALL LIABILITY OR RESPONSIBILITY WHATSOEVER FOR
