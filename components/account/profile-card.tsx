@@ -12,6 +12,7 @@ interface ProfileCardProps {
   location: string;
   avatarUrl?: string;
   street?: string;
+  states?: string;
   age?: string;
   height?: string;
   weight?: string;
@@ -30,6 +31,7 @@ export function ProfileCard({
   location,
   avatarUrl,
   street,
+  states,
   age,
   height,
   weight,
@@ -121,8 +123,12 @@ export function ProfileCard({
               <span className="text-[#68706a]">{phone}</span>
             </div>
             <div>
-              <span className="font-medium text-[#364039]">Location: </span>
+              <span className="font-medium text-[#364039]">City: </span>
               <span className="text-[#68706a]">{location}</span>
+            </div>
+            <div>
+              <span className="font-medium text-[#364039]">State: </span>
+              <span className="text-[#68706a]">{states}</span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">
@@ -131,17 +137,46 @@ export function ProfileCard({
               <span className="text-[#68706a]">{street}</span>
             </div>
             <div>
-              <span className="font-medium text-[#364039]">postal Code: </span>
+              <span className="font-medium text-[#364039]">Zip Code: </span>
               <span className="text-[#68706a]">{postalCode}</span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">Age: </span>
               <span className="text-[#68706a]">{age}</span>
             </div>
+            {/* <div>
+              <span className="font-medium text-[#364039]">Height: </span>
+              <span className="text-[#68706a]">
+                {height
+                  ? (() => {
+                      const h = String(height); // convert to string
+                      if (h.includes("'")) {
+                        const parts = h.split("'"); // split feet and inches
+                        const ft = parts[0] || "";
+                        const inch = parts[1] || "";
+                        return `${ft} ft ${inch} in`;
+                      }
+                      return `${h} ft`; // only feet available
+                    })()
+                  : "No Height Provided"}
+              </span>
+            </div> */}
+
             <div>
               <span className="font-medium text-[#364039]">Height: </span>
-              <span className="text-[#68706a]">{height}</span>
+              <span className="text-[#68706a]">
+                {height
+                  ? (() => {
+                      const h = Number(height);
+                      if (isNaN(h)) return "Invalid Height";
+                      const ft = Math.floor(h);
+                      const inch = Math.round((h - ft) * 12);
+                      return `${ft} ft ${inch} in`;
+                    })()
+                  : "No Height Provided"}
+              </span>
             </div>
+
             <div>
               <span className="font-medium text-[#364039]">Weight: </span>
               <span className="text-[#68706a]">{weight}</span>

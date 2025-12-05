@@ -1,3 +1,4 @@
+// components/account/pages/profile-page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -17,14 +18,34 @@ interface FormData {
   email: string;
   street: string;
   location: string;
+  state: string;
   postalCode: string;
   phone: string;
   age: string;
-  hight: string;
+  hight: string; // Backend expects this (decimal number as string)
   weight: string;
   shoeSize: string;
   dateOfBirth: string;
 }
+
+// Helper functions for height conversion
+const convertHeightToDecimal = (feet: string, inches: string): string => {
+  const ft = parseFloat(feet) || 0;
+  const inch = parseFloat(inches) || 0;
+  return (ft + inch / 12).toFixed(2);
+};
+
+const convertDecimalToFeetInches = (
+  decimal: string,
+): { feet: string; inches: string } => {
+  const h = parseFloat(decimal);
+  if (isNaN(h)) return { feet: "", inches: "" };
+
+  const ft = Math.floor(h);
+  const inch = Math.round((h - ft) * 12);
+
+  return { feet: ft.toString(), inches: inch.toString() };
+};
 
 export const ProfilePage = () => {
   const { data: user, isLoading, isError, error } = useProfile();
@@ -35,12 +56,18 @@ export const ProfilePage = () => {
   const [avatarUrl, setAvatarUrl] = useState<string>(
     "/images/profile-mini.jpg",
   );
+
+  // Separate feet & inches for UI
+  const [feet, setFeet] = useState("");
+  const [inches, setInches] = useState("");
+
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
     email: "",
     street: "",
     location: "",
+    state: "",
     postalCode: "",
     phone: "",
     dateOfBirth: "",
@@ -49,25 +76,33 @@ export const ProfilePage = () => {
     weight: "",
     shoeSize: "",
   });
-  // console.log('userdata',user)
+
   // Populate form data when user loads
   useEffect(() => {
     if (user) {
+      // Convert backend height to feet and inches
+      const { feet: ft, inches: inch } = convertDecimalToFeetInches(
+        user.hight ?? "",
+      );
+      setFeet(ft);
+      setInches(inch);
+
       setFormData({
         firstName: user.firstName ?? "",
         lastName: user.lastName ?? "",
         email: user.email ?? "",
-        street: user.street ?? user.street ?? "",
+        street: user.street ?? "",
         location: user.location ?? "",
+        state: user.state ?? "",
         postalCode: user.postalCode ?? "",
         phone: user.phone ?? "",
-        // Format dateOfBirth as YYYY-MM-DD for input[type=date]
         dateOfBirth: user.dateOfBirth ? user.dateOfBirth.slice(0, 10) : "",
-        age: user?.age ?? "",
-        hight: user?.hight ?? "",
-        weight: user?.weight ?? "",
-        shoeSize: user?.shoeSize ?? "",
+        age: user.age ?? "",
+        hight: user.hight ?? "",
+        weight: user.weight ?? "",
+        shoeSize: user.shoeSize ?? "",
       });
+
       setAvatarUrl(user.image?.url ?? "/professional-bearded-man.png");
     }
   }, [user]);
@@ -86,17 +121,21 @@ export const ProfilePage = () => {
   };
 
   const handleSave = async () => {
+    // Convert feet & inches to decimal for backend
+    const hightForBackend = convertHeightToDecimal(feet, inches);
+
     try {
       await updateMutation.mutateAsync({
         ...formData,
-        street: formData.street,
+        hight: hightForBackend,
         streetAddress: formData.street,
         phoneNumber: formData.phone,
+        state: formData.state,
       });
-      toast.success("your profile update successfuly");
+      toast.success("Your profile updated successfully");
       setIsEditing(false);
     } catch (err) {
-      toast.error(`Failed to update profile:${err}`);
+      toast.error(`Failed to update profile: ${err}`);
       console.error("Failed to update profile:", err);
     }
   };
@@ -104,39 +143,64 @@ export const ProfilePage = () => {
   const handleDiscard = () => {
     setIsEditing(false);
     if (user) {
+      // setFormData({
+      //   firstName: user.firstName ?? "",
+      //   lastName: user.lastName ?? "",
+      //   email: user.email ?? "",
+      //   street: user.street ?? "",
+      //   location: user.location ?? "",
+      //   state: user.state ?? "",
+      //   postalCode: user.postalCode ?? "",
+      //   phone: user.phone ?? "",
+      //   dateOfBirth: user.dateOfBirth ? user.dateOfBirth.slice(0, 10) : "",
+      //   age: user.age ?? "",
+      //   hight: user.hight ?? "",
+      //   weight: user.weight ?? "",
+      //   shoeSize: user.shoeSize ?? "",
+      // });
+
       setFormData({
-        firstName: user?.firstName ?? "",
-        lastName: user?.lastName ?? "",
-        email: user?.email ?? "",
-        street: user?.street ?? user?.location ?? "",
-        location: user?.location ?? "",
-        postalCode: user?.postalCode ?? "",
-        phone: user?.phone ?? "",
-        dateOfBirth: user?.dateOfBirth ? user?.dateOfBirth.slice(0, 10) : "",
-        age: user?.age ?? "",
-        hight: user?.hight ?? "",
-        weight: user?.weight ?? "",
-        shoeSize: user?.shoeSize ?? "",
+        firstName: user.firstName ?? "",
+        lastName: user.lastName ?? "",
+        email: user.email ?? "",
+        street: user.street ?? "",
+        location: user.location ?? "",
+        state: user.state ?? "",
+        postalCode: user.postalCode ?? "",
+        phone: user.phone ?? "",
+        dateOfBirth: user.dateOfBirth ? user.dateOfBirth.slice(0, 10) : "",
+        age: user.age ?? "",
+        hight: user.hight ?? "",
+        weight: user.weight ?? "",
+        shoeSize: user.shoeSize ?? "",
       });
+
+      // Reset feet & inches from backend value
+      const { feet: ft, inches: inch } = convertDecimalToFeetInches(
+        user.hight ?? "",
+      );
+      setFeet(ft);
+      setInches(inch);
+
       setAvatarUrl(user.image?.url ?? "/professional-bearded-man.png");
     }
   };
 
-  // Format field names for display
   const formatFieldName = (fieldName: string) => {
     const fieldLabels: Record<string, string> = {
       firstName: "First Name",
       lastName: "Last Name",
       email: "Email",
       street: "Street Address",
-      location: "Location",
-      postalCode: "Postal Code",
-      phone: "Phone",
+      location: "City",
+      postalCode: "Zip Code",
+      state: "State",
+      phone: "Cell Phone",
       dateOfBirth: "Date of Birth",
-      Age: "Age",
-      Height: "Height",
-      Weight: "Weight",
-      ShoeSize: "Shoe Size",
+      age: "Age",
+      hight: "Height",
+      weight: "Weight",
+      shoeSize: "Shoe Size",
     };
     return (
       fieldLabels[fieldName] ||
@@ -205,11 +269,12 @@ export const ProfilePage = () => {
             }
             email={formData.email || "No Email Provided"}
             phone={formData.phone || "No PhoneNumber Provided"}
-            location={formData.street || "No Address Provided"}
-            street={formData.street || "No Location Provided"}
+            location={formData.location || "No City Provided"}
+            street={formData.street || "No Address Provided"}
             postalCode={formData.postalCode || "No PostalCode Provided"}
+            states={formData.state || "No State Provided"}
             age={formData.age || "No Age Provided"}
-            height={formData.hight || "No Height Provided"}
+            height={formData.hight || ""}
             weight={formData.weight || "No Weight Provided"}
             shoeSize={formData.shoeSize || "No Shoe Size Provided"}
             avatarUrl={avatarUrl}
@@ -230,34 +295,93 @@ export const ProfilePage = () => {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              {Object.entries(formData).map(([key, value]) => (
-                <div key={key}>
-                  <Label htmlFor={key} className="text-[#364039] font-medium">
-                    {formatFieldName(key)}
-                  </Label>
-                  <Input
-                    id={key}
-                    type={
-                      key === "dateOfBirth"
-                        ? "date"
-                        : key === "email"
-                          ? "email"
-                          : "text"
-                    }
-                    value={value}
-                    onChange={(e) =>
-                      handleInputChange(key as keyof FormData, e.target.value)
-                    }
-                    disabled={!isEditing}
-                    className="mt-1"
-                    placeholder={
-                      isEditing
-                        ? `Enter your ${formatFieldName(key).toLowerCase()}`
-                        : ""
-                    }
-                  />
-                </div>
-              ))}
+              {Object.entries(formData).map(([key, value]) => {
+                if (key === "hight") {
+                  return (
+                    <div key={key} className="space-y-2">
+                      <Label
+                        htmlFor="feet"
+                        className="text-[#364039] font-medium"
+                      >
+                        Height (ft/in)
+                      </Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="feet"
+                          type="number"
+                          value={feet}
+                          onChange={(e) => setFeet(e.target.value)}
+                          disabled={!isEditing}
+                          placeholder="Feet"
+                          min="0"
+                          max="8"
+                        />
+                        <Input
+                          id="inches"
+                          type="number"
+                          value={inches}
+                          onChange={(e) => setInches(e.target.value)}
+                          disabled={!isEditing}
+                          placeholder="Inches"
+                          min="0"
+                          max="11"
+                        />
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div key={key} className="space-y-2">
+                    <Label htmlFor={key} className="text-[#364039] font-medium">
+                      {formatFieldName(key)}
+                    </Label>
+                    <Input
+                      id={key}
+                      type={
+                        key === "dateOfBirth"
+                          ? "date"
+                          : key === "email"
+                            ? "email"
+                            : "text"
+                      }
+                      value={value} // empty string if missing
+                      onChange={(e) =>
+                        handleInputChange(key as keyof FormData, e.target.value)
+                      }
+                      disabled={!isEditing}
+                      className="mt-1"
+                      placeholder={
+                        isEditing
+                          ? `Enter your ${formatFieldName(key).toLowerCase()}`
+                          : ""
+                      }
+                    />
+
+                    {/* <Input
+                      id={key}
+                      type={
+                        key === "dateOfBirth"
+                          ? "date"
+                          : key === "email"
+                            ? "email"
+                            : "text"
+                      }
+                      value={value}
+                      onChange={(e) =>
+                        handleInputChange(key as keyof FormData, e.target.value)
+                      }
+                      disabled={!isEditing}
+                      className="mt-1"
+                      placeholder={
+                        isEditing
+                          ? `Enter your ${formatFieldName(key).toLowerCase()}`
+                          : ""
+                      }
+                    /> */}
+                  </div>
+                );
+              })}
             </div>
 
             {isEditing && (

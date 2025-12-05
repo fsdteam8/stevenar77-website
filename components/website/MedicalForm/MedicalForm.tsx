@@ -133,10 +133,14 @@ export default function MedicalForm() {
     <div className="p-6 max-w-5xl mx-auto">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-5xl font-bold text-[#0694a2]">Medical PDF Forms</h1>
-        <p className="mt-2 text-gray-600 text-lg">
+        {/* <h1 className="text-5xl font-bold text-[#0694a2]">Medical PDF Forms</h1> */}
+        <h1 className="text-5xl font-bold text-[#0694a2]">Required Forms</h1>
+        {/* <p className="mt-2 text-gray-600 text-lg">
           Fill out all necessary medical and course-related forms quickly and
           securely.
+        </p> */}
+        <p className="mt-2 text-gray-600 text-lg">
+          Please fill out all required forms.
         </p>
       </div>
 

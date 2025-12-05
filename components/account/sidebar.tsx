@@ -5,10 +5,10 @@ import {
   Lock,
   BookOpen,
   MapPin,
-  // ShoppingBag,
   LogOut,
   Menu,
   ShoppingBasket,
+  House,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -17,6 +17,7 @@ import { useState } from "react";
 import useIsMobile from "@/services/hooks/use-mobile";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Keep only this import
 
 interface SidebarProps {
   activeTab: string;
@@ -26,6 +27,7 @@ interface SidebarProps {
 export function Sidebar({ activeTab, onNavigate }: SidebarProps) {
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter(); // Initialize the router hook
 
   const menuItems = [
     { id: "profile", label: "Profile", icon: User },
@@ -33,11 +35,19 @@ export function Sidebar({ activeTab, onNavigate }: SidebarProps) {
     { id: "course-history", label: "Course History", icon: BookOpen },
     { id: "trips-history", label: "Trips History", icon: MapPin },
     { id: "order-history", label: "Order History", icon: ShoppingBasket},
-    // { id: "shop-history", label: "Shop History", icon: ShoppingBag },
+    { id: "/", label: "Home", icon: House },
     { id: "logout", label: "Log Out", icon: LogOut },
   ];
 
   const handleNavigate = (tab: string) => {
+    // Handle home navigation
+    if (tab === "/") {
+      router.push("/"); // Use router (not Router)
+      if (isMobile) setIsOpen(false);
+      return;
+    }
+    
+    // Handle other navigation
     onNavigate(tab);
     if (isMobile) {
       setIsOpen(false);
