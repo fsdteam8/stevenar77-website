@@ -35,13 +35,15 @@ const convertHeightToDecimal = (feet: string, inches: string): string => {
   return (ft + inch / 12).toFixed(2);
 };
 
-const convertDecimalToFeetInches = (decimal: string): { feet: string; inches: string } => {
+const convertDecimalToFeetInches = (
+  decimal: string,
+): { feet: string; inches: string } => {
   const h = parseFloat(decimal);
   if (isNaN(h)) return { feet: "", inches: "" };
-  
+
   const ft = Math.floor(h);
   const inch = Math.round((h - ft) * 12);
-  
+
   return { feet: ft.toString(), inches: inch.toString() };
 };
 
@@ -79,7 +81,9 @@ export const ProfilePage = () => {
   useEffect(() => {
     if (user) {
       // Convert backend height to feet and inches
-      const { feet: ft, inches: inch } = convertDecimalToFeetInches(user.hight ?? "");
+      const { feet: ft, inches: inch } = convertDecimalToFeetInches(
+        user.hight ?? "",
+      );
       setFeet(ft);
       setInches(inch);
 
@@ -139,6 +143,22 @@ export const ProfilePage = () => {
   const handleDiscard = () => {
     setIsEditing(false);
     if (user) {
+      // setFormData({
+      //   firstName: user.firstName ?? "",
+      //   lastName: user.lastName ?? "",
+      //   email: user.email ?? "",
+      //   street: user.street ?? "",
+      //   location: user.location ?? "",
+      //   state: user.state ?? "",
+      //   postalCode: user.postalCode ?? "",
+      //   phone: user.phone ?? "",
+      //   dateOfBirth: user.dateOfBirth ? user.dateOfBirth.slice(0, 10) : "",
+      //   age: user.age ?? "",
+      //   hight: user.hight ?? "",
+      //   weight: user.weight ?? "",
+      //   shoeSize: user.shoeSize ?? "",
+      // });
+
       setFormData({
         firstName: user.firstName ?? "",
         lastName: user.lastName ?? "",
@@ -156,7 +176,9 @@ export const ProfilePage = () => {
       });
 
       // Reset feet & inches from backend value
-      const { feet: ft, inches: inch } = convertDecimalToFeetInches(user.hight ?? "");
+      const { feet: ft, inches: inch } = convertDecimalToFeetInches(
+        user.hight ?? "",
+      );
       setFeet(ft);
       setInches(inch);
 
@@ -323,7 +345,7 @@ export const ProfilePage = () => {
                             ? "email"
                             : "text"
                       }
-                      value={value}
+                      value={value} // empty string if missing
                       onChange={(e) =>
                         handleInputChange(key as keyof FormData, e.target.value)
                       }
@@ -335,6 +357,28 @@ export const ProfilePage = () => {
                           : ""
                       }
                     />
+
+                    {/* <Input
+                      id={key}
+                      type={
+                        key === "dateOfBirth"
+                          ? "date"
+                          : key === "email"
+                            ? "email"
+                            : "text"
+                      }
+                      value={value}
+                      onChange={(e) =>
+                        handleInputChange(key as keyof FormData, e.target.value)
+                      }
+                      disabled={!isEditing}
+                      className="mt-1"
+                      placeholder={
+                        isEditing
+                          ? `Enter your ${formatFieldName(key).toLowerCase()}`
+                          : ""
+                      }
+                    /> */}
                   </div>
                 );
               })}
