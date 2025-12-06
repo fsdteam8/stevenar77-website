@@ -6,7 +6,12 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { ShoppingCart, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { CartItem, ProceedToPaymentPayload } from "@/types/cart";
+import {
+  CartItem,
+  ProceedToPaymentPayload,
+  Schedule,
+  ScheduleSet,
+} from "@/types/cart";
 import Link from "next/link";
 
 export default function CartPage() {
@@ -103,19 +108,57 @@ export default function CartPage() {
 
     const courseItems = cartItems
       .filter((item) => item.type === "course")
-      .map((item) => ({
-        cartId: item._id,
-        itemId: item.itemId,
-        bookingId: item.bookingId,
-        formTitle: item.details?.formTitle || [],
-        title: item.details?.title || "No title",
-        Username: item.details?.Username || "",
-        email: item.details?.email || "",
-      }));
+      .map((item) => {
+        // Extract schedule data
+        const schedule = item.details?.classId?.schedule || [];
+        const classDate = item.details?.classDate || [];
+
+        console.log("\n🗓️ SCHEDULE DATA EXTRACTION:");
+        console.log("  - Cart ID:", item._id);
+        console.log("  - Course Title:", item.details?.title);
+        console.log("  - Class Dates:", classDate);
+        console.log("  - Full Schedule:", schedule);
+
+        // Log each schedule item
+        schedule.forEach((sched: Schedule, index: number) => {
+          console.log(`\n  📅 Schedule [${index}]: ${sched.title}`);
+          console.log(`    - Description: ${sched.description}`);
+          console.log(`    - Schedule ID: ${sched._id}`);
+          console.log(
+            `    - Participants: ${sched.participents}/${sched.totalParticipents}`,
+          );
+          console.log(`    - Sets (${sched.sets?.length || 0}):`);
+
+          sched.sets?.forEach((set: ScheduleSet, setIndex: number) => {
+            console.log(`      [${setIndex}] Date: ${set.date}`);
+            console.log(`          Location: ${set.location}`);
+            console.log(`          Type: ${set.type}`);
+            console.log(`          Active: ${set.isActive}`);
+          });
+        });
+
+        return {
+          cartId: item._id,
+          itemId: item.itemId,
+          bookingId: item.bookingId,
+          formTitle: item.details?.formTitle || [],
+          title: item.details?.title || "No title",
+          Username: item.details?.Username || "",
+          email: item.details?.email || "",
+
+          classDate: classDate, // Selected class dates for this booking
+          schedule: schedule, // Full schedule array with all available dates
+          scheduleId: item.details?.scheduleId || "", // The selected schedule ID
+        };
+      });
 
     const dataToStore = {
       course: courseItems,
     };
+
+    console.log("\n💾 STORING TO LOCALSTORAGE:");
+    console.log("  - Total courses:", courseItems.length);
+    console.log("  - Full data:", JSON.stringify(dataToStore, null, 2));
 
     localStorage.setItem("courseFormTitles", JSON.stringify(dataToStore));
   }, [cartItems]);
