@@ -36,7 +36,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
   const [participantDate, setParticipantDate] = useState(getCurrentDate());
   const [guardianSignature, setGuardianSignature] = useState("");
   const [guardianDate, setGuardianDate] = useState(getCurrentDate());
-  const [storeResort, setStoreResort] = useState("");
+  // const [storeResort, setStoreResort] = useState("");
   const [hasInsurance, setHasInsurance] = useState("");
   const [policyNumber, setPolicyNumber] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
@@ -45,7 +45,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
     participantName: false,
     participantSignature: false,
     participantDate: false,
-    storeResort: false,
+    hasInsurance: false,
   });
 
   const formRef = useRef<HTMLDivElement>(null);
@@ -55,16 +55,16 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
       participantName: !participantName.trim(),
       participantSignature: !participantSignature.trim(),
       participantDate: !participantDate,
-      storeResort: !storeResort.trim(),
+      hasInsurance: !hasInsurance,
     };
     setErrors(newErrors);
 
     const emptyFields = [];
     if (newErrors.participantName) emptyFields.push("Participant Name");
-    if (newErrors.storeResort) emptyFields.push("Store/Resort");
     if (newErrors.participantSignature)
       emptyFields.push("Participant Signature");
     if (newErrors.participantDate) emptyFields.push("Date");
+    if (newErrors.hasInsurance) emptyFields.push("Diver Accident Insurance");
 
     if (emptyFields.length > 0) {
       toast.error(`Please fill in: ${emptyFields.join(", ")}`);
@@ -224,21 +224,24 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 </h3>
               </div>
             </div>
-            <p className="text-sm font-semibold text-center lg:text-left">
-              Please read carefully and fill in all blanks before signing.
-            </p>
           </div>
+        </div>
+        <div className="mx-auto px-8 py-4">
+          <hr className="w-full border-black" />
+          <p className="text-sm font-semibold text-center lg:text-left">
+            Please read carefully and fill in all blanks before signing.
+          </p>
         </div>
 
         {/* Main Content */}
         <div className="px-6 lg:px-8 pb-8">
           {/* Store/Resort Field */}
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <label className="block text-sm font-medium mb-2">
               Store/Resort: <span className="text-red-500">*</span>
             </label>
             Scuba Life
-            {/* <input
+            <input
               type="text"
               value={storeResort}
               onChange={(e) => {
@@ -255,8 +258,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               <p className="text-red-500 text-xs mt-1">
                 This field is required
               </p>
-            )} */}
-          </div>
+            )}
+          </div> */}
 
           {/* Non-Agency Disclosure */}
           <div className="mb-8">
@@ -559,9 +562,16 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
             </div>
 
             {/* Insurance Section */}
-            <div className="flex flex-wrap items-center gap-4 p-4 bg-muted/20 rounded-lg">
+            <div
+              className={`flex flex-wrap items-center gap-4 p-4 rounded-lg border-2 ${
+                errors.hasInsurance
+                  ? "border-red-500 bg-red-50"
+                  : "border-transparent bg-muted/20"
+              }`}
+            >
               <span className="text-sm font-medium">
-                Diver Accident Insurance?
+                Diver Accident Insurance?{" "}
+                <span className="text-red-500">*</span>
               </span>
               <div className="flex items-center gap-4">
                 <label className="flex items-center gap-2">
@@ -570,7 +580,12 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                     name="insurance"
                     value="no"
                     checked={hasInsurance === "no"}
-                    onChange={(e) => setHasInsurance(e.target.value)}
+                    onChange={(e) => {
+                      setHasInsurance(e.target.value);
+                      if (errors.hasInsurance) {
+                        setErrors((prev) => ({ ...prev, hasInsurance: false }));
+                      }
+                    }}
                     className="w-4 h-4"
                   />
                   <span className="text-sm">NO</span>
@@ -581,7 +596,12 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                     name="insurance"
                     value="yes"
                     checked={hasInsurance === "yes"}
-                    onChange={(e) => setHasInsurance(e.target.value)}
+                    onChange={(e) => {
+                      setHasInsurance(e.target.value);
+                      if (errors.hasInsurance) {
+                        setErrors((prev) => ({ ...prev, hasInsurance: false }));
+                      }
+                    }}
                     className="w-4 h-4"
                   />
                   <span className="text-sm">YES</span>
@@ -598,6 +618,11 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                     className="border-0 border-b-2 border-black bg-transparent px-2 py-1 text-sm focus:outline-none focus:border-blue-600"
                   />
                 </div>
+              )}
+              {errors.hasInsurance && (
+                <p className="text-red-500 text-xs w-full">
+                  Please select whether you have diver accident insurance
+                </p>
               )}
             </div>
           </div>

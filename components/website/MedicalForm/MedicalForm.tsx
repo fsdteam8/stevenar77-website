@@ -20,6 +20,7 @@ import DiverMedicalForm from "@/components/forms/diver-medical-form";
 import PadiForm from "../form/Equipment";
 import { CheckCircle2, ArrowDown, FileText, Loader2 } from "lucide-react";
 import { useCourseFormBookingUpdate } from "@/hooks/useCourseformbookingupdate";
+import { Schedule } from "@/types/cart";
 
 interface CourseFormItem {
   cartId: string;
@@ -29,6 +30,9 @@ interface CourseFormItem {
   title: string;
   Username: string;
   email: string;
+  classDate?: string[];
+  schedule?: Schedule[];
+  scheduleId?: string;
 }
 
 interface FormProps {
@@ -45,26 +49,105 @@ export default function MedicalForm() {
 
   useEffect(() => {
     const stored = localStorage.getItem("courseFormTitles");
+    console.log("📦 Raw localStorage data:", stored);
+
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        if (parsed?.course) setCourseData(parsed.course);
+        console.log("✅ Parsed localStorage data:", parsed);
+        console.log("📋 Full parsed object:", JSON.stringify(parsed, null, 2));
+
+        if (parsed?.course) {
+          console.log("🎓 Course data array:", parsed.course);
+          console.log("📊 Number of courses:", parsed.course.length);
+
+          // Log each course item separately
+          parsed.course.forEach((item: CourseFormItem, index: number) => {
+            console.log(`\n🔍 Course Item [${index}]:`, item);
+            console.log(`  - Title: ${item.title}`);
+            console.log(`  - Cart ID: ${item.cartId}`);
+            console.log(`  - Booking ID: ${item.bookingId}`);
+            console.log(`  - Username: ${item.Username}`);
+            console.log(`  - Email: ${item.email}`);
+            console.log(`  - Form Titles:`, item.formTitle);
+            console.log(`  - Schedule ID: ${item.scheduleId}`);
+            console.log(`  - Class Dates:`, item.classDate);
+
+            // Display schedule information
+            if (item.schedule && item.schedule.length > 0) {
+              console.log(
+                `  📅 SCHEDULE INFORMATION (${item.schedule.length} schedules):`,
+              );
+              item.schedule.forEach((sched, schedIndex) => {
+                console.log(`\n    [${schedIndex}] ${sched.title}`);
+                console.log(`        Description: ${sched.description}`);
+                console.log(
+                  `        Participants: ${sched.participents}/${sched.totalParticipents}`,
+                );
+                console.log(`        Sets (${sched.sets?.length || 0} dates):`);
+                sched.sets?.forEach((set, setIndex) => {
+                  console.log(
+                    `          [${setIndex}] ${new Date(set.date).toLocaleString()}`,
+                  );
+                  console.log(`              Location: ${set.location}`);
+                  console.log(`              Type: ${set.type}`);
+                });
+              });
+            }
+
+            // Check for any course-date type fields
+            const itemKeys = Object.keys(item);
+            const dateRelatedKeys = itemKeys.filter(
+              (key) =>
+                key.toLowerCase().includes("date") ||
+                key.toLowerCase().includes("course-date"),
+            );
+
+            if (dateRelatedKeys.length > 0) {
+              console.log(`  🗓️ DATE-RELATED FIELDS FOUND:`, dateRelatedKeys);
+              dateRelatedKeys.forEach((key) => {
+                console.log(
+                  `    - ${key}:`,
+                  (item as unknown as Record<string, unknown>)[key],
+                );
+              });
+            }
+          });
+
+          setCourseData(parsed.course);
+        }
+
+        // Check for course-date at root level
+        if (parsed["course-date"]) {
+          console.log(
+            "\n🗓️ COURSE-DATE FOUND at root level:",
+            parsed["course-date"],
+          );
+        }
       } catch (error) {
-        console.error("JSON parse error:", error);
+        console.error("❌ JSON parse error:", error);
       }
+    } else {
+      console.log("⚠️ No courseFormTitles found in localStorage");
     }
   }, []);
-
-  
 
   /** ----------- ONLY FILE UPLOAD SUBMIT (ARRAY FORMAT) ----------- **/
   const handleSubmit = async (
     cartId: string | undefined,
     bookingId?: string,
   ) => {
-    if (!cartId || !bookingId) return;
+    if (!cartId || !bookingId) {
+      console.log("⚠️ Submit blocked - missing cartId or bookingId");
+      return;
+    }
+
+    console.log("\n🚀 SUBMIT INITIATED:");
+    console.log("  - Cart ID:", cartId);
+    console.log("  - Booking ID:", bookingId);
 
     const allData = store.getFormData(cartId);
+    console.log("📝 All form data from store:", allData);
 
     const formData = new FormData();
 
@@ -73,11 +156,19 @@ export default function MedicalForm() {
 
     // Collect files and names separately
     Object.entries(allData).forEach(([formTitle, formValue]) => {
+      console.log(`  📄 Form: ${formTitle}`, formValue);
       if (formValue?.file instanceof File) {
+        console.log(
+          `    ✅ File found: ${formValue.file.name} (${formValue.file.size} bytes)`,
+        );
         medicalDocuments.push(formValue.file);
         medicalDocumentsNames.push(formTitle);
       }
     });
+
+    console.log("\n📦 Collected Documents:");
+    console.log("  - Total files:", medicalDocuments.length);
+    console.log("  - File names:", medicalDocumentsNames);
 
     // Append files exactly as Postman does
     medicalDocuments.forEach((file) => {
@@ -127,6 +218,14 @@ export default function MedicalForm() {
       <p>No form available for this title.</p>
     );
   };
+
+  // Console log all important data
+  console.log("\n📊 COMPONENT STATE:");
+  console.log("  - Course Data:", courseData);
+  console.log("  - Submitted Carts:", Array.from(submittedCarts));
+  console.log("  - Form Store State:", store);
+  console.log("  - Completed Forms:", store.completedForms);
+  console.log("  - Is Loading:", isLoading);
 
   const isCartComplete = (cartId: string, requiredTitles: string[]) =>
     store.checkAllFormsComplete(cartId, requiredTitles);
