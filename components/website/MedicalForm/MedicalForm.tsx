@@ -49,29 +49,29 @@ export default function MedicalForm() {
 
   useEffect(() => {
     const stored = localStorage.getItem("courseFormTitles");
-    console.log("📦 Raw localStorage data:", stored);
+    // console.log("📦 Raw localStorage data:", stored);
 
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        console.log("✅ Parsed localStorage data:", parsed);
-        console.log("📋 Full parsed object:", JSON.stringify(parsed, null, 2));
+        // console.log("✅ Parsed localStorage data:", parsed);
+        // console.log("📋 Full parsed object:", JSON.stringify(parsed, null, 2));
 
         if (parsed?.course) {
-          console.log("🎓 Course data array:", parsed.course);
-          console.log("📊 Number of courses:", parsed.course.length);
+          // console.log("🎓 Course data array:", parsed.course);
+          // console.log("📊 Number of courses:", parsed.course.length);
 
           // Log each course item separately
           parsed.course.forEach((item: CourseFormItem, index: number) => {
             console.log(`\n🔍 Course Item [${index}]:`, item);
-            console.log(`  - Title: ${item.title}`);
-            console.log(`  - Cart ID: ${item.cartId}`);
-            console.log(`  - Booking ID: ${item.bookingId}`);
-            console.log(`  - Username: ${item.Username}`);
-            console.log(`  - Email: ${item.email}`);
-            console.log(`  - Form Titles:`, item.formTitle);
-            console.log(`  - Schedule ID: ${item.scheduleId}`);
-            console.log(`  - Class Dates:`, item.classDate);
+            // console.log(`  - Title: ${item.title}`);
+            // console.log(`  - Cart ID: ${item.cartId}`);
+            // console.log(`  - Booking ID: ${item.bookingId}`);
+            // console.log(`  - Username: ${item.Username}`);
+            // console.log(`  - Email: ${item.email}`);
+            // console.log(`  - Form Titles:`, item.formTitle);
+            // console.log(`  - Schedule ID: ${item.scheduleId}`);
+            // console.log(`  - Class Dates:`, item.classDate);
 
             // Display schedule information
             if (item.schedule && item.schedule.length > 0) {
@@ -80,17 +80,17 @@ export default function MedicalForm() {
               );
               item.schedule.forEach((sched, schedIndex) => {
                 console.log(`\n    [${schedIndex}] ${sched.title}`);
-                console.log(`        Description: ${sched.description}`);
-                console.log(
-                  `        Participants: ${sched.participents}/${sched.totalParticipents}`,
-                );
-                console.log(`        Sets (${sched.sets?.length || 0} dates):`);
+                // console.log(`        Description: ${sched.description}`);
+                // console.log(
+                //   `        Participants: ${sched.participents}/${sched.totalParticipents}`,
+                // );
+                // console.log(`        Sets (${sched.sets?.length || 0} dates):`);
                 sched.sets?.forEach((set, setIndex) => {
                   console.log(
                     `          [${setIndex}] ${new Date(set.date).toLocaleString()}`,
                   );
-                  console.log(`              Location: ${set.location}`);
-                  console.log(`              Type: ${set.type}`);
+                  // console.log(`              Location: ${set.location}`);
+                  // console.log(`              Type: ${set.type}`);
                 });
               });
             }
@@ -128,7 +128,7 @@ export default function MedicalForm() {
         console.error("❌ JSON parse error:", error);
       }
     } else {
-      console.log("⚠️ No courseFormTitles found in localStorage");
+      // console.log("⚠️ No courseFormTitles found in localStorage");
     }
   }, []);
 
@@ -138,16 +138,16 @@ export default function MedicalForm() {
     bookingId?: string,
   ) => {
     if (!cartId || !bookingId) {
-      console.log("⚠️ Submit blocked - missing cartId or bookingId");
+      // console.log("⚠️ Submit blocked - missing cartId or bookingId");
       return;
     }
 
-    console.log("\n🚀 SUBMIT INITIATED:");
-    console.log("  - Cart ID:", cartId);
-    console.log("  - Booking ID:", bookingId);
+    // console.log("\n🚀 SUBMIT INITIATED:");
+    // console.log("  - Cart ID:", cartId);
+    // console.log("  - Booking ID:", bookingId);
 
     const allData = store.getFormData(cartId);
-    console.log("📝 All form data from store:", allData);
+    // console.log("📝 All form data from store:", allData);
 
     const formData = new FormData();
 
@@ -158,17 +158,17 @@ export default function MedicalForm() {
     Object.entries(allData).forEach(([formTitle, formValue]) => {
       console.log(`  📄 Form: ${formTitle}`, formValue);
       if (formValue?.file instanceof File) {
-        console.log(
-          `    ✅ File found: ${formValue.file.name} (${formValue.file.size} bytes)`,
-        );
+        // console.log(
+        //   `    ✅ File found: ${formValue.file.name} (${formValue.file.size} bytes)`,
+        // );
         medicalDocuments.push(formValue.file);
         medicalDocumentsNames.push(formTitle);
       }
     });
 
-    console.log("\n📦 Collected Documents:");
-    console.log("  - Total files:", medicalDocuments.length);
-    console.log("  - File names:", medicalDocumentsNames);
+    // console.log("\n📦 Collected Documents:");
+    // console.log("  - Total files:", medicalDocuments.length);
+    // console.log("  - File names:", medicalDocumentsNames);
 
     // Append files exactly as Postman does
     medicalDocuments.forEach((file) => {
@@ -220,12 +220,12 @@ export default function MedicalForm() {
   };
 
   // Console log all important data
-  console.log("\n📊 COMPONENT STATE:");
-  console.log("  - Course Data:", courseData);
-  console.log("  - Submitted Carts:", Array.from(submittedCarts));
-  console.log("  - Form Store State:", store);
-  console.log("  - Completed Forms:", store.completedForms);
-  console.log("  - Is Loading:", isLoading);
+  // console.log("\n📊 COMPONENT STATE:");
+  // console.log("  - Course Data:", courseData);
+  // console.log("  - Submitted Carts:", Array.from(submittedCarts));
+  // console.log("  - Form Store State:", store);
+  // console.log("  - Completed Forms:", store.completedForms);
+  // console.log("  - Is Loading:", isLoading);
 
   const isCartComplete = (cartId: string, requiredTitles: string[]) =>
     store.checkAllFormsComplete(cartId, requiredTitles);
@@ -270,31 +270,65 @@ export default function MedicalForm() {
                 </h2>
 
                 {/* User Info */}
-                <div className="grid grid-cols-2 gap-4 text-sm bg-white p-4 rounded-lg border mb-4">
-                  <p>
-                    <span className="text-gray-500 text-xs uppercase">
-                      Name
-                    </span>
-                    <span className="block text-gray-800 font-medium">
-                      {item.Username}
-                    </span>
-                  </p>
-                  <p>
-                    <span className="text-gray-500 text-xs uppercase">
-                      Email
-                    </span>
-                    <span className="block text-gray-800 font-medium">
-                      {item.email}
-                    </span>
-                  </p>
-                  <p>
-                    <span className="text-gray-500 text-xs uppercase">
-                      Booking Id
-                    </span>
-                    <span className="block text-gray-800 font-medium">
-                      {item.bookingId}
-                    </span>
-                  </p>
+                {/* User Info */}
+                <div className="grid md:grid-cols-3 gap-4 text-sm bg-white p-6 rounded-xl border shadow-sm mb-6">
+                  {/* User Info */}
+                  <div className="space-y-2">
+                    <p>
+                      <span className="text-gray-500 text-xs uppercase">
+                        Name
+                      </span>
+                      <span className="block text-gray-800 font-medium">
+                        {item.Username}
+                      </span>
+                    </p>
+                    <p>
+                      <span className="text-gray-500 text-xs uppercase">
+                        Email
+                      </span>
+                      <span className="block text-gray-800 font-medium">
+                        {item.email}
+                      </span>
+                    </p>
+                    {/* <p>
+                      <span className="text-gray-500 text-xs uppercase">
+                        Booking ID
+                      </span>
+                      <span className="block text-gray-800 font-medium">
+                        {item.bookingId}
+                      </span>
+                    </p> */}
+                  </div>
+
+                  {/* Class Dates */}
+                  {item.classDate && item.classDate.length > 0 && (
+                    <div className="md:col-span-2 bg-blue-50 p-4 rounded-lg  ">
+                      <span className="font-semibold text-blue-700 uppercase flex items-center gap-2 mb-2">
+                        <ArrowDown className="w-4 h-4" /> Class Dates
+                      </span>
+
+                      <div className="flex flex-wrap items-center gap-2 mt-1">
+                        {item.classDate.map((dateStr, i) => {
+                          const date = new Date(dateStr);
+                          const formatted = new Intl.DateTimeFormat("en-US", {
+                            weekday: "short",
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          }).format(date);
+
+                          return (
+                            <span
+                              key={i}
+                              className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium hover:bg-blue-200 transition-colors"
+                            >
+                              📅 {formatted}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Forms list */}

@@ -11,6 +11,7 @@ import {
   ProceedToPaymentPayload,
   Schedule,
   ScheduleSet,
+  StoredCourseItem,
 } from "@/types/cart";
 import Link from "next/link";
 
@@ -22,7 +23,10 @@ export default function CartPage() {
   const deleteCartMutation = useDeleteCart(userId);
   const proceedToPaymentMutation = useProceedToPayment(userId);
 
-  const cartItems: CartItem[] = cartData?.data || [];
+  const cartItems: CartItem[] = React.useMemo(
+    () => cartData?.data || [],
+    [cartData?.data],
+  );
 
   // Calculate total price
   const totalPrice = cartItems.reduce(
@@ -66,24 +70,28 @@ export default function CartPage() {
       onSuccess: () => {
         toast.success("Cart item deleted successfully");
 
-        // ---- Remove from localStorage ----
+        // ---- Update localStorage ----
         const stored = localStorage.getItem("courseFormTitles");
 
         if (stored) {
-          const parsed = JSON.parse(stored);
+          const parsed = JSON.parse(stored) as { course: StoredCourseItem[] };
 
-          // filter out deleted ID
+          // Filter out deleted cart
           const updatedCourse = parsed.course.filter(
-            (item: { cartId: string }) => item.cartId !== cartId,
+            (item) => item.cartId !== cartId,
           );
 
+          // Keep classDate for remaining items
           const updatedData = {
-            course: updatedCourse,
+            course: updatedCourse.map((item) => ({
+              ...item,
+              classDate: item.classDate || [], // ensure classDate exists
+            })),
           };
 
           localStorage.setItem("courseFormTitles", JSON.stringify(updatedData));
         }
-        // -----------------------------------
+        // -----------------------------
       },
       onError: () => {
         toast.error("Failed to delete cart item");
@@ -156,9 +164,9 @@ export default function CartPage() {
       course: courseItems,
     };
 
-    console.log("\n💾 STORING TO LOCALSTORAGE:");
-    console.log("  - Total courses:", courseItems.length);
-    console.log("  - Full data:", JSON.stringify(dataToStore, null, 2));
+    // console.log("\n💾 STORING TO LOCALSTORAGE:");
+    // console.log("  - Total courses:", courseItems.length);
+    // console.log("  - Full data:", JSON.stringify(dataToStore, null, 2));
 
     localStorage.setItem("courseFormTitles", JSON.stringify(dataToStore));
   }, [cartItems]);
