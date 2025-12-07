@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { useFormStore } from "@/store/formStore";
-import { generatePaginatedPDF, downloadPDF } from "@/lib/pdf-utils";
+import { generatePaginatedPDF } from "@/lib/pdf-utils";
 
 interface DiversActivityFormProps {
   cartId?: string;
@@ -117,7 +117,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
       }
 
       // Auto-download
-      downloadPDF(pdfFile);
+      // downloadPDF(pdfFile);
 
       toast.success("PDF generated successfully!");
       onSubmitSuccess?.();

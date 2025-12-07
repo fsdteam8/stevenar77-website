@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useFormStore } from "@/store/formStore";
 // import { useBooking } from "../course/booking-context";
 
-import { generatePaginatedPDF, downloadPDF } from "@/lib/pdf-utils";
+import { generatePaginatedPDF } from "@/lib/pdf-utils";
 
 interface FormData {
   name: string;
@@ -189,7 +189,7 @@ export default function PadiForm({
       }
 
       // Auto-download
-      downloadPDF(pdfFile);
+      // downloadPDF(pdfFile);
 
       toast.success("PDF generated successfully!");
       if (onSubmitSuccess) onSubmitSuccess();
