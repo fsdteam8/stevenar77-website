@@ -6,22 +6,14 @@ import { useState, useRef } from "react";
 
 import { toast } from "sonner";
 
-const loadJsPDF = async () => {
-  const { default: jsPDF } = await import("jspdf");
-  return jsPDF;
-};
-
-const loadHTML2Canvas = async () => {
-  const { default: html2canvas } = await import("html2canvas");
-  return html2canvas;
-};
+import { generatePaginatedPDF, downloadPDF } from "@/lib/pdf-utils";
 
 interface QuickReviewProps {
   onSubmitSuccess?: () => void;
 }
 
 // const QuickReview = () => {
-const QuickReview: React.FC<QuickReviewProps> = () => {
+const QuickReview: React.FC<QuickReviewProps> = ({ onSubmitSuccess }) => {
   // const { dispatch } = useBooking();
 
   const [studentName, setStudentName] = useState("");
@@ -226,91 +218,22 @@ const QuickReview: React.FC<QuickReviewProps> = () => {
     try {
       if (!formRef.current) throw new Error("Form reference not found");
 
-      // console.log("Generating PDF...");
-      const html2canvas = await loadHTML2Canvas();
-
-      const canvas = await html2canvas(formRef.current, {
-        scale: 1,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#ffffff",
-        logging: false,
-        ignoreElements: (element) => {
-          return (
-            element.classList.contains("no-print") ||
-            !!(
-              element.tagName === "IMG" &&
-              element.getAttribute("src")?.startsWith("http")
-            )
-          );
-        },
-        onclone: (clonedDoc) => {
-          const allEls = clonedDoc.querySelectorAll("*");
-          allEls.forEach((el) => {
-            const htmlEl = el as HTMLElement;
-            if (htmlEl.style) {
-              const props = ["color", "backgroundColor", "borderColor"];
-              props.forEach((prop) => {
-                const value = htmlEl.style.getPropertyValue(prop);
-                if (value && value.includes("lab")) {
-                  htmlEl.style.setProperty(prop, "rgb(0, 0, 0)", "important");
-                }
-              });
-
-              if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
-                htmlEl.style.color = "rgb(0, 0, 0)";
-              }
-              if (
-                htmlEl.tagName !== "INPUT" &&
-                (!htmlEl.style.backgroundColor ||
-                  htmlEl.style.backgroundColor.includes("lab"))
-              ) {
-                htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-              }
-              if (
-                !htmlEl.style.borderColor ||
-                htmlEl.style.borderColor.includes("lab")
-              ) {
-                htmlEl.style.borderColor = "rgb(0, 0, 0)";
-              }
-
-              htmlEl.style.removeProperty("filter");
-              htmlEl.style.removeProperty("backdrop-filter");
-              htmlEl.style.removeProperty("box-shadow");
-            }
-          });
-        },
-      });
-
-      const imgData = canvas.toDataURL("image/jpeg", 0.75);
-      const jsPDF = await loadJsPDF();
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
-
-      pdf.addImage(imgData, "JPEG", 0, 0, pageWidth, pdfHeight);
-
-      const pdfBlob = pdf.output("blob");
-      const fileSizeMB = pdfBlob.size / 1024 / 1024;
-
-      // console.log(`PDF generated: ${fileSizeMB.toFixed(2)}MB`);
-
       const fileName = `PADI_Quick_Review_${studentName
         .replace(/[^a-zA-Z0-9\s]/g, "")
         .replace(/\s+/g, "_")
         .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
 
-      const pdfFile = new File([pdfBlob], fileName, {
-        type: "application/pdf",
-      });
-      // console.log("pdf file ", pdfFile);
+      const pdfFile = await generatePaginatedPDF(formRef.current, fileName);
+
+      // Auto-download
+      downloadPDF(pdfFile);
 
       // api mutation
 
       // dispatch({ type: "ADD_DOCUMENT", payload: pdfFile });
 
       toast.success("PDF created and added to your booking successfully!");
+      onSubmitSuccess?.();
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
       toast.error("PDF generation failed. Please try again.");

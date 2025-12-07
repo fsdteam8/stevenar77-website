@@ -2,7 +2,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { XCircle, Home, RefreshCw, AlertCircle } from "lucide-react";
+import { XCircle, Home } from "lucide-react";
 
 export const Cancel = () => {
   const router = useRouter();

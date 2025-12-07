@@ -6,15 +6,7 @@ import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { useFormStore } from "@/store/formStore";
 
-const loadHTML2Canvas = async () => {
-  const { default: html2canvas } = await import("html2canvas");
-  return html2canvas;
-};
-
-const loadJsPDF = async () => {
-  const { default: jsPDF } = await import("jspdf");
-  return jsPDF;
-};
+import { generatePaginatedPDF, downloadPDF } from "@/lib/pdf-utils";
 
 interface StandardsFormProps {
   cartId: string;
@@ -80,101 +72,15 @@ const StandardsForm: React.FC<StandardsFormProps> = ({
     try {
       if (!formRef.current) throw new Error("Form reference not found");
 
-      const html2canvas = await loadHTML2Canvas();
-      const canvas = await html2canvas(formRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#ffffff",
-        width: formRef.current.scrollWidth,
-        height: formRef.current.scrollHeight,
-        ignoreElements: (el) => el.classList.contains("no-print"),
-        onclone: (clonedDoc) => {
-          try {
-            const allEls = clonedDoc.querySelectorAll("*");
-            allEls.forEach((el) => {
-              const htmlEl = el as HTMLElement;
-              if (htmlEl.style) {
-                // Check computed styles for lab colors
-                const computedStyle =
-                  clonedDoc.defaultView?.getComputedStyle(htmlEl);
-                if (computedStyle) {
-                  const colorProps = [
-                    "color",
-                    "backgroundColor",
-                    "borderColor",
-                    "borderTopColor",
-                  ];
-                  colorProps.forEach((prop) => {
-                    const computedValue = computedStyle.getPropertyValue(prop);
-                    if (computedValue && computedValue.includes("lab")) {
-                      const replacement = prop.includes("background")
-                        ? "rgb(255, 255, 255)"
-                        : "rgb(0, 0, 0)";
-                      htmlEl.style.setProperty(prop, replacement, "important");
-                    }
-                  });
-                }
-
-                // Check inline styles
-                const props = ["color", "backgroundColor", "borderColor"];
-                props.forEach((prop) => {
-                  const value = htmlEl.style.getPropertyValue(prop);
-                  if (value && value.includes("lab")) {
-                    const replacement =
-                      prop === "backgroundColor"
-                        ? "rgb(255, 255, 255)"
-                        : "rgb(0, 0, 0)";
-                    htmlEl.style.setProperty(prop, replacement, "important");
-                  }
-                });
-
-                // Set defaults
-                if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
-                  htmlEl.style.color = "rgb(0, 0, 0)";
-                }
-                if (
-                  htmlEl.tagName !== "INPUT" &&
-                  (!htmlEl.style.backgroundColor ||
-                    htmlEl.style.backgroundColor.includes("lab"))
-                ) {
-                  htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-                }
-                if (
-                  !htmlEl.style.borderColor ||
-                  htmlEl.style.borderColor.includes("lab")
-                ) {
-                  htmlEl.style.borderColor = "rgb(0, 0, 0)";
-                }
-
-                htmlEl.style.removeProperty("filter");
-                htmlEl.style.removeProperty("backdrop-filter");
-                htmlEl.style.removeProperty("box-shadow");
-              }
-            });
-          } catch (e) {
-            console.warn("Color sanitization warning:", e);
-          }
-        },
-      });
-
-      const imgData = canvas.toDataURL("image/png", 1.0);
-      const jsPDF = await loadJsPDF();
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
-      pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pdfHeight);
-
       const fileName = `PADI_Standards_Form_${participantName.replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`;
 
-      const pdfBlob = pdf.output("blob");
-      const pdfFile = new File([pdfBlob], fileName, {
-        type: "application/pdf",
-      });
+      const pdfFile = await generatePaginatedPDF(formRef.current, fileName);
 
       // Save to store
       store.setFormCompleted(cartId, formTitle, pdfFile);
+
+      // Auto-download
+      downloadPDF(pdfFile);
 
       toast.success("PDF generated successfully!");
       onSubmitSuccess?.();
@@ -195,7 +101,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({
       {/* Form Content - Professional PADI Design */}
       <div
         ref={formRef}
-        className="print-area mx-auto bg-card shadow-xl rounded-lg overflow-hidden"
+        className="print-area max-w-4xl mx-auto bg-card shadow-xl rounded-lg overflow-hidden"
       >
         {/* Header with Logo and Title */}
         <div className="flex flex-col lg:flex-row items-start p-6 lg:p-8 gap-6">

@@ -23,7 +23,7 @@ import {
   Clock,
   Star,
   Target,
-  UserRound,
+  // UserRound,
 } from "lucide-react";
 import { useCourses } from "@/services/hooks/courses/useCourses";
 import { CourseData } from "@/lib/courseApi";
