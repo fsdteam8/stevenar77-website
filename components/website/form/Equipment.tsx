@@ -7,15 +7,7 @@ import { toast } from "sonner";
 import { useFormStore } from "@/store/formStore";
 // import { useBooking } from "../course/booking-context";
 
-const loadHTML2Canvas = async () => {
-  const { default: html2canvas } = await import("html2canvas");
-  return html2canvas;
-};
-
-const loadJsPDF = async () => {
-  const { jsPDF } = await import("jspdf");
-  return jsPDF;
-};
+import { generatePaginatedPDF, downloadPDF } from "@/lib/pdf-utils";
 
 interface FormData {
   name: string;
@@ -40,47 +32,6 @@ interface FormData {
 interface FormErrors {
   [key: string]: string;
 }
-
-// Reusable Form Input Component
-const FormInput: React.FC<{
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  className?: string;
-  width?: string;
-  type?: string;
-  maxLength?: number;
-  mask?: boolean;
-  error?: string;
-}> = ({
-  name,
-  value,
-  onChange,
-  placeholder,
-  className = "",
-  width = "auto",
-  type = "text",
-  maxLength,
-  mask = false,
-  error,
-}) => (
-  <div className="flex flex-col">
-    <input
-      type={type}
-      name={name}
-      value={mask ? "•".repeat(value.length) : value}
-      onChange={onChange}
-      placeholder={placeholder}
-      className={`border-0 border-b border-black bg-transparent outline-none h-12 focus:border-blue-500 ${className} ${
-        error ? "border-red-500" : ""
-      }`}
-      style={{ width }}
-      maxLength={maxLength}
-    />
-    {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
-  </div>
-);
 
 interface PadiFormProps {
   cartId?: string;
@@ -223,135 +174,22 @@ export default function PadiForm({
     try {
       // console.log("🧾 Generating PDF...");
 
-      const html2canvas = await loadHTML2Canvas();
-      const jsPDF = await loadJsPDF();
-
-      const canvas = await html2canvas(printRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#ffffff",
-        logging: false,
-        width: printRef.current.scrollWidth,
-        height: printRef.current.scrollHeight,
-        ignoreElements: (element) => {
-          return (
-            element.classList.contains("no-print") ||
-            !!(
-              element.tagName === "IMG" &&
-              element.getAttribute("src")?.startsWith("http")
-            )
-          );
-        },
-        onclone: (clonedDoc) => {
-          try {
-            const allEls = clonedDoc.querySelectorAll("*");
-            allEls.forEach((el) => {
-              const htmlEl = el as HTMLElement;
-              if (htmlEl.style) {
-                // Check computed styles for lab colors
-                const computedStyle =
-                  clonedDoc.defaultView?.getComputedStyle(htmlEl);
-                if (computedStyle) {
-                  const colorProps = [
-                    "color",
-                    "backgroundColor",
-                    "borderColor",
-                    "borderTopColor",
-                  ];
-                  colorProps.forEach((prop) => {
-                    const computedValue = computedStyle.getPropertyValue(prop);
-                    if (computedValue && computedValue.includes("lab")) {
-                      const replacement = prop.includes("background")
-                        ? "rgb(255, 255, 255)"
-                        : "rgb(0, 0, 0)";
-                      htmlEl.style.setProperty(prop, replacement, "important");
-                    }
-                  });
-                }
-
-                // Check inline styles
-                const props = ["color", "backgroundColor", "borderColor"];
-                props.forEach((prop) => {
-                  const value = htmlEl.style.getPropertyValue(prop);
-                  if (value && value.includes("lab")) {
-                    const replacement =
-                      prop === "backgroundColor"
-                        ? "rgb(255, 255, 255)"
-                        : "rgb(0, 0, 0)";
-                    htmlEl.style.setProperty(prop, replacement, "important");
-                  }
-                });
-
-                if (!htmlEl.style.color || htmlEl.style.color.includes("lab")) {
-                  htmlEl.style.color = "rgb(0, 0, 0)";
-                }
-                if (
-                  htmlEl.tagName !== "INPUT" &&
-                  (!htmlEl.style.backgroundColor ||
-                    htmlEl.style.backgroundColor.includes("lab"))
-                ) {
-                  htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-                }
-                if (
-                  !htmlEl.style.borderColor ||
-                  htmlEl.style.borderColor.includes("lab")
-                ) {
-                  htmlEl.style.borderColor = "rgb(0, 0, 0)";
-                }
-
-                htmlEl.style.removeProperty("filter");
-                htmlEl.style.removeProperty("backdrop-filter");
-                htmlEl.style.removeProperty("box-shadow");
-              }
-            });
-          } catch (e) {
-            console.warn("Color sanitization warning:", e);
-          }
-        },
-      });
-
-      const imgData = canvas.toDataURL("image/png", 1.0);
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      // console.log("🖼️ Image dimensions:", { imgWidth, imgHeight, pageHeight });
-
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      // Add extra pages for remaining content
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      const pdfBlob = pdf.output("blob");
-      // const fileSizeMB = pdfBlob.size / 1024 / 1024;
-      // console.log(`✅ PDF generated successfully: ${fileSizeMB.toFixed(2)} MB`);
+      if (!printRef.current) throw new Error("Form reference not found");
 
       const fileName = `PADI_Equipment_Rental_${formData.name
         .replace(/[^a-zA-Z0-9\s]/g, "")
         .replace(/\s+/g, "_")
         .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
 
-      const pdfFile = new File([pdfBlob], fileName, {
-        type: "application/pdf",
-      });
+      const pdfFile = await generatePaginatedPDF(printRef.current, fileName);
 
       // Save to store
       if (cartId && formTitle) {
         store.setFormCompleted(cartId, formTitle, pdfFile);
       }
+
+      // Auto-download
+      downloadPDF(pdfFile);
 
       toast.success("PDF generated successfully!");
       if (onSubmitSuccess) onSubmitSuccess();
@@ -368,7 +206,7 @@ export default function PadiForm({
       <div className="max-w-4xl mx-auto space-y-4">
         <div
           ref={printRef}
-          className="bg-white p-6 shadow-lg"
+          className="bg-white p-6 shadow-lg max-w-4xl mx-auto"
           style={{
             fontFamily: "Arial, sans-serif",
             fontSize: "11px",

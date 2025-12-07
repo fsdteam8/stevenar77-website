@@ -14,7 +14,7 @@ interface ProfileCardProps {
   street?: string;
   states?: string;
   age?: string;
-  height?: string;
+  height?: string; // Decimal number as string from backend
   weight?: string;
   shoeSize?: string;
   postalCode?: string;
@@ -23,6 +23,19 @@ interface ProfileCardProps {
   onImageUpload?: (file: File) => void;
   isEditing?: boolean;
 }
+
+// Helper function to format height display
+const formatHeight = (height: string): string => {
+  if (!height) return "";
+  
+  const h = parseFloat(height);
+  if (isNaN(h)) return "";
+  
+  const ft = Math.floor(h);
+  const inch = Math.round((h - ft) * 12);
+  
+  return `${ft} ft ${inch} in`;
+};
 
 export function ProfileCard({
   name,
@@ -69,7 +82,7 @@ export function ProfileCard({
         <div className="flex flex-col items-center">
           <div className="relative group">
             <Avatar
-              className="w-20 h-20 sm:w-24 sm:h-24 border-4  border-white mb-4 cursor-pointer"
+              className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-white mb-4 cursor-pointer"
               onClick={isEditing ? handleImageUpload : undefined}
             >
               <AvatarImage
@@ -103,94 +116,85 @@ export function ProfileCard({
           />
 
           <h3 className="text-lg sm:text-xl font-semibold text-[#364039] mb-1 text-center">
-            {name}
+            {name || "Your Name"}
           </h3>
           <p className="text-[#68706a] text-sm mb-4 sm:mb-6 text-center">
-            {email}
+            {email || "your.email@example.com"}
           </p>
 
           <div className="w-full space-y-2 sm:space-y-3 text-sm">
             <div>
               <span className="font-medium text-[#364039]">Name: </span>
-              <span className="text-[#68706a]">{name}</span>
+              <span className={name ? "text-[#68706a]" : "text-gray-400 italic"}>
+                {name || "Enter your name"}
+              </span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">Email: </span>
-              <span className="text-[#68706a] break-all">{email}</span>
+              <span className={email ? "text-[#68706a] break-all" : "text-gray-400 italic"}>
+                {email || "Enter your email"}
+              </span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">Phone: </span>
-              <span className="text-[#68706a]">{phone}</span>
+              <span className={phone ? "text-[#68706a]" : "text-gray-400 italic"}>
+                {phone || "Enter your phone"}
+              </span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">City: </span>
-              <span className="text-[#68706a]">{location}</span>
+              <span className={location ? "text-[#68706a]" : "text-gray-400 italic"}>
+                {location || "Enter your city"}
+              </span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">State: </span>
-              <span className="text-[#68706a]">{states}</span>
+              <span className={states ? "text-[#68706a]" : "text-gray-400 italic"}>
+                {states || "Enter your state"}
+              </span>
             </div>
             <div>
-              <span className="font-medium text-[#364039]">
-                StreetAddress:{" "}
+              <span className="font-medium text-[#364039]">Street Address: </span>
+              <span className={street ? "text-[#68706a]" : "text-gray-400 italic"}>
+                {street || "Enter your street address"}
               </span>
-              <span className="text-[#68706a]">{street}</span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">Zip Code: </span>
-              <span className="text-[#68706a]">{postalCode}</span>
+              <span className={postalCode ? "text-[#68706a]" : "text-gray-400 italic"}>
+                {postalCode || "Enter your zip code"}
+              </span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">Age: </span>
-              <span className="text-[#68706a]">{age}</span>
-            </div>
-            {/* <div>
-              <span className="font-medium text-[#364039]">Height: </span>
-              <span className="text-[#68706a]">
-                {height
-                  ? (() => {
-                      const h = String(height); // convert to string
-                      if (h.includes("'")) {
-                        const parts = h.split("'"); // split feet and inches
-                        const ft = parts[0] || "";
-                        const inch = parts[1] || "";
-                        return `${ft} ft ${inch} in`;
-                      }
-                      return `${h} ft`; // only feet available
-                    })()
-                  : "No Height Provided"}
+              <span className={age ? "text-[#68706a]" : "text-gray-400 italic"}>
+                {age || "Enter your age"}
               </span>
-            </div> */}
-
+            </div>
             <div>
               <span className="font-medium text-[#364039]">Height: </span>
-              <span className="text-[#68706a]">
-                {height
-                  ? (() => {
-                      const h = Number(height);
-                      if (isNaN(h)) return "Invalid Height";
-                      const ft = Math.floor(h);
-                      const inch = Math.round((h - ft) * 12);
-                      return `${ft} ft ${inch} in`;
-                    })()
-                  : "No Height Provided"}
+              <span className={height ? "text-[#68706a]" : "text-gray-400 italic"}>
+                {height ? formatHeight(height) : "Enter your height"}
               </span>
             </div>
-
             <div>
               <span className="font-medium text-[#364039]">Weight: </span>
-              <span className="text-[#68706a]">{weight}</span>
+              <span className={weight ? "text-[#68706a]" : "text-gray-400 italic"}>
+                {weight || "Enter your weight"}
+              </span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">Shoe Size: </span>
-              <span className="text-[#68706a]">{shoeSize}</span>
+              <span className={shoeSize ? "text-[#68706a]" : "text-gray-400 italic"}>
+                {shoeSize || "Enter your shoe size"}
+              </span>
             </div>
           </div>
           <div className="">
             {showEditButton && (
               <Button
                 size="sm"
-                className=" top-25 sm:top-35 right-35 sm:right-50 bg-primary hover:bg-teal-500 text-white border-white/30"
+                className="top-25 sm:top-35 right-35 sm:right-50 bg-primary hover:bg-teal-500 text-white border-white/30"
                 onClick={onEdit}
               >
                 <Edit className="w-4 h-4" />

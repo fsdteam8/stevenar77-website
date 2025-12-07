@@ -82,7 +82,6 @@ interface FormData {
 
 // export async function generatePDF(formData: FormData) {
 export async function generatePDF(formData: FormData): Promise<File> {
-
   const pdf = new jsPDF("p", "mm", "a4");
   const pageWidth = 210;
   const pageHeight = 297;
@@ -180,6 +179,15 @@ export async function generatePDF(formData: FormData): Promise<File> {
     return calculatedHeight;
   };
 
+  const checkPageBreak = (heightNeeded: number) => {
+    if (yPos + heightNeeded > pageHeight - margin) {
+      pdf.addPage();
+      yPos = margin; // Reset to top margin
+      return true;
+    }
+    return false;
+  };
+
   // PAGE 1
   pdf.setFontSize(18);
   pdf.setFont("helvetica", "bold");
@@ -203,11 +211,13 @@ export async function generatePDF(formData: FormData): Promise<File> {
 
   const directionLines = pdf.splitTextToSize(directionsText, contentWidth);
   directionLines.forEach((line: string) => {
+    checkPageBreak(4);
     pdf.text(line, margin, yPos);
     yPos += 4;
   });
 
   yPos += 8;
+  checkPageBreak(8);
   pdf.setFont("helvetica", "bold");
   pdf.text(
     "Complete this questionnaire as a prerequisite to a recreational scuba diving or freediving course.",
@@ -216,6 +226,7 @@ export async function generatePDF(formData: FormData): Promise<File> {
   );
 
   yPos += 6;
+  checkPageBreak(6);
   pdf.setFont("helvetica", "normal");
   pdf.text(
     "Note to women: If you are pregnant, or attempting to become pregnant, do not dive.",
@@ -296,6 +307,7 @@ export async function generatePDF(formData: FormData): Promise<File> {
     const textWidth = contentWidth - 75;
     const rowHeight = calculateRowHeight(q.text, textWidth, 14);
 
+    checkPageBreak(rowHeight);
     yPos = drawTableRow(margin, yPos, contentWidth, rowHeight, [
       { text: q.num, width: 12, align: "center" },
       { text: q.text, width: textWidth },
@@ -315,6 +327,7 @@ export async function generatePDF(formData: FormData): Promise<File> {
 
   // Participant Signature Section
   yPos += 8;
+  checkPageBreak(8);
   pdf.setFontSize(11);
   pdf.setFont("helvetica", "bold");
   pdf.text("Participant Signature", margin, yPos);
@@ -328,11 +341,13 @@ export async function generatePDF(formData: FormData): Promise<File> {
 
   const statement1Lines = pdf.splitTextToSize(statementText1, contentWidth);
   statement1Lines.forEach((line: string) => {
+    checkPageBreak(3.5);
     pdf.text(line, margin, yPos);
     yPos += 3.5;
   });
 
   yPos += 4;
+  checkPageBreak(4);
   pdf.setFont("helvetica", "bold");
   const participantStatement = "Participant Statement: ";
   pdf.text(participantStatement, margin, yPos);
@@ -347,6 +362,7 @@ export async function generatePDF(formData: FormData): Promise<File> {
 
   const currentX = margin + pdf.getTextWidth(participantStatement);
   statement2Lines.forEach((line: string, index: number) => {
+    checkPageBreak(3.5);
     if (index === 0) {
       pdf.text(line, currentX, yPos);
     } else {
@@ -358,6 +374,7 @@ export async function generatePDF(formData: FormData): Promise<File> {
 
   // Signature fields
   const signatureY = yPos;
+  checkPageBreak(20); // Ensure space for signature block
   pdf.setLineWidth(0.5);
   pdf.line(margin, signatureY, margin + 100, signatureY);
   if (formData.participantSignature) {
@@ -415,6 +432,7 @@ export async function generatePDF(formData: FormData): Promise<File> {
     "* If you answered YES to questions 3, 5 or 10 above OR to any of the questions on page 2, please read and agree to the statement above by signing and dating it AND take all three pages of this form (Participant Questionnaire and the Physician's Evaluation Form) to your physician for a medical evaluation. Participation in a diving course requires your physician's approval.";
   const asteriskLines = pdf.splitTextToSize(asteriskNote, contentWidth);
   asteriskLines.forEach((line: string) => {
+    checkPageBreak(3.5);
     pdf.text(line, margin, yPos);
     yPos += 3.5;
   });
@@ -425,443 +443,487 @@ export async function generatePDF(formData: FormData): Promise<File> {
   pdf.text("1 of 3", pageWidth / 2, pageHeight - 15, { align: "center" });
   pdf.text("© 2020", pageWidth - margin, pageHeight - 15, { align: "right" });
 
-  // PAGE 2
-  pdf.addPage();
-  yPos = 30;
+  // PAGE 2 - Only add if any box has answers (meaning Page 1 triggered them)
+  const hasPage2Content =
+    formData.question1 ||
+    formData.question2 ||
+    formData.question4 ||
+    formData.question6 ||
+    formData.question7 ||
+    formData.question8 ||
+    formData.question9;
 
-  pdf.setFontSize(18);
-  pdf.setFont("helvetica", "bold");
-  pdf.text(
-    "Diver Medical | Participant Questionnaire Continued",
-    pageWidth / 2,
-    yPos,
-    { align: "center" },
-  );
+  if (hasPage2Content) {
+    pdf.setPage(pdf.getNumberOfPages());
+    pdf.addPage();
+    yPos = 30;
 
-  yPos += 15;
-
-  // Header info
-  pdf.setLineWidth(0.5);
-  pdf.line(margin, yPos, margin + 100, yPos);
-  if (formData.participantName) {
-    pdf.setFontSize(9);
-    pdf.text(formData.participantName, margin, yPos - 2);
-  }
-  pdf.setFontSize(8);
-  pdf.text("Participant Name (Print)", margin, yPos + 4);
-
-  pdf.setLineWidth(0.5);
-  pdf.line(margin + 110, yPos, margin + contentWidth, yPos);
-  if (formData.birthdate) {
-    pdf.setFontSize(9);
-    pdf.text(formData.birthdate, margin + 110, yPos - 2);
-  }
-  pdf.setFontSize(8);
-  pdf.text("Birthdate Date (dd/mm/yyyy)", margin + 110, yPos + 4);
-
-  yPos += 20;
-
-  const drawDetailedBox = (
-    title: string,
-    questions: Array<{ text: string; checked: boolean }>,
-    startY: number,
-  ) => {
-    let boxY = startY;
-
-    // Draw box header with background
-    pdf.setLineWidth(0.3);
-    pdf.setFillColor(230, 230, 230);
-    pdf.rect(margin, boxY, contentWidth, 8, "F");
-    pdf.rect(margin, boxY, contentWidth, 8);
-
-    pdf.setFontSize(10);
+    pdf.setFontSize(18);
     pdf.setFont("helvetica", "bold");
-    pdf.text(title, margin + 2, boxY + 5.5);
+    pdf.text(
+      "Diver Medical | Participant Questionnaire Continued",
+      pageWidth / 2,
+      yPos,
+      { align: "center" },
+    );
 
-    boxY += 8;
-    pdf.setFont("helvetica", "normal");
+    yPos += 15;
 
-    // Draw each question row
-    questions.forEach((q) => {
-      const textWidth = contentWidth - 45;
-      const questionHeight = calculateRowHeight(q.text, textWidth, 12);
-
-      drawTableRow(margin, boxY, contentWidth, questionHeight, [
-        { text: q.text, width: textWidth },
-        {
-          text: "",
-          width: 22,
-          checkbox: { checked: q.checked, label: "Yes *" },
-        },
-        {
-          text: "",
-          width: 23,
-          checkbox: { checked: !q.checked, label: "No" },
-        },
-      ]);
-
-      boxY += questionHeight;
-    });
-
-    return boxY + 4;
-  };
-
-  const boxes = [
-    {
-      title: "BOX A – I HAVE/HAVE HAD:",
-      questions: [
-        {
-          text: "Chest surgery, heart surgery, heart valve surgery, an implantable medical device (eg, stent, pacemaker, neurostimulator), pneumothorax, and/or chronic lung disease.",
-          checked: formData.boxA1,
-        },
-        {
-          text: "Asthma, wheezing, severe allergies, hay fever or congested airways within the last 12 months that limits my physical activity/exercise.",
-          checked: formData.boxA2,
-        },
-        {
-          text: "A problem or illness involving my heart such as: angina, chest pain on exertion, heart failure, immersion pulmonary edema, heart attack or stroke, OR am taking medication for any heart condition.",
-          checked: formData.boxA3,
-        },
-        {
-          text: "Recurrent bronchitis and currently coughing within the past 12 months, OR have been diagnosed with emphysema.",
-          checked: formData.boxA4,
-        },
-        {
-          text: "Symptoms affecting my lungs, breathing, heart and/or blood in the last 30 days that impair my physical or mental performance.",
-          checked: formData.boxA5,
-        },
-      ],
-    },
-    {
-      title: "BOX B – I AM OVER 45 YEARS OF AGE AND:",
-      questions: [
-        {
-          text: "I currently smoke or inhale nicotine by other means.",
-          checked: formData.boxB1,
-        },
-        { text: "I have a high cholesterol level.", checked: formData.boxB2 },
-        { text: "I have high blood pressure.", checked: formData.boxB3 },
-        {
-          text: "I have had a close blood relative die suddenly or of cardiac disease or stroke before the age of 50, OR have a family history of heart disease before age 50 (including abnormal heart rhythms, coronary artery disease or cardiomyopathy).",
-          checked: formData.boxB4,
-        },
-      ],
-    },
-    {
-      title: "BOX C – I HAVE/HAVE HAD:",
-      questions: [
-        {
-          text: "Sinus surgery within the last 6 months.",
-          checked: formData.boxC1,
-        },
-        {
-          text: "Ear disease or ear surgery, hearing loss, or problems with balance.",
-          checked: formData.boxC2,
-        },
-        {
-          text: "Recurrent sinusitis within the past 12 months.",
-          checked: formData.boxC3,
-        },
-        {
-          text: "Eye surgery within the past 3 months.",
-          checked: formData.boxC4,
-        },
-      ],
-    },
-    {
-      title: "BOX D – I HAVE/HAVE HAD:",
-      questions: [
-        {
-          text: "Head injury with loss of consciousness within the past 5 years.",
-          checked: formData.boxD1,
-        },
-        {
-          text: "Persistent neurologic injury or disease.",
-          checked: formData.boxD2,
-        },
-        {
-          text: "Recurring migraine headaches within the past 12 months, or take medications to prevent them.",
-          checked: formData.boxD3,
-        },
-        {
-          text: "Blackouts or fainting (full/partial loss of consciousness) within the last 5 years.",
-          checked: formData.boxD4,
-        },
-        {
-          text: "Epilepsy, seizures, or convulsions, OR take medications to prevent them.",
-          checked: formData.boxD5,
-        },
-      ],
-    },
-    {
-      title: "BOX E – I HAVE/HAVE HAD:",
-      questions: [
-        {
-          text: "Behavioral health, mental or psychological problems requiring medical/psychiatric treatment.",
-          checked: formData.boxE1,
-        },
-        {
-          text: "Major depression, suicidal ideation, panic attacks, uncontrolled bipolar disorder requiring medication/psychiatric treatment.",
-          checked: formData.boxE2,
-        },
-        {
-          text: "Been diagnosed with a mental health condition or a learning/developmental disorder that requires ongoing care or special accommodation.",
-          checked: formData.boxE3,
-        },
-        {
-          text: "An addiction to drugs or alcohol requiring treatment within the last 5 years.",
-          checked: formData.boxE4,
-        },
-      ],
-    },
-    {
-      title: "BOX F – I HAVE/HAVE HAD:",
-      questions: [
-        {
-          text: "Recurrent back problems in the last 6 months that limit my everyday activity.",
-          checked: formData.boxF1,
-        },
-        {
-          text: "Back or spinal surgery within the last 12 months.",
-          checked: formData.boxF2,
-        },
-        {
-          text: "Diabetes, either drug or diet controlled, OR gestational diabetes within the last 12 months.",
-          checked: formData.boxF3,
-        },
-        {
-          text: "An uncorrected hernia that limits my physical abilities.",
-          checked: formData.boxF4,
-        },
-        {
-          text: "Active or untreated ulcers, problem wounds, or ulcer surgery within the last 6 months.",
-          checked: formData.boxF5,
-        },
-      ],
-    },
-    {
-      title: "BOX G – I HAVE HAD:",
-      questions: [
-        {
-          text: "Ostomy surgery and do not have medical clearance to swim or engage in physical activity.",
-          checked: formData.boxG1,
-        },
-        {
-          text: "Dehydration requiring medical intervention within the last 7 days.",
-          checked: formData.boxG2,
-        },
-        {
-          text: "Active or untreated stomach or intestinal ulcers or ulcer surgery within the last 6 months.",
-          checked: formData.boxG3,
-        },
-        {
-          text: "Frequent heartburn, regurgitation, or gastroesophageal reflux disease (GERD).",
-          checked: formData.boxG4,
-        },
-        {
-          text: "Active or uncontrolled ulcerative colitis or Crohn's disease.",
-          checked: formData.boxG5,
-        },
-        {
-          text: "Bariatric surgery within the last 12 months.",
-          checked: formData.boxG6,
-        },
-      ],
-    },
-  ];
-
-  boxes.forEach((box) => {
-    yPos = drawDetailedBox(box.title, box.questions, yPos);
-  });
-
-  pdf.setFontSize(9);
-  pdf.text(
-    "*Physician's medical evaluation required (see page 1).",
-    margin,
-    yPos + 4,
-  );
-
-  pdf.setFontSize(8);
-  pdf.text("2 of 3", pageWidth / 2, pageHeight - 15, { align: "center" });
-  pdf.text("© 2020", pageWidth - margin, pageHeight - 15, { align: "right" });
-
-  // PAGE 3
-  pdf.addPage();
-  yPos = 30;
-
-  pdf.setFontSize(18);
-  pdf.setFont("helvetica", "bold");
-  pdf.text(
-    "Diver Medical | Medical Examiner's Evaluation Form",
-    pageWidth / 2,
-    yPos,
-    { align: "center" },
-  );
-
-  yPos += 15;
-
-  // Header info
-  pdf.setLineWidth(0.5);
-  pdf.line(margin, yPos, margin + 100, yPos);
-  if (formData.participantName) {
-    pdf.setFontSize(9);
-    pdf.text(formData.participantName, margin, yPos - 2);
-  }
-  pdf.setFontSize(8);
-  pdf.text("Participant Name (Print)", margin, yPos + 4);
-
-  pdf.setLineWidth(0.5);
-  pdf.line(margin + 110, yPos, margin + contentWidth, yPos);
-  if (formData.birthdate) {
-    pdf.setFontSize(9);
-    pdf.text(formData.birthdate, margin + 110, yPos - 2);
-  }
-  pdf.setFontSize(8);
-  pdf.text("Birthdate Date (dd/mm/yyyy)", margin + 110, yPos + 4);
-
-  yPos += 20;
-
-  pdf.setFontSize(9);
-  pdf.setFont("helvetica", "normal");
-  const evaluationText =
-    "The above-named person requests your opinion of his/her medical suitability to participate in recreational scuba diving or freediving training or activity. Please visit uhms.org for medical guidance on medical conditions as they relate to diving. Review the areas relevant to your patient as part of your evaluation.";
-  const evaluationLines = pdf.splitTextToSize(evaluationText, contentWidth);
-  evaluationLines.forEach((line: string) => {
-    pdf.text(line, margin, yPos);
-    yPos += 3.5;
-  });
-
-  yPos += 10;
-
-  // Evaluation Result
-  pdf.setFont("helvetica", "bold");
-  pdf.text("Evaluation Result", margin, yPos);
-  yPos += 10;
-
-  pdf.setFont("helvetica", "normal");
-  drawCheckbox(margin, yPos, formData.evaluationResult === "approved", 4);
-  pdf.text(
-    "Approved – I find no conditions that I consider incompatible with recreational scuba diving or freediving.",
-    margin + 8,
-    yPos + 3,
-  );
-
-  yPos += 10;
-  drawCheckbox(margin, yPos, formData.evaluationResult === "not-approved", 4);
-  pdf.text(
-    "Not approved – I find conditions that I consider incompatible with recreational scuba diving or freediving.",
-    margin + 8,
-    yPos + 3,
-  );
-
-  yPos += 15;
-
-  // Medical Examiner signature fields
-  pdf.setLineWidth(0.5);
-  pdf.line(margin, yPos, margin + 100, yPos);
-  if (formData.medicalExaminerSignature) {
-    pdf.text(formData.medicalExaminerSignature, margin, yPos - 2);
-  }
-  pdf.setFontSize(8);
-  pdf.text(
-    "Signature of certified medical doctor or other legally certified medical provider",
-    margin,
-    yPos + 4,
-  );
-
-  pdf.setLineWidth(0.5);
-  pdf.line(margin + 110, yPos, margin + contentWidth, yPos);
-  if (formData.medicalExaminerDate) {
-    pdf.setFontSize(9);
-    pdf.text(formData.medicalExaminerDate, margin + 110, yPos - 2);
-  }
-  pdf.setFontSize(8);
-  pdf.text("Date (dd/mm/yyyy)", margin + 110, yPos + 4);
-
-  yPos += 15;
-
-  // Full-width fields
-  const fullWidthFields = [
-    {
-      label: "Medical Examiner's Name (Print)",
-      value: formData.medicalExaminerName,
-    },
-    {
-      label: "Clinical Degrees/Credentials",
-      value: formData.medicalExaminerCredentials,
-    },
-    { label: "Clinic/Hospital", value: formData.medicalExaminerClinic },
-    { label: "Address", value: formData.medicalExaminerAddress },
-  ];
-
-  fullWidthFields.forEach((field) => {
+    // Header info
     pdf.setLineWidth(0.5);
-    pdf.line(margin, yPos, margin + contentWidth, yPos);
-    if (field.value) {
+    pdf.line(margin, yPos, margin + 100, yPos);
+    if (formData.participantName) {
       pdf.setFontSize(9);
-      pdf.text(field.value, margin, yPos - 2);
+      pdf.text(formData.participantName, margin, yPos - 2);
     }
     pdf.setFontSize(8);
-    pdf.text(field.label, margin, yPos + 4);
-    yPos += 12;
-  });
+    pdf.text("Participant Name (Print)", margin, yPos + 4);
 
-  // Phone and Email on same line
-  pdf.setLineWidth(0.5);
-  pdf.line(margin, yPos, margin + 100, yPos);
-  if (formData.medicalExaminerPhone) {
+    pdf.setLineWidth(0.5);
+    pdf.line(margin + 110, yPos, margin + contentWidth, yPos);
+    if (formData.birthdate) {
+      pdf.setFontSize(9);
+      pdf.text(formData.birthdate, margin + 110, yPos - 2);
+    }
+    pdf.setFontSize(8);
+    pdf.text("Birthdate Date (dd/mm/yyyy)", margin + 110, yPos + 4);
+
+    yPos += 20;
+
+    const drawDetailedBox = (
+      title: string,
+      questions: Array<{ text: string; checked: boolean }>,
+      startY: number,
+    ) => {
+      let boxY = startY;
+
+      // Check if box header fits
+      if (checkPageBreak(8 + 5.5)) {
+        boxY = margin;
+      }
+
+      // Draw box header with background
+      pdf.setLineWidth(0.3);
+      pdf.setFillColor(230, 230, 230);
+      pdf.rect(margin, boxY, contentWidth, 8, "F");
+      pdf.rect(margin, boxY, contentWidth, 8);
+
+      pdf.setFontSize(10);
+      pdf.setFont("helvetica", "bold");
+      pdf.text(title, margin + 2, boxY + 5.5);
+
+      boxY += 8;
+      pdf.setFont("helvetica", "normal");
+
+      // Draw each question row
+      questions.forEach((q) => {
+        const textWidth = contentWidth - 45;
+        const questionHeight = calculateRowHeight(q.text, textWidth, 12);
+
+        if (checkPageBreak(questionHeight)) {
+          boxY = margin;
+        }
+
+        drawTableRow(margin, boxY, contentWidth, questionHeight, [
+          { text: q.text, width: textWidth },
+          {
+            text: "",
+            width: 22,
+            checkbox: { checked: q.checked, label: "Yes *" },
+          },
+          {
+            text: "",
+            width: 23,
+            checkbox: { checked: !q.checked, label: "No" },
+          },
+        ]);
+
+        boxY += questionHeight;
+      });
+
+      return boxY + 4;
+    };
+
+    const boxes = [
+      {
+        title: "BOX A – I HAVE/HAVE HAD:",
+        questions: [
+          {
+            text: "Chest surgery, heart surgery, heart valve surgery, an implantable medical device (eg, stent, pacemaker, neurostimulator), pneumothorax, and/or chronic lung disease.",
+            checked: formData.boxA1,
+          },
+          {
+            text: "Asthma, wheezing, severe allergies, hay fever or congested airways within the last 12 months that limits my physical activity/exercise.",
+            checked: formData.boxA2,
+          },
+          {
+            text: "A problem or illness involving my heart such as: angina, chest pain on exertion, heart failure, immersion pulmonary edema, heart attack or stroke, OR am taking medication for any heart condition.",
+            checked: formData.boxA3,
+          },
+          {
+            text: "Recurrent bronchitis and currently coughing within the past 12 months, OR have been diagnosed with emphysema.",
+            checked: formData.boxA4,
+          },
+          {
+            text: "Symptoms affecting my lungs, breathing, heart and/or blood in the last 30 days that impair my physical or mental performance.",
+            checked: formData.boxA5,
+          },
+        ],
+      },
+      {
+        title: "BOX B – I AM OVER 45 YEARS OF AGE AND:",
+        questions: [
+          {
+            text: "I currently smoke or inhale nicotine by other means.",
+            checked: formData.boxB1,
+          },
+          { text: "I have a high cholesterol level.", checked: formData.boxB2 },
+          { text: "I have high blood pressure.", checked: formData.boxB3 },
+          {
+            text: "I have had a close blood relative die suddenly or of cardiac disease or stroke before the age of 50, OR have a family history of heart disease before age 50 (including abnormal heart rhythms, coronary artery disease or cardiomyopathy).",
+            checked: formData.boxB4,
+          },
+        ],
+      },
+      {
+        title: "BOX C – I HAVE/HAVE HAD:",
+        questions: [
+          {
+            text: "Sinus surgery within the last 6 months.",
+            checked: formData.boxC1,
+          },
+          {
+            text: "Ear disease or ear surgery, hearing loss, or problems with balance.",
+            checked: formData.boxC2,
+          },
+          {
+            text: "Recurrent sinusitis within the past 12 months.",
+            checked: formData.boxC3,
+          },
+          {
+            text: "Eye surgery within the past 3 months.",
+            checked: formData.boxC4,
+          },
+        ],
+      },
+      {
+        title: "BOX D – I HAVE/HAVE HAD:",
+        questions: [
+          {
+            text: "Head injury with loss of consciousness within the past 5 years.",
+            checked: formData.boxD1,
+          },
+          {
+            text: "Persistent neurologic injury or disease.",
+            checked: formData.boxD2,
+          },
+          {
+            text: "Recurring migraine headaches within the past 12 months, or take medications to prevent them.",
+            checked: formData.boxD3,
+          },
+          {
+            text: "Blackouts or fainting (full/partial loss of consciousness) within the last 5 years.",
+            checked: formData.boxD4,
+          },
+          {
+            text: "Epilepsy, seizures, or convulsions, OR take medications to prevent them.",
+            checked: formData.boxD5,
+          },
+        ],
+      },
+      {
+        title: "BOX E – I HAVE/HAVE HAD:",
+        questions: [
+          {
+            text: "Behavioral health, mental or psychological problems requiring medical/psychiatric treatment.",
+            checked: formData.boxE1,
+          },
+          {
+            text: "Major depression, suicidal ideation, panic attacks, uncontrolled bipolar disorder requiring medication/psychiatric treatment.",
+            checked: formData.boxE2,
+          },
+          {
+            text: "Been diagnosed with a mental health condition or a learning/developmental disorder that requires ongoing care or special accommodation.",
+            checked: formData.boxE3,
+          },
+          {
+            text: "An addiction to drugs or alcohol requiring treatment within the last 5 years.",
+            checked: formData.boxE4,
+          },
+        ],
+      },
+      {
+        title: "BOX F – I HAVE/HAVE HAD:",
+        questions: [
+          {
+            text: "Recurrent back problems in the last 6 months that limit my everyday activity.",
+            checked: formData.boxF1,
+          },
+          {
+            text: "Back or spinal surgery within the last 12 months.",
+            checked: formData.boxF2,
+          },
+          {
+            text: "Diabetes, either drug or diet controlled, OR gestational diabetes within the last 12 months.",
+            checked: formData.boxF3,
+          },
+          {
+            text: "An uncorrected hernia that limits my physical abilities.",
+            checked: formData.boxF4,
+          },
+          {
+            text: "Active or untreated ulcers, problem wounds, or ulcer surgery within the last 6 months.",
+            checked: formData.boxF5,
+          },
+        ],
+      },
+      {
+        title: "BOX G – I HAVE HAD:",
+        questions: [
+          {
+            text: "Ostomy surgery and do not have medical clearance to swim or engage in physical activity.",
+            checked: formData.boxG1,
+          },
+          {
+            text: "Dehydration requiring medical intervention within the last 7 days.",
+            checked: formData.boxG2,
+          },
+          {
+            text: "Active or untreated stomach or intestinal ulcers or ulcer surgery within the last 6 months.",
+            checked: formData.boxG3,
+          },
+          {
+            text: "Frequent heartburn, regurgitation, or gastroesophageal reflux disease (GERD).",
+            checked: formData.boxG4,
+          },
+          {
+            text: "Active or uncontrolled ulcerative colitis or Crohn's disease.",
+            checked: formData.boxG5,
+          },
+          {
+            text: "Bariatric surgery within the last 12 months.",
+            checked: formData.boxG6,
+          },
+        ],
+      },
+    ];
+
+    boxes.forEach((box) => {
+      yPos = drawDetailedBox(box.title, box.questions, yPos);
+    });
+
     pdf.setFontSize(9);
-    pdf.text(formData.medicalExaminerPhone, margin, yPos - 2);
-  }
-  pdf.setFontSize(8);
-  pdf.text("Phone", margin, yPos + 4);
+    checkPageBreak(4);
+    pdf.text(
+      "*Physician's medical evaluation required (see page 1).",
+      margin,
+      yPos + 4,
+    );
 
-  pdf.setLineWidth(0.5);
-  pdf.line(margin + 110, yPos, margin + contentWidth, yPos);
-  if (formData.medicalExaminerEmail) {
+    pdf.setFontSize(8);
+    pdf.text("2 of 3", pageWidth / 2, pageHeight - 15, { align: "center" });
+    pdf.text("© 2020", pageWidth - margin, pageHeight - 15, {
+      align: "right",
+    });
+  }
+
+  // PAGE 3 - Add if Page 2 exists OR if specific Page 1 questions (3, 5, 10) are Yes
+  // Also if the user needs medical clearance (which we track via the alert logic, but here we can infer)
+  // Actually, standard is: if Page 2 is needed, Page 3 is needed.
+  // Also if Q3, Q5, Q10 are Yes, Page 3 is needed.
+  const hasPage3Content =
+    hasPage2Content ||
+    formData.question3 ||
+    formData.question5 ||
+    formData.question10;
+
+  if (hasPage3Content) {
+    pdf.setPage(pdf.getNumberOfPages());
+    pdf.addPage();
+    yPos = 30;
+
+    pdf.setFontSize(18);
+    pdf.setFont("helvetica", "bold");
+    pdf.text(
+      "Diver Medical | Medical Examiner's Evaluation Form",
+      pageWidth / 2,
+      yPos,
+      { align: "center" },
+    );
+
+    yPos += 15;
+
+    // Header info
+    pdf.setLineWidth(0.5);
+    pdf.line(margin, yPos, margin + 100, yPos);
+    if (formData.participantName) {
+      pdf.setFontSize(9);
+      pdf.text(formData.participantName, margin, yPos - 2);
+    }
+    pdf.setFontSize(8);
+    pdf.text("Participant Name (Print)", margin, yPos + 4);
+
+    pdf.setLineWidth(0.5);
+    pdf.line(margin + 110, yPos, margin + contentWidth, yPos);
+    if (formData.birthdate) {
+      pdf.setFontSize(9);
+      pdf.text(formData.birthdate, margin + 110, yPos - 2);
+    }
+    pdf.setFontSize(8);
+    pdf.text("Birthdate Date (dd/mm/yyyy)", margin + 110, yPos + 4);
+
+    yPos += 20;
+
     pdf.setFontSize(9);
-    pdf.text(formData.medicalExaminerEmail, margin + 110, yPos - 2);
+    pdf.setFont("helvetica", "normal");
+    const evaluationText =
+      "The above-named person requests your opinion of his/her medical suitability to participate in recreational scuba diving or freediving training or activity. Please visit uhms.org for medical guidance on medical conditions as they relate to diving. Review the areas relevant to your patient as part of your evaluation.";
+    const evaluationLines = pdf.splitTextToSize(evaluationText, contentWidth);
+    evaluationLines.forEach((line: string) => {
+      checkPageBreak(3.5);
+      pdf.text(line, margin, yPos);
+      yPos += 3.5;
+    });
+
+    yPos += 10;
+
+    // Evaluation Result
+    checkPageBreak(10);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Evaluation Result", margin, yPos);
+    yPos += 10;
+
+    pdf.setFont("helvetica", "normal");
+    checkPageBreak(4);
+    drawCheckbox(margin, yPos, formData.evaluationResult === "approved", 4);
+    pdf.text(
+      "Approved – I find no conditions that I consider incompatible with recreational scuba diving or freediving.",
+      margin + 8,
+      yPos + 3,
+    );
+
+    yPos += 10;
+    checkPageBreak(4);
+    drawCheckbox(margin, yPos, formData.evaluationResult === "not-approved", 4);
+    pdf.text(
+      "Not approved – I find conditions that I consider incompatible with recreational scuba diving or freediving.",
+      margin + 8,
+      yPos + 3,
+    );
+
+    yPos += 15;
+
+    // Medical Examiner signature fields
+    checkPageBreak(20);
+    pdf.setLineWidth(0.5);
+    pdf.line(margin, yPos, margin + 100, yPos);
+    if (formData.medicalExaminerSignature) {
+      pdf.text(formData.medicalExaminerSignature, margin, yPos - 2);
+    }
+    pdf.setFontSize(8);
+    pdf.text(
+      "Signature of certified medical doctor or other legally certified medical provider",
+      margin,
+      yPos + 4,
+    );
+
+    pdf.setLineWidth(0.5);
+    pdf.line(margin + 110, yPos, margin + contentWidth, yPos);
+    if (formData.medicalExaminerDate) {
+      pdf.setFontSize(9);
+      pdf.text(formData.medicalExaminerDate, margin + 110, yPos - 2);
+    }
+    pdf.setFontSize(8);
+    pdf.text("Date (dd/mm/yyyy)", margin + 110, yPos + 4);
+
+    yPos += 15;
+
+    // Full-width fields
+    const fullWidthFields = [
+      {
+        label: "Medical Examiner's Name (Print)",
+        value: formData.medicalExaminerName,
+      },
+      {
+        label: "Clinical Degrees/Credentials",
+        value: formData.medicalExaminerCredentials,
+      },
+      { label: "Clinic/Hospital", value: formData.medicalExaminerClinic },
+      { label: "Address", value: formData.medicalExaminerAddress },
+    ];
+
+    fullWidthFields.forEach((field) => {
+      checkPageBreak(12);
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, yPos, margin + contentWidth, yPos);
+      if (field.value) {
+        pdf.text(field.value, margin, yPos - 2);
+      }
+      pdf.setFontSize(8);
+      pdf.text(field.label, margin, yPos + 4);
+
+      yPos += 12;
+    });
+
+    // Phone and Email on same line
+    checkPageBreak(12);
+    pdf.setLineWidth(0.5);
+    pdf.line(margin, yPos, margin + 100, yPos);
+    if (formData.medicalExaminerPhone) {
+      pdf.setFontSize(9);
+      pdf.text(formData.medicalExaminerPhone, margin, yPos - 2);
+    }
+    pdf.setFontSize(8);
+    pdf.text("Phone", margin, yPos + 4);
+
+    pdf.setLineWidth(0.5);
+    pdf.line(margin + 110, yPos, margin + contentWidth, yPos);
+    if (formData.medicalExaminerEmail) {
+      pdf.setFontSize(9);
+      pdf.text(formData.medicalExaminerEmail, margin + 110, yPos - 2);
+    }
+    pdf.setFontSize(8);
+    pdf.text("Email", margin + 110, yPos + 4);
+
+    yPos += 20;
+
+    // Physician/Clinic Stamp box
+    checkPageBreak(30);
+    pdf.setLineWidth(0.3);
+    pdf.rect(margin + 60, yPos, 70, 30);
+    pdf.setFontSize(8);
+    pdf.text("Physician/Clinic Stamp (optional)", margin + 95, yPos + 17, {
+      align: "center",
+    });
+
+    // Footer
+    yPos = pageHeight - 50;
+    pdf.setFontSize(8);
+    pdf.text(
+      "Created by the Diver Medical Screen Committee in association with the",
+      margin,
+      yPos,
+    );
+    yPos += 4;
+    pdf.text("following bodies:", margin, yPos);
+    yPos += 5;
+    pdf.text("The Undersea & Hyperbaric Medical Society", margin, yPos);
+    yPos += 4;
+    pdf.text("DAN (US)", margin, yPos);
+    yPos += 4;
+    pdf.text("DAN Europe", margin, yPos);
+    yPos += 4;
+    pdf.text(
+      "Hyperbaric Medicine Division, University of California, San Diego",
+      margin,
+      yPos,
+    );
+
+    yPos += 10;
+    pdf.text("3 of 3", pageWidth / 2, yPos, { align: "center" });
+    pdf.text("10346 EN", margin, yPos);
+    pdf.text("© DMSC 2020", pageWidth - margin, yPos, { align: "right" });
   }
-  pdf.setFontSize(8);
-  pdf.text("Email", margin + 110, yPos + 4);
-
-  yPos += 20;
-
-  // Physician/Clinic Stamp box
-  pdf.setLineWidth(0.3);
-  pdf.rect(margin + 60, yPos, 70, 30);
-  pdf.setFontSize(8);
-  pdf.text("Physician/Clinic Stamp (optional)", margin + 95, yPos + 17, {
-    align: "center",
-  });
-
-  // Footer
-  yPos = pageHeight - 50;
-  pdf.setFontSize(8);
-  pdf.text(
-    "Created by the Diver Medical Screen Committee in association with the",
-    margin,
-    yPos,
-  );
-  yPos += 4;
-  pdf.text("following bodies:", margin, yPos);
-  yPos += 5;
-  pdf.text("The Undersea & Hyperbaric Medical Society", margin, yPos);
-  yPos += 4;
-  pdf.text("DAN (US)", margin, yPos);
-  yPos += 4;
-  pdf.text("DAN Europe", margin, yPos);
-  yPos += 4;
-  pdf.text(
-    "Hyperbaric Medicine Division, University of California, San Diego",
-    margin,
-    yPos,
-  );
-
-  yPos += 10;
-  pdf.text("3 of 3", pageWidth / 2, yPos, { align: "center" });
-  pdf.text("10346 EN", margin, yPos);
-  pdf.text("© DMSC 2020", pageWidth - margin, yPos, { align: "right" });
 
   // Save the PDF
   // pdf.save("diver-medical-questionnaire.pdf");

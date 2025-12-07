@@ -3,14 +3,9 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState, useRef } from "react";
-import { jsPDF } from "jspdf";
 import { toast } from "sonner";
 import { useFormStore } from "@/store/formStore";
-
-const loadHTML2Canvas = async () => {
-  const { default: html2canvas } = await import("html2canvas");
-  return html2canvas;
-};
+import { generatePaginatedPDF, downloadPDF } from "@/lib/pdf-utils";
 
 interface EnrichedAirFormProps {
   cartId: string;
@@ -36,7 +31,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
   const [participantDate, setParticipantDate] = useState(getCurrentDate());
   const [guardianSignature, setGuardianSignature] = useState("");
   const [guardianDate, setGuardianDate] = useState(getCurrentDate());
-  const [storeResort, setStoreResort] = useState("");
+  // const [storeResort, setStoreResort] = useState("");
   const [hasInsurance, setHasInsurance] = useState("");
   const [policyNumber, setPolicyNumber] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
@@ -45,7 +40,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
     participantName: false,
     participantSignature: false,
     participantDate: false,
-    storeResort: false,
+    hasInsurance: false,
+    policyNumber: false,
   });
 
   const formRef = useRef<HTMLDivElement>(null);
@@ -55,16 +51,18 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
       participantName: !participantName.trim(),
       participantSignature: !participantSignature.trim(),
       participantDate: !participantDate,
-      storeResort: !storeResort.trim(),
+      hasInsurance: !hasInsurance,
+      policyNumber: hasInsurance === "yes" && !policyNumber.trim(),
     };
-    setErrors(newErrors);
+    setErrors((prev) => ({ ...prev, ...newErrors }));
 
     const emptyFields = [];
     if (newErrors.participantName) emptyFields.push("Participant Name");
-    if (newErrors.storeResort) emptyFields.push("Store/Resort");
     if (newErrors.participantSignature)
       emptyFields.push("Participant Signature");
     if (newErrors.participantDate) emptyFields.push("Date");
+    if (newErrors.hasInsurance) emptyFields.push("Diver Accident Insurance");
+    if (newErrors.policyNumber) emptyFields.push("Policy Number");
 
     if (emptyFields.length > 0) {
       toast.error(`Please fill in: ${emptyFields.join(", ")}`);
@@ -82,99 +80,18 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
 
     try {
       if (!formRef.current) throw new Error("Form reference not found");
-      const html2canvas = await loadHTML2Canvas();
-      const canvas = await html2canvas(formRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#ffffff",
-        logging: false,
-        width: formRef.current.scrollWidth,
-        height: formRef.current.scrollHeight,
-        ignoreElements: (el) =>
-          el.classList.contains("no-print") ||
-          (el.tagName === "IMG" &&
-            (el.getAttribute("src")?.startsWith("http") ?? false)),
-        onclone: (clonedDoc) => {
-          try {
-            clonedDoc.querySelectorAll("*").forEach((el) => {
-              const htmlEl = el as HTMLElement;
-              if (htmlEl.style) {
-                // Check computed styles for lab colors
-                const computedStyle =
-                  clonedDoc.defaultView?.getComputedStyle(htmlEl);
-                if (computedStyle) {
-                  const colorProps = [
-                    "color",
-                    "backgroundColor",
-                    "borderColor",
-                    "borderTopColor",
-                  ];
-                  colorProps.forEach((prop) => {
-                    const computedValue = computedStyle.getPropertyValue(prop);
-                    if (computedValue && computedValue.includes("lab")) {
-                      const replacement = prop.includes("background")
-                        ? "rgb(255, 255, 255)"
-                        : "rgb(0, 0, 0)";
-                      htmlEl.style.setProperty(prop, replacement, "important");
-                    }
-                  });
-                }
 
-                // Check inline styles
-                ["color", "backgroundColor", "borderColor"].forEach((prop) => {
-                  const value = htmlEl.style.getPropertyValue(prop);
-                  if (value && value.includes("lab")) {
-                    const replacement =
-                      prop === "backgroundColor"
-                        ? "rgb(255, 255, 255)"
-                        : "rgb(0, 0, 0)";
-                    htmlEl.style.setProperty(prop, replacement, "important");
-                  }
-                });
+      const fileName = `PADI_Enriched_Air_Form_${participantName
+        .replace(/[^a-zA-Z0-9\s]/g, "")
+        .replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`;
 
-                // Set defaults
-                if (!htmlEl.style.color || htmlEl.style.color.includes("lab"))
-                  htmlEl.style.color = "rgb(0, 0, 0)";
-                if (
-                  htmlEl.tagName !== "INPUT" &&
-                  (!htmlEl.style.backgroundColor ||
-                    htmlEl.style.backgroundColor.includes("lab"))
-                )
-                  htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-                if (
-                  !htmlEl.style.borderColor ||
-                  htmlEl.style.borderColor.includes("lab")
-                )
-                  htmlEl.style.borderColor = "rgb(0, 0, 0)";
-                htmlEl.style.removeProperty("filter");
-                htmlEl.style.removeProperty("backdrop-filter");
-                htmlEl.style.removeProperty("box-shadow");
-              }
-            });
-          } catch (e) {
-            console.warn("Color sanitization warning:", e);
-          }
-        },
-      });
-
-      const imgData = canvas.toDataURL("image/png", 1.0);
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
-
-      pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pdfHeight);
-
-      const pdfBlob = pdf.output("blob");
-      const fileName = `PADI_Enriched_Air_Form_${participantName.replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`;
-
-      const pdfFile = new File([pdfBlob], fileName, {
-        type: "application/pdf",
-      });
+      const pdfFile = await generatePaginatedPDF(formRef.current, fileName);
 
       // Save to store
       store.setFormCompleted(cartId, formTitle, pdfFile);
+
+      // Auto-download
+      downloadPDF(pdfFile);
 
       toast.success("Form submitted successfully!");
       onSubmitSuccess?.();
@@ -224,19 +141,23 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 </h3>
               </div>
             </div>
-            <p className="text-sm font-semibold text-center lg:text-left">
-              Please read carefully and fill in all blanks before signing.
-            </p>
           </div>
+        </div>
+        <div className="mx-auto px-8 py-4">
+          <hr className="w-full border-black" />
+          <p className="text-sm font-semibold text-center lg:text-left">
+            Please read carefully and fill in all blanks before signing.
+          </p>
         </div>
 
         {/* Main Content */}
         <div className="px-6 lg:px-8 pb-8">
           {/* Store/Resort Field */}
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <label className="block text-sm font-medium mb-2">
               Store/Resort: <span className="text-red-500">*</span>
             </label>
+            Scuba Life
             <input
               type="text"
               value={storeResort}
@@ -255,7 +176,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 This field is required
               </p>
             )}
-          </div>
+          </div> */}
 
           {/* Non-Agency Disclosure */}
           <div className="mb-8">
@@ -266,7 +187,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               I understand and agree that PADI Members (&quot;Members&quot;),
               including{" "}
               <span className="font-medium">
-                {storeResort || "_________________"}
+                {/* {storeResort || "_________________"} */}
+                Scuba Life
               </span>{" "}
               and/or any individual PADI Instructors and Divemasters associated
               with the program in which I am participating, are licensed to use
@@ -285,7 +207,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               neither I nor my estate shall seek to hold PADI liable for the
               actions, inactions or negligence of{" "}
               <span className="font-medium">
-                {storeResort || "_________________"}
+                {/* {storeResort || "_________________"} */}
+                Scuba Life
               </span>{" "}
               and/or the instructors and divemasters associated with the
               activity.
@@ -341,7 +264,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 I understand and agree that neither my instructor(s), the
                 facility through which I receive my instruction,{" "}
                 <span className="font-medium">
-                  {storeResort || "_________________"}
+                  {/* {storeResort || "_________________"} */}
+                  Scuba Life
                 </span>
                 , nor PADI Americas, Inc., nor its affiliate and subsidiary
                 corporations, nor any of their respective employees, officers,
@@ -427,7 +351,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 , BY THIS INSTRUMENT AGREE TO EXEMPT AND RELEASE MY INSTRUCTORS,
                 THE FACILITY THROUGH WHICH I RECEIVE MY INSTRUCTION,{" "}
                 <span className="underline">
-                  {storeResort || "_________________"}
+                  {/* {storeResort || "_________________"} */}
+                  Scuba Life
                 </span>
                 , AND PADI AMERICAS, INC., AND ALL RELATED ENTITIES AS DEFINED
                 ABOVE, FROM ALL LIABILITY OR RESPONSIBILITY WHATSOEVER FOR
@@ -554,9 +479,16 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
             </div>
 
             {/* Insurance Section */}
-            <div className="flex flex-wrap items-center gap-4 p-4 bg-muted/20 rounded-lg">
+            <div
+              className={`flex flex-wrap items-center gap-4 p-4 rounded-lg border-2 ${
+                errors.hasInsurance
+                  ? "border-red-500 bg-red-50"
+                  : "border-transparent bg-muted/20"
+              }`}
+            >
               <span className="text-sm font-medium">
-                Diver Accident Insurance?
+                Diver Accident Insurance?{" "}
+                <span className="text-red-500">*</span>
               </span>
               <div className="flex items-center gap-4">
                 <label className="flex items-center gap-2">
@@ -565,7 +497,12 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                     name="insurance"
                     value="no"
                     checked={hasInsurance === "no"}
-                    onChange={(e) => setHasInsurance(e.target.value)}
+                    onChange={(e) => {
+                      setHasInsurance(e.target.value);
+                      if (errors.hasInsurance) {
+                        setErrors((prev) => ({ ...prev, hasInsurance: false }));
+                      }
+                    }}
                     className="w-4 h-4"
                   />
                   <span className="text-sm">NO</span>
@@ -576,7 +513,12 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                     name="insurance"
                     value="yes"
                     checked={hasInsurance === "yes"}
-                    onChange={(e) => setHasInsurance(e.target.value)}
+                    onChange={(e) => {
+                      setHasInsurance(e.target.value);
+                      if (errors.hasInsurance) {
+                        setErrors((prev) => ({ ...prev, hasInsurance: false }));
+                      }
+                    }}
                     className="w-4 h-4"
                   />
                   <span className="text-sm">YES</span>
@@ -588,11 +530,26 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                   <input
                     type="text"
                     value={policyNumber}
-                    onChange={(e) => setPolicyNumber(e.target.value)}
+                    onChange={(e) => {
+                      setPolicyNumber(e.target.value);
+                      handleFieldChange("policyNumber", e.target.value);
+                    }}
                     placeholder="Enter policy number"
-                    className="border-0 border-b-2 border-black bg-transparent px-2 py-1 text-sm focus:outline-none focus:border-blue-600"
+                    className={`border-0 border-b-2 ${
+                      errors.policyNumber ? "border-red-500" : "border-black"
+                    } bg-transparent px-2 py-1 text-sm focus:outline-none focus:border-blue-600`}
                   />
                 </div>
+              )}
+              {errors.policyNumber && (
+                <p className="text-red-500 text-xs w-full ml-32">
+                  Policy number is required
+                </p>
+              )}
+              {errors.hasInsurance && (
+                <p className="text-red-500 text-xs w-full">
+                  Please select whether you have diver accident insurance
+                </p>
               )}
             </div>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Clock, MapPin, Users } from "lucide-react";
+// import { Calendar, Clock, MapPin, Users } from "lucide-react";
 // import { Button } from "@/components/ui/button";
 // import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -41,10 +41,10 @@ interface CourseCardProps {
 export function CourseCard({
   title,
   description,
-  date,
-  time,
-  location,
-  participants,
+  // date,
+  // time,
+  // location,
+  // participants,
   price,
 
   imageUrl,

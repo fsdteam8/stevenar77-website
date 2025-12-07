@@ -194,6 +194,7 @@ export default function IndividualBooking() {
       .then(() => {
         toast.success(
           "You're almost there! Your selected course has been successfully added to your cart.",
+          // "You’re almost there! Your selected course has been successfully added to your cart. If you’d like to book another course, reserve a trip, or pick up some gear, just choose the appropriate option below. Once you’re ready, complete your checkout to officially lock in your Scuba Life adventure!🌊🐠"
         );
         setBookingComplete(true);
       })
@@ -234,10 +235,11 @@ export default function IndividualBooking() {
           Booking
         </h1>
         <p className="text-lg text-gray-700 mb-8">
-          If you&lsquo;d like to book another course, reserve a trip, or pick up
+          {/* If you&lsquo;d like to book another course, reserve a trip, or pick up
           some gear, just choose the appropriate option below. Once you&apos;re
           ready, complete your checkout to make your Scuba Life adventure
-          officially locked in!
+          officially locked in! */}
+          If you&apos;d like to book another course, reserve a trip, or pick up some gear, just choose the appropriate option below. Once you&apos;re ready, complete your checkout to officially lock in your Scuba Life adventure! 🌊🐠
         </p>
 
         {/* Mini Cart Summary */}

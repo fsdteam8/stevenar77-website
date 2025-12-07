@@ -2,21 +2,15 @@
 
 import Image from "next/image";
 import { useState, useRef } from "react";
-import { jsPDF } from "jspdf";
-// import { useBooking } from "../course/booking-context";
 import { toast } from "sonner";
 import { useFormStore } from "@/store/formStore";
+import { generatePaginatedPDF, downloadPDF } from "@/lib/pdf-utils";
 
 interface DiversActivityFormProps {
   cartId?: string;
   formTitle?: string;
   onSubmitSuccess?: () => void;
 }
-
-const loadHTML2Canvas = async () => {
-  const { default: html2canvas } = await import("html2canvas");
-  return html2canvas;
-};
 
 const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
   cartId,
@@ -37,8 +31,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
   const [hasInsurance, setHasInsurance] = useState<boolean | null>(null);
   const [signature, setSignature] = useState("");
   const [guardianSignature, setGuardianSignature] = useState("");
-  const [guardianDate, setGuardianDate] = useState(getCurrentDate());
-  const [date, setDate] = useState(getCurrentDate());
+  const [guardianDate] = useState(getCurrentDate());
+  const [date] = useState(getCurrentDate());
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Track which fields have errors - initialize as true to show red highlights
@@ -110,128 +104,20 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
     try {
       if (!formRef.current) throw new Error("Form reference not found");
 
-      // console.log("Generating PDF...");
-      const html2canvas = await loadHTML2Canvas();
-
-      const canvas = await html2canvas(formRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#ffffff",
-        logging: false,
-        width: formRef.current.scrollWidth,
-        height: formRef.current.scrollHeight,
-        ignoreElements: (el: Element): boolean => {
-          const isNoPrint = el.classList.contains("no-print");
-          const isExternalImg =
-            el.tagName === "IMG" &&
-            !!el.getAttribute("src")?.startsWith("http");
-          return isNoPrint || isExternalImg;
-        },
-
-        onclone: (clonedDoc: Document) => {
-          try {
-            const styleTag = clonedDoc.createElement("style");
-            styleTag.innerHTML = `
-            html, body { background-color: #ffffff !important; }
-            .print-area { background-color: #ffffff !important; }
-            * { box-shadow: none !important; filter: none !important; -webkit-filter: none !important; backdrop-filter: none !important; }
-            .no-print { display: none !important; }
-          `;
-            clonedDoc.head?.appendChild(styleTag);
-
-            const clonedPrint = clonedDoc.querySelector(
-              ".print-area",
-            ) as HTMLElement | null;
-            if (clonedPrint) {
-              clonedPrint.style.setProperty(
-                "background-color",
-                "#ffffff",
-                "important",
-              );
-              clonedPrint.style.setProperty("box-shadow", "none", "important");
-            }
-
-            const allEls = clonedDoc.querySelectorAll<HTMLElement>("*");
-            allEls.forEach((el) => {
-              el.style.setProperty("box-shadow", "none", "important");
-              el.style.setProperty("filter", "none", "important");
-              el.style.setProperty("backdrop-filter", "none", "important");
-
-              const view = clonedDoc.defaultView;
-              if (view) {
-                const cs = view.getComputedStyle(el);
-                [
-                  "color",
-                  "background-color",
-                  "border-top-color",
-                  "border-color",
-                ].forEach((prop) => {
-                  const val = cs.getPropertyValue(prop);
-                  if (val && val.includes("lab")) {
-                    const replacement =
-                      prop === "background-color"
-                        ? "rgb(255, 255, 255)"
-                        : "rgb(0, 0, 0)";
-                    el.style.setProperty(prop, replacement, "important");
-                  }
-                });
-              }
-
-              const inlineProps = ["color", "background-color", "border-color"];
-              inlineProps.forEach((p) => {
-                const v = el.style.getPropertyValue(p);
-                if (v && v.includes("lab")) {
-                  const replacement =
-                    p === "background-color"
-                      ? "rgb(255, 255, 255)"
-                      : "rgb(0, 0, 0)";
-                  el.style.setProperty(p, replacement, "important");
-                }
-              });
-            });
-          } catch (e) {
-            console.warn("onclone sanitation failed:", e);
-          }
-        },
-      });
-
-      const imgData = canvas.toDataURL("image/png", 1.0);
-
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      const pdfBlob = pdf.output("blob");
       const fileName = `PADI_Divers_Activity_Form_${participantName
-        .replace(/[^a-zA-Z0-9\\s]/g, "")
+        .replace(/[^a-zA-Z0-9\s]/g, "")
         .replace(/\s+/g, "_")
         .trim()}_${new Date().toISOString().split("T")[0]}.pdf`;
 
-      const pdfFile = new File([pdfBlob], fileName, {
-        type: "application/pdf",
-      });
+      const pdfFile = await generatePaginatedPDF(formRef.current, fileName);
 
       // Save to store
       if (cartId && formTitle) {
         store.setFormCompleted(cartId, formTitle, pdfFile);
       }
+
+      // Auto-download
+      downloadPDF(pdfFile);
 
       toast.success("PDF generated successfully!");
       onSubmitSuccess?.();
@@ -252,7 +138,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
       {/* Form Content */}
       <div
         ref={formRef}
-        className="print-area max-w-6xl mx-auto bg-white p-10 text-sm leading-relaxed font-serif shadow-lg"
+        className="print-area max-w-4xl mx-auto bg-white p-10 text-sm leading-relaxed font-serif shadow-lg"
       >
         {/* ---------------- Page 1 ---------------- */}
         <div className="flex items-center pb-4">

@@ -10,7 +10,8 @@ export default function ForbiddenPage() {
         {/* <h1 className="text-6xl font-bold text-primary mb-4">403</h1> */}
         <h2 className="text-2xl font-semibold mb-2 text-red-500">Login Required!</h2>
         <p className="text-gray-600 mb-8">
-          Sorry, You are not a user, Please login to Book this course! 
+          {/* Sorry, You are not a user, Please login to Book this course!  */}
+          Please login to chat, book a course/trip, or make a purchase.
         </p>
 
         <div className="flex gap-4 justify-center">

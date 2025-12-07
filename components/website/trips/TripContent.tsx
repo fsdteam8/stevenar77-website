@@ -38,16 +38,16 @@ export function TripContent({ trip }: TripContentProps) {
   }, [queryQuantity]);
 
   //  When user selects new value → update both
-  const handleSelectChange = (value: string) => {
-    const num = Number(value);
-    setSelectedParticipants(num);
-    dispatch({ type: "SET_PARTICIPANTS", payload: num });
-  };
+  // const handleSelectChange = (value: string) => {
+  //   const num = Number(value);
+  //   setSelectedParticipants(num);
+  //   dispatch({ type: "SET_PARTICIPANTS", payload: num });
+  // };
 
-  const participantOptions = Array.from(
-    { length: trip.maximumCapacity },
-    (_, i) => i + 1,
-  );
+  // const participantOptions = Array.from(
+  //   { length: trip.maximumCapacity },
+  //   (_, i) => i + 1,
+  // );
 
   return (
     <div className="space-y-2">

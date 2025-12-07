@@ -5,9 +5,27 @@ export interface ProceedToPaymentData {
 }
 
 // Type definitions
+export interface ScheduleSet {
+  date: string;
+  location: string;
+  type: string;
+  isActive: boolean;
+  _id: string;
+}
+
+export interface Schedule {
+  title: string;
+  description: string;
+  participents: number;
+  totalParticipents: number;
+  sets: ScheduleSet[];
+  _id: string;
+}
+
 export interface Class {
   title: string;
   image?: { url: string };
+  schedule?: Schedule[];
 }
 
 export interface CartDetails {
@@ -19,6 +37,8 @@ export interface CartDetails {
   formTitle?: string[];
   Username?: string;
   email?: string;
+  classDate?: string[];
+  scheduleId?: string;
 }
 
 export interface Participant {
@@ -65,3 +85,16 @@ export interface ProductBookingPayload {
 }
 
 export type TripBookingData = TripBookingPayload | ProductBookingPayload;
+
+export interface StoredCourseItem {
+  cartId: string;
+  itemId?: string;
+  bookingId?: string;
+  formTitle: string[];
+  title: string;
+  Username: string;
+  email: string;
+  classDate: string[];
+  schedule: Schedule[];
+  scheduleId: string;
+}
