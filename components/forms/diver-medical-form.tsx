@@ -845,7 +845,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
     }
   };
 
-  const [currentPage, setCurrentPage] = useState(2);
+  const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 3;
   const nextPage = () =>
     currentPage < totalPages && setCurrentPage(currentPage + 1);

@@ -6,7 +6,7 @@ import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { useFormStore } from "@/store/formStore";
 
-import { generatePaginatedPDF, downloadPDF } from "@/lib/pdf-utils";
+import { generatePaginatedPDF } from "@/lib/pdf-utils";
 
 interface StandardsFormProps {
   cartId: string;
@@ -80,7 +80,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({
       store.setFormCompleted(cartId, formTitle, pdfFile);
 
       // Auto-download
-      downloadPDF(pdfFile);
+      // downloadPDF(pdfFile);
 
       toast.success("PDF generated successfully!");
       onSubmitSuccess?.();
