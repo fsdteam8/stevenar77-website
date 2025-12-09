@@ -5,10 +5,6 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useTrip } from "@/services/hooks/trip/useTrip";
 import { Button } from "@/components/ui/button";
-<<<<<<< HEAD
-=======
-// import { Minus, Plus } from "lucide-react";
->>>>>>> fa2c33128a292c691a3c5df3c73455071b5d9466
 import { useSession } from "next-auth/react";
 import {
   Dialog,
