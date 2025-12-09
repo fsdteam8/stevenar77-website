@@ -5,34 +5,16 @@ import React from "react";
 import ReviewShowByCourseID from "@/components/website/courses/ReviewShowByCourseID";
 // import { useSession } from "next-auth/react";
 
-// ✅ Page receives params from Next.js routing
-interface PageProps {
-  params: { id: string }; // dynamic segment e.g. /courses/[id]
-}
-
-export default function Page({ params }: PageProps) {
-  // Get classId from route
-  const classId = params.id;
-
-  // TODO: Replace with real userId from auth (e.g. NextAuth session)
-  // const userId = "68bf6996f02adb6fb1fef5a0";
-  // const {data:session} = useSession();
-  // const userId = session?.user?.id as string;
-  // console.log( "", userId)
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const classId = resolvedParams.id;
 
   return (
     <div>
-      {/* <Hero
-        title="Course Details"
-        subtitle="Start your underwater adventure with our comprehensive courses."
-        backgroundImage="/images/imagewater.jpg"
-        size="small"
-      /> */}
       <Rescuedivers />
-
       <ReviewShowByCourseID courseId={classId} />
-
       <CourseReview classId={classId} />
     </div>
   );
 }
+
