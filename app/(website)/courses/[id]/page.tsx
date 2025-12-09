@@ -7,8 +7,10 @@ import ReviewShowByCourseID from "@/components/website/courses/ReviewShowByCours
 
 // ✅ Page receives params from Next.js routing
 interface PageProps {
-  params: { id: string }; // dynamic segment e.g. /courses/[id]
+  params: { id: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
+
 
 export default function Page({ params }: PageProps) {
   // Get classId from route
@@ -22,12 +24,7 @@ export default function Page({ params }: PageProps) {
 
   return (
     <div>
-      {/* <Hero
-        title="Course Details"
-        subtitle="Start your underwater adventure with our comprehensive courses."
-        backgroundImage="/images/imagewater.jpg"
-        size="small"
-      /> */}
+      
       <Rescuedivers />
 
       <ReviewShowByCourseID courseId={classId} />
