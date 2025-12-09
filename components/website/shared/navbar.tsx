@@ -35,7 +35,7 @@ const Navbar = () => {
   const { data: session, status } = useSession();
   const { user, loading } = useMyProfile();
   const userId = session?.user?.id;
-  const { data: cartData, isLoading, error } = useCart(userId);
+  const { data: cartData,  } = useCart(userId);
 
   const [isOpen, setIsOpen] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);

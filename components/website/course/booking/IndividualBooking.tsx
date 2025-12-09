@@ -39,7 +39,6 @@ export default function IndividualBooking() {
   const [bookingComplete, setBookingComplete] = useState(false);
 
   // FINAL FIX — decode once, parse once
-  let schedule: ParsedSchedule | null = null;
   let scheduleId = "";
   let scheduleDates: string[] = [];
 
@@ -48,7 +47,6 @@ export default function IndividualBooking() {
       const decoded = decodeURIComponent(scheduleParam);
       const parsed = JSON.parse(decoded);
 
-      schedule = parsed;
       scheduleId = parsed._id;
       scheduleDates = Array.isArray(parsed.dates) ? parsed.dates : [];
     }

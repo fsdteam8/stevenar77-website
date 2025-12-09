@@ -353,17 +353,9 @@ export default function PadiQuickReview({
       document.head.removeChild(tempStyle);
 
       const fileName = `PADI_Quick_Review_${formData.name.replace(/[^a-zA-Z0-9]/g, "_").trim()}.pdf`;
-      // Create a Blob and File from the generated PDF so we can store/dispatch it
-      const pdfBlob = pdf.output("blob");
-      const pdfFileObj = new File([pdfBlob], fileName, {
-        type: "application/pdf",
-      });
+      
       pdf.save(fileName);
-      // dispatch({
-      //   type: "ADD_DOCUMENT",
-      //   payload: { file: pdfFileObj, label: "Quick Review-Open Waters" },
-      // });
-
+     
       onSubmitSuccess?.(); // ✅ close modal or mark complete
     } catch (error: unknown) {
       console.error("PDF download failed:", error);

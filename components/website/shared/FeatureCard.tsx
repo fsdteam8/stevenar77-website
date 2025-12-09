@@ -25,7 +25,6 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   image,
   title,
   onSeeMore,
-  onBookNow,
   children,
 }) => {
   return (
@@ -59,12 +58,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
           >
             See More
           </Button>
-          {/* <Button
-            className="flex-1 bg-[#0694A2] py-3 px-[16px] text-white hover:bg-cyan-700"
-            onClick={onBookNow}
-          >
-            Book Now
-          </Button> */}
+         
         </div>
       </div>
     </section>

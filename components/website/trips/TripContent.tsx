@@ -38,16 +38,6 @@ export function TripContent({ trip }: TripContentProps) {
   }, [queryQuantity]);
 
   //  When user selects new value → update both
-  const handleSelectChange = (value: string) => {
-    const num = Number(value);
-    setSelectedParticipants(num);
-    dispatch({ type: "SET_PARTICIPANTS", payload: num });
-  };
-
-  const participantOptions = Array.from(
-    { length: trip.maximumCapacity },
-    (_, i) => i + 1,
-  );
 
   return (
     <div className="space-y-2">
@@ -85,40 +75,7 @@ export function TripContent({ trip }: TripContentProps) {
           </div>
         </div>
 
-        {/* Participants Selector */}
-        <div>
-          {/* <h2 className="text-xl font-semibold mb-4 text-[#343a40]">
-            Number of Participants
-          </h2>
-          <p className="text-sm text-[#6c757d] mb-2">
-            Maximum capacity: {trip.maximumCapacity} participants
-          </p> */}
-
-          {/* <Select
-            value={selectedParticipants.toString()}
-            onValueChange={handleSelectChange}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select participants" />
-            </SelectTrigger>
-            <SelectContent>
-              {participantOptions.map((num) => (
-                <SelectItem key={num} value={num.toString()}>
-                  {num}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select> */}
-
-          {/* Total Price Display */}
-          {/* <div className="mt-4 text-right text-lg font-semibold text-[#0694a2]">
-            Total: $
-            {(trip.price * selectedParticipants).toLocaleString("en-US", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
-          </div> */}
-        </div>
+       
       </Card>
     </div>
   );

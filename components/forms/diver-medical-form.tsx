@@ -4,9 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { generatePDF } from "@/lib/forms/medical-form-pdf-generator";
-import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { useSearchParams } from "next/navigation";
 import { useFormStore } from "@/store/formStore";
 
 interface FormData {
@@ -143,12 +141,6 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
   onSubmitSuccess,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { data: session } = useSession();
-  //   const { dispatch } = useBooking();
-  const token = session?.accessToken || "";
-
-  const searchParams = useSearchParams();
-  const bookingId = searchParams.get("bookingId");
 
   // Get current date in mm/dd/yyyy format
   const getCurrentDate = () => {
