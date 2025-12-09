@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useTrip } from "@/services/hooks/trip/useTrip";
 import { Button } from "@/components/ui/button";
-// import { Minus, Plus } from "lucide-react";
 import { useSession } from "next-auth/react";
 import {
   Dialog,
@@ -22,10 +21,6 @@ export default function TripsDetails() {
   const id = Array.isArray(idParam) ? idParam[0] : idParam;
 
   const { data: trip, isLoading, isError, error } = useTrip(id!);
-  // const [quantity, setQuantity] = useState(1);
-
-  // const increase = () => setQuantity((prev) => prev + 1);
-  // const decrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const router = useRouter();
   const { status } = useSession();
