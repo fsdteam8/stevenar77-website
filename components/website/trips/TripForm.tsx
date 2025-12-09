@@ -135,13 +135,13 @@ export function TripForm({ trip }: TripFormProps) {
 
     // Send to API
     bookTrip(payload, {
-      onSuccess: (res) => {
+      onSuccess: ( ) => {
         toast.success("Trip added to cart successfully!");
         setTripsBookings(true);
         // console.log("Trip booking successful!", res);
         setIsSaved(true);
       },
-      onError: (err) => {
+      onError: ( ) => {
         toast.error("Failed to add trip to cart!");
         // console.error("Trip booking failed:", err);
       },
