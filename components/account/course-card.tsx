@@ -22,7 +22,6 @@ interface CourseCardProps {
 export function CourseCard({
   title,
   description,
-
   price,
 
   imageUrl,

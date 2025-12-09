@@ -5,6 +5,10 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useTrip } from "@/services/hooks/trip/useTrip";
 import { Button } from "@/components/ui/button";
+<<<<<<< HEAD
+=======
+// import { Minus, Plus } from "lucide-react";
+>>>>>>> fa2c33128a292c691a3c5df3c73455071b5d9466
 import { useSession } from "next-auth/react";
 import {
   Dialog,
@@ -17,7 +21,7 @@ import {
 
 export default function TripsDetails() {
   const params = useParams();
-  const idParam = params?.id; 
+  const idParam = params?.id;
   const id = Array.isArray(idParam) ? idParam[0] : idParam;
 
   const { data: trip, isLoading, isError, error } = useTrip(id!);
@@ -28,7 +32,7 @@ export default function TripsDetails() {
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleBookNow = () => {
-    if (!trip) return; 
+    if (!trip) return;
 
     const bookNowLink = `/trips/book/${trip._id}`;
     if (!isLoggedIn) {
@@ -80,8 +84,6 @@ export default function TripsDetails() {
           >
             {/* {trip.description} */}
           </p>
-
-
 
           {/* Buy Now Button */}
           <Button

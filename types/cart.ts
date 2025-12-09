@@ -85,3 +85,16 @@ export interface ProductBookingPayload {
 }
 
 export type TripBookingData = TripBookingPayload | ProductBookingPayload;
+
+export interface StoredCourseItem {
+  cartId: string;
+  itemId?: string;
+  bookingId?: string;
+  formTitle: string[];
+  title: string;
+  Username: string;
+  email: string;
+  classDate: string[];
+  schedule: Schedule[];
+  scheduleId: string;
+}

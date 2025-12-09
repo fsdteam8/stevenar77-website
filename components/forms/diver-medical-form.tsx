@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { generatePDF } from "@/lib/forms/medical-form-pdf-generator";
 import { toast } from "sonner";
 import { useFormStore } from "@/store/formStore";
+import Swal from "sweetalert2";
 
 interface FormData {
   participantName: string;
@@ -158,7 +159,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
     instructorName: "",
     date: getCurrentDate(),
     participantSignature: "",
-    question1: null,
+    question1: null, // Default to true to show Box A on Page 2
     question2: null,
     question3: null,
     question4: null,
@@ -304,18 +305,32 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       }
 
       // Check if at least one Yes in Box A
-      const hasYesInA =
-        formData.boxA1 ||
-        formData.boxA2 ||
-        formData.boxA3 ||
-        formData.boxA4 ||
-        formData.boxA5;
-      if (!hasYesInA) {
-        return {
-          isValid: false,
-          message: "Box A: At least one question must be answered 'Yes'",
-        };
-      }
+      // const hasYesInA =
+      //   formData.boxA1 ||
+      //   formData.boxA2 ||
+      //   formData.boxA3 ||
+      //   formData.boxA4 ||
+      //   formData.boxA5;
+      // if (!hasYesInA) {
+      //   return {
+      //     isValid: false,
+      //     message: "Box A: At least one question must be answered 'Yes'",
+      //   };
+      // }
+
+      // Check if at least one Yes in Box A
+      // const hasYesInA =
+      //   formData.boxA1 ||
+      //   formData.boxA2 ||
+      //   formData.boxA3 ||
+      //   formData.boxA4 ||
+      //   formData.boxA5;
+      // if (!hasYesInA) {
+      //   return {
+      //     isValid: false,
+      //     message: "Box A: At least one question must be answered 'Yes'",
+      //   };
+      // }
     }
 
     // Validate Box B - ALL questions must be answered if question2 is Yes
@@ -334,14 +349,54 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       }
 
       // Check if at least one Yes in Box B
-      const hasYesInB =
-        formData.boxB1 || formData.boxB2 || formData.boxB3 || formData.boxB4;
-      if (!hasYesInB) {
-        return {
-          isValid: false,
-          message: "Box B: At least one question must be answered 'Yes'",
-        };
-      }
+      // const hasYesInB =
+      //   formData.boxB1 || formData.boxB2 || formData.boxB3 || formData.boxB4;
+      // if (!hasYesInB) {
+      //   return {
+      //     isValid: false,
+      //     message: "Box B: At least one question must be answered 'Yes'",
+      //   };
+      // }
+
+      // Check if at least one Yes in Box B
+      // const hasYesInB =
+      //   formData.boxB1 || formData.boxB2 || formData.boxB3 || formData.boxB4;
+      // if (!hasYesInB) {
+      //   return {
+      //     isValid: false,
+      //     message: "Box B: At least one question must be answered 'Yes'",
+      //   };
+      // }
+
+      // Check if at least one Yes in Box B
+      // const hasYesInB =
+      //   formData.boxB1 || formData.boxB2 || formData.boxB3 || formData.boxB4;
+      // if (!hasYesInB) {
+      //   return {
+      //     isValid: false,
+      //     message: "Box B: At least one question must be answered 'Yes'",
+      //   };
+      // }
+
+      // Check if at least one Yes in Box B
+      // const hasYesInB =
+      //   formData.boxB1 || formData.boxB2 || formData.boxB3 || formData.boxB4;
+      // if (!hasYesInB) {
+      //   return {
+      //     isValid: false,
+      //     message: "Box B: At least one question must be answered 'Yes'",
+      //   };
+      // }
+
+      // Check if at least one Yes in Box B
+      // const hasYesInB =
+      //   formData.boxB1 || formData.boxB2 || formData.boxB3 || formData.boxB4;
+      // if (!hasYesInB) {
+      //   return {
+      //     isValid: false,
+      //     message: "Box B: At least one question must be answered 'Yes'",
+      //   };
+      // }
     }
 
     // Validate Box C - ALL questions must be answered if question4 is Yes
@@ -360,14 +415,14 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       }
 
       // Check if at least one Yes in Box C
-      const hasYesInC =
-        formData.boxC1 || formData.boxC2 || formData.boxC3 || formData.boxC4;
-      if (!hasYesInC) {
-        return {
-          isValid: false,
-          message: "Box C: At least one question must be answered 'Yes'",
-        };
-      }
+      // const hasYesInC =
+      //   formData.boxC1 || formData.boxC2 || formData.boxC3 || formData.boxC4;
+      // if (!hasYesInC) {
+      //   return {
+      //     isValid: false,
+      //     message: "Box C: At least one question must be answered 'Yes'",
+      //   };
+      // }
     }
 
     // Validate Box D - ALL questions must be answered if question6 is Yes
@@ -387,18 +442,18 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       }
 
       // Check if at least one Yes in Box D
-      const hasYesInD =
-        formData.boxD1 ||
-        formData.boxD2 ||
-        formData.boxD3 ||
-        formData.boxD4 ||
-        formData.boxD5;
-      if (!hasYesInD) {
-        return {
-          isValid: false,
-          message: "Box D: At least one question must be answered 'Yes'",
-        };
-      }
+      // const hasYesInD =
+      //   formData.boxD1 ||
+      //   formData.boxD2 ||
+      //   formData.boxD3 ||
+      //   formData.boxD4 ||
+      //   formData.boxD5;
+      // if (!hasYesInD) {
+      //   return {
+      //     isValid: false,
+      //     message: "Box D: At least one question must be answered 'Yes'",
+      //   };
+      // }
     }
 
     // Validate Box E - ALL questions must be answered if question7 is Yes
@@ -417,14 +472,14 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       }
 
       // Check if at least one Yes in Box E
-      const hasYesInE =
-        formData.boxE1 || formData.boxE2 || formData.boxE3 || formData.boxE4;
-      if (!hasYesInE) {
-        return {
-          isValid: false,
-          message: "Box E: At least one question must be answered 'Yes'",
-        };
-      }
+      // const hasYesInE =
+      //   formData.boxE1 || formData.boxE2 || formData.boxE3 || formData.boxE4;
+      // if (!hasYesInE) {
+      //   return {
+      //     isValid: false,
+      //     message: "Box E: At least one question must be answered 'Yes'",
+      //   };
+      // }
     }
 
     // Validate Box F - ALL questions must be answered if question8 is Yes
@@ -444,18 +499,18 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       }
 
       // Check if at least one Yes in Box F
-      const hasYesInF =
-        formData.boxF1 ||
-        formData.boxF2 ||
-        formData.boxF3 ||
-        formData.boxF4 ||
-        formData.boxF5;
-      if (!hasYesInF) {
-        return {
-          isValid: false,
-          message: "Box F: At least one question must be answered 'Yes'",
-        };
-      }
+      // const hasYesInF =
+      //   formData.boxF1 ||
+      //   formData.boxF2 ||
+      //   formData.boxF3 ||
+      //   formData.boxF4 ||
+      //   formData.boxF5;
+      // if (!hasYesInF) {
+      //   return {
+      //     isValid: false,
+      //     message: "Box F: At least one question must be answered 'Yes'",
+      //   };
+      // }
     }
 
     // Validate Box G - ALL questions must be answered if question9 is Yes
@@ -476,19 +531,19 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       }
 
       // Check if at least one Yes in Box G
-      const hasYesInG =
-        formData.boxG1 ||
-        formData.boxG2 ||
-        formData.boxG3 ||
-        formData.boxG4 ||
-        formData.boxG5 ||
-        formData.boxG6;
-      if (!hasYesInG) {
-        return {
-          isValid: false,
-          message: "Box G: At least one question must be answered 'Yes'",
-        };
-      }
+      // const hasYesInG =
+      //   formData.boxG1 ||
+      //   formData.boxG2 ||
+      //   formData.boxG3 ||
+      //   formData.boxG4 ||
+      //   formData.boxG5 ||
+      //   formData.boxG6;
+      // if (!hasYesInG) {
+      //   return {
+      //     isValid: false,
+      //     message: "Box G: At least one question must be answered 'Yes'",
+      //   };
+      // }
     }
 
     return { isValid: true, message: "" };
@@ -589,6 +644,155 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       //   return;
       // }
 
+      // Check for "All No" answers in Boxes A-G
+      const noBoxes: string[] = [];
+
+      // Box A - Only check if Box A is visible/required (question1 is true)
+      if (formData.question1) {
+        const boxAQuestions = [
+          formData.boxA1,
+          formData.boxA2,
+          formData.boxA3,
+          formData.boxA4,
+          formData.boxA5,
+        ];
+        // If all answered and all are false (No)
+        if (
+          boxAQuestions.every((q) => q !== null) &&
+          boxAQuestions.every((q) => q === false)
+        ) {
+          noBoxes.push("A");
+        }
+      }
+
+      // Box B
+      if (formData.question2) {
+        const boxBQuestions = [
+          formData.boxB1,
+          formData.boxB2,
+          formData.boxB3,
+          formData.boxB4,
+        ];
+        if (
+          boxBQuestions.every((q) => q !== null) &&
+          boxBQuestions.every((q) => q === false)
+        ) {
+          noBoxes.push("B");
+        }
+      }
+
+      // Box C
+      if (formData.question4) {
+        const boxCQuestions = [
+          formData.boxC1,
+          formData.boxC2,
+          formData.boxC3,
+          formData.boxC4,
+        ];
+        if (
+          boxCQuestions.every((q) => q !== null) &&
+          boxCQuestions.every((q) => q === false)
+        ) {
+          noBoxes.push("C");
+        }
+      }
+
+      // Box D
+      if (formData.question6) {
+        const boxDQuestions = [
+          formData.boxD1,
+          formData.boxD2,
+          formData.boxD3,
+          formData.boxD4,
+          formData.boxD5,
+        ];
+        if (
+          boxDQuestions.every((q) => q !== null) &&
+          boxDQuestions.every((q) => q === false)
+        ) {
+          noBoxes.push("D");
+        }
+      }
+
+      // Box E
+      if (formData.question7) {
+        const boxEQuestions = [
+          formData.boxE1,
+          formData.boxE2,
+          formData.boxE3,
+          formData.boxE4,
+        ];
+        if (
+          boxEQuestions.every((q) => q !== null) &&
+          boxEQuestions.every((q) => q === false)
+        ) {
+          noBoxes.push("E");
+        }
+      }
+
+      // Box F
+      if (formData.question8) {
+        const boxFQuestions = [
+          formData.boxF1,
+          formData.boxF2,
+          formData.boxF3,
+          formData.boxF4,
+          formData.boxF5,
+        ];
+        if (
+          boxFQuestions.every((q) => q !== null) &&
+          boxFQuestions.every((q) => q === false)
+        ) {
+          noBoxes.push("F");
+        }
+      }
+
+      // Box G
+      if (formData.question9) {
+        const boxGQuestions = [
+          formData.boxG1,
+          formData.boxG2,
+          formData.boxG3,
+          formData.boxG4,
+          formData.boxG5,
+          formData.boxG6,
+        ];
+        if (
+          boxGQuestions.every((q) => q !== null) &&
+          boxGQuestions.every((q) => q === false)
+        ) {
+          noBoxes.push("G");
+        }
+      }
+
+      if (noBoxes.length > 0) {
+        const message = `Because you answered “No” to a question in Box ${noBoxes.join(
+          ", ",
+        )} you must print this form and get it signed by a physician before participating in the class.`;
+
+        Swal.fire({
+          icon: "warning",
+          title: "Medical Clearance Required",
+          text: message,
+          confirmButtonText: "Okay",
+          confirmButtonColor: "#F97316",
+          background: "#FFF7ED",
+        });
+
+        toast.warning(message, {
+          duration: 10000,
+          style: {
+            background: "#FFF7ED",
+            border: "2px solid #F97316",
+            color: "#C2410C",
+            fontSize: "14px",
+            fontWeight: "600",
+            padding: "16px",
+            borderRadius: "8px",
+          },
+        });
+      }
+
       // if (!token) {
       //   toast.error("Authentication token not found. Please log in again.");
       //   return;
@@ -600,6 +804,16 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       if (!(pdfFile instanceof File)) {
         throw new Error("Generated file is not a valid File object");
       }
+
+      // Auto-download the PDF
+      const url = URL.createObjectURL(pdfFile);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Diver_Medical_Form_${formData.participantName.replace(/\s+/g, "_")}_${formData.date.replace(/\//g, "-")}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
 
       // Save to store if cartId and formTitle are present
       if (cartId && formTitle) {
@@ -1500,6 +1714,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
           </div>
         )}
       </div>
+
       <div className="sticky top-0 bg-white border-b border-gray-200 p-4 z-10">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">

@@ -3,14 +3,9 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState, useRef } from "react";
-import { jsPDF } from "jspdf";
 import { toast } from "sonner";
 import { useFormStore } from "@/store/formStore";
-
-const loadHTML2Canvas = async () => {
-  const { default: html2canvas } = await import("html2canvas");
-  return html2canvas;
-};
+import { generatePaginatedPDF } from "@/lib/pdf-utils";
 
 interface EnrichedAirFormProps {
   cartId: string;
@@ -46,6 +41,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
     participantSignature: false,
     participantDate: false,
     hasInsurance: false,
+    policyNumber: false,
   });
 
   const formRef = useRef<HTMLDivElement>(null);
@@ -56,8 +52,9 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
       participantSignature: !participantSignature.trim(),
       participantDate: !participantDate,
       hasInsurance: !hasInsurance,
+      policyNumber: hasInsurance === "yes" && !policyNumber.trim(),
     };
-    setErrors(newErrors);
+    setErrors((prev) => ({ ...prev, ...newErrors }));
 
     const emptyFields = [];
     if (newErrors.participantName) emptyFields.push("Participant Name");
@@ -65,6 +62,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
       emptyFields.push("Participant Signature");
     if (newErrors.participantDate) emptyFields.push("Date");
     if (newErrors.hasInsurance) emptyFields.push("Diver Accident Insurance");
+    if (newErrors.policyNumber) emptyFields.push("Policy Number");
 
     if (emptyFields.length > 0) {
       toast.error(`Please fill in: ${emptyFields.join(", ")}`);
@@ -82,99 +80,18 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
 
     try {
       if (!formRef.current) throw new Error("Form reference not found");
-      const html2canvas = await loadHTML2Canvas();
-      const canvas = await html2canvas(formRef.current, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#ffffff",
-        logging: false,
-        width: formRef.current.scrollWidth,
-        height: formRef.current.scrollHeight,
-        ignoreElements: (el) =>
-          el.classList.contains("no-print") ||
-          (el.tagName === "IMG" &&
-            (el.getAttribute("src")?.startsWith("http") ?? false)),
-        onclone: (clonedDoc) => {
-          try {
-            clonedDoc.querySelectorAll("*").forEach((el) => {
-              const htmlEl = el as HTMLElement;
-              if (htmlEl.style) {
-                // Check computed styles for lab colors
-                const computedStyle =
-                  clonedDoc.defaultView?.getComputedStyle(htmlEl);
-                if (computedStyle) {
-                  const colorProps = [
-                    "color",
-                    "backgroundColor",
-                    "borderColor",
-                    "borderTopColor",
-                  ];
-                  colorProps.forEach((prop) => {
-                    const computedValue = computedStyle.getPropertyValue(prop);
-                    if (computedValue && computedValue.includes("lab")) {
-                      const replacement = prop.includes("background")
-                        ? "rgb(255, 255, 255)"
-                        : "rgb(0, 0, 0)";
-                      htmlEl.style.setProperty(prop, replacement, "important");
-                    }
-                  });
-                }
 
-                // Check inline styles
-                ["color", "backgroundColor", "borderColor"].forEach((prop) => {
-                  const value = htmlEl.style.getPropertyValue(prop);
-                  if (value && value.includes("lab")) {
-                    const replacement =
-                      prop === "backgroundColor"
-                        ? "rgb(255, 255, 255)"
-                        : "rgb(0, 0, 0)";
-                    htmlEl.style.setProperty(prop, replacement, "important");
-                  }
-                });
+      const fileName = `PADI_Enriched_Air_Form_${participantName
+        .replace(/[^a-zA-Z0-9\s]/g, "")
+        .replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`;
 
-                // Set defaults
-                if (!htmlEl.style.color || htmlEl.style.color.includes("lab"))
-                  htmlEl.style.color = "rgb(0, 0, 0)";
-                if (
-                  htmlEl.tagName !== "INPUT" &&
-                  (!htmlEl.style.backgroundColor ||
-                    htmlEl.style.backgroundColor.includes("lab"))
-                )
-                  htmlEl.style.backgroundColor = "rgb(255, 255, 255)";
-                if (
-                  !htmlEl.style.borderColor ||
-                  htmlEl.style.borderColor.includes("lab")
-                )
-                  htmlEl.style.borderColor = "rgb(0, 0, 0)";
-                htmlEl.style.removeProperty("filter");
-                htmlEl.style.removeProperty("backdrop-filter");
-                htmlEl.style.removeProperty("box-shadow");
-              }
-            });
-          } catch (e) {
-            console.warn("Color sanitization warning:", e);
-          }
-        },
-      });
-
-      const imgData = canvas.toDataURL("image/png", 1.0);
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfHeight = (imgProps.height * pageWidth) / imgProps.width;
-
-      pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pdfHeight);
-
-      const pdfBlob = pdf.output("blob");
-      const fileName = `PADI_Enriched_Air_Form_${participantName.replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`;
-
-      const pdfFile = new File([pdfBlob], fileName, {
-        type: "application/pdf",
-      });
+      const pdfFile = await generatePaginatedPDF(formRef.current, fileName);
 
       // Save to store
       store.setFormCompleted(cartId, formTitle, pdfFile);
+
+      // Auto-download
+      // downloadPDF(pdfFile);
 
       toast.success("Form submitted successfully!");
       onSubmitSuccess?.();
@@ -613,11 +530,21 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                   <input
                     type="text"
                     value={policyNumber}
-                    onChange={(e) => setPolicyNumber(e.target.value)}
+                    onChange={(e) => {
+                      setPolicyNumber(e.target.value);
+                      handleFieldChange("policyNumber", e.target.value);
+                    }}
                     placeholder="Enter policy number"
-                    className="border-0 border-b-2 border-black bg-transparent px-2 py-1 text-sm focus:outline-none focus:border-blue-600"
+                    className={`border-0 border-b-2 ${
+                      errors.policyNumber ? "border-red-500" : "border-black"
+                    } bg-transparent px-2 py-1 text-sm focus:outline-none focus:border-blue-600`}
                   />
                 </div>
+              )}
+              {errors.policyNumber && (
+                <p className="text-red-500 text-xs w-full ml-32">
+                  Policy number is required
+                </p>
               )}
               {errors.hasInsurance && (
                 <p className="text-red-500 text-xs w-full">

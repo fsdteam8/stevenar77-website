@@ -2,6 +2,7 @@
 
 import { Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+// import Image from "next/image";
 import { Review } from "@/types/review";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,6 +15,9 @@ export function ReviewCard({ review }: ReviewCardProps) {
   const fullName = `${review.userId?.firstName} ${review.userId?.lastName}`;
 
   // Format the review creation date
+  // const createdAtDate = review.createdAt
+  //   ? format(new Date(review.createdAt), "dd MMM yyyy, hh:mm a")
+  //   : "Unknown date";
 
   // Format the purchase date
   const purchaseDateFormatted = review.purchaseDate
