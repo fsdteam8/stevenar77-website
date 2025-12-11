@@ -27,13 +27,13 @@ interface ProfileCardProps {
 // Helper function to format height display
 const formatHeight = (height: string): string => {
   if (!height) return "";
-  
+
   const h = parseFloat(height);
   if (isNaN(h)) return "";
-  
+
   const ft = Math.floor(h);
   const inch = Math.round((h - ft) * 12);
-  
+
   return `${ft} ft ${inch} in`;
 };
 
@@ -76,7 +76,7 @@ export function ProfileCard({
   };
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-sm md:h-[calc(100vh-100px)]">
+    <div className="bg-white rounded-lg overflow-hidden shadow-sm md:h-[calc(100vh-100px)] overflow-y-auto">
       <div className="profile-card-bg h-24 sm:h-32 relative"></div>
       <div className="px-4 sm:px-6 pb-4 sm:pb-6 -mt-12 sm:-mt-16 relative">
         <div className="flex flex-col items-center">
@@ -125,43 +125,65 @@ export function ProfileCard({
           <div className="w-full space-y-2 sm:space-y-3 text-sm">
             <div>
               <span className="font-medium text-[#364039]">Name: </span>
-              <span className={name ? "text-[#68706a]" : "text-gray-400 italic"}>
+              <span
+                className={name ? "text-[#68706a]" : "text-gray-400 italic"}
+              >
                 {name || "Enter your name"}
               </span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">Email: </span>
-              <span className={email ? "text-[#68706a] break-all" : "text-gray-400 italic"}>
+              <span
+                className={
+                  email ? "text-[#68706a] break-all" : "text-gray-400 italic"
+                }
+              >
                 {email || "Enter your email"}
               </span>
             </div>
             <div>
-              <span className="font-medium text-[#364039]">Phone: </span>
-              <span className={phone ? "text-[#68706a]" : "text-gray-400 italic"}>
-                {phone || "Enter your phone"}
+              <span className="font-medium text-[#364039]">Cell: </span>
+              <span
+                className={phone ? "text-[#68706a]" : "text-gray-400 italic"}
+              >
+                {phone || "Enter your cell"}
               </span>
             </div>
             <div>
-              <span className="font-medium text-[#364039]">City: </span>
-              <span className={location ? "text-[#68706a]" : "text-gray-400 italic"}>
-                {location || "Enter your city"}
+              <span className="font-medium text-[#364039]">
+                Street Address:{" "}
               </span>
-            </div>
-            <div>
-              <span className="font-medium text-[#364039]">State: </span>
-              <span className={states ? "text-[#68706a]" : "text-gray-400 italic"}>
-                {states || "Enter your state"}
-              </span>
-            </div>
-            <div>
-              <span className="font-medium text-[#364039]">Street Address: </span>
-              <span className={street ? "text-[#68706a]" : "text-gray-400 italic"}>
+              <span
+                className={street ? "text-[#68706a]" : "text-gray-400 italic"}
+              >
                 {street || "Enter your street address"}
               </span>
             </div>
             <div>
+              <span className="font-medium text-[#364039]">City: </span>
+              <span
+                className={location ? "text-[#68706a]" : "text-gray-400 italic"}
+              >
+                {location || "Enter your city"}
+              </span>
+            </div>
+
+            <div>
+              <span className="font-medium text-[#364039]">State: </span>
+              <span
+                className={states ? "text-[#68706a]" : "text-gray-400 italic"}
+              >
+                {states || "Enter your state"}
+              </span>
+            </div>
+
+            <div>
               <span className="font-medium text-[#364039]">Zip Code: </span>
-              <span className={postalCode ? "text-[#68706a]" : "text-gray-400 italic"}>
+              <span
+                className={
+                  postalCode ? "text-[#68706a]" : "text-gray-400 italic"
+                }
+              >
                 {postalCode || "Enter your zip code"}
               </span>
             </div>
@@ -173,19 +195,25 @@ export function ProfileCard({
             </div>
             <div>
               <span className="font-medium text-[#364039]">Height: </span>
-              <span className={height ? "text-[#68706a]" : "text-gray-400 italic"}>
+              <span
+                className={height ? "text-[#68706a]" : "text-gray-400 italic"}
+              >
                 {height ? formatHeight(height) : "Enter your height"}
               </span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">Weight: </span>
-              <span className={weight ? "text-[#68706a]" : "text-gray-400 italic"}>
+              <span
+                className={weight ? "text-[#68706a]" : "text-gray-400 italic"}
+              >
                 {weight || "Enter your weight"}
               </span>
             </div>
             <div>
               <span className="font-medium text-[#364039]">Shoe Size: </span>
-              <span className={shoeSize ? "text-[#68706a]" : "text-gray-400 italic"}>
+              <span
+                className={shoeSize ? "text-[#68706a]" : "text-gray-400 italic"}
+              >
                 {shoeSize || "Enter your shoe size"}
               </span>
             </div>

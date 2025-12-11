@@ -100,7 +100,8 @@ const ShopProductCard: React.FC<ShopProductCardType> = ({
           <DialogHeader>
             <DialogTitle>Login Required</DialogTitle>
             <DialogDescription>
-              You need to be logged. Please login to continue.
+              You need to be logged in to purchase this product. Please login to
+              continue.
             </DialogDescription>
           </DialogHeader>
 
