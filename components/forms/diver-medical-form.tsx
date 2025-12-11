@@ -766,7 +766,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       }
 
       if (noBoxes.length > 0) {
-        const message = `Because you answered “No” to a question in Box ${noBoxes.join(
+        const message = `Because you answered “No” to Box ${noBoxes.join(
           ", ",
         )} you must print this form and get it signed by a physician before participating in the class.`;
 
