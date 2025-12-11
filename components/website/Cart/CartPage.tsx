@@ -194,7 +194,7 @@ export default function CartPage() {
         Review Your Cart
       </h1>
       <p className="text-center text-gray-600 mb-10">
-        Please verify your items before moving to the payment step.
+        Please double check your chosen quantities are accurate.
       </p>
 
       {cartItems.length === 0 ? (
@@ -226,7 +226,7 @@ export default function CartPage() {
                 <th className="py-3 px-4 text-left">Title</th>
                 <th className="py-3 px-4 text-left">Type</th>
                 <th className="py-3 px-4 text-left">Price</th>
-                <th className="py-3 px-4 text-left">Participants/Quantity</th>
+                <th className="py-3 px-4 text-left">Diver(s)/Quantity</th>
                 <th className="py-3 px-4 text-left">Total Price</th>
                 <th className="py-3 px-4 text-left">Action</th>
               </tr>

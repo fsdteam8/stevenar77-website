@@ -219,13 +219,6 @@ export default function MedicalForm() {
     );
   };
 
-  // Console log all important data
-  // console.log("\n📊 COMPONENT STATE:");
-  // console.log("  - Course Data:", courseData);
-  // console.log("  - Submitted Carts:", Array.from(submittedCarts));
-  // console.log("  - Form Store State:", store);
-  // console.log("  - Completed Forms:", store.completedForms);
-  // console.log("  - Is Loading:", isLoading);
 
   const isCartComplete = (cartId: string, requiredTitles: string[]) =>
     store.checkAllFormsComplete(cartId, requiredTitles);

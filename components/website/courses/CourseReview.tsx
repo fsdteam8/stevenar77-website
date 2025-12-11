@@ -21,9 +21,7 @@ interface CourseReviewProps {
   classId: string;
 }
 
-
-
-const CourseReview: React.FC<CourseReviewProps> = ({  classId }) => {
+const CourseReview: React.FC<CourseReviewProps> = ({ classId }) => {
   const { mutate, isPending, isError, isSuccess, error } = useSubmitReview();
   // const { data, isLoading } = useReviewsByCourse(classId);
   const [showLoginModal, setShowLoginModal] = React.useState(false);
@@ -48,8 +46,6 @@ const CourseReview: React.FC<CourseReviewProps> = ({  classId }) => {
       return;
     }
 
-    
-
     //  Validate first
     if (reviewData.rating === 0) {
       return alert("Please select a rating");
@@ -59,7 +55,6 @@ const CourseReview: React.FC<CourseReviewProps> = ({  classId }) => {
       return alert("Please enter a description");
     }
 
-
     //  Submit review
     mutate(
       {
@@ -67,14 +62,14 @@ const CourseReview: React.FC<CourseReviewProps> = ({  classId }) => {
         classId,
         star: reviewData.rating,
         comment: reviewData.description,
-        purchaseDate: reviewData.purchaseDate
+        purchaseDate: reviewData.purchaseDate,
       },
       {
         onSuccess: () => {
           // Redirect only after success
           router.push(redirectPath);
         },
-      }
+      },
     );
   };
 
@@ -87,11 +82,11 @@ const CourseReview: React.FC<CourseReviewProps> = ({  classId }) => {
           isSuccess
             ? { type: "success", message: "Review submitted successfully!" }
             : isError
-            ? {
-                type: "error",
-                message: error?.message || "Failed to submit review",
-              }
-            : null
+              ? {
+                  type: "error",
+                  message: error?.message || "Failed to submit review",
+                }
+              : null
         }
       />
 

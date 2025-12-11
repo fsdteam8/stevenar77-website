@@ -191,9 +191,11 @@ export default function PersonalInformation({
           <Label className="my-2">Shoe Size *</Label>
           <Input
             type="number"
+            step="any"
             {...register("shoeSize")}
             placeholder="e.g., 8"
           />
+
           {errors.shoeSize && (
             <p className="text-red-600 text-sm my-2">This field is required</p>
           )}
@@ -227,7 +229,7 @@ export default function PersonalInformation({
           <Input
             type="number"
             {...register("weight")}
-            placeholder="e.g., 50lbs"
+            placeholder="e.g., 150lbs"
           />
           {errors.weight && (
             <p className="text-red-600 text-sm my-2">This field is required</p>

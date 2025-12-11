@@ -135,13 +135,13 @@ export function TripForm({ trip }: TripFormProps) {
 
     // Send to API
     bookTrip(payload, {
-      onSuccess: ( ) => {
+      onSuccess: () => {
         toast.success("Trip added to cart successfully!");
         setTripsBookings(true);
         // console.log("Trip booking successful!", res);
         setIsSaved(true);
       },
-      onError: ( ) => {
+      onError: () => {
         toast.error("Failed to add trip to cart!");
         // console.error("Trip booking failed:", err);
       },
@@ -268,7 +268,7 @@ export function TripForm({ trip }: TripFormProps) {
             render={({ field }) => (
               <FormItem className="mb-6">
                 <FormLabel className="text-lg font-semibold text-gray-700">
-                  Number of Participants *
+                  Number of Diver(s) *
                 </FormLabel>
                 <FormMessage />
                 <FormControl>
@@ -286,7 +286,7 @@ export function TripForm({ trip }: TripFormProps) {
                     <SelectContent className="rounded-lg border border-gray-200 shadow-lg">
                       {participantOptions.map((num) => (
                         <SelectItem key={num} value={num.toString()}>
-                          {num} {num === 1 ? "participant" : "participants"}
+                          {num} {num === 1 ? "Diver" : "Divers"}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -304,7 +304,7 @@ export function TripForm({ trip }: TripFormProps) {
                 className="p-6 border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-shadow grid md:grid-cols-2 gap-6"
               >
                 <h3 className="md:col-span-2 text-lg font-bold text-gray-800 mb-4 border-b pb-2">
-                  Participant {index + 1}
+                  Diver {index + 1}
                 </h3>
 
                 <FormField
