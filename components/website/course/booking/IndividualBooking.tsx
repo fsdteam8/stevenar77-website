@@ -237,7 +237,10 @@ export default function IndividualBooking() {
           some gear, just choose the appropriate option below. Once you&apos;re
           ready, complete your checkout to make your Scuba Life adventure
           officially locked in! */}
-          If you&apos;d like to book another course, reserve a trip, or pick up some gear, just choose the appropriate option below. Once you&apos;re ready, complete your checkout to officially lock in your Scuba Life adventure! 🌊🐠
+          If you&apos;d like to book another course, reserve a trip, or pick up
+          some gear, just choose the appropriate option below. Once you&apos;re
+          ready, complete your checkout to officially lock in your Scuba Life
+          adventure! 🌊🐠
         </p>
 
         {/* Mini Cart Summary */}
@@ -317,10 +320,10 @@ export default function IndividualBooking() {
         {/* Action Buttons */}
         <div className="flex justify-center gap-6">
           <button
-            onClick={() => (window.location.href = "/courses")}
+            onClick={() => (window.location.href = "/")}
             className="px-8 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition cursor-pointer"
           >
-            Back to Courses
+            Continue Shopping
           </button>
           <button
             onClick={() => (window.location.href = "/cart")}

@@ -357,9 +357,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               </div>
               {/* Star Rating */}
               <div>
-                <div className="block text-sm font-medium text-gray-700 mb-3">
+                {/* <div className="block text-sm font-medium text-gray-700 mb-3">
                   How happy are you with our service
-                </div>
+                </div> */}
 
                 <div className="flex space-x-1 mb-6">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -435,7 +435,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               {/* Description */}
               <div>
                 <div className="block text-sm font-medium text-gray-700 mb-2">
-                  Your Review 
+                  Your Review
                 </div>
 
                 <textarea
