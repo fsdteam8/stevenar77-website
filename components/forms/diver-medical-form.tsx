@@ -765,8 +765,41 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         }
       }
 
+      // if (noBoxes.length > 0) {
+      //   const message = `Because you answered “No” to Box ${noBoxes.join(
+      //     ", ",
+      //   )} you must print this form and get it signed by a physician before participating in the class.`;
+
+      //   Swal.fire({
+      //     icon: "warning",
+      //     title: "Medical Clearance Required",
+      //     text: message,
+      //     confirmButtonText: "Okay",
+      //     confirmButtonColor: "#F97316",
+      //     background: "#FFF7ED",
+      //   });
+
+      //   toast.warning(message, {
+      //     duration: 10000,
+      //     style: {
+      //       background: "#FFF7ED",
+      //       border: "2px solid #F97316",
+      //       color: "#C2410C",
+      //       fontSize: "14px",
+      //       fontWeight: "600",
+      //       padding: "16px",
+      //       borderRadius: "8px",
+      //     },
+      //   });
+      // }
+
+      // if (!token) {
+      //   toast.error("Authentication token not found. Please log in again.");
+      //   return;
+      // }
+
       if (noBoxes.length > 0) {
-        const message = `Because you answered “No” to Box ${noBoxes.join(
+        const message = `Because you answered "Yes" to Box ${noBoxes.join(
           ", ",
         )} you must print this form and get it signed by a physician before participating in the class.`;
 
@@ -792,11 +825,6 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
           },
         });
       }
-
-      // if (!token) {
-      //   toast.error("Authentication token not found. Please log in again.");
-      //   return;
-      // }
 
       const pdfFormData = convertToPDFFormat(formData);
       const pdfFile = await generatePDF(pdfFormData);
