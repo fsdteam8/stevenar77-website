@@ -80,7 +80,7 @@ export default function PadiForm({
     address: "Street Address is required",
     city: "City is required",
     state: "State is required",
-    phoneHome: "Home phone number is required",
+    phoneHome: "Cell phone number is required",
     email: "Email is required",
     signature: "Signature is required",
     renter: "Renter name is required",
