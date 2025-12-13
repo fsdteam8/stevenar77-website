@@ -12,6 +12,7 @@ import { generatePaginatedPDF } from "@/lib/pdf-utils";
 interface FormData {
   name: string;
   address: string;
+  city: string;
   address2?: string;
   phoneHome: string;
   phoneHomeArea?: string;
@@ -60,6 +61,7 @@ export default function PadiForm({
   const [formData, setFormData] = useState<FormData>({
     name: "",
     address: "",
+    city: "",
     phoneHome: "",
     phoneWork: "",
     email: "",
@@ -75,7 +77,9 @@ export default function PadiForm({
 
   const [errors, setErrors] = useState<FormErrors>({
     name: "Name is required",
-    address: "Address is required",
+    address: "Street Address is required",
+    city: "City is required",
+    state: "State is required",
     phoneHome: "Home phone number is required",
     email: "Email is required",
     signature: "Signature is required",
@@ -108,50 +112,114 @@ export default function PadiForm({
     [errors],
   );
 
+  // const validateForm = (): boolean => {
+  //   const newErrors: FormErrors = {};
+  //   const errorMessages: string[] = [];
+
+  //   // Required fields validation
+  //   if (!formData.name.trim()) {
+  //     newErrors.name = "Name is required";
+  //     errorMessages.push("Name is required,");
+  //   }
+
+  //   if (!formData.address.trim()) {
+  //     newErrors.address = "Address is required";
+  //     errorMessages.push("Address is required,");
+  //   }
+
+  //   if (!formData.phoneHome.trim()) {
+  //     newErrors.phoneHome = "Home phone number is required";
+  //     errorMessages.push("Home phone number is required,");
+  //   }
+
+  //   if (!formData.email.trim()) {
+  //     newErrors.email = "Email is required";
+  //     errorMessages.push("Email is required,");
+  //   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+  //     newErrors.email = "Invalid email format";
+  //     errorMessages.push("• Valid email address is required");
+  //   }
+
+  //   if (!formData.signature.trim()) {
+  //     newErrors.signature = "Signature is required";
+  //     errorMessages.push("Signature is required,");
+  //   }
+
+  //   if (!formData.renter.trim()) {
+  //     newErrors.renter = "Renter name is required";
+  //     errorMessages.push("Renter name is required,");
+  //   }
+
+  //   setErrors(newErrors);
+
+  //   // Show single toast with all errors
+  //   if (errorMessages.length > 0) {
+  //     toast.error("Please complete the following fields:", {
+  //       description: errorMessages.join("\n"),
+  //       duration: 5000,
+  //     });
+  //   }
+
+  //   return Object.keys(newErrors).length === 0;
+  // };
+
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
     const errorMessages: string[] = [];
 
-    // Required fields validation
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
-      errorMessages.push("Name is required,");
+      errorMessages.push("Name is required");
     }
 
     if (!formData.address.trim()) {
-      newErrors.address = "Address is required";
-      errorMessages.push("Address is required,");
+      newErrors.address = "Street Address is required";
+      errorMessages.push("Street Address is required");
+    }
+
+    if (!formData.city.trim()) {
+      newErrors.city = "City is required";
+      errorMessages.push("City is required");
+    }
+
+    if (!formData.state.trim()) {
+      newErrors.state = "State is required";
+      errorMessages.push("State is required");
     }
 
     if (!formData.phoneHome.trim()) {
       newErrors.phoneHome = "Home phone number is required";
-      errorMessages.push("Home phone number is required,");
+      errorMessages.push("cell phone number is required");
     }
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
-      errorMessages.push("Email is required,");
+      errorMessages.push("Email is required");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Invalid email format";
-      errorMessages.push("• Valid email address is required");
+      errorMessages.push("Valid email address is required");
     }
 
     if (!formData.signature.trim()) {
       newErrors.signature = "Signature is required";
-      errorMessages.push("Signature is required,");
+      errorMessages.push("Signature is required");
     }
 
     if (!formData.renter.trim()) {
       newErrors.renter = "Renter name is required";
-      errorMessages.push("Renter name is required,");
+      errorMessages.push("Renter name is required");
     }
 
     setErrors(newErrors);
 
-    // Show single toast with all errors
     if (errorMessages.length > 0) {
+      const description =
+        errorMessages.length === 1
+          ? errorMessages[0]
+          : errorMessages.join(", ");
+
       toast.error("Please complete the following fields:", {
-        description: errorMessages.join("\n"),
+        description,
         duration: 5000,
       });
     }
@@ -252,14 +320,13 @@ export default function PadiForm({
                   </div>
                 </div>
 
-                {/* Address */}
-                <div className="flex items-start">
-                  <span className="w-20 pt-1">Address</span>
+                {/* Street Address */}
+                <div className="flex items-center">
+                  <span className="w-20 pt-1">Street Address</span>
                   <div className="flex-1">
                     <input
                       type="text"
                       name="address"
-                      // placeholder="Fill up Your Address"
                       value={formData.address}
                       onChange={handleInputChange}
                       className={`w-full border-0 h-12 border-b ${errors.address ? "border-red-500" : "border-black"} bg-transparent outline-none mb-1`}
@@ -269,19 +336,52 @@ export default function PadiForm({
                         {errors.address}
                       </span>
                     )}
+                  </div>
+                </div>
+
+                {/* City */}
+                <div className="flex items-center">
+                  <span className="w-20 pt-1">City</span>
+                  <div className="flex-1">
                     <input
                       type="text"
-                      name="address2"
-                      value={formData.address2}
+                      name="city"
+                      value={formData.city}
                       onChange={handleInputChange}
-                      className="w-full border-0 border-b h-12 border-black bg-transparent outline-none"
+                      className={`w-full border-0 h-12 border-b ${errors.city ? "border-red-500" : "border-black"} bg-transparent outline-none mb-1`}
                     />
+                    {errors.city && (
+                      <span className="text-red-500 text-[10px]">
+                        {errors.city}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* State */}
+                <div className="flex items-center">
+                  <span className="w-20 pt-1">State</span>
+                  <div className="flex-1">
+                    <input
+                      type="text"
+                      name="state"
+                      value={formData.state}
+                      onChange={handleInputChange}
+                      className={`w-full border-0 h-12 border-b ${errors.state ? "border-red-500" : "border-black"} bg-transparent outline-none mb-1`}
+                    />
+                    {errors.state && (
+                      <span className="text-red-500 text-[10px]">
+                        {errors.state}
+                      </span>
+                    )}
                   </div>
                 </div>
 
                 {/* Phone Home */}
                 <div className="flex items-center">
-                  <span className="w-20">Phone Home (</span>
+                  {/* <span className="w-20">Phone Home (</span> */}
+                  <span className="w-20">Cell Phone (</span>
+
                   <input
                     type="text"
                     name="phoneHomeArea"

@@ -91,11 +91,26 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
     }
 
     // If there are errors, show them and return
+    // if (missingFields.length > 0) {
+    //   setErrors(newErrors);
+    //   toast.error(
+    //     `Please fill in the following required fields: ${missingFields.join(", ")}`,
+    //   );
+    //   return;
+    // }
+
     if (missingFields.length > 0) {
       setErrors(newErrors);
-      toast.error(
-        `Please fill in the following required fields: ${missingFields.join(", ")}`,
-      );
+
+      const description =
+        missingFields.length === 1
+          ? missingFields[0]
+          : missingFields.join(", ");
+
+      toast.error("Please fill in the following required field(s):", {
+        description,
+      });
+
       return;
     }
 
