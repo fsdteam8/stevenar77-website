@@ -71,38 +71,6 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
     return true;
   };
 
-  // const validateForm = () => {
-  //   const newErrors = {
-  //     participantName: !participantName.trim(),
-  //     participantSignature: !participantSignature.trim(),
-  //     participantDate: !participantDate,
-  //     hasInsurance: !hasInsurance,
-  //     policyNumber: hasInsurance === "yes" && !policyNumber.trim(),
-  //   };
-
-  //   setErrors((prev) => ({ ...prev, ...newErrors }));
-
-  //   const emptyFields: string[] = [];
-  //   if (newErrors.participantName) emptyFields.push("Participant Name");
-  //   if (newErrors.participantSignature)
-  //     emptyFields.push("Participant Signature");
-  //   if (newErrors.participantDate) emptyFields.push("Date");
-  //   if (newErrors.hasInsurance) emptyFields.push("Diver Accident Insurance");
-  //   if (newErrors.policyNumber) emptyFields.push("Policy Number");
-
-  //   if (emptyFields.length > 0) {
-  //     const description =
-  //       emptyFields.length === 1 ? emptyFields[0] : emptyFields.join(", ");
-
-  //     toast.error("Please fill in the following field(s):", {
-  //       description,
-  //     });
-
-  //     return false;
-  //   }
-
-  //   return true;
-  // };
 
   const store = useFormStore();
 
