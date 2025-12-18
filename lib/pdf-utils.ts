@@ -8,7 +8,7 @@ export const generatePaginatedPDF = async (
 
   // Capture the element as a canvas
   const canvas = await html2canvas(element, {
-    scale: 2, // Higher scale for better quality
+    scale: 1.5, // Reduced from 2 to 1.5 for better file size
     useCORS: true,
     allowTaint: true,
     backgroundColor: "#ffffff",
@@ -61,10 +61,16 @@ export const generatePaginatedPDF = async (
     },
   });
 
-  const imgData = canvas.toDataURL("image/png", 1.0);
+  // Use JPEG with 0.7 quality for significant size reduction
+  const imgData = canvas.toDataURL("image/jpeg", 0.7);
 
-  // Initialize jsPDF with A4 size
-  const pdf = new jsPDF("p", "mm", "a4");
+  // Initialize jsPDF with A4 size and compression
+  const pdf = new jsPDF({
+    orientation: "p",
+    unit: "mm",
+    format: "a4",
+    compress: true,
+  });
   const pdfWidth = pdf.internal.pageSize.getWidth(); // 210 mm
   const pdfHeight = pdf.internal.pageSize.getHeight(); // 297 mm
 
@@ -76,14 +82,14 @@ export const generatePaginatedPDF = async (
   let position = 0;
 
   // Add the first page
-  pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+  pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, imgHeight);
   heightLeft -= pdfHeight;
 
   // Add subsequent pages if content overflows
   while (heightLeft > 0) {
     position -= pdfHeight; // Move the image up by one page height
     pdf.addPage();
-    pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+    pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, imgHeight);
     heightLeft -= pdfHeight;
   }
 
