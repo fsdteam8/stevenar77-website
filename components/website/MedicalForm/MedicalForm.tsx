@@ -219,7 +219,6 @@ export default function MedicalForm() {
     );
   };
 
-
   const isCartComplete = (cartId: string, requiredTitles: string[]) =>
     store.checkAllFormsComplete(cartId, requiredTitles);
 
