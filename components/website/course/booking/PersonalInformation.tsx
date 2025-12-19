@@ -65,8 +65,11 @@ export default function PersonalInformation({
     const capitalizedData = {
       ...data,
       firstName:
-        data.firstName.charAt(0).toUpperCase() + data.firstName.slice(1), // .toLowerCase() সরিয়ে দিন
-      lastName: data.lastName.charAt(0).toUpperCase() + data.lastName.slice(1), // .toLowerCase() সরিয়ে দিন
+        data.firstName.trim().charAt(0).toUpperCase() +
+        data.firstName.trim().slice(1).toLowerCase(),
+      lastName:
+        data.lastName.trim().charAt(0).toUpperCase() +
+        data.lastName.trim().slice(1).toLowerCase(),
     };
     onNext(capitalizedData);
   };

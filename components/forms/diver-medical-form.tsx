@@ -644,162 +644,114 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       //   return;
       // }
 
-      // Check for "All No" answers in Boxes A-G
-      const noBoxes: string[] = [];
+      // Check for answers that require medical clearance
+      const clearanceReasons: string[] = [];
 
-      // Box A - Only check if Box A is visible/required (question1 is true)
-      if (formData.question1) {
-        const boxAQuestions = [
-          formData.boxA1,
-          formData.boxA2,
-          formData.boxA3,
-          formData.boxA4,
-          formData.boxA5,
-        ];
-        // If all answered and all are false (No)
-        if (
-          boxAQuestions.every((q) => q !== null) &&
-          boxAQuestions.every((q) => q === false)
-        ) {
-          noBoxes.push("A");
+      // Standalone Questions (3, 5, 10) - YES triggers clearance
+      if (formData.question3 === true)
+        clearanceReasons.push('"Yes" to Question 3');
+      if (formData.question5 === true)
+        clearanceReasons.push('"Yes" to Question 5');
+      if (formData.question10 === true)
+        clearanceReasons.push('"Yes" to Question 10');
+
+      // Box Configurations
+      const boxConfigs = [
+        {
+          main: formData.question1,
+          name: "A",
+          questions: [
+            formData.boxA1,
+            formData.boxA2,
+            formData.boxA3,
+            formData.boxA4,
+            formData.boxA5,
+          ],
+        },
+        {
+          main: formData.question2,
+          name: "B",
+          questions: [
+            formData.boxB1,
+            formData.boxB2,
+            formData.boxB3,
+            formData.boxB4,
+          ],
+        },
+        {
+          main: formData.question4,
+          name: "C",
+          questions: [
+            formData.boxC1,
+            formData.boxC2,
+            formData.boxC3,
+            formData.boxC4,
+          ],
+        },
+        {
+          main: formData.question6,
+          name: "D",
+          questions: [
+            formData.boxD1,
+            formData.boxD2,
+            formData.boxD3,
+            formData.boxD4,
+            formData.boxD5,
+          ],
+        },
+        {
+          main: formData.question7,
+          name: "E",
+          questions: [
+            formData.boxE1,
+            formData.boxE2,
+            formData.boxE3,
+            formData.boxE4,
+          ],
+        },
+        {
+          main: formData.question8,
+          name: "F",
+          questions: [
+            formData.boxF1,
+            formData.boxF2,
+            formData.boxF3,
+            formData.boxF4,
+            formData.boxF5,
+          ],
+        },
+        {
+          main: formData.question9,
+          name: "G",
+          questions: [
+            formData.boxG1,
+            formData.boxG2,
+            formData.boxG3,
+            formData.boxG4,
+            formData.boxG5,
+            formData.boxG6,
+          ],
+        },
+      ];
+
+      boxConfigs.forEach((box) => {
+        if (box.main === true) {
+          const nos = box.questions
+            .map((q, i) => (q === false ? `${box.name}${i + 1}` : null))
+            .filter((q): q is string => q !== null);
+
+          if (nos.length > 0) {
+            clearanceReasons.push(
+              `"Yes" to Box ${box.name} and you answered "No" to ${nos.join(", ")} in Box ${box.name}`,
+            );
+          } else {
+            clearanceReasons.push(`"Yes" to Box ${box.name}`);
+          }
         }
-      }
+      });
 
-      // Box B
-      if (formData.question2) {
-        const boxBQuestions = [
-          formData.boxB1,
-          formData.boxB2,
-          formData.boxB3,
-          formData.boxB4,
-        ];
-        if (
-          boxBQuestions.every((q) => q !== null) &&
-          boxBQuestions.every((q) => q === false)
-        ) {
-          noBoxes.push("B");
-        }
-      }
-
-      // Box C
-      if (formData.question4) {
-        const boxCQuestions = [
-          formData.boxC1,
-          formData.boxC2,
-          formData.boxC3,
-          formData.boxC4,
-        ];
-        if (
-          boxCQuestions.every((q) => q !== null) &&
-          boxCQuestions.every((q) => q === false)
-        ) {
-          noBoxes.push("C");
-        }
-      }
-
-      // Box D
-      if (formData.question6) {
-        const boxDQuestions = [
-          formData.boxD1,
-          formData.boxD2,
-          formData.boxD3,
-          formData.boxD4,
-          formData.boxD5,
-        ];
-        if (
-          boxDQuestions.every((q) => q !== null) &&
-          boxDQuestions.every((q) => q === false)
-        ) {
-          noBoxes.push("D");
-        }
-      }
-
-      // Box E
-      if (formData.question7) {
-        const boxEQuestions = [
-          formData.boxE1,
-          formData.boxE2,
-          formData.boxE3,
-          formData.boxE4,
-        ];
-        if (
-          boxEQuestions.every((q) => q !== null) &&
-          boxEQuestions.every((q) => q === false)
-        ) {
-          noBoxes.push("E");
-        }
-      }
-
-      // Box F
-      if (formData.question8) {
-        const boxFQuestions = [
-          formData.boxF1,
-          formData.boxF2,
-          formData.boxF3,
-          formData.boxF4,
-          formData.boxF5,
-        ];
-        if (
-          boxFQuestions.every((q) => q !== null) &&
-          boxFQuestions.every((q) => q === false)
-        ) {
-          noBoxes.push("F");
-        }
-      }
-
-      // Box G
-      if (formData.question9) {
-        const boxGQuestions = [
-          formData.boxG1,
-          formData.boxG2,
-          formData.boxG3,
-          formData.boxG4,
-          formData.boxG5,
-          formData.boxG6,
-        ];
-        if (
-          boxGQuestions.every((q) => q !== null) &&
-          boxGQuestions.every((q) => q === false)
-        ) {
-          noBoxes.push("G");
-        }
-      }
-
-      // if (noBoxes.length > 0) {
-      //   const message = `Because you answered “No” to Box ${noBoxes.join(
-      //     ", ",
-      //   )} you must print this form and get it signed by a physician before participating in the class.`;
-
-      //   Swal.fire({
-      //     icon: "warning",
-      //     title: "Medical Clearance Required",
-      //     text: message,
-      //     confirmButtonText: "Okay",
-      //     confirmButtonColor: "#F97316",
-      //     background: "#FFF7ED",
-      //   });
-
-      //   toast.warning(message, {
-      //     duration: 10000,
-      //     style: {
-      //       background: "#FFF7ED",
-      //       border: "2px solid #F97316",
-      //       color: "#C2410C",
-      //       fontSize: "14px",
-      //       fontWeight: "600",
-      //       padding: "16px",
-      //       borderRadius: "8px",
-      //     },
-      //   });
-      // }
-
-      // if (!token) {
-      //   toast.error("Authentication token not found. Please log in again.");
-      //   return;
-      // }
-
-      if (noBoxes.length > 0) {
-        const message = `Because you answered "Yes" to Box ${noBoxes.join(
+      if (clearanceReasons.length > 0) {
+        const message = `Because you answered ${clearanceReasons.join(
           ", ",
         )} you must print this form and get it signed by a physician before participating in the class.`;
 
