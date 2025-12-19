@@ -47,8 +47,10 @@ export default function IndividualBooking() {
       const decoded = decodeURIComponent(scheduleParam);
       const parsed = JSON.parse(decoded);
 
-      scheduleId = parsed._id;
-      scheduleDates = Array.isArray(parsed.dates) ? parsed.dates : [];
+      if (parsed && typeof parsed === "object") {
+        scheduleId = parsed._id || "";
+        scheduleDates = Array.isArray(parsed.dates) ? parsed.dates : [];
+      }
     }
   } catch (err) {
     console.error("❌ Failed to parse schedule:", err);
@@ -263,11 +265,14 @@ export default function IndividualBooking() {
                 Class Date :
                 {scheduleDates.length > 0 ? (
                   scheduleDates.map((date: string, idx: number) => {
+                    const d = new Date(date);
+                    if (isNaN(d.getTime())) return null;
+
                     const formattedDate = new Intl.DateTimeFormat("en-US", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",
-                    }).format(new Date(date));
+                    }).format(d);
 
                     return (
                       <span
