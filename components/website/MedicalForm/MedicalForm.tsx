@@ -219,7 +219,6 @@ export default function MedicalForm() {
     );
   };
 
-
   const isCartComplete = (cartId: string, requiredTitles: string[]) =>
     store.checkAllFormsComplete(cartId, requiredTitles);
 
@@ -272,7 +271,7 @@ export default function MedicalForm() {
                         Name
                       </span>
                       <span className="block text-gray-800 font-medium">
-                        {item.Username}
+                        {item.Username.replace(/([a-z])([A-Z])/g, "$1 $2")}
                       </span>
                     </p>
                     <p>

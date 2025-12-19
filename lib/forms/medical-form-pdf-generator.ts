@@ -82,7 +82,12 @@ interface FormData {
 
 // export async function generatePDF(formData: FormData) {
 export async function generatePDF(formData: FormData): Promise<File> {
-  const pdf = new jsPDF("p", "mm", "a4");
+  const pdf = new jsPDF({
+    orientation: "p",
+    unit: "mm",
+    format: "a4",
+    compress: true,
+  });
   const pageWidth = 210;
   const pageHeight = 297;
   const margin = 20;
