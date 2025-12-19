@@ -134,9 +134,10 @@ export default function IndividualBooking() {
 
     const totalPrice = Number(course.price) + addOnTotal;
 
-    const Username = `${formData.firstName}${formData.lastName}`
-      .replace(/\s+/g, "")
-      .toLowerCase();
+    const Username = `${formData.firstName}${formData.lastName}`.replace(
+      /\s+/g,
+      "",
+    );
 
     const payload = {
       Username,

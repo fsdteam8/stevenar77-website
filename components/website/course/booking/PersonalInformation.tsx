@@ -57,8 +57,21 @@ export default function PersonalInformation({
     resolver: zodResolver(FormSchema),
   });
 
+  // const onSubmit = (data: FormData) => {
+  //   onNext(data);
+  // };
+
   const onSubmit = (data: FormData) => {
-    onNext(data);
+    const capitalizedData = {
+      ...data,
+      firstName:
+        data.firstName.trim().charAt(0).toUpperCase() +
+        data.firstName.trim().slice(1).toLowerCase(),
+      lastName:
+        data.lastName.trim().charAt(0).toUpperCase() +
+        data.lastName.trim().slice(1).toLowerCase(),
+    };
+    onNext(capitalizedData);
   };
 
   return (

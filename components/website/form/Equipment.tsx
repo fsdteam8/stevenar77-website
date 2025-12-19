@@ -23,6 +23,7 @@ interface FormData {
   localPhone: string;
   localPhoneArea?: string;
   state: string;
+  zipCode: string;
   signature: string;
   participantDate: string;
   guardianSignature: string;
@@ -68,6 +69,7 @@ export default function PadiForm({
     localAddress: "",
     localPhone: "",
     state: "",
+    zipCode: "",
     signature: "",
     participantDate: getCurrentDate(),
     guardianSignature: "",
@@ -80,6 +82,7 @@ export default function PadiForm({
     address: "Street Address is required",
     city: "City is required",
     state: "State is required",
+    zipCode: "Zip code is required",
     phoneHome: "Cell phone number is required",
     email: "Email is required",
     signature: "Signature is required",
@@ -185,6 +188,11 @@ export default function PadiForm({
     if (!formData.state.trim()) {
       newErrors.state = "State is required";
       errorMessages.push("State is required");
+    }
+
+    if (!formData.zipCode.trim()) {
+      newErrors.zipCode = "Zip code is required";
+      errorMessages.push("Zip code is required");
     }
 
     if (!formData.phoneHome.trim()) {
@@ -339,41 +347,57 @@ export default function PadiForm({
                   </div>
                 </div>
 
-                {/* City */}
+                {/* City, State & Zip code Row */}
                 <div className="flex items-center">
-                  <span className="w-20 pt-1">City</span>
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      className={`w-full border-0 h-12 border-b ${errors.city ? "border-red-500" : "border-black"} bg-transparent outline-none mb-1`}
-                    />
-                    {errors.city && (
-                      <span className="text-red-500 text-[10px]">
-                        {errors.city}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* State */}
-                <div className="flex items-center">
-                  <span className="w-20 pt-1">State</span>
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      name="state"
-                      value={formData.state}
-                      onChange={handleInputChange}
-                      className={`w-full border-0 h-12 border-b ${errors.state ? "border-red-500" : "border-black"} bg-transparent outline-none mb-1`}
-                    />
-                    {errors.state && (
-                      <span className="text-red-500 text-[10px]">
-                        {errors.state}
-                      </span>
-                    )}
+                  <span className="w-24 whitespace-nowrap">
+                    City, State, Zip
+                  </span>
+                  <div className="flex flex-1 gap-2">
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        className={`w-full border-0 h-10 border-b ${errors.city ? "border-red-500" : "border-black"} bg-transparent outline-none mb-1`}
+                        placeholder="City"
+                      />
+                      {errors.city && (
+                        <span className="text-red-500 text-[10px]">
+                          {errors.city}
+                        </span>
+                      )}
+                    </div>
+                    <div className="w-20">
+                      <input
+                        type="text"
+                        name="state"
+                        value={formData.state}
+                        onChange={handleInputChange}
+                        className={`w-full border-0 h-10 border-b ${errors.state ? "border-red-500" : "border-black"} bg-transparent outline-none mb-1`}
+                        placeholder="State"
+                      />
+                      {errors.state && (
+                        <span className="text-red-500 text-[10px]">
+                          {errors.state}
+                        </span>
+                      )}
+                    </div>
+                    <div className="w-24">
+                      <input
+                        type="text"
+                        name="zipCode"
+                        value={formData.zipCode}
+                        onChange={handleInputChange}
+                        className={`w-full border-0 h-10 border-b ${errors.zipCode ? "border-red-500" : "border-black"} bg-transparent outline-none mb-1`}
+                        placeholder="Zip"
+                      />
+                      {errors.zipCode && (
+                        <span className="text-red-500 text-[10px]">
+                          {errors.zipCode}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
