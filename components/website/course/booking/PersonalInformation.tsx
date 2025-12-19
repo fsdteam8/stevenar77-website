@@ -57,8 +57,18 @@ export default function PersonalInformation({
     resolver: zodResolver(FormSchema),
   });
 
+  // const onSubmit = (data: FormData) => {
+  //   onNext(data);
+  // };
+
   const onSubmit = (data: FormData) => {
-    onNext(data);
+    const capitalizedData = {
+      ...data,
+      firstName:
+        data.firstName.charAt(0).toUpperCase() + data.firstName.slice(1), // .toLowerCase() সরিয়ে দিন
+      lastName: data.lastName.charAt(0).toUpperCase() + data.lastName.slice(1), // .toLowerCase() সরিয়ে দিন
+    };
+    onNext(capitalizedData);
   };
 
   return (

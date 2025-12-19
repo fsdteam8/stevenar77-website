@@ -1155,12 +1155,15 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                 </div>
                 <div>
                   <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end">
-                    <input
+                    {/* <input
                       type="text"
                       value={formData.facilityName}
                       readOnly
                       className="w-full border-none outline-none bg-gray-100 cursor-not-allowed"
-                    />
+                    /> */}
+                    <div className=" text-center text-gray-700 font-bold text-base">
+                      Scuba Life
+                    </div>
                   </div>
                   <div className="text-xs text-center">
                     Facility Name (Print)
