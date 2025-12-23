@@ -18,7 +18,13 @@ import StandardsForm from "../form/StandardsForm";
 import DiversActivityForm from "../form/DiversActivityForm";
 import DiverMedicalForm from "@/components/forms/diver-medical-form";
 import PadiForm from "../form/Equipment";
-import { CheckCircle2, ArrowDown, FileText, Loader2 } from "lucide-react";
+import {
+  CheckCircle2,
+  ArrowDown,
+  FileText,
+  Loader2,
+  PartyPopper,
+} from "lucide-react";
 import { useCourseFormBookingUpdate } from "@/hooks/useCourseformbookingupdate";
 import { Schedule } from "@/types/cart";
 
@@ -44,6 +50,7 @@ interface FormProps {
 export default function MedicalForm() {
   const [courseData, setCourseData] = useState<CourseFormItem[]>([]);
   const [submittedCarts, setSubmittedCarts] = useState<Set<string>>(new Set());
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const store = useFormStore();
   const { updateBooking, isLoading } = useCourseFormBookingUpdate();
 
@@ -184,6 +191,7 @@ export default function MedicalForm() {
     try {
       await updateBooking({ bookingId, formData });
       setSubmittedCarts((prev) => new Set(prev).add(cartId));
+      setShowSuccessModal(true);
     } catch (error) {
       console.log("Medical Form Submit Failed", error);
     }
@@ -387,6 +395,50 @@ export default function MedicalForm() {
           })}
         </div>
       )}
+
+      {/* Success Modal */}
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <PartyPopper className="w-10 h-10 text-green-600" />
+              </div>
+              <DialogTitle className="text-2xl font-bold text-green-700">
+                Thank you!
+              </DialogTitle>
+            </div>
+          </DialogHeader>
+          <div className="text-center py-4 space-y-4">
+            <p className="text-gray-700 text-base leading-relaxed">
+              Your documents have been successfully submitted.
+            </p>
+            <p className="text-gray-700 text-base leading-relaxed">
+              You should receive an email shortly with important information
+              about what to know and how to prepare for your upcoming class. If
+              you don&apos;t see it, please check your spam or junk folder.
+            </p>
+            <p className="text-gray-700 text-base leading-relaxed">
+              If the email isn&apos;t found in either place, reach out to us
+              through the Contact Us page on our website and we&apos;ll be happy
+              to help.
+            </p>
+            <p className="text-gray-700 text-base leading-relaxed font-medium">
+              We&apos;re looking forward to diving with you soon! 🌊
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <DialogFooter className="flex justify-center ">
+              <Button
+                onClick={() => setShowSuccessModal(false)}
+                className="bg-green-600 hover:bg-green-700 text-white px-12 py-2"
+              >
+                OK
+              </Button>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

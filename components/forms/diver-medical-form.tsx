@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { generatePDF } from "@/lib/forms/medical-form-pdf-generator";
 import { toast } from "sonner";
 import { useFormStore } from "@/store/formStore";
+import { useToastStore } from "@/store/toastStore";
 import Swal from "sweetalert2";
 
 interface FormData {
@@ -617,6 +618,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
   // ... inside component ...
 
   const store = useFormStore(); // Initialize store
+  const showToast = useToastStore((state) => state.showToast);
 
   const handleExportPDF = async () => {
     try {
@@ -736,15 +738,17 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
       boxConfigs.forEach((box) => {
         if (box.main === true) {
-          const nos = box.questions
-            .map((q, i) => (q === false ? `${box.name}${i + 1}` : null))
+          // Collect only the "Yes" answers
+          const yesAnswers = box.questions
+            .map((q, i) => (q === true ? `${box.name}${i + 1}` : null))
             .filter((q): q is string => q !== null);
 
-          if (nos.length > 0) {
+          if (yesAnswers.length > 0) {
             clearanceReasons.push(
-              `"Yes" to Box ${box.name} and you answered "No" to ${nos.join(", ")} in Box ${box.name}`,
+              `"Yes" to Box ${box.name} (${yesAnswers.join(", ")})`,
             );
           } else {
+            // If no specific Yes answers, just mention the box
             clearanceReasons.push(`"Yes" to Box ${box.name}`);
           }
         }
@@ -819,8 +823,60 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
 
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 3;
-  const nextPage = () =>
-    currentPage < totalPages && setCurrentPage(currentPage + 1);
+
+  const handleNextPage = () => {
+    // Check if leaving Page 2 and show toast for boxes with Yes answers
+    if (currentPage === 2) {
+      const boxes = ["A", "B", "C", "D", "E", "F", "G"];
+      const boxDetails: { box: string; yesAnswers: string[] }[] = [];
+
+      boxes.forEach((boxChar) => {
+        const yesAnswers: string[] = [];
+        Object.keys(formData).forEach((key) => {
+          if (
+            key.startsWith(`box${boxChar}`) &&
+            formData[key as keyof FormData] === true
+          ) {
+            // Extract the number from the key (e.g., "boxA1" -> "1")
+            const questionNum = key.replace(`box${boxChar}`, "");
+            yesAnswers.push(`${boxChar}${questionNum}`);
+          }
+        });
+
+        if (yesAnswers.length > 0) {
+          boxDetails.push({ box: boxChar, yesAnswers });
+        }
+      });
+
+      if (boxDetails.length > 0) {
+        let message = "Because you answered 'Yes' to ";
+        const boxParts: string[] = [];
+
+        boxDetails.forEach((detail) => {
+          const yesText = detail.yesAnswers.join(", ");
+          boxParts.push(`Box ${detail.box} (${yesText})`);
+        });
+
+        if (boxParts.length === 1) {
+          message += boxParts[0];
+        } else if (boxParts.length === 2) {
+          message += `${boxParts[0]} and ${boxParts[1]}`;
+        } else {
+          const lastPart = boxParts.pop();
+          message += `${boxParts.join(", ")}, and ${lastPart}`;
+        }
+
+        message +=
+          " on page 2, this form must be printed and signed by a physician before you can participate in the class.";
+        showToast(message, "info");
+      }
+    }
+
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   const prevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
   const goToPage = (page: number) => setCurrentPage(page);
 
@@ -1019,46 +1075,17 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               </p>
 
               <div className="grid grid-cols-2 gap-8 mb-4">
-                {/* <div>
-                  <div
-                    className={`border-b-2 pb-1 mb-1 min-h-[30px] flex items-end ${!formData.participantSignature?.trim() ? "border-red-500 bg-red-50" : "border-black"}`}
-                  >
-                    <input
-                      type="text"
-                      value={formData.participantSignature}
-                      onChange={(e) =>
-                        updateFormData("participantSignature", e.target.value)
-                      }
-                      className="w-full border-none text-italic outline-none bg-transparent"
-                      placeholder="Type your full name"
-                    />
-                  </div>
-                  <div className="text-xs text-center">
-                    Participant Signature (or, if a minor, participant&apos;s
-                    parent/guardian signature required){" "}
-                    <span className="text-red-500">*</span>
-                  </div>
-                </div> */}
                 <div>
                   <div
                     className={`border-b-2 pb-1 mb-1 min-h-[30px] flex items-end ${!formData.participantSignature?.trim() ? "border-red-500 bg-red-50" : "border-black"}`}
                   >
-                    {/* <input
-                      type="text"
-                      value={formData.participantSignature}
-                      onChange={(e) =>
-                        updateFormData("participantSignature", e.target.value)
-                      }
-                      className="w-full border-none italic text-lg  outline-none bg-transparent"
-                      placeholder="Type your full name"
-                    /> */}
                     <input
                       type="text"
                       value={formData.participantSignature}
                       onChange={(e) =>
                         updateFormData("participantSignature", e.target.value)
                       }
-                      className="w-full border-none italic text-lg outline-none bg-transparent custom-slant"
+                      className="w-full border-none outline-none text-lg bg-transparent custom-slant" // Added custom-slant class here
                       placeholder="Type your full name"
                     />
                   </div>
@@ -1068,7 +1095,6 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
                     <span className="text-red-500">*</span>
                   </div>
                 </div>
-
                 <div>
                   <div className="border-b-2 border-black pb-1 mb-1 min-h-[30px] flex items-end bg-gray-100">
                     <input
@@ -1752,7 +1778,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
               ))}
             </div>
             <Button
-              onClick={nextPage}
+              onClick={handleNextPage}
               disabled={currentPage === totalPages}
               variant="outline"
               className="px-4 py-2 bg-transparent"
