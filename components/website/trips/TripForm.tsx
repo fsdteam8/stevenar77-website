@@ -239,7 +239,8 @@ export function TripForm({ trip }: TripFormProps) {
               className="mt-8 w-full bg-primary text-white text-lg py-3 rounded-xl hover:bg-primary/80"
               onClick={() => (window.location.href = "/trips")}
             >
-              Back Home
+              {/* Back Home */}
+              Continue Shopping
             </Button>
             <Button
               className="mt-8 w-full bg-primary text-white text-lg py-3 rounded-xl hover:bg-primary/80"
