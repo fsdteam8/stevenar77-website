@@ -4,6 +4,7 @@ import "./globals.css";
 import MainProviders from "@/Providers/MainProviders";
 import Provider from "@/Providers/Provider";
 import { Toaster } from "sonner";
+import { Toast } from "@/components/ui/Toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +26,7 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
-
 export const metadata: Metadata = {
- 
   title: "Dive Into Adventure",
   description: "From beginner to pro, we guide your underwater adventure.",
 };
@@ -46,6 +45,7 @@ export default function RootLayout({
           <Provider> {children} </Provider>
         </MainProviders>
         <Toaster position="top-center" richColors closeButton />
+        <Toast />
       </body>
     </html>
   );

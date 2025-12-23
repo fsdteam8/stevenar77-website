@@ -164,6 +164,11 @@
 }
 
 
+.custom-slant {
+  font-style: italic;
+  transform: skewX(-12deg); /* Adjust the -10deg to a higher value for more slant */
+}
+
 
 /* QuillEditor style start */
 
