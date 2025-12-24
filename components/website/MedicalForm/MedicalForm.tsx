@@ -431,9 +431,9 @@ export default function MedicalForm() {
             <DialogFooter className="flex justify-center ">
               <Button
                 onClick={() => setShowSuccessModal(false)}
-                className="bg-green-600 hover:bg-green-700 text-white px-12 py-2"
+                className="bg-[#0694a2] hover:bg-[#0284a2] text-white px-12 py-2"
               >
-                OK
+                Go to Home
               </Button>
             </DialogFooter>
           </div>
