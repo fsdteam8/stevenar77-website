@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useFormStore } from "@/store/formStore";
 import { useToastStore } from "@/store/toastStore";
 import Swal from "sweetalert2";
+import { ArrowDownToDot } from "lucide-react";
 
 interface FormData {
   participantName: string;
@@ -301,7 +302,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       if (unansweredA.length > 0) {
         return {
           isValid: false,
-          message: `Box A is required. Please answer ALL questions in Box A (${unansweredA.join(", ")})`,
+          message: `Box A is required. Please answer ALL questions in Box A (${unansweredA.join(", ")} )\n\n⬇️`,
         };
       }
 
