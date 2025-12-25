@@ -187,8 +187,8 @@ export function TripForm({ trip }: TripFormProps) {
           <div className="text-gray-600 text-lg">
             <p className="font-semibold text-gray-800">{trip.title}</p>
             <p>
-              <span className="font-semibold">{totalParticipants}</span>{" "}
-              participant{totalParticipants > 1 ? "s" : ""}
+              <span className="font-semibold">{totalParticipants}</span> Diver
+              {totalParticipants > 1 ? "s" : ""}
             </p>
             <p className="text-xl font-bold text-primary mt-2">
               Total: {totalPrice.toLocaleString()} BDT
@@ -197,7 +197,7 @@ export function TripForm({ trip }: TripFormProps) {
 
           <div className="w-full mt-8">
             <h3 className="text-xl font-semibold mb-4 text-gray-800">
-              Participant Details
+              Divers Details
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -207,7 +207,7 @@ export function TripForm({ trip }: TripFormProps) {
                   className="p-5 border border-gray-200 rounded-2xl bg-gray-50 shadow-sm hover:shadow-md transition"
                 >
                   <h4 className="text-lg font-bold text-gray-800 mb-3 border-b pb-2">
-                    Participant {i + 1}
+                    Diver {i + 1}
                   </h4>
 
                   <div className="space-y-2 text-gray-700 text-sm">

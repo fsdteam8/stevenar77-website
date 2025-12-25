@@ -105,7 +105,7 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
   // 🔥 SUCCESS MODAL LIKE YOUR TRIP DESIGN
   if (productBookingSuccess) {
     return (
-      <Card className="p-10 bg-white shadow-lg rounded-2xl text-center">
+      <Card className="max-h-[calc(100vh-10rem)] bg-white shadow-lg rounded-2xl text-center overflow-y-auto">
         <div className="flex flex-col items-center space-y-4">
           {/* Success Tick */}
           <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
@@ -160,9 +160,9 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
           <div className="flex justify-center gap-4 mt-6">
             <Button
               className="bg-primary text-white text-lg py-3 rounded-xl hover:bg-primary/80"
-              onClick={() => (window.location.href = "/")}
+              onClick={() => (window.location.href = "/shop")}
             >
-              Back Home
+              Continue Shopping
             </Button>
 
             <Button
