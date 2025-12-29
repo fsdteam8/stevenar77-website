@@ -50,6 +50,12 @@ const StandardsForm: React.FC<StandardsFormProps> = ({
   const store = useFormStore();
 
   const handleExportPDF = async () => {
+    const fieldNames = {
+      participantName: "Name",
+      participantSignature: "Signature",
+      participantDate: "Date",
+    };
+
     const newErrors = {
       participantName: !participantName.trim(),
       participantSignature: !participantSignature.trim(),
@@ -60,10 +66,23 @@ const StandardsForm: React.FC<StandardsFormProps> = ({
 
     const missingFields = Object.entries(newErrors)
       .filter(([_, value]) => value)
-      .map(([key]) => key);
+      .map(([key]) => fieldNames[key as keyof typeof fieldNames]); // <-- map key to friendly name
 
     if (missingFields.length > 0) {
-      toast.error(`Please fill in: ${missingFields.join(", ")}`);
+      let message = "";
+
+      if (missingFields.length === 1) {
+        message = missingFields[0];
+      } else if (missingFields.length === 2) {
+        message = missingFields.join(" , ");
+      } else {
+        message =
+          missingFields.slice(0, -1).join(", ") +
+          " , " +
+          missingFields.slice(-1);
+      }
+
+      toast.error(`Please fill in: ${message}`);
       return;
     }
 
