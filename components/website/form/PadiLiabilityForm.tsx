@@ -49,19 +49,24 @@ export default function PadiLiabilityForm({
       date: !date.trim(),
     };
 
+    // Mapping keys to user-friendly names
+    const fieldNames: Record<string, string> = {
+      participantName: "Name",
+      signature: "Signature",
+      date: "Date",
+    };
+
     setErrors(newErrors);
 
     const missingFields = Object.entries(newErrors)
       .filter(([_, value]) => value)
-      .map(([key]) => key);
-
+      .map(([key]) => fieldNames[key]);
     if (missingFields.length > 0) {
       toast.error(
         `Please fill in the following required fields: ${missingFields.join(", ")}`,
       );
       return;
     }
-
     setIsGeneratingPDF(true);
 
     try {
@@ -511,6 +516,7 @@ export default function PadiLiabilityForm({
                       }
                     }}
                     placeholder="Signature"
+                    autoComplete="off"
                     className={`border-b ${errors.signature ? "border-red-500 bg-red-50" : "border-black"} w-full h-12 px-1 bg-transparent focus:outline-none text-xl italic`}
                     style={{ fontFamily: "cursive" }}
                   />

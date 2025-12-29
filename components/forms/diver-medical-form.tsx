@@ -9,6 +9,7 @@ import { useFormStore } from "@/store/formStore";
 import { useToastStore } from "@/store/toastStore";
 import Swal from "sweetalert2";
 import { ArrowDownToDot } from "lucide-react";
+import { isValid } from "date-fns";
 
 interface FormData {
   participantName: string;
@@ -270,6 +271,14 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       };
     }
 
+    if (currentPage === 1 && unansweredQuestions.length === 0) {
+      return {
+        isValid: false,
+        message:
+          "Because you answered “Yes” to at least one question (1–10) on this page, you must complete the corresponding section on page 2 of this document. Please select Page 2 at the bottom of this page to continue.",
+      };
+    }
+
     // Check required participant fields
     if (!formData.participantSignature?.trim()) {
       missingFields.push("Participant Signature");
@@ -302,7 +311,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       if (unansweredA.length > 0) {
         return {
           isValid: false,
-          message: `Box A is required. Please answer ALL questions in Box A (${unansweredA.join(", ")} )\n\n⬇️`,
+          message: `Box A is required. Please answer ALL questions in Box A (${unansweredA.join(", ")} )`,
         };
       }
 
