@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { useCourseFormBookingUpdate } from "@/hooks/useCourseformbookingupdate";
 import { Schedule } from "@/types/cart";
+import Link from "next/link";
 
 interface CourseFormItem {
   cartId: string;
@@ -428,13 +429,12 @@ export default function MedicalForm() {
             </p>
           </div>
           <div className="flex justify-center">
-            <DialogFooter className="flex justify-center ">
-              <Button
-                onClick={() => setShowSuccessModal(false)}
-                className="bg-[#0694a2] hover:bg-[#0284a2] text-white px-12 py-2"
-              >
-                Go to Home
-              </Button>
+            <DialogFooter className="flex justify-center">
+              <Link href="/">
+                <Button className="bg-[#0694a2] hover:bg-[#0284a2] text-white px-12 py-2">
+                  Go to Home
+                </Button>
+              </Link>
             </DialogFooter>
           </div>
         </DialogContent>

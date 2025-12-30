@@ -1,5 +1,5 @@
 // import Hero from '@/components/website/shared/Hero';
-import GelatoDetails from "@/components/website/shop/GelatoDetails";
+// import GelatoDetails from "@/components/website/shop/GelatoDetails";
 import ProductCarousel from "@/components/website/shop/ProductCarousel";
 // import ProductDetails from "@/components/website/shop/ProductDetails";
 // import ProductReview from '@/components/website/shop/ProductReview';
@@ -23,7 +23,7 @@ export default function Page() {
         backgroundImage="/images/imagewater.jpg"
         size="small"
       /> */}
-      <GelatoDetails />
+      {/* <GelatoDetails /> */}
       {/* <ProductDetails /> */}
       {/* <ProductReviewDes   /> */}
       {/* <ProductReview userId={userId} productId={productId} /> */}

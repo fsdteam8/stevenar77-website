@@ -74,11 +74,11 @@ const StandardsForm: React.FC<StandardsFormProps> = ({
       if (missingFields.length === 1) {
         message = missingFields[0];
       } else if (missingFields.length === 2) {
-        message = missingFields.join(" , ");
+        message = missingFields.join(", ");
       } else {
         message =
           missingFields.slice(0, -1).join(", ") +
-          " , " +
+          ", " +
           missingFields.slice(-1);
       }
 
