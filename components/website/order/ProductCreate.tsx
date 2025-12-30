@@ -33,6 +33,8 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
   const { data: session } = useSession();
   const userId = session?.user?.id;
 
+  console.log("quantity", quantity);
+
   const { mutate: bookTrip } = useTripBooking();
 
   // Success modal state
@@ -49,14 +51,28 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
   };
 
   useEffect(() => {
-    if (data?.data?.variants?.length) {
-      const firstVariant = data.data.variants[0];
-      setSelectedVariant(firstVariant.title);
+    if (data?.data) {
+      const { isVariant = true } = data.data; // Default to true if undefined, for backward compatibility? Or undefined check.
+      // Actually based on request "If 'isVariant': true... If 'isVariant': false"
+      // If data.data.isVariant is true or undefined (assuming current behavior is variant-based)
+      // But user said "In the shop, all products are currently being displayed." implying existing ones work.
 
-      if (firstVariant.image?.url) {
-        urlToFile(firstVariant.image.url, "variant-image").then((file) =>
-          setImages([file]),
-        );
+      if (isVariant && data.data.variants?.length) {
+        const firstVariant = data.data.variants[0];
+        setSelectedVariant(firstVariant.title);
+        if (firstVariant.image?.url) {
+          urlToFile(firstVariant.image.url, "variant-image").then((file) =>
+            setImages([file]),
+          );
+        }
+      } else if (!isVariant) {
+        // Initialize for non-variant product if needed
+        setSelectedVariant(""); // clear variant selection
+        if (data.data.images?.[0]?.url) {
+          urlToFile(data.data.images[0].url, "product-image").then((file) =>
+            setImages([file]),
+          );
+        }
       }
     }
   }, [data]);
@@ -68,23 +84,43 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
     onClose?.();
   };
 
+  const { isVariant = true } = data?.data || {};
+
   const totalPrice =
-    Number(quantity) * (selectedVariantData?.price || data?.data?.price || 0);
+    Number(quantity) *
+    // (isVariant ? selectedVariantData?.price || 0 : data?.data?.price || 0);
+    (data?.data?.price || 0);
 
   const handleSubmit = async () => {
-    if (!selectedVariant) return toast.error("Please select a variant");
+    // Validation
+    if (isVariant && !selectedVariant)
+      return toast.error("Please select a variant");
     if (!quantity || quantity < 1) return toast.error("Enter valid quantity");
 
-    const imageUrl = selectedVariantData?.image?.url;
-    if (!imageUrl) return toast.error("No image found for selected variant.");
+    let price = 0;
+    let imageUrl = "";
+    let color = "";
+
+    if (isVariant) {
+      imageUrl = selectedVariantData?.image?.url || "";
+      if (!imageUrl) return toast.error("No image found for selected variant.");
+      price = totalPrice;
+      color = selectedVariant;
+    } else {
+      // Non-variant product
+      imageUrl = data?.data?.images?.[0]?.url || "";
+      if (!imageUrl) return toast.error("No image found for product.");
+      price = totalPrice;
+      color = data?.data?.title || "Default";
+    }
 
     const payload = {
       userId: userId,
       itemId: productId,
       type: "product" as const,
-      price: totalPrice,
+      price: price,
       quantity: Number(quantity),
-      color: selectedVariant,
+      color: color,
       images: [imageUrl],
     };
 
@@ -133,7 +169,17 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
             <p className="font-semibold text-gray-800">{data?.data?.title}</p>
 
             <p className="mt-1">
-              Color: <span className="font-semibold">{selectedVariant}</span>
+              {!isVariant && data?.data?.category ? (
+                <>
+                  Category:{" "}
+                  <span className="font-semibold">{data.data.category}</span>
+                </>
+              ) : (
+                <>
+                  Color:{" "}
+                  <span className="font-semibold">{selectedVariant}</span>
+                </>
+              )}
             </p>
 
             <p>
@@ -148,7 +194,11 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
           {/* Image */}
           <div className="mt-4">
             <Image
-              src={selectedVariantData?.image?.url || "/images/placeholder.png"}
+              src={
+                (isVariant
+                  ? selectedVariantData?.image?.url
+                  : data?.data?.images?.[0]?.url) || "/images/placeholder.png"
+              }
               alt="Product"
               width={300}
               height={300}
@@ -184,32 +234,51 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
           <p className="text-sm font-medium text-gray-700">
             Select Color & Quantity
           </p>
-          {selectedVariantData?.quantity !== undefined && (
-            <span className="text-sm text-gray-500">
-              In stock: <strong>{selectedVariantData.quantity}</strong>
-            </span>
-          )}
+          {isVariant
+            ? selectedVariantData?.quantity !== undefined && (
+                <span className="text-sm text-gray-500">
+                  In stock: <strong>{selectedVariantData.quantity}</strong>
+                </span>
+              )
+            : data?.data?.productQuantity !== undefined && (
+                <span className="text-sm text-gray-500">
+                  In stock: <strong>{data.data.productQuantity}</strong>
+                </span>
+              )}
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-          {/* Variant dropdown */}
-          <select
-            value={selectedVariant}
-            onChange={(e) => setSelectedVariant(e.target.value)}
-            className="px-2 py-1 border rounded-md"
-          >
-            {data?.data?.variants?.map((v: ProductVariant) => (
-              <option key={v._id} value={v.title}>
-                {v.title}
-              </option>
-            ))}
-          </select>
+          {/* Variant dropdown - Show only if isVariant is TRUE */}
+          {isVariant ? (
+            <select
+              value={selectedVariant}
+              onChange={(e) => setSelectedVariant(e.target.value)}
+              className="px-2 py-1 border rounded-md"
+            >
+              {data?.data?.variants?.map((v: ProductVariant) => (
+                <option key={v._id} value={v.title}>
+                  {v.title}
+                </option>
+              ))}
+            </select>
+          ) : (
+            // If not variant, show category if needed or just nothing here
+            data?.data?.title && (
+              <div className="px-2 py-1 border rounded-md bg-gray-100 text-gray-700">
+                {data.data.title}
+              </div>
+            )
+          )}
 
           {/* Quantity Input */}
           <input
             type="number"
             min={1}
-            max={selectedVariantData?.quantity || undefined}
+            max={
+              isVariant
+                ? selectedVariantData?.quantity
+                : data?.data?.productQuantity
+            }
             placeholder="Qty"
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value) || "")}
@@ -225,10 +294,22 @@ const ProductCreate: React.FC<ProductCreateProps> = ({
         </p>
 
         <div className="border-2 border-dashed rounded-lg p-2 text-center max-h-64 overflow-auto">
-          {selectedVariantData?.image?.url ? (
+          {isVariant ? (
+            selectedVariantData?.image?.url ? (
+              <Image
+                src={selectedVariantData.image.url}
+                alt={selectedVariant}
+                width={400}
+                height={400}
+                className="mx-auto rounded-xl object-contain"
+              />
+            ) : (
+              <p>No Image Available</p>
+            )
+          ) : data?.data?.images?.[0]?.url ? (
             <Image
-              src={selectedVariantData.image.url}
-              alt={selectedVariant}
+              src={data.data.images[0].url}
+              alt={data.data.title}
               width={400}
               height={400}
               className="mx-auto rounded-xl object-contain"

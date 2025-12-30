@@ -27,6 +27,9 @@ export interface Product {
   averageRating: number;
   // variants?: { _id: string; title: string; price: number }[];
   variants?: ProductVariant[];
+  isVariant?: boolean;
+  category?: string;
+  productQuantity?: number;
   // etc.
 }
 
@@ -38,12 +41,20 @@ export interface ProductResponse {
   // title: string;
 }
 
-export async function getProductById(productId: string): Promise<ProductResponse> {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/shop/${productId}`);
+export async function getProductById(
+  productId: string,
+): Promise<ProductResponse> {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/shop/${productId}`,
+  );
   return response.data;
 }
 
-export async function getGelatoProductById(productId: string): Promise<{ data: GelatoProduct }> {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/get-price/${productId}`);
+export async function getGelatoProductById(
+  productId: string,
+): Promise<{ data: GelatoProduct }> {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/product/get-price/${productId}`,
+  );
   return response.data;
 }
