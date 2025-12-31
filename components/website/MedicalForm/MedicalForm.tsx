@@ -411,30 +411,57 @@ export default function MedicalForm() {
             </div>
           </DialogHeader>
           <div className="text-center py-4 space-y-4">
-            <p className="text-gray-700 text-base leading-relaxed">
-              Your documents have been successfully submitted.
-            </p>
-            <p className="text-gray-700 text-base leading-relaxed">
-              You should receive an email shortly with important information
-              about what to know and how to prepare for your upcoming class. If
-              you don&apos;t see it, please check your spam or junk folder.
-            </p>
-            <p className="text-gray-700 text-base leading-relaxed">
-              If the email isn&apos;t found in either place, reach out to us
-              through the Contact Us page on our website and we&apos;ll be happy
-              to help.
-            </p>
-            <p className="text-gray-700 text-base leading-relaxed font-medium">
-              We&apos;re looking forward to diving with you soon! 🌊
-            </p>
+            {submittedCarts.size === courseData.length ? (
+              /* FINAL SUCCESS STATE (All divers submitted) */
+              <>
+                <p className="text-gray-700 text-base leading-relaxed">
+                  All documents have been successfully submitted.
+                </p>
+                <p className="text-gray-700 text-base leading-relaxed">
+                  You should receive an email shortly with important information
+                  about what to know and how to prepare for your upcoming class.
+                  If you don&apos;t see it, please check your spam or junk
+                  folder.
+                </p>
+                <p className="text-gray-700 text-base leading-relaxed">
+                  If the email isn&apos;t found in either place, please reach
+                  out to us through the Contact Us page on our website and
+                  we&apos;ll be happy to help.
+                </p>
+                <p className="text-gray-700 text-base leading-relaxed font-medium">
+                  We&apos;re looking forward to diving with you soon! 🌊
+                </p>
+              </>
+            ) : (
+              /* INTERMEDIATE SUCCESS STATE (More divers to go) */
+              <p className="text-gray-700 text-base leading-relaxed">
+                Your documents have been successfully submitted. Since you
+                purchased for more than one diver,{" "}
+                <strong>
+                  each diver will need to complete their own paperwork to
+                  finalize their registration and make their Scuba Life
+                  adventure official
+                </strong>{" "}
+                🌊🤿
+              </p>
+            )}
           </div>
           <div className="flex justify-center">
             <DialogFooter className="flex justify-center">
-              <Link href="/">
-                <Button className="bg-[#0694a2] hover:bg-[#0284a2] text-white px-12 py-2">
-                  Go to Home
+              {submittedCarts.size === courseData.length ? (
+                <Link href="/">
+                  <Button className="bg-[#0694a2] hover:bg-[#0284a2] text-white px-12 py-2">
+                    Go to Home
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  onClick={() => setShowSuccessModal(false)}
+                  className="bg-[#0694a2] hover:bg-[#0284a2] text-white px-12 py-2"
+                >
+                  OK
                 </Button>
-              </Link>
+              )}
             </DialogFooter>
           </div>
         </DialogContent>
