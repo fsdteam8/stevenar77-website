@@ -7,6 +7,8 @@ export default function Success() {
   const router = useRouter();
 
   useEffect(() => {
+    let timeoutId;
+
     const stored = localStorage.getItem("courseFormTitles");
 
     if (stored) {
@@ -14,17 +16,26 @@ export default function Success() {
         const parsed = JSON.parse(stored);
 
         if (parsed.course && parsed.course.length > 0) {
-          //   const bookingId = parsed.course[0].bookingId;
-
-          // Wait 3 seconds before redirect
-          setTimeout(() => {
-            router.replace(`/medical-form`);
+          timeoutId = setTimeout(() => {
+            router.replace("/medical-form");
           }, 2000);
+        } else {
+          timeoutId = setTimeout(() => {
+            router.replace("/");
+          }, 3000);
         }
       } catch {
-        console.error("Invalid localStorage courseFormTitles");
+        timeoutId = setTimeout(() => {
+          router.replace("/");
+        }, 3000);
       }
+    } else {
+      timeoutId = setTimeout(() => {
+        router.replace("/");
+      }, 3000);
     }
+
+    return () => clearTimeout(timeoutId);
   }, [router]);
 
   return (
@@ -36,19 +47,8 @@ export default function Success() {
 
         <h1 className="text-2xl font-semibold">Payment Successful!</h1>
         <p className="text-slate-600 mt-2">
-          {/* Thank you! Your trip booking has been completed successfully. */}
-          <br />
-          {/* Redirecting in <span className="font-bold">3 seconds...</span> */}
+          You will be redirected to home page
         </p>
-
-        <div className="mt-6">
-          {/* <button
-            onClick={() => router.push("/")}
-            className="px-6 py-2 bg-primary hover:bg-primary text-white rounded-lg shadow cursor-pointer"
-          >
-            Go to Home
-          </button> */}
-        </div>
       </div>
     </div>
   );
