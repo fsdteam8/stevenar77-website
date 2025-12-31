@@ -1,13 +1,9 @@
 "use client";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 const ProductPaymentSuccess = () => {
-  const router = useRouter();
-
   return (
     <div className="flex items-center justify-center  px-4">
       <Card className="w-full  text-center shadow-lg rounded-2xl">

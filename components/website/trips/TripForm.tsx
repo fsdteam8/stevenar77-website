@@ -191,7 +191,7 @@ export function TripForm({ trip }: TripFormProps) {
               {totalParticipants > 1 ? "s" : ""}
             </p>
             <p className="text-xl font-bold text-primary mt-2">
-              Total: {totalPrice.toLocaleString()} BDT
+              Total: ${totalPrice.toLocaleString()}
             </p>
           </div>
 

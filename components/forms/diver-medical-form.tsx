@@ -8,8 +8,6 @@ import { toast } from "sonner";
 import { useFormStore } from "@/store/formStore";
 import { useToastStore } from "@/store/toastStore";
 import Swal from "sweetalert2";
-import { ArrowDownToDot } from "lucide-react";
-import { isValid } from "date-fns";
 
 interface FormData {
   participantName: string;
@@ -271,20 +269,12 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       };
     }
 
-    if (currentPage === 1 && unansweredQuestions.length === 0) {
-      return {
-        isValid: false,
-        message:
-          "Because you answered “Yes” to at least one question (1–10) on this page, you must complete the corresponding section on page 2 of this document. Please select Page 2 at the bottom of this page to continue.",
-      };
-    }
-
     // Check required participant fields
     if (!formData.participantSignature?.trim()) {
-      missingFields.push("Participant Signature");
+      missingFields.push("Signature");
     }
     if (!formData.participantName?.trim()) {
-      missingFields.push("Participant Name");
+      missingFields.push("Name");
     }
     if (!formData.birthdate) {
       missingFields.push("Birthdate (mm/dd/yyyy)");
@@ -295,7 +285,15 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         isValid: false,
         message:
           "Please complete the following required fields:\n\n" +
-          missingFields.join("\n"),
+          missingFields.join(", "),
+      };
+    }
+
+    if (currentPage === 1 && unansweredQuestions.length === 0) {
+      return {
+        isValid: false,
+        message:
+          "Because you answered “Yes” to at least one question (1–10) on this page, you must complete the corresponding section on page 2 of this document. Please select Page 2 at the bottom of this page to continue.",
       };
     }
 
@@ -765,31 +763,33 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       });
 
       if (clearanceReasons.length > 0) {
-        const message = `Because you answered ${clearanceReasons.join(
-          ", ",
-        )} you must print this form and get it signed by a physician before participating in the class.`;
+        // const message = `Because you answered ${clearanceReasons.join(
+        //   ", ",
+        // )} you must print this form and get it signed by a physician before participating in the class.`;
+
+        const message = `Because you answered <strong>“Yes”</strong> to at least one question on <strong>page 2</strong>, this form must be <strong>printed and signed by a physician</strong> before you can participate in the class. <br/> Please use the <strong>Contact Us</strong> page on our website to request a copy of your form.`;
 
         Swal.fire({
           icon: "warning",
           title: "Medical Clearance Required",
-          text: message,
+          html: message,
           confirmButtonText: "Okay",
           confirmButtonColor: "#F97316",
           background: "#FFF7ED",
         });
 
-        toast.warning(message, {
-          duration: 10000,
-          style: {
-            background: "#FFF7ED",
-            border: "2px solid #F97316",
-            color: "#C2410C",
-            fontSize: "14px",
-            fontWeight: "600",
-            padding: "16px",
-            borderRadius: "8px",
-          },
-        });
+        // toast.warning(message, {
+        //   duration: 10000,
+        //   style: {
+        //     background: "#FFF7ED",
+        //     border: "2px solid #F97316",
+        //     color: "#C2410C",
+        //     fontSize: "14px",
+        //     fontWeight: "600",
+        //     padding: "16px",
+        //     borderRadius: "8px",
+        //   },
+        // });
       }
 
       const pdfFormData = convertToPDFFormat(formData);
