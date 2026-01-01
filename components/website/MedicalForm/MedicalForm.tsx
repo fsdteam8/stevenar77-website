@@ -405,7 +405,7 @@ export default function MedicalForm() {
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
                 <PartyPopper className="w-10 h-10 text-green-600" />
               </div>
-              <DialogTitle className="text-2xl font-bold text-green-700">
+              <DialogTitle className="text-2xl font-bold">
                 Thank you!
               </DialogTitle>
             </div>
@@ -414,18 +414,18 @@ export default function MedicalForm() {
             {submittedCarts.size === courseData.length ? (
               /* FINAL SUCCESS STATE (All divers submitted) */
               <>
-                <p className="text-gray-700 text-base leading-relaxed">
+                <p className="text-gray-700 text-base leading-relaxed font-bold">
                   All documents have been successfully submitted.
                 </p>
                 <p className="text-gray-700 text-base leading-relaxed">
-                  You should receive an email shortly with important information
+                  You should receive an email shortly with <strong>important information</strong>
                   about what to know and how to prepare for your upcoming class.
                   If you don&apos;t see it, please check your spam or junk
                   folder.
                 </p>
                 <p className="text-gray-700 text-base leading-relaxed">
                   If the email isn&apos;t found in either place, please reach
-                  out to us through the Contact Us page on our website and
+                  out to us through the <strong>Contact Us</strong> page on our website and
                   we&apos;ll be happy to help.
                 </p>
                 <p className="text-gray-700 text-base leading-relaxed font-medium">
@@ -436,13 +436,9 @@ export default function MedicalForm() {
               /* INTERMEDIATE SUCCESS STATE (More divers to go) */
               <p className="text-gray-700 text-base leading-relaxed">
                 Your documents have been successfully submitted. Since you
-                purchased for more than one diver,{" "}
-                <strong>
-                  each diver will need to complete their own paperwork to
-                  finalize their registration and make their Scuba Life
-                  adventure official
-                </strong>{" "}
-                🌊🤿
+                purchased for <strong>more than one diver</strong>, each diver
+                will need to complete their own paperwork to finalize their
+                registration and make their Scuba Life adventure official 🌊🤿
               </p>
             )}
           </div>

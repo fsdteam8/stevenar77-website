@@ -46,9 +46,9 @@ export default function Success() {
         </div>
 
         <h1 className="text-2xl font-semibold">Payment Successful!</h1>
-        <p className="text-slate-600 mt-2">
+        {/* <p className="text-slate-600 mt-2">
           You will be redirected to home page
-        </p>
+        </p> */}
       </div>
     </div>
   );

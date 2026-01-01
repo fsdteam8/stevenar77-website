@@ -31,7 +31,7 @@ const CourseReview: React.FC<CourseReviewProps> = ({ classId }) => {
 
   const userID = useSession();
   const userId = userID?.data?.user?.id as string;
-  // console.log("cudlinkpung",userID);
+
 
   const handleReviewSubmit = (reviewData: {
     rating: number;

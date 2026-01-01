@@ -317,8 +317,8 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
     const purchaseDateStr = isValid
       ? new Date(
-          Date.UTC(Number(purchaseYear), Number(purchaseMonth) - 1, 1),
-        ).toISOString()
+        Date.UTC(Number(purchaseYear), Number(purchaseMonth) - 1, 1),
+      ).toISOString()
       : "";
 
     if (onSubmit && !isSubmitting) {
@@ -372,11 +372,10 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                     >
                       <Star
                         size={32}
-                        className={`transition-colors duration-200 ${
-                          star <= (hoveredRating || rating)
+                        className={`transition-colors duration-200 ${star <= (hoveredRating || rating)
                             ? "fill-yellow-400 text-yellow-400"
                             : "text-gray-300"
-                        }`}
+                          }`}
                       />
                     </div>
                   ))}
@@ -423,7 +422,10 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                     className="border rounded-md px-3 py-2"
                   >
                     <option value="">Select Year</option>
-                    {Array.from({ length: 20 }, (_, i) => 2025 - i).map((y) => (
+                    {Array.from(
+                      { length: 20 },
+                      (_, i) => new Date().getFullYear() - i,
+                    ).map((y) => (
                       <option key={y} value={y}>
                         {y}
                       </option>
@@ -450,11 +452,10 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               {/* Submit Button */}
               <div
                 onClick={handleSubmit}
-                className={`w-full font-medium py-3 px-4 rounded-md text-center cursor-pointer ${
-                  isSubmitting
+                className={`w-full font-medium py-3 px-4 rounded-md text-center cursor-pointer ${isSubmitting
                     ? "bg-gray-400 text-white cursor-not-allowed"
                     : "bg-teal-600 hover:bg-teal-700 text-white"
-                }`}
+                  }`}
               >
                 {isSubmitting ? "Submitting..." : "Submit Review"}
               </div>
