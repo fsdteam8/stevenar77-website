@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
+// import { Star } from "lucide-react";
 import Image from "next/image";
-import {  useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 // import { toast } from "sonner"; // or your toast lib
 import { useProductDetails } from "@/services/hooks/product/useProductDetails";
@@ -19,7 +19,7 @@ const ProductDetails = () => {
   // Fetch product details
   const { data, isLoading, error } = useProductDetails(productId);
 
-  const [quantity,] = useState(1);
+  const [quantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
@@ -106,10 +106,10 @@ const ProductDetails = () => {
             <h1 className="text-4xl text-[#27303F] font-semibold mb-6">
               {product.title}
             </h1>
-            <p className="flex gap-2 py-2">
+            {/* <p className="flex gap-2 py-2">
               <Star className="text-yellow-400" /> {product.averageRating || 0}{" "}
               ({product.totalReviews || 0} reviews)
-            </p>
+            </p> */}
             <p
               className="text-gray-700 leading-relaxed text-lg mb-8"
               dangerouslySetInnerHTML={{
