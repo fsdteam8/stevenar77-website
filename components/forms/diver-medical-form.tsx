@@ -778,18 +778,26 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
           background: "#FFF7ED",
         });
 
-        // toast.warning(message, {
-        //   duration: 10000,
-        //   style: {
-        //     background: "#FFF7ED",
-        //     border: "2px solid #F97316",
-        //     color: "#C2410C",
-        //     fontSize: "14px",
-        //     fontWeight: "600",
-        //     padding: "16px",
-        //     borderRadius: "8px",
-        //   },
-        // });
+        toast.success(
+          <div>
+            <strong>Please check your Downloads folder,</strong> as your
+            completed form should have automatically downloaded. If you do not
+            see it, please use the <strong>Contact Us</strong> page on our
+            website to request another copy.
+          </div>,
+          {
+            duration: 6000,
+            style: {
+              background: "#FFF7ED", // very light teal bg
+              border: "2px solid #0694A2", // brand border
+              color: "#035E66", // dark teal text
+              fontSize: "14px",
+              fontWeight: "600",
+              padding: "16px",
+              borderRadius: "8px",
+            },
+          },
+        );
       }
 
       const pdfFormData = convertToPDFFormat(formData);
@@ -812,7 +820,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
       // Save to store if cartId and formTitle are present
       if (cartId && formTitle) {
         store.setFormCompleted(cartId, formTitle, pdfFile);
-        toast.success("Form saved successfully!");
+        // toast.success("Form saved successfully!");
       } else {
         // Fallback for standalone usage if needed, or just log warning
         console.warn("Missing cartId or formTitle, cannot save to store.");
