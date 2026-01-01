@@ -418,15 +418,15 @@ export default function MedicalForm() {
                   All documents have been successfully submitted.
                 </p>
                 <p className="text-gray-700 text-base leading-relaxed">
-                  You should receive an email shortly with <strong>important information</strong>
-                  about what to know and how to prepare for your upcoming class.
-                  If you don&apos;t see it, please check your spam or junk
-                  folder.
+                  You should receive an email shortly with{" "}
+                  <strong>important information</strong> about what to know and
+                  how to prepare for your upcoming class. If you don&apos;t see
+                  it, please check your spam or junk folder.
                 </p>
                 <p className="text-gray-700 text-base leading-relaxed">
                   If the email isn&apos;t found in either place, please reach
-                  out to us through the <strong>Contact Us</strong> page on our website and
-                  we&apos;ll be happy to help.
+                  out to us through the <strong>Contact Us</strong> page on our
+                  website and we&apos;ll be happy to help.
                 </p>
                 <p className="text-gray-700 text-base leading-relaxed font-medium">
                   We&apos;re looking forward to diving with you soon! 🌊

@@ -41,8 +41,7 @@ export function TripSummary({ trip }: TripSummaryProps) {
         <div className="border-t pt-4 space-y-2">
           <div className="flex justify-between">
             <span className="text-[#6c757d]">
-              {/* Trip Cost (x{state.participants}) */}
-              Trip Cost
+              Trip Cost (x{state.participants}){/* Trip Cost */}
             </span>
             {/* <span className="font-medium">
               $
