@@ -222,8 +222,10 @@ const FeaturedClasses: React.FC = () => {
           <DialogHeader>
             <DialogTitle>Login Required</DialogTitle>
             <DialogDescription>
-              You need to be logged in to book this course. Please login to
-              continue.
+              {/* You need to be logged in to book this course. Please login to
+              continue. */}
+              Please login to access your account, book a course and/or trip,
+              leave a review, send a chat, and/or shop for products!
             </DialogDescription>
           </DialogHeader>
 
