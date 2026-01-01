@@ -22,8 +22,8 @@ const ShopProductCard: React.FC<ShopProductCardType> = ({
   image,
   title,
   description,
-  rating,
-  reviews,
+  // rating,
+  // reviews,
   price,
   onSeeMore,
 
@@ -64,9 +64,9 @@ const ShopProductCard: React.FC<ShopProductCardType> = ({
 
           {/* Rating */}
           <div className="flex items-center gap-1 mt-2 text-sm text-gray-600">
-            <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-            <span className="font-medium">{rating.toFixed(1)}</span>
-            <span className="text-gray-400">({reviews} reviews)</span>
+            {/* <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" /> */}
+            {/* <span className="font-medium">{rating.toFixed(1)}</span> */}
+            {/* <span className="text-gray-400">({reviews} reviews)</span> */}
           </div>
 
           {/* Price */}
