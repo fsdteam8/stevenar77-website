@@ -75,8 +75,8 @@ const Products = () => {
                       ? product.longDescription.slice(0, 100) + "..."
                       : ""
                 }
-                rating={product.averageRating || 0}
-                reviews={product.totalReviews || 0}
+                // rating={product.averageRating || 0}
+                // reviews={product.totalReviews || 0}
                 price={product.price || 0}
                 onSeeMore={() => router.push(`/shop/${product._id}`)} // admin product page
                 onBookNow={() => console.log("Add to cart:", product._id)}
