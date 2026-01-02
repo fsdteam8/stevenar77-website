@@ -10,7 +10,10 @@ const ProductsCombined = () => {
   const { products, isLoading, isError } = useAllProducts();
 
   if (isLoading) return <p className="text-center mt-10">Loading...</p>;
-  if (isError) return <p className="text-center mt-10 text-red-500">Failed to load products.</p>;
+  if (isError)
+    return (
+      <p className="text-center mt-10 text-red-500">Failed to load products.</p>
+    );
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 lg:p-6">
@@ -26,18 +29,22 @@ const ProductsCombined = () => {
                 id={product._id}
                 description={
                   product.shortDescription
-                    ? product.shortDescription.replace(/<[^>]*>?/gm, "").slice(0, 100) + "..."
+                    ? product.shortDescription
+                        .replace(/<[^>]*>?/gm, "")
+                        .slice(0, 100) + "..."
                     : ""
                 }
-                rating={0}
-                reviews={0}
+                // rating={0}
+                // reviews={0}
                 price={product.price || 0}
                 onSeeMore={() => router.push(`/shop/${product._id}`)}
                 onBookNow={() => console.log("Buy now clicked:", product._id)}
               />
             ))
           ) : (
-            <p className="col-span-full text-center text-gray-500 mt-10">No products found.</p>
+            <p className="col-span-full text-center text-gray-500 mt-10">
+              No products found.
+            </p>
           )}
         </div>
       </div>
