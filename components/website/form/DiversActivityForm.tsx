@@ -1,3 +1,4 @@
+// DiversActivityForm.tsx
 "use client";
 
 import Image from "next/image";
@@ -139,8 +140,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
       toast.error(
-        `Failed to generate PDF: ${
-          error instanceof Error ? error.message : "Unknown error"
+        `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"
         }`,
       );
     } finally {
@@ -156,36 +156,42 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
         className="print-area max-w-4xl mx-auto bg-white p-10 text-sm leading-relaxed font-serif shadow-lg"
       >
         {/* ---------------- Page 1 ---------------- */}
-        <div className="flex items-center pb-4">
+        <div className="break-inside-avoid shadow-[0_0_0_1px_rgba(0,0,0,0.02)]">
           <div className="flex items-center pb-4">
             <div className="mr-6 flex-shrink-0">
               <Image
                 src={"/images/pdf-logo.png"}
                 alt="Padi logo"
-                width={200}
-                height={200}
+                width={100}
+                height={100}
                 crossOrigin="anonymous"
               />
             </div>
 
             <div className="flex-1">
               <div>
-                <h1 className="text-center font-bold text-xl mb-1">
+                <h1 className="text-center max-w-8xl font-bold text-base ">
                   Release of Liability/Assumption of Risk/Non-agency
+                  {" "}
                   Acknowledgment Form
                 </h1>
-                <h2 className="text-center text-4xl font-bold mb-4">
+                <h2 className="text-center text-3xl font-bold mb-4">
                   DIVER ACTIVITIES
                 </h2>
                 <hr className="my-2 border-2 border-gray-900" />
+                <div className="ml-10">
+                  <p className="text-base capitalize font-bold text-start">
+                    Please read carefully and fill in all blanks before signing.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div className=" ml-10 ">
-          <p className="text-basecapitalize font-bold text-start">
+          {/* <p className="text-basecapitalize font-bold text-start">
             Please read carefully and fill in all blanks before signing.
-          </p>
+          </p> */}
           <div className="">
             <div className="mt-8">
               <h3 className="text-center font-bold text-2xl mt-2 mb-3">
@@ -193,8 +199,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               </h3>
             </div>
 
-            <p>
-              I understand and agree that PADI Members (&qout;Members&qout;),
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I understand and agree that PADI Members (&qout;Members&qout;),
               including
               <span className="border-full underline border-gray-900 text-xl font-bold px-2">
                 Scuba Life & their instructors
@@ -227,8 +233,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               </h3>
             </div>
 
-            <p>
-              I,{" "}
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I,{" "}
               <input
                 type="text"
                 value={participantName}
@@ -265,8 +271,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               site(s).
             </p>
 
-            <p className="mt-4">
-              I understand and agree that neither
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I understand and agree that neither
               <span className="border-full underline border-gray-900 text-xl font-bold px-2">
                 Scuba Life & their instructors
               </span>{" "}
@@ -282,8 +288,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               passive or active.
             </p>
 
-            <p className="mt-6">
-              I affirm I am in good mental and physical fitness for the
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I affirm I am in good mental and physical fitness for the
               Excursion. I further state that I will not participate in the
               Excursion if I am under the influence of alcohol or any drugs that
               are contraindicated to diving. If I am taking medication, I affirm
@@ -296,8 +302,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               hold the Released Parties responsible for the same.
             </p>
 
-            <p className="mt-6">
-              I am aware that safe dive practices suggest diving with a buddy
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I am aware that safe dive practices suggest diving with a buddy
               unless trained as a self-reliant diver. I am aware it is my
               responsibility to plan my dive allowing for my diving experience
               and limitations, and the prevailing water conditions and
@@ -306,9 +312,9 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               instructions and dive briefing of the dive professional(s).
             </p>
 
-            <p className="mt-6">
-              If diving from a boat, I will be present at and attentive to the
-              briefing given by the boat crew. If there is anything I do not
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If diving from a boat, I will be present at and attentive to the briefing
+              given by the boat crew. If there is anything I do not
               understand I will notify the boat crew or captain immediately. I
               acknowledge it is my responsibility to plan my dives as
               no-decompression dives, and within parameters that allow me to
@@ -332,19 +338,20 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               <Image
                 src={"/images/pdf-logo.png"}
                 alt="Padi logo"
-                width={200}
-                height={200}
+                width={100}
+                height={100}
                 crossOrigin="anonymous"
               />
             </div>
 
             <div className="flex-1">
               <div>
-                <h1 className="text-center font-bold text-xl mb-1">
+                <h1 className="text-center max-w-8xl font-bold text-base ">
                   Release of Liability/Assumption of Risk/Non-agency
+                  {" "}
                   Acknowledgment Form
                 </h1>
-                <h2 className="text-center text-4xl font-bold mb-4">
+                <h2 className="text-center text-3xl font-bold mb-4">
                   DIVER ACTIVITIES
                 </h2>
                 <hr className="my-2 border-2 border-gray-900" />
@@ -352,16 +359,16 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
             </div>
           </div>
           <div className=" ml-10 ">
-            <p className="mt-6">
-              I am aware safe dive practices recommend a refresher or guided
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I am aware safe dive practices recommend a refresher or guided
               orientation dive following a period of diving inactivity. I
               understand such refresher/guided dive is available for an
               additional fee. If I choose not to follow this recommendation I
               will not hold the Released Parties responsible for my decision.
             </p>
 
-            <p className="mt-6">
-              I acknowledge Released Parties may provide an in-water guide
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I acknowledge Released Parties may provide an in-water guide
               (hereinafter &qout;Guide&qout;) during the Excursion. The Guide is
               present to assist in navigation during the dive and identifying
               local flora and fauna. If I choose to dive with the Guide I
@@ -372,8 +379,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               is at my own risk and peril.
             </p>
 
-            <p className="mt-6">
-              I affirm it is my responsibility to inspect all of the equipment I
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I affirm it is my responsibility to inspect all of the equipment I
               will be using prior to the leaving the dock for the Excursion and
               that I should not dive if the equipment is not functioning
               properly. I will not hold the Released Parties responsible for my
@@ -381,8 +388,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               dive with equipment that may not be functioning properly.
             </p>
 
-            <p className="mt-6">
-              I acknowledge Released Parties have made no representation to me,
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I acknowledge Released Parties have made no representation to me,
               implied or otherwise, that they or their crew can or will perform
               effective rescues or render first aid. In the event I show signs
               of distress or call for aid I would like assistance and will not
@@ -391,14 +398,14 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               rescue or first aid.
             </p>
 
-            <p className="mt-6">
-              I hereby state and agree that this Agreement will be effective for
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I hereby state and agree that this Agreement will be effective for
               all Excursions in which I participate for one (1) year from the
               date on which I sign this Agreement.
             </p>
 
-            <p className="mt-6">
-              I further state that I am of lawful age and legally competent to
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I further state that I am of lawful age and legally competent to
               sign this liability release, or that I have acquired the written
               consent of my parent or guardian. I understand the terms herein
               are contractual and not a mere recital, and that I have signed
@@ -417,8 +424,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               Released Parties.
             </p>
 
-            <p className="mt-6">
-              I,{" "}
+            <p className="text-justify indent-8 mt-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I,{" "}
               <input
                 type="text"
                 value={participantName}
@@ -438,8 +445,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               RELEASED PARTIES, WHETHER PASSIVE OR ACTIVE.
             </p>
 
-            <p className=" mt-6 mb-6">
-              I HAVE FULLY INFORMED MYSELF AND MY HEIRS OF THE CONTENTS OF THIS
+            <p className="text-justify indent-8 mt-6 mb-6">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I HAVE FULLY INFORMED MYSELF AND MY HEIRS OF THE CONTENTS OF THIS
               NON-AGENCY DISCLOSURE AND ACKNOWLEDGMENT AGREEMENT, AND LIABILITY
               RELEASE AND ASSUMPTION OF RISK AGREEMENT BY READING BOTH BEFORE
               SIGNING BELOW ON BEHALF OF MYSELF AND MY HEIRS.
@@ -567,9 +574,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
                 }}
                 placeholder={hasInsurance ? "Enter policy number" : "N/A"}
                 disabled={!hasInsurance}
-                className={`border-b ${errors.policyNumber ? "border-red-500 bg-red-50" : "border-black"} w-48 h-8 px-1 bg-transparent focus:outline-none ${
-                  !hasInsurance ? "text-gray-400 " : ""
-                }`}
+                className={`border-b ${errors.policyNumber ? "border-red-500 bg-red-50" : "border-black"} w-48 h-8 px-1 bg-transparent focus:outline-none ${!hasInsurance ? "text-gray-400 " : ""
+                  }`}
               />
             </div>
           </div>
@@ -581,11 +587,10 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
         <button
           onClick={handlePrint}
           disabled={isGeneratingPDF}
-          className={`font-bold py-3 px-6 rounded-lg transition duration-200 w-full cursor-pointer ${
-            isGeneratingPDF
-              ? "bg-gray-400  text-gray-700"
-              : "bg-primary hover:bg-teal-500 text-white"
-          }`}
+          className={`font-bold py-3 px-6 rounded-lg transition duration-200 w-full cursor-pointer ${isGeneratingPDF
+            ? "bg-gray-400  text-gray-700"
+            : "bg-primary hover:bg-teal-500 text-white"
+            }`}
         >
           {isGeneratingPDF ? "Generating PDF..." : "Submit Form"}
         </button>

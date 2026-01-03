@@ -117,14 +117,20 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
         className="print-area max-w-4xl mx-auto bg-card shadow-xl rounded-lg overflow-hidden"
       >
         {/* Header with Logo and Title */}
-        <div className="flex flex-col lg:flex-row items-start p-6 lg:p-8 gap-6">
+                <div className="">
+                  <h2 className="text-lg lg:text-xl font-bold text-center leading-tight">
+                  Release of Liability/Assumption of Risk/Non-agency
+                  Acknowledgment Form
+                </h2>
+                </div>
+        <div className="flex flex-col lg:flex-row items-center px-6 py-0! lg:p-8 gap-6">
           <div className=" mx-auto lg:mx-0">
             <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-full flex items-center justify-center">
               <Image
                 src="/images/trainning.png"
                 alt="PADI logo"
-                width={100}
-                height={100}
+                width={200}
+                height={200}
                 crossOrigin="anonymous"
               />
             </div>
@@ -132,12 +138,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
 
           <div className="flex-1 w-full">
             <div className="text-center lg:text-left mb-4">
-              <div className=" px-4 py-3 mb-4 rounded-sm">
-                <h2 className="text-lg lg:text-xl font-bold text-center leading-tight">
-                  Release of Liability/Assumption of Risk/Non-agency
-                  Acknowledgment Form
-                </h2>
-                <h3 className="text-base font-bold text-center mt-2">
+              <div className=" px-0! py-3 mb-4 rounded-sm">
+                <h3 className="text-3xl font-bold text-center mt-2">
                   ENRICHED AIR (NITROX) DIVER TRAINING
                 </h3>
               </div>
@@ -233,7 +235,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 placeholder="Participant Name"
                 className={`border-0 border-b-2 ${
                   errors.participantName ? "border-red-500" : "border-black"
-                } bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm focus:outline-none focus:border-blue-600 border-red-500`}
+                } bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm w-46 h-12 focus:outline-none focus:border-blue-600 border-red-500`}
                 required
               />
               <span className="text-sm">
@@ -385,7 +387,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 placeholder="Participant Name (PLEASE PRINT)"
                 className={`border-0 border-b-2 ${
                   errors.participantName ? "border-red-500" : "border-black"
-                } bg-transparent w-full text-lg focus:outline-none focus:border-blue-600 pb-2 border-red-500`}
+                } bg-transparent w-full text-lg focus:outline-none focus:border-blue-600 w-46 h-12 pb-2 border-red-500`}
                 required
               />
               <p className="text-xs mt-2 font-medium">
@@ -414,7 +416,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                     errors.participantSignature
                       ? "border-red-500"
                       : "border-black"
-                  } bg-transparent w-full text-lg font-cursive focus:outline-none focus:border-blue-600 pb-2 border-red-500 italic`}
+                  } bg-transparent w-full text-lg font-cursive focus:outline-none focus:border-blue-600 w-46 h-12 pb-2 border-red-500 italic`}
                   style={{ fontFamily: "cursive" }}
                   required
                 />
@@ -437,7 +439,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                   }}
                   className={`border-0 border-b-2 ${
                     errors.participantDate ? "border-red-500" : "border-black"
-                  } bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1 border-red-500`}
+                  } bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 w-46 h-12 pb-1 border-red-500`}
                   required
                 />
                 <p className="text-xs mt-2 text-center font-medium">
@@ -459,7 +461,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                   value={guardianSignature}
                   onChange={(e) => setGuardianSignature(e.target.value)}
                   placeholder="Type guardian signature here (if applicable)"
-                  className="border-0 border-b-2 border-black bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 pb-2"
+                  className="border-0 border-b-2 border-black bg-transparent w-full text-lg font-cursive italic focus:outline-none focus:border-blue-600 w-46 h-12 pb-2"
                   style={{ fontFamily: "cursive" }}
                 />
                 <p className="text-xs mt-2 font-medium">
@@ -471,7 +473,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                   type="text"
                   value={guardianDate}
                   onChange={(e) => setGuardianDate(e.target.value)}
-                  className="border-0 border-b-2 border-black bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 pb-1 "
+                  className="border-0 border-b-2 border-black bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 w-46 h-12 pb-1 "
                 />
                 <p className="text-xs mt-2 text-center font-medium">
                   Date (Day/Month/Year)
@@ -538,7 +540,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                     placeholder="Enter policy number"
                     className={`border-0 border-b-2 ${
                       errors.policyNumber ? "border-red-500" : "border-black"
-                    } bg-transparent px-2 py-1 text-sm focus:outline-none focus:border-blue-600`}
+                    } bg-transparent px-2 py-1 text-sm focus:outline-none focus:border-blue-600 w-46 h-12 pb-2 border-red-500`}
                   />
                 </div>
               )}

@@ -74,23 +74,61 @@ export const generatePaginatedPDF = async (
   const pdfWidth = pdf.internal.pageSize.getWidth(); // 210 mm
   const pdfHeight = pdf.internal.pageSize.getHeight(); // 297 mm
 
-  // Calculate image dimensions to fit A4 width
+  // Calculate image dimensions to fit A4 width with margins
+  const margin = 10; // 10mm margin
+  const innerWidth = pdfWidth - 2 * margin;
+  const innerHeight = pdfHeight - 2 * margin;
+
   const imgProps = pdf.getImageProperties(imgData);
-  const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  const imgHeight = (imgProps.height * innerWidth) / imgProps.width;
 
   let heightLeft = imgHeight;
   let position = 0;
 
   // Add the first page
-  pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, imgHeight);
-  heightLeft -= pdfHeight;
+  pdf.addImage(
+    imgData,
+    "JPEG",
+    margin,
+    margin + position,
+    innerWidth,
+    imgHeight,
+    undefined,
+    "FAST",
+  );
+
+  // Overlay margins with white rectangles to prevent content spillover
+  pdf.setFillColor(255, 255, 255);
+  pdf.rect(0, 0, pdfWidth, margin, "F"); // Top
+  pdf.rect(0, pdfHeight - margin, pdfWidth, margin, "F"); // Bottom
+  pdf.rect(0, 0, margin, pdfHeight, "F"); // Left
+  pdf.rect(pdfWidth - margin, 0, margin, pdfHeight, "F"); // Right
+
+  heightLeft -= innerHeight;
 
   // Add subsequent pages if content overflows
   while (heightLeft > 0) {
-    position -= pdfHeight; // Move the image up by one page height
+    position -= innerHeight; // Move the image up by the inner height of the page
     pdf.addPage();
-    pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, imgHeight);
-    heightLeft -= pdfHeight;
+    pdf.addImage(
+      imgData,
+      "JPEG",
+      margin,
+      margin + position,
+      innerWidth,
+      imgHeight,
+      undefined,
+      "FAST",
+    );
+
+    // Overlay margins on subsequent pages
+    pdf.setFillColor(255, 255, 255);
+    pdf.rect(0, 0, pdfWidth, margin, "F"); // Top
+    pdf.rect(0, pdfHeight - margin, pdfWidth, margin, "F"); // Bottom
+    pdf.rect(0, 0, margin, pdfHeight, "F"); // Left
+    pdf.rect(pdfWidth - margin, 0, margin, pdfHeight, "F"); // Right
+
+    heightLeft -= innerHeight;
   }
 
   const pdfBlob = pdf.output("blob");
