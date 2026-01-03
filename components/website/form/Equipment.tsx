@@ -1,3 +1,4 @@
+// Equipment.tsx
 "use client";
 
 import type React from "react";
@@ -282,7 +283,7 @@ export default function PadiForm({
       <div className="max-w-4xl mx-auto space-y-4">
         <div
           ref={printRef}
-          className="bg-white p-6 shadow-lg max-w-4xl mx-auto"
+          className="bg-white pt-12 pb-12 px-10 shadow-lg max-w-4xl mx-auto"
           style={{
             fontFamily: "Arial, sans-serif",
             fontSize: "11px",
@@ -293,15 +294,17 @@ export default function PadiForm({
           {/* Page 1 */}
           <div className="mb-8">
             {/* Header */}
-            <div className="text-center mb-4">
-              <div className="font-bold text-sm mb-1">
-                Release of Liability/Assumption of Risk/Non-agency
-                Acknowledgement Form
+            <div className="break-inside-avoid shadow-[0_0_0_1px_rgba(0,0,0,0.02)]">
+              <div className="text-center mb-4">
+                <div className="font-bold text-sm mb-1">
+                  Release of Liability/Assumption of Risk/Non-agency
+                  &nbsp;Acknowledgement Form
+                </div>
+                <div className="font-bold text-lg mb-2">
+                  EQUIPMENT RENTAL AGREEMENT
+                </div>
+                <hr className="my-2 border-2 border-gray-900" />
               </div>
-              <div className="font-bold text-lg mb-2">
-                EQUIPMENT RENTAL AGREEMENT
-              </div>
-              <hr className="my-2 border-2 border-gray-900" />
             </div>
 
             {/* Personal Information Grid */}
@@ -402,34 +405,51 @@ export default function PadiForm({
                 </div>
 
                 {/* Phone Home */}
-                <div className="flex items-center">
-                  {/* <span className="w-20">Phone Home (</span> */}
-                  <span className="w-20">Cell Phone (</span>
+                <div className="flex items-end h-16">
+                  {/* <span className="pb-2">Cell Phone (</span>
+                  <input
+                    type="text"
+                    name="phoneHome"
+                    value={formData.phoneHome}
+                    onChange={handleInputChange}
+                    className={`flex-1 border-0 h-12 border-b-2 ${errors.phoneHome ? "border-red-500" : "border-black"} bg-transparent outline-none pb-1 mx-2`}
+                  />
+                  <span className="pb-2">)</span>
+                  <input
+                    type="text"
+                    name="phoneHome"
+                    value={formData.phoneHome}
+                    onChange={handleInputChange}
+                    className={`flex-1 border-0 h-12 border-b-2 ${errors.phoneHome ? "border-red-500" : "border-black"} bg-transparent outline-none pb-1 mx-2`}
+                  /> */}
+
+                  <span className="pb-2 mr-2">Cell Phone</span>
 
                   <input
                     type="text"
-                    name="phoneHomeArea"
-                    value={formData.phoneHomeArea}
-                    onChange={handleInputChange}
-                    className="w-8 border-0 border-b h-12 border-black bg-transparent outline-none text-center"
-                    maxLength={3}
+                    name="phoneHome"
+                    value={formData.phoneHome}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/\D/g, "");
+                      value = value.slice(0, 10); // max 10 digits
+
+                      if (value.length > 6) {
+                        value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6)}`;
+                      } else if (value.length > 3) {
+                        value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+                      } else if (value.length > 0) {
+                        value = `(${value}`;
+                      }
+
+                      setFormData({
+                        ...formData,
+                        phoneHome: value,
+                      });
+                    }}
+                    placeholder="(123) 456-7890"
+                    className={`flex-1 border-0 h-12 border-b-2 ${errors.phoneHome ? "border-red-500" : "border-black"
+                      } bg-transparent outline-none pb-1`}
                   />
-                  <span>)</span>
-                  <div className="flex-1 ml-1">
-                    <input
-                      type="text"
-                      name="phoneHome"
-                      value={formData.phoneHome}
-                      onChange={handleInputChange}
-                      className={`w-full border-0 h-12 border-b ${errors.phoneHome ? "border-red-500" : "border-black"} bg-transparent outline-none`}
-                      // placeholder="Your Phone Number"
-                    />
-                    {errors.phoneHome && (
-                      <span className="text-red-500 text-[10px]">
-                        {errors.phoneHome}
-                      </span>
-                    )}
-                  </div>
                 </div>
 
                 {/* Email */}
@@ -552,13 +572,21 @@ export default function PadiForm({
                 ].map(([leftItem, rightItem], index) => (
                   <tr key={index}>
                     <td className="border border-black p-1 h-6"></td>
-                    <td className="border border-black p-1">{leftItem}</td>
+                    <td
+                      className={`border border-black p-1 ${leftItem.toLowerCase().startsWith("w/") ? "pl-5" : ""}`}
+                    >
+                      {leftItem}
+                    </td>
                     <td className="border border-black p-1"></td>
                     <td className="border border-black p-1"></td>
                     <td className="border border-black p-1"></td>
                     <td className="border border-black p-1"></td>
                     <td className="border border-black p-1"></td>
-                    <td className="border border-black p-1">{rightItem}</td>
+                    <td
+                      className={`border border-black p-1 ${rightItem.toLowerCase().startsWith("w/") ? "pl-5" : ""}`}
+                    >
+                      {rightItem}
+                    </td>
                     <td className="border border-black p-1"></td>
                     <td className="border border-black p-1"></td>
                     <td className="border border-black p-1"></td>
@@ -641,26 +669,32 @@ export default function PadiForm({
             <div className="text-right text-xs">- page 1 of 2 -</div>
           </div>
           <div className="py-40"></div>
+          <br />
+          <br />  
+          
           {/* Page 2 */}
           <div className="mt-12">
-            <div className="text-center mb-4">
-              <div className="font-bold text-sm mb-1">
-                Release of Liability/Assumption of Risk/Non-agency
-                Acknowledgement Form
-              </div>
-              <div className="font-bold text-lg mb-2">
-                EQUIPMENT RENTAL AGREEMENT
-              </div>
-              <hr className="my-2 border-2 border-gray-900" />
+            <div className="break-inside-avoid shadow-[0_0_0_1px_rgba(0,0,0,0.02)]">
+              <div className="text-center mb-4">
+                <div className="font-bold text-sm mb-1">
+                  Release of Liability/Assumption of Risk/Non-agency
+                  {" "}
+                  Acknowledgement Form
+                </div>
+                <div className="font-bold text-lg mb-2">
+                  EQUIPMENT RENTAL AGREEMENT
+                </div>
+                <hr className="my-2 border-2 border-gray-900" />
 
-              <div className="text-xs text-start font-bold mb-2">
-                Please read carefully and fill in all blanks before signing.
+                <div className="text-xs text-start font-bold mb-2">
+                  Please read carefully and fill in all blanks before signing.
+                </div>
               </div>
             </div>
 
             <div className="text-xs leading-relaxed space-y-3">
-              <p>
-                THIS AGREEMENT is entered into between{" "}
+              <p className="text-justify indent-8">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;THIS AGREEMENT is entered into between{" "}
                 <span className="border-full underline border-gray-900 text-xl font-bold px-2">
                   Scuba Life & their instructors
                 </span>
@@ -670,7 +704,7 @@ export default function PadiForm({
                   name="renter"
                   value={formData.renter}
                   onChange={handleInputChange}
-                  className={`border-0 border-b h-12 ${errors.renter ? "border-red-500" : "border-black"} bg-transparent outline-none w-32`}
+                  className={`border-0 border-b h-10 ${errors.renter ? "border-red-500" : "border-black"} bg-transparent outline-none w-32 pb-0`}
                   placeholder="rentor"
                 />
                 {errors.renter && (
@@ -691,8 +725,8 @@ export default function PadiForm({
                 Non-Agency Disclosure and Acknowledgment Agreement
               </div>
 
-              <p>
-                I understand and agree that PADI Members (&quot;Members&quot;),
+              <p className="text-justify indent-8">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I understand and agree that PADI Members (&quot;Members&quot;),
                 including{" "}
                 <span className="border-full underline border-gray-900 text-xl font-bold px-2">
                   Scuba Life & their instructors
@@ -725,8 +759,8 @@ export default function PadiForm({
                 Liability Release and Assumption of Risk Agreement
               </div>
 
-              <p className="text-xs">
-                I understand and agree that{" "}
+              <p className="text-xs text-justify indent-8">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I understand and agree that{" "}
                 <span className="border-full underline border-gray-900 text-xl font-bold px-2">
                   Scuba Life & their instructors
                 </span>
@@ -740,16 +774,16 @@ export default function PadiForm({
                 Parties, whether passive or active.
               </p>
 
-              <p className="text-xs">
-                I hereby acknowledge receipt of the equipment designated in this
+              <p className="text-xs text-justify indent-8">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I hereby acknowledge receipt of the equipment designated in this
                 form, and, if any of this equipment is to be used for scuba
                 diving I affirm I am a certified scuba diver or student diver in
                 a scuba diving course/program under the supervision of a
                 certified scuba instructor.
               </p>
 
-              <p className="text-xs">
-                I affirm it is my responsibility to inspect all of the equipment
+              <p className="text-xs text-justify indent-8">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I affirm it is my responsibility to inspect all of the equipment
                 and acknowledge it is in good working condition. I affirm that
                 it is my responsibility to check both the quality and quantity
                 of gas in any scuba tanks. I acknowledge that I should not dive
@@ -759,8 +793,8 @@ export default function PadiForm({
                 that may not be functioning properly.
               </p>
 
-              <p className="text-xs">
-                I understand that skin diving and scuba diving are physically
+              <p className="text-xs text-justify indent-8">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I understand that skin diving and scuba diving are physically
                 strenuous activities, that I will be exerting myself during
                 these activities, and that if I am injured as a result of heart
                 attack, panic, hyperventilation, drowning or any other cause,
@@ -768,16 +802,16 @@ export default function PadiForm({
                 will not hold the Released Parties responsible for the same.
               </p>
 
-              <p className="text-xs">
-                I agree to reimburse the Dive Center/Resort for the loss or
+              <p className="text-xs text-justify indent-8">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I agree to reimburse the Dive Center/Resort for the loss or
                 breakage of any and all equipment at the current replacement
                 value and to also pay for damages incurred while transporting
                 the equipment. I agree to return the equipment in clean
                 condition and to pay a cleaning fee if not returned cleaned.
               </p>
 
-              <p className="text-xs">
-                I further state that I am of lawful age and legally competent to
+              <p className="text-xs text-justify indent-8">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I further state that I am of lawful age and legally competent to
                 sign this liability release, or that I have acquired the written
                 consent of my parent or guardian. I understand the terms herein
                 are contractual and not a mere recital, and that I have signed
@@ -789,8 +823,8 @@ export default function PadiForm({
                 the unenforceable provision had never been contained herein.
               </p>
 
-              <p className="text-xs">
-                I understand and agree that I am not only giving up my right to
+              <p className="text-xs text-justify indent-8">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I understand and agree that I am not only giving up my right to
                 sue the Released Parties but also any rights my heirs, assigns,
                 and beneficiaries may have to sue the Released Parties resulting
                 from my death. I further represent I have the authority to do so
@@ -799,8 +833,8 @@ export default function PadiForm({
                 Released Parties.
               </p>
 
-              <p className="font-bold">
-                I,{" "}
+              <p className="font-bold text-justify indent-8">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I,{" "}
                 <input
                   type="text"
                   name="renter"
@@ -823,8 +857,8 @@ export default function PadiForm({
                 WHETHER PASSIVE OR ACTIVE.
               </p>
 
-              <p>
-                I HAVE FULLY INFORMED MYSELF AND MY HEIRS OF THE CONTENTS OF
+              <p className="text-justify indent-8">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I HAVE FULLY INFORMED MYSELF AND MY HEIRS OF THE CONTENTS OF
                 THIS NON-AGENCY DISCLOSURE AND ACKNOWLDGEMENT AGREEMENT AND
                 LIABILITY RELEASE AND ASSUMPTION OF RISK AGREEMENT BY READING
                 BOTH BEFORE SIGNING BELOW ON BEHALF OF MYSELF AND MY HEIRS.
@@ -894,9 +928,8 @@ export default function PadiForm({
         <Button
           onClick={handleDownloadPdf}
           disabled={isGeneratingPDF}
-          className={`w-full mb-4 no-print ${
-            isGeneratingPDF ? "bg-gray-400 cursor-not-allowed" : "bg-primary"
-          }`}
+          className={`w-full mb-4 no-print ${isGeneratingPDF ? "bg-gray-400 cursor-not-allowed" : "bg-primary"
+            }`}
         >
           {isGeneratingPDF ? "Generating PDF..." : "Submit Form"}
         </Button>

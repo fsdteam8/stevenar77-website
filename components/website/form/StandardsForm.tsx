@@ -1,3 +1,4 @@
+// StandardsForm.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -106,8 +107,7 @@ const StandardsForm: React.FC<StandardsFormProps> = ({
     } catch (error: unknown) {
       console.error("Error generating PDF:", error);
       toast.error(
-        `Failed to generate PDF: ${
-          error instanceof Error ? error.message : "Unknown error"
+        `Failed to generate PDF: ${error instanceof Error ? error.message : "Unknown error"
         }`,
       );
     } finally {
@@ -180,94 +180,84 @@ const StandardsForm: React.FC<StandardsFormProps> = ({
             </span>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 lg:gap-8 mb-8">
-            <div>
-              <ol className="list-decimal ml-5 space-y-4 text-sm leading-relaxed text-justify">
-                <li>
-                  Maintain good mental and physical fitness for diving. Avoid
-                  being under the influence of alcohol or dangerous drugs when
-                  diving. Keep proficient in diving skills, striving to increase
-                  them through continuing education and reviewing them in
-                  controlled conditions after a period of diving inactivity, and
-                  refer to my course materials to stay current and refresh
-                  myself on important information.
-                </li>
-                <li>
-                  Be familiar with my dive sites. If not, obtain a formal diving
-                  orientation from a knowledgeable, local source. If diving
-                  conditions are worse than those in which I am experienced,
-                  postpone diving or select an alternate site with better
-                  conditions. Engage only in diving activities consistent with
-                  my training and experience. Do not engage in cave or technical
-                  diving unless specifically trained to do so.
-                </li>
-                <li>
-                  Use complete, well-maintained, reliable equipment with which I
-                  am familiar; and inspect it for correct fit and function prior
-                  to each dive. Have a buoyancy control device, low-pressure
-                  buoyancy control inflation system, submersible pressure gauge
-                  and alternate air source and dive planning/monitoring device
-                  (dive computer, RDP/dive tables—whichever you are trained to
-                  use) when scuba diving. Deny use of my equipment to
-                  uncertified divers.
-                </li>
-                <li>
-                  Listen carefully to dive briefings and directions and respect
-                  the advice of those supervising my diving activities.
-                  Recognize that additional training is recommended for
-                  participation in specialty diving activities, in other
-                  geographic areas and after periods of inactivity that exceed
-                  six months.
-                </li>
-                <li>
-                  Adhere to the buddy system throughout every dive. Plan dives –
-                  including communications, procedures for reuniting in case of
-                  separation and emergency procedures – with my buddy.
-                </li>
-              </ol>
-            </div>
-
-            <div>
-              <ol
-                className="list-decimal ml-5 space-y-4 text-sm leading-relaxed text-justify"
-                start={6}
-              >
-                <li>
-                  Be proficient in dive planning (dive computer or dive table
-                  use). Make all dives no decompression dives and allow a margin
-                  of safety. Have a means to monitor depth and time underwater.
-                  Limit maximum depth to my level of training and experience.
-                  Ascend at a rate of not more than 18 metres/60 feet per
-                  minute. Be a SAFE diver –{" "}
-                  <strong>Slowly Ascend From Every dive</strong>. Make a safety
-                  stop as an added precaution, usually at 5 metres/15 feet for
-                  three minutes or longer.
-                </li>
-                <li>
-                  Maintain proper buoyancy. Adjust weighting at the surface for
-                  neutral buoyancy with no air in my buoyancy control device.
-                  Maintain neutral buoyancy while underwater. Be buoyant for
-                  surface swimming and resting. Have weights clear for easy
-                  removal, and establish buoyancy when in distress while diving.
-                  Carry at least one surface signaling device (such as signal
-                  tube, whistle, mirror).
-                </li>
-                <li>
-                  Breathe properly for diving. Never breath-hold or skip-breathe
-                  when breathing compressed air, and avoid excessive
-                  hyperventilation when breath-hold diving. Avoid overexertion
-                  while in and underwater and dive within my limitations.
-                </li>
-                <li>
-                  Use a boat, float or other surface support station, whenever
-                  feasible.
-                </li>
-                <li>
-                  Know and obey local dive laws and regulations, including fish
-                  and game and dive flag laws.
-                </li>
-              </ol>
-            </div>
+          <div className="mb-8">
+            <ol className="list-decimal pl-10 space-y-4 text-sm leading-relaxed text-justify">
+              <li>
+                Maintain good mental and physical fitness for diving. Avoid
+                being under the influence of alcohol or dangerous drugs when
+                diving. Keep proficient in diving skills, striving to increase
+                them through continuing education and reviewing them in
+                controlled conditions after a period of diving inactivity, and
+                refer to my course materials to stay current and refresh
+                myself on important information.
+              </li>
+              <li>
+                Be familiar with my dive sites. If not, obtain a formal diving
+                orientation from a knowledgeable, local source. If diving
+                conditions are worse than those in which I am experienced,
+                postpone diving or select an alternate site with better
+                conditions. Engage only in diving activities consistent with
+                my training and experience. Do not engage in cave or technical
+                diving unless specifically trained to do so.
+              </li>
+              <li>
+                Use complete, well-maintained, reliable equipment with which I
+                am familiar; and inspect it for correct fit and function prior
+                to each dive. Have a buoyancy control device, low-pressure
+                buoyancy control inflation system, submersible pressure gauge
+                and alternate air source and dive planning/monitoring device
+                (dive computer, RDP/dive tables—whichever you are trained to
+                use) when scuba diving. Deny use of my equipment to
+                uncertified divers.
+              </li>
+              <li>
+                Listen carefully to dive briefings and directions and respect
+                the advice of those supervising my diving activities.
+                Recognize that additional training is recommended for
+                participation in specialty diving activities, in other
+                geographic areas and after periods of inactivity that exceed
+                six months.
+              </li>
+              <li>
+                Adhere to the buddy system throughout every dive. Plan dives –
+                including communications, procedures for reuniting in case of
+                separation and emergency procedures – with my buddy.
+              </li>
+              <li>
+                Be proficient in dive planning (dive computer or dive table
+                use). Make all dives no decompression dives and allow a margin
+                of safety. Have a means to monitor depth and time underwater.
+                Limit maximum depth to my level of training and experience.
+                Ascend at a rate of not more than 18 metres/60 feet per
+                minute. Be a SAFE diver –{" "}
+                <strong>Slowly Ascend From Every dive</strong>. Make a safety
+                stop as an added precaution, usually at 5 metres/15 feet for
+                three minutes or longer.
+              </li>
+              <li>
+                Maintain proper buoyancy. Adjust weighting at the surface for
+                neutral buoyancy with no air in my buoyancy control device.
+                Maintain neutral buoyancy while underwater. Be buoyant for
+                surface swimming and resting. Have weights clear for easy
+                removal, and establish buoyancy when in distress while diving.
+                Carry at least one surface signaling device (such as signal
+                tube, whistle, mirror).
+              </li>
+              <li>
+                Breathe properly for diving. Never breath-hold or skip-breathe
+                when breathing compressed air, and avoid excessive
+                hyperventilation when breath-hold diving. Avoid overexertion
+                while in and underwater and dive within my limitations.
+              </li>
+              <li>
+                Use a boat, float or other surface support station, whenever
+                feasible.
+              </li>
+              <li>
+                Know and obey local dive laws and regulations, including fish
+                and game and dive flag laws.
+              </li>
+            </ol>
           </div>
 
           <p className="mb-8 text-sm leading-relaxed font-medium text-justify">
@@ -355,11 +345,10 @@ const StandardsForm: React.FC<StandardsFormProps> = ({
         <Button
           onClick={handleExportPDF}
           disabled={isGeneratingPDF}
-          className={`font-semibold bg-primary py-3 px-6 rounded-lg transition duration-200 w-full ${
-            isGeneratingPDF
-              ? "bg-muted cursor-not-allowed text-muted-foreground"
-              : "bg-primary hover:bg-emerald/90 text-accent-foreground shadow-md  "
-          }`}
+          className={`font-semibold bg-primary py-3 px-6 rounded-lg transition duration-200 w-full ${isGeneratingPDF
+            ? "bg-muted cursor-not-allowed text-muted-foreground"
+            : "bg-primary hover:bg-emerald/90 text-accent-foreground shadow-md  "
+            }`}
         >
           {isGeneratingPDF ? "Generating PDF..." : "Submit Form"}
         </Button>

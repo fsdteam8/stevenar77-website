@@ -117,23 +117,23 @@ export default function PadiLiabilityForm({
                 <Image
                   src={"/images/pdf-logo.png"}
                   alt="Padi logo"
-                  width={200}
-                  height={200}
+                  width={100}
+                  height={100}
                   priority
                   crossOrigin="anonymous"
                 />
               </div>
               <div className="flex-1">
                 <div>
-                  <h1 className="text-center font-bold text-xl mb-1">
+                  <h1 className="text-center max-w-8xl font-bold text-base mb-1">
                     Release of Liability/Assumption of Risk/Non-agency
                     Acknowledgment Form
                   </h1>
-                  <h2 className="text-center text-4xl font-bold mb-4">
+                  <h2 className="text-center text-2xl font-bold mb-4">
                     Continuing Education Administrative Document
                   </h2>
                   <hr className="my-2 border-2 border-gray-900" />
-                  <p className="capitalize text-center font-bold text-2xl mb-6">
+                  <p className="capitalize text-center font-bold text-base mb-6">
                     NOTE: Also complete and attach the Diver Medical Form
                     (Product No. 10346)
                   </p>
@@ -298,11 +298,11 @@ export default function PadiLiabilityForm({
             <div className="flex items-center ">
               <div className="flex-1">
                 <div>
-                  <h1 className="text-center font-bold text-xl mb-1">
+                  <h1 className="text-center max-w-8xl font-bold text-base mb-1">
                     Release of Liability/Assumption of Risk/Non-agency
                     Acknowledgment Form
                   </h1>
-                  <h2 className="text-center text-4xl font-bold mb-4">
+                  <h2 className="text-center text-2xl font-bold mb-4">
                     Continuing Education Administrative Document.{" "}
                     <span className="text-end text-sm italic">(Continued)</span>
                   </h2>
