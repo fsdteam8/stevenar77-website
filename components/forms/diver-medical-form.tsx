@@ -767,7 +767,7 @@ const DiverMedicalForm: React.FC<DiverMedicalFormProps> = ({
         //   ", ",
         // )} you must print this form and get it signed by a physician before participating in the class.`;
 
-        const message = `Because you answered <strong>“Yes”</strong> to at least one question on <strong>page 2</strong>, this form must be <strong>printed and signed by a physician</strong> before you can participate in the class. <br/> Please use the <strong>Contact Us</strong> page on our website to request a copy of your form.`;
+        const message = `Because you answered <strong>“Yes”</strong> to at least one question on <strong>page 2</strong>, this form must be <strong>printed and signed by a physician</strong> before you can participate in the class. <br/> <strong> Please check your Downloads folder,</strong> as your completed form should have automatically downloaded. <strong>If you do not see it,</strong> <br/> please use the <strong>Contact Us</strong> page on our website to request another copy.`;
 
         Swal.fire({
           icon: "warning",
