@@ -78,6 +78,7 @@ export default function Trips() {
           seeMoreLink={`/trips/${trip._id}`} // dynamic route
           bookNowLink={`/trips/book/${trip._id}`} // dynamic booking route
           reverse={index % 2 === 1} // alternate layout
+          className=" px-2"
         />
       ))}
     </div>

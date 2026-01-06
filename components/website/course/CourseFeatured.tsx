@@ -152,7 +152,7 @@ const CourseFeatured: React.FC = () => {
     <section className="py-10">
       <h2 className="text-3xl font-bold text-center mb-8">Featured Classes</h2>
 
-      <div className="w-full flex flex-wrap justify-between items-stretch container mx-auto">
+      <div className="w-full flex flex-wrap justify-between items-stretch container mx-auto px-2">
         {courses.map((course) => (
           <div key={course.id} className="md:w-[48%]">
             <FeatureCard
