@@ -86,28 +86,43 @@ const FeaturedClasses: React.FC = () => {
         <h2 className="text-3xl md:text-[48px] font-semibold text-center font-montserrat mb-4">
           Featured Classes
         </h2>
-        <div className="flex justify-center items-center h-64">
-          <Skeleton className="h-8 w-[150px] mb-4" /> {/* Skeleton for the title */}
-          <Skeleton className="h-4 w-[300px] mb-6" /> {/* Skeleton for the description */}
-          <Carousel setApi={setApi} className="container mx-auto">
-            <CarouselContent className="">
-              {Array.from({ length: 3 }).map((_, index) => (
-                <CarouselItem
-                  key={index}
-                  className="md:basis-1/2 lg:basis-1/3 flex flex-col items-stretch"
-                >
-                  <Skeleton className="h-[320px] w-full rounded-lg" /> {/* Skeleton for the course image */}
+        <p className="text-center mb-8">
+          <Skeleton className="h-4 w-[400px] mx-auto" />
+        </p>
+
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="flex flex-col h-full my-5">
+                <div className="my-5 w-full h-full overflow-hidden rounded-2xl shadow-lg bg-white flex flex-col">
+                  {/* Image Skeleton */}
+                  <Skeleton className="w-full aspect-[5/3] rounded-t-2xl" />
+
+                  {/* Content Skeleton */}
                   <div className="p-5 space-y-4">
-                    <Skeleton className="h-[20px] w-[60%] bg-gray-300" /> {/* Skeleton for title */}
-                    <Skeleton className="h-[18px] w-[30%] bg-gray-300" /> {/* Skeleton for rating */}
-                    <Skeleton className="h-[60px] w-full bg-gray-300 mt-2" /> {/* Skeleton for description */}
-                    <Skeleton className="h-[20px] w-[40%] bg-gray-300 mt-4" /> {/* Skeleton for duration */}
-                    <Skeleton className="h-[20px] w-[40%] bg-gray-300 mt-2" /> {/* Skeleton for location */}
+                    <div className="flex justify-between items-start gap-2">
+                      <Skeleton className="h-7 w-[70%]" />
+                      <Skeleton className="h-5 w-[15%]" />
+                    </div>
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-[60%]" />
+                    </div>
+                    <div className="flex justify-between items-center pt-2">
+                      <Skeleton className="h-5 w-[30%]" />
+                      <Skeleton className="h-5 w-[30%]" />
+                    </div>
                   </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+
+                  {/* Button Skeleton */}
+                  <div className="px-4 pb-4 mt-auto">
+                    <Skeleton className="h-12 w-full rounded-md" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     );
@@ -115,7 +130,7 @@ const FeaturedClasses: React.FC = () => {
 
   if (isError) {
     return (
-      <section className="py-10">
+      <section className="py-10 ">
         <div className="flex justify-center items-center h-64">
           <p className="text-center text-red-500">
             Error loading classes: {error?.message || "Something went wrong"}
@@ -150,7 +165,7 @@ const FeaturedClasses: React.FC = () => {
         Start your scuba journey with our comprehensive PADI certified courses
       </p>
 
-      <Carousel setApi={setApi} className="container  mx-auto">
+      <Carousel setApi={setApi} className="container  mx-auto px-2">
         <CarouselContent className="">
           {courses.map((course) => (
             <CarouselItem
@@ -221,9 +236,8 @@ const FeaturedClasses: React.FC = () => {
             {Array.from({ length: totalDots }).map((_, i) => (
               <button
                 key={i}
-                className={`h-3 w-3 rounded-full transition-colors ${
-                  i === current ? "bg-teal-600" : "bg-gray-300"
-                }`}
+                className={`h-3 w-3 rounded-full transition-colors ${i === current ? "bg-teal-600" : "bg-gray-300"
+                  }`}
                 onClick={() => api?.scrollTo(i)}
                 aria-label={`Go to slide ${i + 1}`}
               />

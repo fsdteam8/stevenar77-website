@@ -55,7 +55,7 @@ export default function TripsCard({
   };
 
   return (
-    <div className="container mx-auto my-16 md:my-10">
+    <div className="container mx-auto my-16 md:my-10 px-2">
       <div
         className={`grid grid-cols-1 md:grid-cols-12   gap-6 ${
           reverse ? "md:[direction:rtl]" : ""
