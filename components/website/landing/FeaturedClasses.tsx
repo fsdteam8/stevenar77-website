@@ -22,6 +22,7 @@ import { useCourses } from "@/services/hooks/courses/useCourses";
 import { CourseData } from "@/lib/courseApi";
 import { useRouter } from "next/navigation";
 import FeatureCard from "../shared/FeatureCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const FeaturedClasses: React.FC = () => {
   const { data: apiCourses, isLoading, isError, error } = useCourses();
@@ -82,8 +83,31 @@ const FeaturedClasses: React.FC = () => {
   if (isLoading) {
     return (
       <section className="py-10">
+        <h2 className="text-3xl md:text-[48px] font-semibold text-center font-montserrat mb-4">
+          Featured Classes
+        </h2>
         <div className="flex justify-center items-center h-64">
-          <p className="text-center text-gray-600">Loading classes...</p>
+          <Skeleton className="h-8 w-[150px] mb-4" /> {/* Skeleton for the title */}
+          <Skeleton className="h-4 w-[300px] mb-6" /> {/* Skeleton for the description */}
+          <Carousel setApi={setApi} className="container mx-auto">
+            <CarouselContent className="">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <CarouselItem
+                  key={index}
+                  className="md:basis-1/2 lg:basis-1/3 flex flex-col items-stretch"
+                >
+                  <Skeleton className="h-[320px] w-full rounded-lg" /> {/* Skeleton for the course image */}
+                  <div className="p-5 space-y-4">
+                    <Skeleton className="h-[20px] w-[60%] bg-gray-300" /> {/* Skeleton for title */}
+                    <Skeleton className="h-[18px] w-[30%] bg-gray-300" /> {/* Skeleton for rating */}
+                    <Skeleton className="h-[60px] w-full bg-gray-300 mt-2" /> {/* Skeleton for description */}
+                    <Skeleton className="h-[20px] w-[40%] bg-gray-300 mt-4" /> {/* Skeleton for duration */}
+                    <Skeleton className="h-[20px] w-[40%] bg-gray-300 mt-2" /> {/* Skeleton for location */}
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         </div>
       </section>
     );
