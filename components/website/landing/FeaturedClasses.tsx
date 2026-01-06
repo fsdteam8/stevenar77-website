@@ -22,6 +22,7 @@ import { useCourses } from "@/services/hooks/courses/useCourses";
 import { CourseData } from "@/lib/courseApi";
 import { useRouter } from "next/navigation";
 import FeatureCard from "../shared/FeatureCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const FeaturedClasses: React.FC = () => {
   const { data: apiCourses, isLoading, isError, error } = useCourses();
@@ -82,8 +83,46 @@ const FeaturedClasses: React.FC = () => {
   if (isLoading) {
     return (
       <section className="py-10">
-        <div className="flex justify-center items-center h-64">
-          <p className="text-center text-gray-600">Loading classes...</p>
+        <h2 className="text-3xl md:text-[48px] font-semibold text-center font-montserrat mb-4">
+          Featured Classes
+        </h2>
+        <p className="text-center mb-8">
+          <Skeleton className="h-4 w-[400px] mx-auto" />
+        </p>
+
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="flex flex-col h-full my-5">
+                <div className="my-5 w-full h-full overflow-hidden rounded-2xl shadow-lg bg-white flex flex-col">
+                  {/* Image Skeleton */}
+                  <Skeleton className="w-full aspect-[5/3] rounded-t-2xl" />
+
+                  {/* Content Skeleton */}
+                  <div className="p-5 space-y-4">
+                    <div className="flex justify-between items-start gap-2">
+                      <Skeleton className="h-7 w-[70%]" />
+                      <Skeleton className="h-5 w-[15%]" />
+                    </div>
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-[60%]" />
+                    </div>
+                    <div className="flex justify-between items-center pt-2">
+                      <Skeleton className="h-5 w-[30%]" />
+                      <Skeleton className="h-5 w-[30%]" />
+                    </div>
+                  </div>
+
+                  {/* Button Skeleton */}
+                  <div className="px-4 pb-4 mt-auto">
+                    <Skeleton className="h-12 w-full rounded-md" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     );
@@ -91,7 +130,7 @@ const FeaturedClasses: React.FC = () => {
 
   if (isError) {
     return (
-      <section className="py-10">
+      <section className="py-10 ">
         <div className="flex justify-center items-center h-64">
           <p className="text-center text-red-500">
             Error loading classes: {error?.message || "Something went wrong"}
@@ -126,7 +165,7 @@ const FeaturedClasses: React.FC = () => {
         Start your scuba journey with our comprehensive PADI certified courses
       </p>
 
-      <Carousel setApi={setApi} className="container  mx-auto">
+      <Carousel setApi={setApi} className="container  mx-auto px-2">
         <CarouselContent className="">
           {courses.map((course) => (
             <CarouselItem
@@ -197,9 +236,8 @@ const FeaturedClasses: React.FC = () => {
             {Array.from({ length: totalDots }).map((_, i) => (
               <button
                 key={i}
-                className={`h-3 w-3 rounded-full transition-colors ${
-                  i === current ? "bg-teal-600" : "bg-gray-300"
-                }`}
+                className={`h-3 w-3 rounded-full transition-colors ${i === current ? "bg-teal-600" : "bg-gray-300"
+                  }`}
                 onClick={() => api?.scrollTo(i)}
                 aria-label={`Go to slide ${i + 1}`}
               />
