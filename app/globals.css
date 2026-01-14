@@ -125,6 +125,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -166,7 +167,8 @@
 
 .custom-slant {
   font-style: italic;
-  transform: skewX(-12deg); /* Adjust the -10deg to a higher value for more slant */
+  transform: skewX(-12deg);
+  /* Adjust the -10deg to a higher value for more slant */
 }
 
 
@@ -290,3 +292,19 @@ ol {
 }
 
 /* QuillEditor style end */
+
+/* PDF Pagination Rules */
+.no-split {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+/* Also add globally for html2pdf.js which respects these */
+tr,
+h1,
+h2,
+h3,
+.no-split,
+.signature-block {
+  break-inside: avoid !important;
+}
