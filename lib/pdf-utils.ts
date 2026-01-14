@@ -24,9 +24,17 @@ export const generatePaginatedPDF = async (
             text-justify: inter-word !important;
             line-height: 1.4 !important;
           }
-          p, h1, h2, h3, h4, li, .no-split, .signature-block {
+          h1, h2, h3, h4, li, .signature-block {
             page-break-inside: avoid !important;
             break-inside: avoid !important;
+          }
+          h1, h2, h3, h4 {
+            page-break-after: avoid !important;
+          }
+          .no-split {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            display: block !important;
           }
           .pdf-columns {
             display: grid !important;
@@ -43,6 +51,7 @@ export const generatePaginatedPDF = async (
             padding: 0 !important;
             margin: 0 !important;
             padding-bottom: 30px !important; /* Increased buffer */
+            overflow: visible !important;
           }
           input {
             border-bottom: 1px solid black !important;
@@ -92,7 +101,7 @@ export const generatePaginatedPDF = async (
     },
     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" as const, compress: true },
     pagebreak: {
-      mode: ["avoid-all", "css"],
+      mode: ["css"],
       avoid: ["tr", ".no-split", ".signature-block"],
     },
   };
