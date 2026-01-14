@@ -117,12 +117,12 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
         className="print-area max-w-4xl mx-auto bg-card shadow-xl rounded-lg overflow-hidden"
       >
         {/* Header with Logo and Title */}
-                <div className="">
-                  <h2 className="text-lg lg:text-xl font-bold text-center leading-tight">
-                  Release of Liability/Assumption of Risk/Non-agency
-                  Acknowledgment Form
-                </h2>
-                </div>
+        <div className="">
+          <h2 className="text-lg lg:text-xl font-bold text-center leading-tight">
+            Release of Liability/Assumption of Risk/Non-agency
+            Acknowledgment Form
+          </h2>
+        </div>
         <div className="flex flex-col lg:flex-row items-center px-6 py-0! lg:p-8 gap-6">
           <div className=" mx-auto lg:mx-0">
             <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-full flex items-center justify-center">
@@ -146,7 +146,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
             </div>
           </div>
         </div>
-        <div className="mx-auto px-8 py-4">
+        <div className="mx-auto px-8 py-2">
           <hr className="w-full border-black" />
           <p className="text-sm font-semibold text-center lg:text-left">
             Please read carefully and fill in all blanks before signing.
@@ -182,8 +182,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
           </div> */}
 
           {/* Non-Agency Disclosure */}
-          <div className="mb-8">
-            <h3 className="text-lg font-bold mb-4">
+          <div className="mb-4">
+            <h3 className="text-lg font-bold mb-2">
               Non-Agency Disclosure and Acknowledgment Agreement
             </h3>
             <p className="text-sm leading-relaxed text-justify mb-4">
@@ -233,9 +233,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                   handleFieldChange("participantName", e.target.value);
                 }}
                 placeholder="Participant Name"
-                className={`border-0 border-b-2 ${
-                  errors.participantName ? "border-red-500" : "border-black"
-                } bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm w-46 h-12 focus:outline-none focus:border-blue-600 border-red-500`}
+                className={`border-0 border-b-2 ${errors.participantName ? "border-red-500" : "border-black"
+                  } bg-transparent px-2 py-1 min-w-0 flex-1 max-w-xs text-sm w-46 h-12 focus:outline-none focus:border-blue-600 border-red-500`}
                 required
               />
               <span className="text-sm">
@@ -385,9 +384,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                   handleFieldChange("participantName", e.target.value);
                 }}
                 placeholder="Participant Name (PLEASE PRINT)"
-                className={`border-0 border-b-2 ${
-                  errors.participantName ? "border-red-500" : "border-black"
-                } bg-transparent w-full text-lg focus:outline-none focus:border-blue-600 w-46 h-12 pb-2 border-red-500`}
+                className={`border-0 border-b-2 ${errors.participantName ? "border-red-500" : "border-black"
+                  } bg-transparent w-full text-lg focus:outline-none focus:border-blue-600 w-46 h-12 pb-2 border-red-500`}
                 required
               />
               <p className="text-xs mt-2 font-medium">
@@ -402,7 +400,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
             </div>
 
             {/* Participant Signature and Date */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-end">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-end signature-block">
               <div className="lg:col-span-2">
                 <input
                   type="text"
@@ -412,11 +410,10 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                     handleFieldChange("participantSignature", e.target.value);
                   }}
                   placeholder="Type your signature here"
-                  className={`border-0 border-b-2 ${
-                    errors.participantSignature
-                      ? "border-red-500"
-                      : "border-black"
-                  } bg-transparent w-full text-lg font-cursive focus:outline-none focus:border-blue-600 w-46 h-12 pb-2 border-red-500 italic`}
+                  className={`border-0 border-b-2 ${errors.participantSignature
+                    ? "border-red-500"
+                    : "border-black"
+                    } bg-transparent w-full text-lg font-cursive focus:outline-none focus:border-blue-600 w-46 h-12 pb-2 border-red-500 italic`}
                   style={{ fontFamily: "cursive" }}
                   required
                 />
@@ -437,9 +434,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                     setParticipantDate(e.target.value);
                     handleFieldChange("participantDate", e.target.value);
                   }}
-                  className={`border-0 border-b-2 ${
-                    errors.participantDate ? "border-red-500" : "border-black"
-                  } bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 w-46 h-12 pb-1 border-red-500`}
+                  className={`border-0 border-b-2 ${errors.participantDate ? "border-red-500" : "border-black"
+                    } bg-transparent w-full text-sm focus:outline-none focus:border-blue-600 w-46 h-12 pb-1 border-red-500`}
                   required
                 />
                 <p className="text-xs mt-2 text-center font-medium">
@@ -454,7 +450,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
             </div>
 
             {/* Guardian Signature and Date */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-end">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-end signature-block">
               <div className="lg:col-span-2">
                 <input
                   type="text"
@@ -483,11 +479,10 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
 
             {/* Insurance Section */}
             <div
-              className={`flex flex-wrap items-center gap-4 p-4 rounded-lg border-2 ${
-                errors.hasInsurance
-                  ? "border-red-500 bg-red-50"
-                  : "border-transparent bg-muted/20"
-              }`}
+              className={`flex flex-wrap items-center gap-4 p-4 rounded-lg border-2 ${errors.hasInsurance
+                ? "border-red-500 bg-red-50"
+                : "border-transparent bg-muted/20"
+                }`}
             >
               <span className="text-sm font-medium">
                 Diver Accident Insurance?{" "}
@@ -538,9 +533,8 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                       handleFieldChange("policyNumber", e.target.value);
                     }}
                     placeholder="Enter policy number"
-                    className={`border-0 border-b-2 ${
-                      errors.policyNumber ? "border-red-500" : "border-black"
-                    } bg-transparent px-2 py-1 text-sm focus:outline-none focus:border-blue-600 w-46 h-12 pb-2 border-red-500`}
+                    className={`border-0 border-b-2 ${errors.policyNumber ? "border-red-500" : "border-black"
+                      } bg-transparent px-2 py-1 text-sm focus:outline-none focus:border-blue-600 w-46 h-12 pb-2 border-red-500`}
                   />
                 </div>
               )}
@@ -569,11 +563,10 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
         <Button
           onClick={handleExportPDF}
           disabled={isGeneratingPDF}
-          className={`font-semibold py-3 px-6 rounded-lg transition duration-200 w-full ${
-            isGeneratingPDF
-              ? "bg-gray-400 cursor-not-allowed text-gray-700"
-              : "bg-blue-600 hover:bg-blue-700 text-white"
-          }`}
+          className={`font-semibold py-3 px-6 rounded-lg transition duration-200 w-full ${isGeneratingPDF
+            ? "bg-gray-400 cursor-not-allowed text-gray-700"
+            : "bg-blue-600 hover:bg-blue-700 text-white"
+            }`}
         >
           {isGeneratingPDF ? "Generating PDF..." : "Submit Form"}
         </Button>
