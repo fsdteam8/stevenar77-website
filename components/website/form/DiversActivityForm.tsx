@@ -200,7 +200,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
             </div>
 
             <p className="text-justify indent-8 mt-6">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I understand and agree that PADI Members (&qout;Members&qout;),
+              I understand and agree that PADI Members (&qout;Members&qout;),
               including
               <span className="border-full underline border-gray-900 text-xl font-bold px-2">
                 Scuba Life & their instructors
@@ -227,52 +227,55 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
           </div>
 
           <div className="">
-            <div className="mt-8">
-              <h3 className="text-center font-bold text-2xl mt-2 mb-3">
-                LIABILITY RELEASE AND ASSUMPTION OF RISK AGREEMENT
-              </h3>
+            {/* <div className="no-split" style={{ pageBreakInside: "avoid" }}> */}
+            <div className=" " >
+              <div className="mt-2">
+                <h3 className="text-center font-bold text-2xl mt-2 mb-3">
+                  LIABILITY RELEASE AND ASSUMPTION OF RISK AGREEMENT
+                </h3>
+              </div>
+
+              <p className="text-justify indent-8 mt-6">
+                I,{" "}
+                <input
+                  type="text"
+                  value={participantName}
+                  onChange={(e) => {
+                    setParticipantName(e.target.value);
+                    if (errors.participantName && e.target.value.trim()) {
+                      setErrors({ ...errors, participantName: false });
+                    }
+                  }}
+                  placeholder="Participant Name"
+                  className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-8 px-1 bg-transparent focus:outline-none`}
+                />{" "}
+                hereby affirm that I am a certified scuba diver trained in safe
+                dive practices, or a student diver under the control and
+                supervision of a certified scuba instructor. I know that skin
+                diving, freediving and scuba diving have inherent risks including
+                those risks associated with boat travel to and from the dive site
+                (hereinafter &qout;Excursion&qout;), which may result in serious
+                injury or death. understand that scuba diving with compressed air
+                involves certain inherent risks; including but not limited to
+                decompression sickness, embolism or other hyperbaric/air expansion
+                injury that require treatment in a recompression chamber. If I am
+                scuba diving with oxygen enriched air (&qout;Enriched Air&qout;)
+                or other gas blends including oxygen, I also understand that it
+                involves inherent risks of oxygen toxicity and/or improper
+                mixtures of breathing gas. I acknowledge this Excursion includes
+                risks of slipping or falling while on board the boat, being cut or
+                struck by a boat while in the water, injuries occurring while
+                getting on or off a boat, and other perils of the sea. I further
+                understand that the Excursion will be conducted at a site that is
+                remote, either by time or distance or both, from a recompression
+                chamber. I still choose to proceed with the Excursion in spite of
+                the absence of a recompression chamber in proximity to the dive
+                site(s).
+              </p>
             </div>
 
             <p className="text-justify indent-8 mt-6">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I,{" "}
-              <input
-                type="text"
-                value={participantName}
-                onChange={(e) => {
-                  setParticipantName(e.target.value);
-                  if (errors.participantName && e.target.value.trim()) {
-                    setErrors({ ...errors, participantName: false });
-                  }
-                }}
-                placeholder="Participant Name"
-                className={`border-b ${errors.participantName ? "border-red-500 bg-red-50" : "border-black"} w-46 h-8 px-1 bg-transparent focus:outline-none`}
-              />{" "}
-              hereby affirm that I am a certified scuba diver trained in safe
-              dive practices, or a student diver under the control and
-              supervision of a certified scuba instructor. I know that skin
-              diving, freediving and scuba diving have inherent risks including
-              those risks associated with boat travel to and from the dive site
-              (hereinafter &qout;Excursion&qout;), which may result in serious
-              injury or death. understand that scuba diving with compressed air
-              involves certain inherent risks; including but not limited to
-              decompression sickness, embolism or other hyperbaric/air expansion
-              injury that require treatment in a recompression chamber. If I am
-              scuba diving with oxygen enriched air (&qout;Enriched Air&qout;)
-              or other gas blends including oxygen, I also understand that it
-              involves inherent risks of oxygen toxicity and/or improper
-              mixtures of breathing gas. I acknowledge this Excursion includes
-              risks of slipping or falling while on board the boat, being cut or
-              struck by a boat while in the water, injuries occurring while
-              getting on or off a boat, and other perils of the sea. I further
-              understand that the Excursion will be conducted at a site that is
-              remote, either by time or distance or both, from a recompression
-              chamber. I still choose to proceed with the Excursion in spite of
-              the absence of a recompression chamber in proximity to the dive
-              site(s).
-            </p>
-
-            <p className="text-justify indent-8 mt-6">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I understand and agree that neither
+              I understand and agree that neither
               <span className="border-full underline border-gray-900 text-xl font-bold px-2">
                 Scuba Life & their instructors
               </span>{" "}
@@ -289,7 +292,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
             </p>
 
             <p className="text-justify indent-8 mt-6">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I affirm I am in good mental and physical fitness for the
+              I affirm I am in good mental and physical fitness for the
               Excursion. I further state that I will not participate in the
               Excursion if I am under the influence of alcohol or any drugs that
               are contraindicated to diving. If I am taking medication, I affirm
@@ -303,7 +306,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
             </p>
 
             <p className="text-justify indent-8 mt-6">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I am aware that safe dive practices suggest diving with a buddy
+              I am aware that safe dive practices suggest diving with a buddy
               unless trained as a self-reliant diver. I am aware it is my
               responsibility to plan my dive allowing for my diving experience
               and limitations, and the prevailing water conditions and
@@ -313,7 +316,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
             </p>
 
             <p className="text-justify indent-8 mt-6">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If diving from a boat, I will be present at and attentive to the briefing
+              If diving from a boat, I will be present at and attentive to the briefing
               given by the boat crew. If there is anything I do not
               understand I will notify the boat crew or captain immediately. I
               acknowledge it is my responsibility to plan my dives as
@@ -330,9 +333,8 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
             <p className="">- page 1 of 2 -</p> <p className="">© PADI 2021</p>
           </div>
         </div>
-        <div className="py-48"></div>
         {/* ---------------- Page 2 ---------------- */}
-        <div className="mt-12 border-t pt-8">
+        <div className="mt-12 border-t pt-8 no-split">
           <div className="flex items-center pb-4">
             <div className="mr-6 flex-shrink-0">
               <Image
@@ -344,6 +346,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
               />
             </div>
 
+            <div className="py-20"></div>
             <div className="flex-1">
               <div>
                 <h1 className="text-center max-w-8xl font-bold text-base ">
@@ -360,7 +363,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
           </div>
           <div className=" ml-10 ">
             <p className="text-justify indent-8 mt-6">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I am aware safe dive practices recommend a refresher or guided
+              I am aware safe dive practices recommend a refresher or guided
               orientation dive following a period of diving inactivity. I
               understand such refresher/guided dive is available for an
               additional fee. If I choose not to follow this recommendation I
@@ -368,7 +371,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
             </p>
 
             <p className="text-justify indent-8 mt-6">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I acknowledge Released Parties may provide an in-water guide
+              I acknowledge Released Parties may provide an in-water guide
               (hereinafter &qout;Guide&qout;) during the Excursion. The Guide is
               present to assist in navigation during the dive and identifying
               local flora and fauna. If I choose to dive with the Guide I
@@ -380,7 +383,7 @@ const DiversActivityForm: React.FC<DiversActivityFormProps> = ({
             </p>
 
             <p className="text-justify indent-8 mt-6">
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I affirm it is my responsibility to inspect all of the equipment I
+              I affirm it is my responsibility to inspect all of the equipment I
               will be using prior to the leaving the dock for the Excursion and
               that I should not dive if the equipment is not functioning
               properly. I will not hold the Released Parties responsible for my

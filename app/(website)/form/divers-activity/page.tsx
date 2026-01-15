@@ -1,5 +1,4 @@
-// import DiversActivityForm from '@/components/website/form/DiversActivityForm'
-// import { BookingProvider } from "@/components/website/course/booking-context";
+"use client";
 import DiversActivityForm from "@/components/website/form/DiversActivityForm";
 import React, { Suspense } from "react";
 
