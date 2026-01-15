@@ -14,8 +14,7 @@ export default function Trips() {
   const { data: trips, isLoading, isError, error } = useTrips();
   // const router = useRouter();
 
-  // console.log(trips)
-
+ 
   if (isLoading)
     return (
       <div className="bg-white py-10">
@@ -79,6 +78,10 @@ export default function Trips() {
           bookNowLink={`/trips/book/${trip._id}`} // dynamic booking route
           reverse={index % 2 === 1} // alternate layout
           className=" px-2"
+          location={trip.location}
+          startDate={trip.startDate}
+          endDate={trip.endDate}
+          maxCapacity={trip.maximumCapacity}
         />
       ))}
     </div>
