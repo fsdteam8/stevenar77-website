@@ -112,12 +112,12 @@ export default function TripsCard({
             </div>
 
             {/* Capacity */}
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <Users className="w-4 h-4 text-primary" />
               <span className="text-sm font-medium">
                 Max Capacity: {maxCapacity}
               </span>
-            </div>
+            </div> */}
           </div>
 
           {/* Description */}
@@ -163,7 +163,7 @@ export default function TripsCard({
               onClick={handleBookNow}
               className="bg-[#0694A2] text-white px-12 py-2 md:px-20 rounded-md hover:bg-[#057c88] transition cursor-pointer"
             >
-              Buy Now
+              Book Now
             </Button>
           </div>
         </div>
