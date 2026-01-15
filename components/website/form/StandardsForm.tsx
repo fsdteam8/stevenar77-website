@@ -223,16 +223,27 @@ const StandardsForm: React.FC<StandardsFormProps> = ({
                 including communications, procedures for reuniting in case of
                 separation and emergency procedures – with my buddy.
               </li>
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
               <li>
-                Be proficient in dive planning (dive computer or dive table
-                use). Make all dives no decompression dives and allow a margin
-                of safety. Have a means to monitor depth and time underwater.
-                Limit maximum depth to my level of training and experience.
-                Ascend at a rate of not more than 18 metres/60 feet per
-                minute. Be a SAFE diver –{" "}
-                <strong>Slowly Ascend From Every dive</strong>. Make a safety
-                stop as an added precaution, usually at 5 metres/15 feet for
-                three minutes or longer.
+                <div className="no-split" style={{ display: "block" }}>
+                  Be proficient in dive planning (dive computer or dive table
+                  use). Make all dives no decompression dives and allow a margin
+                  of safety. Have a means to monitor depth and time underwater.
+                  Limit maximum depth to my level of training and experience.
+                  Ascend at a rate of not more than 18 metres/60 feet per
+                  minute. Be a SAFE diver –{" "}
+                  <strong>Slowly Ascend From Every dive</strong>. Make a safety
+                  stop as an added precaution, usually at 5 metres/15 feet for
+                  three minutes or longer.
+                </div>
               </li>
               <li>
                 Maintain proper buoyancy. Adjust weighting at the surface for

@@ -112,7 +112,7 @@ export default function PadiLiabilityForm({
           className="print-area bg-white p-6 text-sm leading-relaxed font-serif"
         >
           {/* ---------------- Page 1 ---------------- */}
-          <div className="no-split"> {/* Added no-split here to help contain page 1 content */}
+          <div>
             <div className="flex items-center pb-4">
               <div className="mr-6 flex-shrink-0">
                 <Image
@@ -175,7 +175,7 @@ export default function PadiLiabilityForm({
                 </p>
 
                 <ol className="!list-decimal ml-6 space-y-2">
-                  <li className="no-split"> {/* Added no-split */}
+                  <li > {/* Added no-split */}
                     Maintain good mental and physical fitness for diving. Avoid
                     being under the influence of alcohol or dangerous drugs when
                     diving. Keep proficient in diving skills, striving to
@@ -184,7 +184,7 @@ export default function PadiLiabilityForm({
                     inactivity, and refer to my course materials to stay current
                     and refresh myself on important information.
                   </li>
-                  <li className="no-split"> {/* Added no-split */}
+                  <li > {/* Added no-split */}
                     Be familiar with my dive sites. If not, obtain a formal
                     diving orientation from a knowledgeable, local source. If
                     diving conditions are worse than those in which I am
@@ -194,7 +194,7 @@ export default function PadiLiabilityForm({
                     cave or technical diving unless specifically trained to do
                     so.
                   </li>
-                  <li className="no-split"> {/* Added no-split */}
+                  <li > {/* Added no-split */}
                     Use complete, well-maintained, reliable equipment with which
                     I am familiar, and inspect it for correct fit and function
                     prior to each dive. Have a buoyancy control device,
@@ -204,7 +204,7 @@ export default function PadiLiabilityForm({
                     tables—whichever you are trained to use) when scuba diving.
                     Deny use of my equipment to uncertified divers.
                   </li>
-                  <li className="no-split"> {/* Added no-split */}
+                  <li > {/* Added no-split */}
                     Listen carefully to dive briefings and directions and
                     respect the advice of those supervising my diving
                     activities. Recognize that additional training is
@@ -216,12 +216,12 @@ export default function PadiLiabilityForm({
               </div>
               <div className="pr-4">
                 <ol className="!list-decimal ml-6 space-y-2" start={5}>
-                  <li className="no-split"> {/* Added no-split */}
+                  <li > {/* Added no-split */}
                     Adhere to the buddy system throughout every dive. Plan dives
                     – including communications, procedures for reuniting in case
                     of separation and emergency procedures – with my buddy.
                   </li>
-                  <li className="no-split"> {/* Added no-split */}
+                  <li > {/* Added no-split */}
                     Be proficient in dive planning (dive computer or dive table
                     use). Make all dives no decompression dives and allow a
                     margin of safety. Have a means to monitor depth and time
@@ -231,7 +231,7 @@ export default function PadiLiabilityForm({
                     dive. Make a safety stop as an added precaution, usually at
                     5 metres/15 feet for three minutes or longer.
                   </li>
-                  <li className="no-split"> {/* Added no-split */}
+                  <li  > {/* Added no-split */}
                     Maintain proper buoyancy. Adjust weighting at the surface
                     for neutral buoyancy with no air in my buoyancy control
                     device. Maintain neutral buoyancy while underwater. Be
@@ -240,18 +240,18 @@ export default function PadiLiabilityForm({
                     while diving. Carry at least one surface signaling device
                     (such as signal tube, whistle, mirror).
                   </li>
-                  <li className="no-split"> {/* Added no-split */}
+                  <li > {/* Added no-split */}
                     Breathe properly for diving. Never breath-hold or
                     skip-breathe when breathing compressed air, and avoid
                     excessive hyperventilation when breath-hold diving. Avoid
                     overexertion while in and underwater and dive within my
                     limitations.
                   </li>
-                  <li className="no-split"> {/* Added no-split */}
+                  <li > {/* Added no-split */}
                     Use a boat, float or other surface support station, whenever
                     feasible.
                   </li>
-                  <li className="no-split"> {/* Added no-split */}
+                  <li > {/* Added no-split */}
                     Know and obey local dive laws and regulations, including
                     fish and game and dive flag laws. I have read the above
                     statements and have had any questions answered to my
@@ -272,7 +272,7 @@ export default function PadiLiabilityForm({
               NON-AGENCY DISCLOSURE AND ACKNOWLEDGMENT AGREEMENT
             </h3>
 
-            <p className="no-split"> {/* Added no-split */}
+            <p > {/* Added no-split */}
               I understand and agree that PADI Members (&quot;Members&quot;),
               including
               <span className="border-full underline border-gray-900 text-xl font-bold px-2">
@@ -346,7 +346,8 @@ export default function PadiLiabilityForm({
                   recompression chamber in proximity to the dive site.
                 </p>
 
-                <p className="mb-4 no-split">
+                {/* <p className="mb-4 no-split"> */}
+                <p className="mb-4 ">
                   I understand this Liability Release and Assumption of Risk
                   Agreement (Agreement) hereby encompasses and applies to all
                   diver training activities and courses in which I choose to
@@ -359,7 +360,7 @@ export default function PadiLiabilityForm({
                   distinctive specialties (hereinafter &quot;Programs&quot;).
                 </p>
 
-                <p className="mb-4 no-split">
+                <p className="mb-4 ">
                   I understand and agree that neither my instructor(s),
                   divemasters(s), the facility which provides the Programs{" "}
                   <span className="border-full underline border-gray-900 text-xl font-bold px-2">
@@ -376,7 +377,7 @@ export default function PadiLiabilityForm({
                   whether passive or active.
                 </p>
 
-                <p className="mb-4 no-split">
+                <p className="mb-4 ">
                   In consideration of being allowed to participate in the
                   Programs, I hereby personally assume all risks of the
                   Programs, whether foreseen or unforeseen, that may befall me
@@ -392,7 +393,7 @@ export default function PadiLiabilityForm({
               </div>
 
               <div className="pl-4">
-                <p className="mb-4 no-split">
+                <p className="mb-4 ">
                   I understand that past or present medical conditions may be
                   contraindicative to my participation in the Programs. I
                   declare that I am in good mental and physical fitness for
@@ -407,7 +408,7 @@ export default function PadiLiabilityForm({
                   to do so.
                 </p>
 
-                <p className="mb-4 no-split">
+                <p className="mb-4 ">
                   I also understand that skin diving and scuba diving are
                   physically strenuous activities and that I will be exerting
                   myself during this program, and that if I am injured as a
@@ -417,7 +418,7 @@ export default function PadiLiabilityForm({
                   responsible for the same.
                 </p>
 
-                <p className="mb-4 no-split">
+                <p className="mb-4 ">
                   I further state that I am of lawful age and legally competent
                   to sign this Liability Release and Assumption of Risk
                   Agreement, or that I have acquired the written consent of my
@@ -432,7 +433,7 @@ export default function PadiLiabilityForm({
                   contained herein.
                 </p>
 
-                <p className="mb-4 no-split">
+                <p className="mb-4 ">
                   I hereby state and agree this Agreement will be effective for
                   all activities associated with the Programs in which I
                   participate within one year from the date on which I sign this
@@ -446,9 +447,17 @@ export default function PadiLiabilityForm({
                 </p>
               </div>
             </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
 
             <hr className="my-2 border-2 border-gray-900" />
-            <p className="mb-4 no-split">
+            <p className="mb-4 ">
               I,{" "}
               <input
                 type="text"
@@ -470,7 +479,7 @@ export default function PadiLiabilityForm({
               CONDITION, OR ANY CHANGES THERETO.
             </p>
 
-            <p className="mb-4 no-split">
+            <p className="mb-4 ">
               I,{" "}
               <input
                 type="text"
@@ -501,7 +510,7 @@ export default function PadiLiabilityForm({
               SIGNING BELOW ON BEHALF OF MYSELF AND MY HEIRS.
             </p>
 
-            <div className="mt-8 w-full space-y-6 no-split"> {/* Added no-split */}
+            <div className="mt-4 w-full space-y-6 no-split"> {/* Added no-split */}
               <div className="flex gap-10 signature-block no-split"> {/* Added no-split */}
                 <div className="flex-5 w-full">
                   <label className="block font-semibold mb-1">
