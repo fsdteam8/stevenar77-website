@@ -1,4 +1,4 @@
-import html2pdf from 'html2pdf.js';
+// import html2pdf from 'html2pdf.js'; // Removed top-level import to fix SSR error
 
 
 export const generatePaginatedPDF = async (
@@ -106,6 +106,8 @@ export const generatePaginatedPDF = async (
     },
   };
 
+  // Dynamically import html2pdf.js to avoid SSR issues
+  const html2pdf = (await import("html2pdf.js")).default;
   const pdfBlob = await html2pdf().set(options).from(element).output("blob");
   return new File([pdfBlob], fileName, { type: "application/pdf" });
 };
