@@ -86,7 +86,7 @@ export default function TripsDetails() {
             onClick={handleBookNow}
             className="bg-[#0694A2] border border-[#0694A2] text-white px-24 py-2 rounded-md w-full md:w-auto"
           >
-            Buy Now
+            Book Now
           </Button>
         </div>
 
