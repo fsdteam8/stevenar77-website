@@ -11,15 +11,20 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, MapPin, Calendar, Users } from "lucide-react";
+import { format } from "date-fns";
 
 interface TripsCardProps {
   image: string;
   title: string;
   shortDescription: string;
-  price: number; // ✅ Added number type
+  price: number;
   bookNowLink: string;
   reverse?: boolean;
+  location: string;
+  startDate: string;
+  endDate: string;
+  maxCapacity: number;
 }
 
 export default function TripsCard({
@@ -29,6 +34,10 @@ export default function TripsCard({
   price,
   bookNowLink,
   reverse = false,
+  location,
+  startDate,
+  endDate,
+  maxCapacity,
 }: TripsCardProps) {
   const router = useRouter();
   const { status } = useSession();
@@ -36,7 +45,7 @@ export default function TripsCard({
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
-  const totalPrice = price * quantity; // ✅ Calculate total
+  const totalPrice = price * quantity;
 
   const increase = () => setQuantity((prev) => prev + 1);
   const decrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -53,6 +62,13 @@ export default function TripsCard({
       router.push(urlWithQuantity);
     }
   };
+
+  const formattedStartDate = startDate
+    ? format(new Date(startDate), "dd MMM yyyy")
+    : "";
+  const formattedEndDate = endDate
+    ? format(new Date(endDate), "dd MMM yyyy")
+    : "";
 
   return (
     <div className="container mx-auto my-16 md:my-10 px-2">
@@ -78,6 +94,31 @@ export default function TripsCard({
         >
           {/* Title */}
           <h1 className="text-[#27303F] text-2xl font-semibold">{title}</h1>
+
+          {/* New Fields: Location, Date, Capacity */}
+          <div className="flex flex-col gap-2 mt-2 text-gray-600">
+            {/* Location */}
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium">{location}</span>
+            </div>
+
+            {/* Dates */}
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium">
+                {formattedStartDate} - {formattedEndDate}
+              </span>
+            </div>
+
+            {/* Capacity */}
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium">
+                Max Capacity: {maxCapacity}
+              </span>
+            </div>
+          </div>
 
           {/* Description */}
           <p
@@ -109,10 +150,6 @@ export default function TripsCard({
             </div>
 
             {/* Total Price */}
-            {/* <span className="ml-4 text-lg font-semibold text-gray-800">
-              Total: ${totalPrice.toFixed(2)}
-            </span> */}
-
             <span className="ml-4 text-lg font-semibold text-gray-800">
               Total: $
               {totalPrice.toLocaleString("en-US", {

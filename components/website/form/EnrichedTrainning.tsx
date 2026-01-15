@@ -223,7 +223,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
             <h3 className="text-lg font-bold mb-4">
               Liability Release and Assumption of Risk Agreement
             </h3>
-            <div className="mb-4 flex flex-wrap items-center gap-2">
+            <div className="mb-4 flex flex-wrap items-center gap-2 no-split" style={{ pageBreakInside: "avoid" }}>
               <span className="text-sm">I,</span>
               <input
                 type="text"
@@ -245,7 +245,7 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               </span>
             </div>
 
-            <div className="space-y-4 text-sm leading-relaxed text-justify">
+            <div className="space-y-4 text-sm leading-relaxed text-justify no-split" style={{ pageBreakInside: "auto" }}>
               <p>
                 I understand that diving with compressed air involves certain
                 inherent risks; including but not limited to decompression
@@ -261,7 +261,9 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
                 of the possible absence of a recompression chamber in proximity
                 to the dive site.
               </p>
+            </div>
 
+            <div className="space-y-4 text-sm leading-relaxed text-justify mt-4">
               <p>
                 I understand and agree that neither my instructor(s), the
                 facility through which I receive my instruction,{" "}
@@ -371,6 +373,17 @@ const EnrichedAirForm: React.FC<EnrichedAirFormProps> = ({
               </p>
             </div>
           </div>
+
+
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+
 
           {/* Signature Section */}
           <div className="space-y-8">

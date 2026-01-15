@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import MedicalForm from "@/components/website/MedicalForm/MedicalForm";
 
