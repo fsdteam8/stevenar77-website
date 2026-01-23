@@ -8,13 +8,26 @@ import React from "react";
 import TripsCard from "./TripsCard";
 import { useTrips } from "@/services/hooks/trip/useTrips";
 import { Skeleton } from "@/components/ui/skeleton";
-// import { useRouter } from "next/navigation";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default function Trips() {
-  const { data: trips, isLoading, isError, error } = useTrips();
-  // const router = useRouter();
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const limit = 8;
+  const { data: trips, isLoading, isError, error } = useTrips(currentPage, limit);
 
- 
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
+
+
   if (isLoading)
     return (
       <div className="bg-white py-10">
@@ -84,6 +97,78 @@ export default function Trips() {
           maxCapacity={trip.maximumCapacity}
         />
       ))}
+
+      {trips?.totalPages && trips.totalPages > 1 && (
+        <div className="py-10">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage > 1) setCurrentPage(currentPage - 1);
+                  }}
+                  className={
+                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }
+                />
+              </PaginationItem>
+
+              {[...Array(trips.totalPages)].map((_, i) => {
+                const page = i + 1;
+                // Basic logic to show limited page numbers if there are many
+                if (
+                  page === 1 ||
+                  page === trips.totalPages ||
+                  (page >= currentPage - 1 && page <= currentPage + 1)
+                ) {
+                  return (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentPage(page);
+                        }}
+                        isActive={currentPage === page}
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                } else if (
+                  page === currentPage - 2 ||
+                  page === currentPage + 2
+                ) {
+                  return (
+                    <PaginationItem key={page}>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  );
+                }
+                return null;
+              })}
+
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage < trips.totalPages)
+                      setCurrentPage(currentPage + 1);
+                  }}
+                  className={
+                    currentPage === trips.totalPages
+                      ? "pointer-events-none opacity-50"
+                      : ""
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 }
