@@ -95,6 +95,12 @@ export default function Trips() {
           startDate={trip.startDate}
           endDate={trip.endDate}
           maxCapacity={trip.maximumCapacity}
+          purchasedParticipants={
+            trip.purchasedByDate?.reduce(
+              (total, purchase) => total + (purchase.totalParticipants || 0),
+              0
+            ) || 0
+          }
         />
       ))}
 
