@@ -96,10 +96,19 @@ export default function Trips() {
           endDate={trip.endDate}
           maxCapacity={trip.maximumCapacity}
           purchasedParticipants={
-            trip.purchasedByDate?.reduce(
-              (total, purchase) => total + (purchase.totalParticipants || 0),
-              0
-            ) || 0
+            (() => {
+              // Helper to get YYYY-MM-DD
+              const getDatePart = (dateStr?: string) => dateStr?.split("T")[0];
+              const targetDate = getDatePart(trip.startDate);
+
+              const match = trip.purchasedByDate?.find(
+                (p) => getDatePart(p.tripDate) === targetDate
+              );
+
+              if (match) return match.totalParticipants || 0;
+
+              return 0;
+            })()
           }
         />
       ))}
