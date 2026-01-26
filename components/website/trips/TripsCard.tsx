@@ -25,6 +25,7 @@ interface TripsCardProps {
   startDate: string;
   endDate: string;
   maxCapacity: number;
+  purchasedParticipants: number;
 }
 
 export default function TripsCard({
@@ -38,6 +39,7 @@ export default function TripsCard({
   startDate,
   endDate,
   maxCapacity,
+  purchasedParticipants,
 }: TripsCardProps) {
   const router = useRouter();
   const { status } = useSession();
@@ -73,9 +75,8 @@ export default function TripsCard({
   return (
     <div className="container mx-auto my-16 md:my-10 px-2">
       <div
-        className={`grid grid-cols-1 md:grid-cols-12   gap-6 ${
-          reverse ? "md:[direction:rtl]" : ""
-        }`}
+        className={`grid grid-cols-1 md:grid-cols-12   gap-6 ${reverse ? "md:[direction:rtl]" : ""
+          }`}
       >
         {/* ✅ Image */}
         <div className="md:col-span-6 flex justify-center md:sticky md:top-24 md:h-fit mt-6">
@@ -112,12 +113,12 @@ export default function TripsCard({
             </div>
 
             {/* Capacity */}
-            {/* <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <Users className="w-4 h-4 text-primary" />
               <span className="text-sm font-medium">
                 Max Capacity: {maxCapacity}
               </span>
-            </div> */}
+            </div>
           </div>
 
           {/* Description */}
@@ -148,6 +149,37 @@ export default function TripsCard({
                 <Plus className="text-gray-800 w-4 h-4" />
               </Button>
             </div>
+              {/* Conditional Button */}
+              <div className="">
+                {maxCapacity - purchasedParticipants > 0 ? (
+                  <Button
+                    onClick={handleBookNow}
+                    className="bg-[#0694A2] text-white px-12 py-2 md:px-20 rounded-md hover:bg-[#057c88] transition cursor-pointer"
+                  >
+                    Book Now
+                  </Button>
+                ) : (
+                  <button
+                    disabled
+                    className="px-12 py-2 md:px-20 bg-red-400 text-white text-sm font-medium rounded-lg cursor-not-allowed"
+                  >
+                    Sold Out
+                  </button>
+                )}
+    
+                {/* Spots Left Warning */}
+                {maxCapacity - purchasedParticipants > 0 &&
+                  maxCapacity - purchasedParticipants <= 2 && (
+                    <div className="mt-4">
+                      <div className="bg-red-50 border border-red-200 text-red-700 px-12 py-2 md:px-20 rounded-md animate-pulse text-center">
+                        <span className="text-base font-semibold">
+                          Only {maxCapacity - purchasedParticipants} spot
+                          {maxCapacity - purchasedParticipants > 1 ? "s" : ""} left
+                        </span>
+                      </div>
+                    </div>
+                  )}
+              </div>
 
             {/* Total Price */}
             <span className="ml-4 text-lg font-semibold text-gray-800">
@@ -157,49 +189,43 @@ export default function TripsCard({
                 maximumFractionDigits: 2,
               })}
             </span>
-
-            {/* Buy Now Button */}
-            <Button
-              onClick={handleBookNow}
-              className="bg-[#0694A2] text-white px-12 py-2 md:px-20 rounded-md hover:bg-[#057c88] transition cursor-pointer"
-            >
-              Book Now
-            </Button>
           </div>
+
+
         </div>
-
-        {/* Login Required Modal */}
-        <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
-          <DialogContent className="!max-w-xl">
-            <DialogHeader>
-              <DialogTitle>Login Required</DialogTitle>
-              <DialogDescription>
-                {/* You need to be logged in to book this trip. Please log in to
-                continue. */}
-                Please login to access your account, book a course and/or trip,
-                leave a review, send a chat, and/or shop for products!
-              </DialogDescription>
-            </DialogHeader>
-
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setShowLoginModal(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={() => {
-                  setShowLoginModal(false);
-                  router.push("/login");
-                }}
-              >
-                Login Now
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </div>
+
+      {/* Login Required Modal */}
+      <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+        <DialogContent className="!max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Login Required</DialogTitle>
+            <DialogDescription>
+              {/* You need to be logged in to book this trip. Please log in to
+                continue. */}
+              Please login to access your account, book a course and/or trip,
+              leave a review, send a chat, and/or shop for products!
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowLoginModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                setShowLoginModal(false);
+                router.push("/login");
+              }}
+            >
+              Login Now
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

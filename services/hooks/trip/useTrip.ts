@@ -11,6 +11,8 @@ export interface Trip {
   startDate: string;
   endDate: string;
   images: { public_id: string; url: string; _id: string }[];
+  purchasedParticipants?: number;
+  purchasedByDate?: { tripDate?: string; totalParticipants: number }[];
   createdAt: string;
   updatedAt: string;
   __v: number;

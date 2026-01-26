@@ -54,6 +54,8 @@ interface TripFormProps {
   trip: Trip;
 }
 
+
+
 export function TripForm({ trip }: TripFormProps) {
   const { state, dispatch } = useTripBookingContext();
   const { mutate: bookTrip } = useTripBooking();
@@ -63,6 +65,8 @@ export function TripForm({ trip }: TripFormProps) {
 
   const { data: session } = useSession();
   const userId = session?.user?.id as string | undefined;
+
+
 
   const searchParams = useSearchParams();
   const queryParticipants =
@@ -148,8 +152,26 @@ export function TripForm({ trip }: TripFormProps) {
     });
   };
 
+
+  // Calculate available spots based on the trip date
+  const bookedForDate = (() => {
+    // Helper to get YYYY-MM-DD
+    const getDatePart = (dateStr?: string) => dateStr?.split("T")[0];
+    const targetDate = getDatePart(trip.startDate);
+
+    const match = trip.purchasedByDate?.find(
+      (p) => getDatePart(p.tripDate) === targetDate,
+    );
+    if (match) return match.totalParticipants || 0;
+
+    return 0;
+  })();
+
+  const capacity = trip.maximumCapacity || 50;
+  const availableSlots = Math.max(0, capacity - bookedForDate);
+
   const participantOptions = Array.from(
-    { length: trip.maximumCapacity || 50 },
+    { length: availableSlots },
     (_, i) => i + 1,
   );
 
@@ -371,11 +393,10 @@ export function TripForm({ trip }: TripFormProps) {
           <div className="md:col-span-2 mt-6">
             <Button
               type="submit"
-              className={`w-full py-3 text-lg font-semibold transition ${
-                isSaved
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-primary hover:bg-primary/80 text-white"
-              }`}
+              className={`w-full py-3 text-lg font-semibold transition ${isSaved
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-primary hover:bg-primary/80 text-white"
+                }`}
               disabled={isSaved || form.formState.isSubmitting}
             >
               {isSaved
