@@ -113,12 +113,12 @@ export default function TripsCard({
             </div>
 
             {/* Capacity */}
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <Users className="w-4 h-4 text-primary" />
               <span className="text-sm font-medium">
                 Max Capacity: {maxCapacity}
               </span>
-            </div>
+            </div> */}
           </div>
 
           {/* Description */}
