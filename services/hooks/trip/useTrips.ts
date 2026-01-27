@@ -4,7 +4,7 @@ import { TripApiResponse } from "@/types/trip";
 
 const fetchTrips = async (page = 1, limit = 10): Promise<TripApiResponse> => {
   const response = await axios.get<{ data: TripApiResponse }>(
-    `${process.env.NEXT_PUBLIC_API_URL}/trip/all?page=${page}&limit=${limit}`
+    `${process.env.NEXT_PUBLIC_API_URL}/trip/active?page=${page}&limit=${limit}`
   );
   return response.data.data;
 };
